@@ -58,19 +58,19 @@ footer a{color:var(--muted)}
 <div class="open"><a href="museum.html">open full screen →</a></div>
 </div>
 
-<p>The route makes six stops. The Great Court under the Foster roof, the Amaravati Great Stupa drum slab, the Buddhapada footprint panel, the Shiva Nataraja from Tamil Nadu, the gilded Tara from Sri Lanka, and a climb back out through the glass. Every fact on the cards comes from the museum's own printed visitor guide, which I had open on my lap while building this: dates, heights, room numbers, findspots.</p>
+<p>The route makes six stops. The Great Court under the Foster roof, the Amaravati Great Stupa drum slab, the Buddhapada footprint panel, the Shiva Nataraja from Tamil Nadu, the gilded Tara from Sri Lanka, and a climb back out through the glass. Every fact on the cards comes from the museum's own printed visitor guide, which I had open on my lap while building this: dates, heights, room numbers, findspots. Object photos come from Wikimedia Commons under CC BY-SA and CC0, credited in the flight footer.</p>
 
 <h2>What carried over from the skill</h2>
 
 <ol>
 <li>One monotonic camera path. The galleries sit on a straight line going north, so the camera never reverses; it weaves left and right between plinths instead.</li>
 <li>Smoothed camera, raw UI. Cards and rail dots read the raw scroll fraction, so headless QA can assert every band at any frame rate.</li>
-<li>Objects are stylized, not scanned. The Nataraja is a torus, cones, and cylinders under bronze metalness; the Tara is a lathe profile under gold. With one warm spotlight each in a dark room, silhouette and material do the work.</li>
-<li>Carvings are canvas textures. The stupa relief and the Buddhapada are drawn procedurally to a 2d canvas and used as both color map and bump map on plain boxes.</li>
+<li>The objects are real photographs. Each exhibit is a Wikimedia Commons photo of the actual British Museum object, inlined as base64 and mounted as a framed plane on its plinth. MeshBasicMaterial, since gallery lighting is already baked into the photos.</li>
+<li>The building stays procedural. Great Court, drum, roof lattice, and gallery corridor are plain three.js geometry; only the exhibits are photographic.</li>
 </ol>
 
-<div class="gotcha"><strong>GOTCHA · REALISM BUDGET</strong><br>
-Photoreal museum interiors are an asset problem, not a rendering problem. The move that works in one self-contained file is picking objects whose identity survives simplification: a ring of fire, a pair of carved footprints, a gold silhouette. Architecture with strong geometry (the Great Court roof) reads as itself; sculpture reads through material and lighting.</div>
+<div class="gotcha"><strong>GOTCHA · NO OFFICIAL API</strong><br>
+The British Museum retired its SPARQL endpoint years ago and the collection site sits behind Cloudflare, so scripted access fails. Wikimedia Commons is the working path: a real API, high resolution photos of the same objects, and licenses (CC BY-SA, CC0) that only ask for attribution.</div>
 
 </article>
 
