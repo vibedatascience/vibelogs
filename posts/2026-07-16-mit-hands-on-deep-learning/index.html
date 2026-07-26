@@ -514,6 +514,9 @@ model   = keras.Model(inputs, outputs)</code></pre>
 <h3 id="l2-loss">Loss functions</h3>
 <ul>
 <li>The essence of training is to find the "best" values for the weights and biases, i.e. those that minimize a function that measures the discrepancy between the actual and predicted values. These functions are called loss functions in the DL world.</li>
+<li>If the predictions are close to the actual values, the loss would be small. A perfect model would have a loss of zero.</li>
+<li>In linear regression the error is quantified using sum of squared errors. So sum of squared errors is the loss function used in linear regression.</li>
+<li>The loss function we choose must be matched well with the kind of output that comes out of the model.</li>
 </ul>
 
 <script>
