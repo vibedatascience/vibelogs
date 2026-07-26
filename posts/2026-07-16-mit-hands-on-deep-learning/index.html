@@ -87,6 +87,7 @@ footer a{color:var(--muted)}
 <a class="sub" href="#l2-design">Design decisions</a>
 <a class="sub" href="#l2-training-recap">Training recap</a>
 <a class="sub" href="#l2-loss">Loss functions</a>
+<a class="sub" href="#l2-gd">Gradient descent</a>
 </nav>
 
 <header class="post">
@@ -555,6 +556,33 @@ model   = keras.Model(inputs, outputs)</code></pre>
 <li>Average this expression across all data points and you get the binary cross entropy loss function, the default for binary classification. When a giant network is trained on a binary classification problem, chances are this is the loss.</li>
 <li>This is just one loss function we can choose. There are others: the curve does not have to be a log, a linear penalty works too, and you can penalize one kind of mistake more than another (e.g. false negatives, or overestimates via the pinball loss). Hundreds of loss functions exist and a lot of DL breakthroughs are just clever loss definitions. The log version is picked because it is easy to work with, has good gradients, and is empirically very effective.</li>
 </ul>
+
+<h3 id="l2-gd">Gradient descent</h3>
+<ul>
+<li>Loss functions are just a particular kind of function, so first consider the general problem of minimizing an arbitrary function, then return to loss functions.</li>
+<li>Taking the derivative and setting it to 0 is the textbook move, but for complicated functions it is not clear at all what makes the derivative 0. The idea of the derivative is still the right idea.</li>
+<li>The derivative (slope) at a point tells us the change in g(w) for a small increase in w.</li>
+</ul>
+
+<table>
+<tr><th>If the derivative at w is</th><th>What it means</th><th>To minimize, do this</th></tr>
+<tr><td>positive</td><td>increasing w will increase g(w)</td><td>reduce w slightly</td></tr>
+<tr><td>negative</td><td>increasing w will decrease g(w)</td><td>increase w slightly</td></tr>
+<tr><td>~0</td><td>changing w won't change g(w)</td><td>stop</td></tr>
+</table>
+
+<ul>
+<li>The algorithm: start with some point w, calculate the derivative at w, adjust w per the table, and repeat until the derivative is ~0 or you hit max iterations or run out of time. This whole table collapses into one line:</li>
+</ul>
+
+<div class="pipeline">w  &#8592;  w - &#945; &#183; dg(w)/dw</div>
+
+<ul>
+<li>This is gradient descent, invented in 1847 by Cauchy. GPT-4 was built with the basic intuition of an algorithm from 1847.</li>
+<li>&#945; is the learning rate, our way of ensuring w changes only slightly, because the gradient is only valid for small movements around the current point. Typically small values (0.1, 0.001, 0.0001), determined by trial and error. Papers bury their learning rates in the appendix because they are part of the IP.</li>
+<li>On the demo quartic function, starting at w = 2.5 with &#945; = 1, the algorithm finds the minimum in a few iterations.</li>
+</ul>
+
 
 <div class="widget">
 <div class="wtitle">Log loss for the two cases, and the single BCE expression</div>
