@@ -80,14 +80,6 @@ footer a{color:var(--muted)}
 <a class="sub" href="#l1-wrap">Wrap-up</a>
 <a href="#lecture-02">Lecture 2</a>
 <a class="sub" href="#l2-design">Design decisions</a>
-<a class="sub" href="#l2-case">Case study</a>
-<a class="sub" href="#l2-keras">Keras</a>
-<a class="sub" href="#l2-loss">Loss functions</a>
-<a class="sub" href="#l2-gd">Gradient descent</a>
-<a class="sub" href="#l2-minima">Local minima</a>
-<a class="sub" href="#l2-backprop">Backprop</a>
-<a class="sub" href="#l2-sgd">SGD</a>
-<a class="sub" href="#l2-wrap">Wrap-up</a>
 </nav>
 
 <header class="post">
@@ -413,82 +405,13 @@ y  = &sigma;(0.05 - 0.2&middot;a1 - 0.3&middot;a2 - 0.15&middot;a3)</div>
 
 <table>
 <tr><th>Video</th><th>Slides</th><th>Length</th><th>Colab</th></tr>
-<tr><td><a href="https://www.youtube.com/watch?v=3Lr8nVUDCpk">YouTube</a></td><td><a href="https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/pages/lecture-slides/">OCW</a></td><td>78 min</td><td>none, still concepts. Colabs start next lecture.</td></tr>
+<tr><td><a href="https://www.youtube.com/watch?v=3Lr8nVUDCpk">YouTube</a></td><td><a href="https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/pages/lecture-slides/">OCW</a></td><td>78 min</td><td>none, still concepts</td></tr>
 </table>
 
 <h3 id="l2-design">Design decisions first</h3>
 <ul>
-<li>Before designing a neural network, separate what the problem hands you from what you have agency over. The input is the input and the output is the output. Everything in the middle is in your hands.</li>
-<li>Concretely, you have to decide how many hidden layers you want, how many neurons in each layer, and what activation to use. For the hidden layer activations there is nothing to decide: just go with ReLU.</li>
-<li>The rule of thumb, always: start with the simplest network you can think of. If it gets the job done, stop working on it. If it is not good enough, make it slightly more complicated.</li>
+<li>Before designing a neural network you have to think through how many hidden layers you want, how many neurons in each layer, and what activation function to use. For the hidden layer activations there is nothing to decide: just go with ReLU.</li>
 </ul>
-
-<h3 id="l2-case">Case study: heart disease</h3>
-<ul>
-<li>Cleveland Clinic dataset. Patients came in for something else, demographics and biomarkers were measured (age, gender, chest pain, blood pressure, cholesterol, sugar), then the clinic tracked whether each patient was diagnosed with heart disease in the next year. Binary classification.</li>
-<li>13 input variables become 29 after one-hot encoding the categorical ones.</li>
-<li>Zero hidden layers would be logistic regression, so the simplest neural network is one hidden layer. He tried 4, 8, 16 neurons; 16 did well and above 16 it started overfitting. So: 16 ReLU neurons, sigmoid output.</li>
-<li>Parameter count: 29&times;16 weights + 16 biases + 16&times;1 weights + 1 bias = 497. Going from a layer of A units to a layer of B units costs roughly A&times;B weights. Fully connected layers explode the parameter count, which is where overfitting risk comes from.</li>
-<li>When to use a neural network over logistic regression or trees: weigh how much interpretability matters to the consumer of the model against how much sheer predictive accuracy matters.</li>
-</ul>
-
-<h3 id="l2-keras">The whole model in four lines of Keras</h3>
-<pre><code>inputs  = keras.Input(shape=(29,))
-h       = keras.layers.Dense(16, activation="relu")(inputs)
-outputs = keras.layers.Dense(1, activation="sigmoid")(h)
-model   = keras.Model(inputs, outputs)</code></pre>
-<ul>
-<li>Dense means fully connected to the neighboring layers. Defining a layer and wiring it are separate steps: calling the layer on the previous layer's output variable is what connects them.</li>
-<li>The architecture is fixed before training. Keras cannot compute anything until it knows the full input to output path.</li>
-</ul>
-
-<h3 id="l2-loss">Loss functions</h3>
-<ul>
-<li>Training means finding values for the weights and biases so that predictions are as close to actuals as possible. Same as fitting linear or logistic regression, except regression tools hide the optimization and here we get to see it.</li>
-<li>A loss function quantifies the discrepancy between predicted and actual. He deliberately says discrepancy rather than error, because predicted minus actual is too limiting and a lot of deep learning breakthroughs are just clever loss definitions.</li>
-<li>Regression: mean squared error. Binary classification is harder because the prediction is a fraction from the sigmoid while the actual is 0 or 1.</li>
-<li>Intuition for y = 1: loss near 0 when the predicted probability is near 1, and huge when it is near 0. The more wrong the model is, the harder you penalize. Minus log p has exactly that shape. For y = 0, minus log(1 &minus; p) does the same job.</li>
-<li>The two cases combine into one expression with no if-then, averaged over all data points. That is binary cross entropy. If Google trains a giant network on a binary classification problem, chances are this is the loss.</li>
-</ul>
-
-<h3 id="l2-gd">Gradient descent</h3>
-<ul>
-<li>The derivative at a point tells you how the function changes for a small step. Positive slope: decrease w. Negative slope: increase w. Near zero: stop. That is the whole algorithm.</li>
-<li>One line: w_new = w_old &minus; &alpha; &times; gradient. Invented by Cauchy in 1847. GPT-4 was built with an algorithm from 1847.</li>
-<li>&alpha; is the learning rate, typically small (0.1, 0.01), because the gradient is only valid for small movements around the current point. Papers bury their learning rate schedules in the appendix because they are part of the IP.</li>
-<li>With many variables you take a partial derivative per weight and stack them into a vector, the gradient. The update formula is unchanged whether you have 2 parameters or 175 billion.</li>
-</ul>
-
-<h3 id="l2-minima">Local minima have not mattered</h3>
-<ul>
-<li>Gradient descent can stop at a local minimum or a saddle point with no guarantee of the global minimum. Empirically this has not hurt: a decent solution to a very complex network already solves the problem, and chasing the exact minimum of the training loss risks overfitting.</li>
-<li>To be at a local minimum, every direction around you must slope upward. With a billion dimensions the odds of that are tiny, so what you hit in practice is saddle points, and they are good enough.</li>
-<li>The global minimum on training data is not the global minimum on test data anyway.</li>
-</ul>
-
-<h3 id="l2-backprop">Backprop</h3>
-<ul>
-<li>Never say backpropagation. Backprop.</li>
-<li>Backprop is an efficient way to compute the gradient of the loss. Start at the output, step backwards layer by layer, and reuse every intermediate quantity instead of recomputing it. It is the chain rule organized to match the layer structure.</li>
-<li>Organized this way, the whole computation becomes a sequence of matrix multiplications, which is exactly the operation GPUs were built to accelerate for video game rendering. Backprop on GPUs is the seminal reason deep learning took off. AlexNet winning the 2012 computer vision competition is when the world noticed.</li>
-</ul>
-
-<h3 id="l2-sgd">Stochastic gradient descent</h3>
-<ul>
-<li>Computing the gradient over the full dataset at every step is expensive and may not even fit in memory. SGD grabs a small random minibatch (32 or 64 points, even from billions), computes the loss and gradient on just that, updates the weights once, then moves to the next minibatch. One iteration per minibatch.</li>
-<li>The minibatch gradient only approximates the true gradient, and it works extremely well in practice. There is no definitive theory for why yet. The noise even helps: the minibatch loss surface differs from the true one, so SGD can escape local minima of the actual loss function.</li>
-<li>SGD comes in many flavors. The course default is Adam.</li>
-</ul>
-
-<h3 id="l2-wrap">Wrap-up and Q&amp;A nuggets</h3>
-<ul>
-<li>The training loop: input flows through the layers, prediction comes out, loss compares it to the actuals, the optimizer computes the gradient, every layer's weights get updated by the gradient descent formula, repeat. This is how the heart disease model gets built, and GPT, and AlphaFold.</li>
-<li>Weights are initialized randomly but not carelessly. Schemes like He and Glorot initialization keep gradients from exploding or vanishing through deep networks. Keras defaults handle this.</li>
-<li>Why ReLU keeps winning: for positive inputs its gradient is exactly 1, so gradients flow backwards through it unsquished, while it still injects the minimum nonlinearity needed to do interesting things.</li>
-<li>Trained weights are the crown jewels. When Meta open sources Llama, what it is publishing is the weights, the output of all that compute and data.</li>
-<li>Next lecture: Keras for real in Colab, softmax for multi-class, epochs and batch sizes.</li>
-</ul>
-
 
 <script>
 // network term highlighter
