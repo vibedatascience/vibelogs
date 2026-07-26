@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Rahul">
+<title>A training week as one card | vibelogs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#FAFAF8;--ink:#17171C;--cobalt:#2545FF;--muted:#6E6E76;--rule:#E7E7E2;--chip:#EEF1FF}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:17px;line-height:1.7}
+.wrap{max-width:680px;margin:0 auto;padding:0 24px}
+.top{padding:40px 0 0;font-family:'IBM Plex Mono',monospace;font-size:0.8rem}
+.top a{color:var(--muted);text-decoration:none}
+.top a:hover{color:var(--cobalt)}
+header.post{padding:32px 0 24px;border-bottom:1px solid var(--rule)}
+.meta{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted);display:flex;gap:10px;align-items:center;margin-bottom:14px}
+.upd{color:var(--muted)}
+.tag{background:var(--chip);color:var(--cobalt);padding:1px 8px;border-radius:4px;font-weight:500}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.7rem,5vw,2.3rem);letter-spacing:-0.02em;line-height:1.2}
+article{padding:32px 0 60px}
+article h2{font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:1.3rem;margin:36px 0 12px}
+article p{margin:0 0 18px}
+article ol,article ul{margin:0 0 18px 22px}
+article li{margin-bottom:8px}
+article a{color:var(--cobalt)}
+pre{background:#111116;color:#E8E8EE;font-family:'IBM Plex Mono',monospace;font-size:0.82rem;line-height:1.55;padding:16px 18px;border-radius:8px;overflow-x:auto;margin:0 0 18px}
+code{font-family:'IBM Plex Mono',monospace;font-size:0.86em;background:var(--chip);padding:1px 5px;border-radius:4px}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;margin:0 0 18px;font-size:0.9rem}
+th,td{border:1px solid var(--rule);padding:8px 12px;text-align:left;vertical-align:top}
+th{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);background:#fff}
+.gotcha{border-left:3px solid var(--cobalt);padding:12px 16px;background:#fff;margin:0 0 18px}
+.gotcha strong{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;letter-spacing:0.08em;color:var(--cobalt)}
+.viz{margin:0 0 18px}
+.viz iframe{width:100%;height:680px;border:1px solid var(--rule);border-radius:8px;background:#fff}
+.viz .open{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;margin-top:8px}
+footer{border-top:1px solid var(--rule);padding:24px 0 56px;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted)}
+footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><a href="../../">← vibelogs</a></div>
+
+<header class="post">
+  <div class="meta"><span>[2026-07-26]</span><span>Rahul</span><span class="upd">updated 2026-07-26</span><span class="tag">NOTES</span></div>
+  <h1>A training week as one card</h1>
+</header>
+
+<article>
+<p>I wanted to lose the belly and get properly fit, so I worked out a week of training in a chat and then hit the real problem. A chat log is useless in a gym. You cannot scroll back three screens between sets to find out how many reps you are meant to do. So I asked for the same plan as a single page I could hold in one hand.</p>
+
+<div class="viz">
+<iframe src="card.html" title="Weekly training card" loading="lazy"></iframe>
+<div class="open"><a href="card.html">open full screen →</a></div>
+</div>
+
+<p>Tap the day strip to move through the week. Tap the circles as you finish each set and the bar under the header fills up. Every exercise carries a plain description of the movement and a link that opens a video search, since a still photo does not show you what a lift actually looks like.</p>
+
+<h2>The week</h2>
+<p>Four lifting sessions, one class, one easy cardio day, one walking day. Upper and lower body twice each. A four day split hits everything twice and survives a missed day far better than a five day one does.</p>
+
+<table>
+<tr><th>Day</th><th>Session</th><th>Why it sits there</th></tr>
+<tr><td>Sun</td><td>Legs</td><td>Hardest session, done first, while the week is still cheap</td></tr>
+<tr><td>Mon</td><td>Walk only</td><td>Soreness peaks around 48 hours and walking helps it</td></tr>
+<tr><td>Tue</td><td>Upper body, then easy cardio</td><td>Cardio tails a lifting day so it costs no extra trip</td></tr>
+<tr><td>Wed</td><td>Legs</td><td>Two clear days before the hard class</td></tr>
+<tr><td>Thu</td><td>Easy cardio</td><td>The boring session everybody skips</td></tr>
+<tr><td>Fri</td><td>Class</td><td>The one high intensity slot of the week</td></tr>
+<tr><td>Sat</td><td>Upper body</td><td>Same muscles as Tuesday, different angles</td></tr>
+</table>
+
+<p>The reasoning that took the longest was the easy cardio. It is the piece most people drop because it feels like nothing is happening, and it is the piece that builds the base everything else sits on.</p>
+
+<h2>Design</h2>
+<p>The whole page assumes you are standing up, holding a phone in one hand, slightly out of breath. Everything else follows from that. Headings are set in condensed type large enough to read at arm's length, each block fits roughly one screen, and the tap targets for the set counters are big enough to hit without looking carefully.</p>
+
+<p>There is no build step and no framework. It is one HTML file with an inline style block and about sixty lines of JavaScript, same as everything else here.</p>
+
+<div class="gotcha"><strong>GOTCHA · STATE</strong><br>Set check marks live in a plain JavaScript object and reset when the tab closes. Persisting them would mean storage and a sync story, and I would rather find out whether I use this for two weeks before building that.</div>
+
+<h2>What the plan actually says</h2>
+<p>The training is the easy half. The five rules at the bottom of the card are the half that decides whether any of it works: log every weight, eat at a modest deficit rather than a punishing one, get protein at every meal, keep drinking down to a few a week with none on lifting days, and judge the scale on a weekly average instead of a daily number.</p>
+
+<p>The deficit is set at roughly 400 calories under maintenance, not more. At a normal starting weight the belly is a body composition problem rather than a weight problem, and cutting harder mostly costs you muscle, which makes the waist read softer rather than tighter.</p>
+</article>
+
+<footer>
+  <a href="../../">← all logs</a>
+</footer>
+</div>
+</body>
+</html>

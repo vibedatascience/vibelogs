@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 1 training card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#16181D;
+  --paper:#E9EAEC;
+  --card:#FFFFFF;
+  --red:#D71E28;
+  --steel:#2C4A73;
+  --mute:#767C87;
+  --line:#D3D6DB;
+  --display:"Oswald","Arial Narrow",Impact,sans-serif;
+  --body:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --data:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--body);
+  line-height:1.5;
+  padding:0 0 64px;
+}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+.masthead{
+  background:var(--ink);
+  color:var(--paper);
+  padding:26px 0 0;
+  margin-bottom:0;
+}
+.masthead .wrap{padding-bottom:0}
+.eyebrow{
+  font-family:var(--data);
+  font-size:11px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:#9AA1AC;
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:12px;
+}
+.eyebrow .live{color:var(--red)}
+.daytitle{
+  font-family:var(--display);
+  font-weight:700;
+  font-size:clamp(46px,14vw,88px);
+  line-height:.92;
+  letter-spacing:-.01em;
+  text-transform:uppercase;
+  margin:10px 0 2px;
+}
+.daysub{
+  font-family:var(--display);
+  font-weight:400;
+  font-size:clamp(15px,4vw,19px);
+  letter-spacing:.03em;
+  text-transform:uppercase;
+  color:#9AA1AC;
+  padding-bottom:18px;
+}
+.daysub b{color:var(--paper);font-weight:600}
+
+.rail{
+  display:flex;
+  gap:0;
+  overflow-x:auto;
+  scrollbar-width:none;
+  border-top:1px solid #2C3037;
+}
+.rail::-webkit-scrollbar{display:none}
+.rail button{
+  flex:1 0 auto;
+  min-width:82px;
+  background:none;
+  border:none;
+  border-right:1px solid #2C3037;
+  color:#8C939E;
+  font-family:var(--display);
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  padding:11px 8px 12px;
+  cursor:pointer;
+  text-align:left;
+  transition:background .15s,color .15s;
+}
+.rail button:last-child{border-right:none}
+.rail button .d{display:block;font-size:11px;font-family:var(--data);letter-spacing:.1em;color:#6B7280}
+.rail button .n{display:block;font-size:15px;font-weight:600;margin-top:3px}
+.rail button:hover{background:#22252B;color:var(--paper)}
+.rail button:focus-visible{outline:2px solid var(--red);outline-offset:-2px}
+.rail button[aria-selected="true"]{background:var(--red);color:#fff}
+.rail button[aria-selected="true"] .d{color:#F6C3C6}
+
+.bar{
+  height:5px;
+  background:#2C3037;
+  position:relative;
+}
+.bar span{
+  position:absolute;
+  inset:0 auto 0 0;
+  width:0;
+  background:var(--red);
+  transition:width .25s ease;
+}
+
+.block{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-top:none;
+}
+.block:first-of-type{border-top:1px solid var(--line)}
+.blockhead{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:12px;
+  padding:14px 18px;
+  border-bottom:1px solid var(--line);
+  background:#F6F7F8;
+}
+.blockhead h2{
+  font-family:var(--display);
+  font-size:16px;
+  font-weight:600;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+.blockhead .meta{
+  font-family:var(--data);
+  font-size:11px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--mute);
+}
+
+.note{padding:16px 18px;font-size:15px;color:#3A3F47}
+.note p+p{margin-top:10px}
+.note strong{color:var(--ink)}
+
+ul.plain{padding:4px 18px 18px;list-style:none}
+ul.plain li{
+  position:relative;
+  padding:8px 0 8px 22px;
+  font-size:15px;
+  border-bottom:1px dotted var(--line);
+  color:#3A3F47;
+}
+ul.plain li:last-child{border-bottom:none}
+ul.plain li::before{
+  content:"";
+  position:absolute;
+  left:2px;top:16px;
+  width:7px;height:7px;
+  background:var(--steel);
+}
+
+.ex{
+  display:grid;
+  grid-template-columns:34px 1fr auto;
+  gap:0 12px;
+  padding:14px 18px;
+  border-bottom:1px solid var(--line);
+  align-items:start;
+}
+.ex:last-child{border-bottom:none}
+.ex .idx{
+  font-family:var(--data);
+  font-size:12px;
+  color:var(--mute);
+  padding-top:3px;
+}
+.ex .name{
+  font-family:var(--display);
+  font-size:19px;
+  font-weight:600;
+  letter-spacing:.02em;
+  text-transform:uppercase;
+  line-height:1.15;
+}
+.ex .cue{
+  font-size:14px;
+  color:#565C65;
+  margin-top:4px;
+  max-width:46ch;
+}
+.ex .link{
+  display:inline-block;
+  margin-top:7px;
+  font-family:var(--data);
+  font-size:11px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--steel);
+  text-decoration:none;
+  border-bottom:1px solid #B9C4D4;
+  padding-bottom:1px;
+}
+.ex .link:hover{color:var(--red);border-color:var(--red)}
+.ex .right{text-align:right;padding-top:2px}
+.ex .scheme{
+  font-family:var(--data);
+  font-size:13px;
+  font-weight:600;
+  white-space:nowrap;
+}
+.dots{display:flex;gap:6px;justify-content:flex-end;margin-top:9px}
+.dots button{
+  width:22px;height:22px;
+  border:2px solid var(--line);
+  border-radius:50%;
+  background:#fff;
+  cursor:pointer;
+  padding:0;
+  transition:background .12s,border-color .12s,transform .12s;
+}
+.dots button:hover{border-color:var(--mute)}
+.dots button:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.dots button[aria-pressed="true"]{
+  background:var(--red);
+  border-color:var(--red);
+}
+
+.tail{
+  padding:16px 18px;
+  font-size:14px;
+  color:#565C65;
+  background:#F6F7F8;
+  border-top:1px solid var(--line);
+}
+.tail b{color:var(--ink)}
+
+.rules{margin-top:26px}
+.rules .blockhead{background:var(--ink);border-color:var(--ink)}
+.rules .blockhead h2{color:var(--paper)}
+.rules .blockhead .meta{color:#8C939E}
+.rulelist{list-style:none;counter-reset:r}
+.rulelist li{
+  counter-increment:r;
+  display:grid;
+  grid-template-columns:38px 1fr;
+  gap:12px;
+  padding:14px 18px;
+  border-bottom:1px solid var(--line);
+  font-size:15px;
+  color:#3A3F47;
+}
+.rulelist li:last-child{border-bottom:none}
+.rulelist li::before{
+  content:counter(r,decimal-leading-zero);
+  font-family:var(--data);
+  font-size:12px;
+  color:var(--red);
+  padding-top:3px;
+}
+.rulelist b{display:block;font-family:var(--display);font-size:16px;letter-spacing:.03em;text-transform:uppercase;color:var(--ink);margin-bottom:2px}
+
+.resetrow{
+  display:flex;
+  justify-content:flex-end;
+  padding:14px 0 0;
+}
+.resetrow button{
+  background:none;
+  border:1px solid var(--line);
+  color:var(--mute);
+  font-family:var(--data);
+  font-size:11px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  padding:8px 14px;
+  cursor:pointer;
+}
+.resetrow button:hover{border-color:var(--red);color:var(--red)}
+
+.foot{
+  margin-top:28px;
+  font-family:var(--data);
+  font-size:11px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--mute);
+  text-align:center;
+}
+
+@media (max-width:520px){
+  .ex{grid-template-columns:26px 1fr;}
+  .ex .right{grid-column:2;text-align:left;padding-top:10px}
+  .dots{justify-content:flex-start}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span>Week 1 of 12</span>
+      <span class="live" id="progressLabel">0 of 0 sets done</span>
+    </div>
+    <h1 class="daytitle" id="dayTitle">Legs</h1>
+    <div class="daysub" id="daySub"></div>
+  </div>
+  <nav class="rail" id="rail" role="tablist" aria-label="Days of the week"></nav>
+  <div class="bar"><span id="progressBar"></span></div>
+</header>
+
+<main class="wrap" id="main"></main>
+
+<div class="wrap">
+  <section class="block rules">
+    <div class="blockhead"><h2>The five rules</h2><span class="meta">Read once</span></div>
+    <ol class="rulelist">
+      <li><span><b>Write down every weight</b>Phone notes is fine. Next time you do that exercise, beat it by one rep or a little weight. If the numbers never move, your body has no reason to change.</span></li>
+      <li><span><b>Eat about 1,850 calories</b>Your maintenance is around 2,300. This puts you at roughly one pound of fat a week. Going lower does not speed it up, it just costs you muscle.</span></li>
+      <li><span><b>Protein at every meal</b>Aim for 140 to 155 grams a day. A palm sized portion of chicken, fish, eggs, paneer, or greek yogurt, four times a day, gets you most of the way.</span></li>
+      <li><span><b>Three or four drinks a week, none on lifting days</b>You do not have to quit. Beer is roughly 180 calories each and it wrecks the sleep you need to recover.</span></li>
+      <li><span><b>Weigh daily, judge weekly</b>Same time each morning, before eating. Only look at the seven day average. Day to day swings of two or three pounds are water and mean nothing.</span></li>
+    </ol>
+  </section>
+
+  <div class="resetrow"><button type="button" id="reset">Clear all check marks</button></div>
+  <p class="foot">Starting point 153.8 lb &middot; 5 ft 6 &middot; Target around 141 lb by late October</p>
+</div>
+
+<script>
+const days = [
+  {
+    key:"sun", dow:"Sun", date:"26 Jul", label:"Today",
+    title:"Legs", sub:"About 75 minutes. First session, so this is about finding your weights, not proving anything.",
+    warm:{time:"10 min", items:[
+      "Weigh yourself before you eat anything and write the number down. This is your baseline for the next twelve weeks.",
+      "Five minutes easy on a bike or a treadmill until you are slightly warm.",
+      "Fifteen bodyweight squats, slow.",
+      "Ten leg swings forward and back on each leg, holding a rack for balance."
+    ]},
+    ex:[
+      {n:"Back squat", s:4, r:"8", cue:"Bar resting on your upper back, feet about shoulder width. Sit down between your heels until your thighs are level with the floor, then stand back up. Start with the empty bar for a set to find your depth.", q:"how to barbell back squat"},
+      {n:"Stiff leg deadlift", s:3, r:"8", cue:"Hold the bar against your thighs. Push your hips backward and let the bar slide down your legs until you feel a stretch behind your knees. Stand back up. Your back stays flat the whole time.", q:"romanian deadlift form"},
+      {n:"Leg press", s:3, r:"12", cue:"Sit in the machine and push the platform away with your feet. Stop just short of locking your knees at the top.", q:"leg press machine how to"},
+      {n:"Leg curl", s:3, r:"12", cue:"Lying or seated machine, whichever your gym has. Curl your heels toward your backside against the pad.", q:"hamstring leg curl machine"},
+      {n:"Calf raise", s:3, r:"15", cue:"Stand with the balls of your feet on a step or a block. Let your heels drop, then push up onto your toes.", q:"standing calf raise"},
+      {n:"Plank", s:3, r:"45 sec", cue:"Forearms on the floor, body in one straight line from your head to your heels. Squeeze your stomach and your backside.", q:"how to do a plank correctly"}
+    ],
+    tail:"Afterwards: write down every weight you used, then walk 20 to 30 minutes in the evening. Eat normally today. Start the food changes tomorrow so you are not changing two things at once."
+  },
+  {
+    key:"mon", dow:"Mon", date:"27 Jul", label:"Recover",
+    title:"Walk only", sub:"No gym. Your legs will be sore from yesterday and that is expected.",
+    warm:null,
+    ex:[],
+    note:[
+      "<p><strong>Walk 8,000 to 10,000 steps.</strong> Split it up however works. A loop along the water and back covers a good chunk of it.</p>",
+      "<p><strong>Today is when the food changes start.</strong> Around 1,850 calories, with protein at every meal. Track it for the first two weeks so you learn what portions actually look like, then stop counting so carefully.</p>",
+      "<p><strong>Soreness peaks about 48 hours in.</strong> Walking helps it. Sitting still all day makes it worse.</p>"
+    ].join(""),
+    tail:"If you are too sore to walk normally on Tuesday, you went too heavy on Sunday. Drop the weight ten percent next legs day."
+  },
+  {
+    key:"tue", dow:"Tue", date:"28 Jul", label:"Lift",
+    title:"Upper body", sub:"About 70 minutes of lifting, then 25 easy minutes of cardio.",
+    warm:{time:"8 min", items:[
+      "Five minutes on a rower or a bike, easy.",
+      "Two light sets of the first exercise before you start counting sets.",
+      "Twenty arm circles each direction."
+    ]},
+    ex:[
+      {n:"Bench press", s:4, r:"8", cue:"Lie flat on the bench, lower the bar to the middle of your chest under control, press it back up. If there is nobody to spot you, use dumbbells instead.", q:"barbell bench press form"},
+      {n:"Barbell row", s:4, r:"8", cue:"Bend forward at the hips with a flat back, bar hanging at arms length. Pull it into your stomach, lower it slowly.", q:"bent over barbell row form"},
+      {n:"Overhead press", s:3, r:"10", cue:"Standing or seated. Press the bar or dumbbells from your shoulders straight up over your head.", q:"overhead shoulder press form"},
+      {n:"Lat pulldown", s:3, r:"10", cue:"Grab the wide bar, lean back slightly, pull it down toward your collarbone. Do this instead of pullups until you can do six clean ones.", q:"lat pulldown proper form"},
+      {n:"Side raise", s:3, r:"15", cue:"Light dumbbells, lighter than you think. Raise your arms out to the sides until they are level with your shoulders. This is the exercise that makes a shorter frame read lean, so do not skip it.", q:"dumbbell lateral raise form"},
+      {n:"Bicep curl", s:3, r:"12", cue:"Dumbbells or a bar, elbows tucked at your sides. Curl up, lower slowly.", q:"dumbbell bicep curl form"}
+    ],
+    tail:"Then 25 minutes easy on a bike or an inclined treadmill. Go slow enough that you could hold a conversation but would rather not. This is the piece most people skip and it is the one that builds actual fitness."
+  },
+  {
+    key:"wed", dow:"Wed", date:"29 Jul", label:"Lift",
+    title:"Legs", sub:"About 75 minutes. Different exercises, same job as Sunday.",
+    warm:{time:"10 min", items:[
+      "Five minutes easy on a bike.",
+      "Fifteen bodyweight squats and ten leg swings each leg.",
+      "Two light sets of deadlifts before you start counting."
+    ]},
+    ex:[
+      {n:"Deadlift", s:3, r:"5", cue:"Bar on the floor over your mid foot. Grip it, chest up, back flat, then stand up with it by pushing the floor away. Set it down and reset between every rep. Go light until the movement feels automatic.", q:"conventional deadlift form beginner"},
+      {n:"Split squat", s:3, r:"10 each", cue:"Back foot resting on a bench behind you, front foot a stride forward. Drop straight down, then push back up through your front heel. Hold dumbbells once bodyweight gets easy.", q:"bulgarian split squat form"},
+      {n:"Leg extension", s:3, r:"12", cue:"Sit in the machine, straighten your knees against the pad, lower slowly.", q:"leg extension machine"},
+      {n:"Hip thrust", s:3, r:"10", cue:"Upper back against the side of a bench, barbell or a heavy dumbbell across your hips on a pad. Drive your hips up until your body is level, squeeze, lower.", q:"barbell hip thrust form"},
+      {n:"Calf raise", s:3, r:"15", cue:"Same as Sunday. Full stretch at the bottom, full rise at the top.", q:"standing calf raise"},
+      {n:"Hanging knee raise", s:3, r:"10", cue:"Hang from a pullup bar and pull your knees up toward your chest without swinging. If your grip gives out first, use the arm rest station instead.", q:"hanging knee raise form"}
+    ],
+    tail:"Write the weights down. Compare them to Sunday for the exercises that repeat. That comparison is the whole point of the log."
+  },
+  {
+    key:"thu", dow:"Thu", date:"30 Jul", label:"Cardio",
+    title:"Easy cardio", sub:"Thirty to forty minutes. Nothing hard.",
+    warm:null,
+    ex:[],
+    note:[
+      "<p><strong>Thirty to forty minutes on a bike, a rower, or a treadmill set to an incline.</strong> The test is that you can talk in full sentences but you would rather not. If you are gasping, slow down. If you could sing, speed up.</p>",
+      "<p><strong>This is the boring one and it matters more than it looks.</strong> It lowers your resting heart rate, improves how fast you recover between sets, and builds the base that makes Friday tolerable.</p>",
+      "<p><strong>Keep the steps up on top of this.</strong> Cardio at the gym does not replace walking during the day.</p>"
+    ].join(""),
+    tail:"Keep it genuinely easy. If Thursday leaves you tired, Friday and Saturday both get worse."
+  },
+  {
+    key:"fri", dow:"Fri", date:"31 Jul", label:"Class",
+    title:"Barry's", sub:"Your one hard session of the week. Placed two days after legs on purpose.",
+    warm:null,
+    ex:[],
+    note:[
+      "<p><strong>One class, and one only.</strong> It covers the high intensity slot, which is the part that raises your VO2 max. That is the fitness marker most tied to long term health.</p>",
+      "<p><strong>Take the treadmill work seriously and the floor weights lightly.</strong> The weight portion of these classes is too light to build muscle, so treat it as extra conditioning. Your four gym sessions do the building.</p>",
+      "<p><strong>Eat properly beforehand.</strong> Doing a class like this on an empty stomach in a calorie deficit is how you end up dizzy and skipping next week.</p>"
+    ].join(""),
+    tail:"If you ever have to choose between Barry's and a lifting session, drop Barry's. The lifting is what changes your shape."
+  },
+  {
+    key:"sat", dow:"Sat", date:"1 Aug", label:"Lift",
+    title:"Upper body", sub:"About 65 minutes. Same muscles as Tuesday, different angles.",
+    warm:{time:"8 min", items:[
+      "Five minutes easy on a rower or a bike.",
+      "Two light sets of the first exercise.",
+      "Twenty arm circles each direction."
+    ]},
+    ex:[
+      {n:"Incline dumbbell press", s:4, r:"8", cue:"Bench set to about 30 degrees. Press two dumbbells from your upper chest straight up.", q:"incline dumbbell press form"},
+      {n:"Chest supported row", s:4, r:"10", cue:"Lie face down on an inclined bench with dumbbells hanging below you, or use the machine version. Pull the weights toward your ribs.", q:"chest supported dumbbell row"},
+      {n:"Dumbbell shoulder press", s:3, r:"10", cue:"Seated with back support. Press the dumbbells overhead until your arms are straight.", q:"seated dumbbell shoulder press"},
+      {n:"Face pull", s:3, r:"15", cue:"Rope attachment on a cable set at head height. Pull the rope toward your face and pull your hands apart at the end. Good for posture and for shoulders that sit at a desk all week.", q:"cable face pull form"},
+      {n:"Side raise", s:3, r:"15", cue:"Same as Tuesday. Light weight, controlled, no swinging.", q:"dumbbell lateral raise form"},
+      {n:"Triceps pushdown", s:3, r:"12", cue:"Cable machine, elbows pinned at your sides. Push the bar or rope down until your arms are straight.", q:"tricep pushdown form"}
+    ],
+    tail:"That closes week one: four lifting sessions, one class, one easy cardio day, one walking day. Next week you repeat it and try to beat the numbers you wrote down."
+  }
+];
+
+const rail = document.getElementById("rail");
+const main = document.getElementById("main");
+const dayTitle = document.getElementById("dayTitle");
+const daySub = document.getElementById("daySub");
+const bar = document.getElementById("progressBar");
+const label = document.getElementById("progressLabel");
+const state = {};
+days.forEach(d => state[d.key] = {});
+let active = "sun";
+
+days.forEach(d => {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.setAttribute("role","tab");
+  b.innerHTML = '<span class="d">' + d.dow + " " + d.date + '</span><span class="n">' + d.label + "</span>";
+  b.onclick = () => { active = d.key; render(); };
+  rail.appendChild(b);
+});
+
+function render(){
+  const d = days.find(x => x.key === active);
+  dayTitle.textContent = d.title;
+  daySub.innerHTML = d.sub;
+  [...rail.children].forEach((b,i) => b.setAttribute("aria-selected", days[i].key === active));
+
+  let html = "";
+  if(d.warm){
+    html += '<section class="block"><div class="blockhead"><h2>Warm up</h2><span class="meta">' + d.warm.time + '</span></div><ul class="plain">';
+    d.warm.items.forEach(i => html += "<li>" + i + "</li>");
+    html += "</ul></section>";
+  }
+  if(d.ex.length){
+    const total = d.ex.reduce((a,e) => a + e.s, 0);
+    html += '<section class="block"><div class="blockhead"><h2>The session</h2><span class="meta">' + d.ex.length + " exercises &middot; " + total + ' sets</span></div>';
+    d.ex.forEach((e,i) => {
+      const idx = String(i+1).padStart(2,"0");
+      let dots = "";
+      for(let s=0;s<e.s;s++){
+        const on = state[d.key][i+"_"+s] ? "true" : "false";
+        dots += '<button type="button" aria-pressed="' + on + '" aria-label="Set ' + (s+1) + ' of ' + e.s + '" data-ex="' + i + '" data-set="' + s + '"></button>';
+      }
+      html += '<div class="ex"><div class="idx">' + idx + '</div><div><div class="name">' + e.n + '</div><div class="cue">' + e.cue + '</div><a class="link" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=' + encodeURIComponent(e.q) + '">Watch how it looks</a></div><div class="right"><div class="scheme">' + e.s + " &times; " + e.r + '</div><div class="dots">' + dots + "</div></div></div>";
+    });
+    html += "</section>";
+  }
+  if(d.note){
+    html += '<section class="block"><div class="blockhead"><h2>What to do</h2><span class="meta">No gym</span></div><div class="note">' + d.note + "</div></section>";
+  }
+  if(d.tail){
+    html += '<section class="block"><div class="tail">' + d.tail + "</div></section>";
+  }
+  main.innerHTML = html;
+
+  main.querySelectorAll(".dots button").forEach(b => {
+    b.onclick = () => {
+      const k = b.dataset.ex + "_" + b.dataset.set;
+      state[d.key][k] = !state[d.key][k];
+      b.setAttribute("aria-pressed", state[d.key][k] ? "true" : "false");
+      updateBar();
+    };
+  });
+  updateBar();
+}
+
+function updateBar(){
+  const d = days.find(x => x.key === active);
+  const total = d.ex.reduce((a,e) => a + e.s, 0);
+  const done = Object.values(state[d.key]).filter(Boolean).length;
+  bar.style.width = total ? (done/total*100) + "%" : "0%";
+  label.textContent = total ? done + " of " + total + " sets done" : "Rest day";
+}
+
+document.getElementById("reset").onclick = () => {
+  days.forEach(d => state[d.key] = {});
+  render();
+};
+
+render();
+</script>
+</body>
+</html>
