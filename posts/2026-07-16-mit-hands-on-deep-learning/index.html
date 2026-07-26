@@ -517,7 +517,37 @@ model   = keras.Model(inputs, outputs)</code></pre>
 <li>If the predictions are close to the actual values, the loss would be small. A perfect model would have a loss of zero.</li>
 <li>In linear regression the error is quantified using sum of squared errors. So sum of squared errors is the loss function used in linear regression.</li>
 <li>The loss function we choose must be matched well with the kind of output that comes out of the model.</li>
+<li>Mean Squared Error (MSE) loss is commonly used for general numerical outputs.</li>
 </ul>
+
+<div class="widget">
+<div class="wtitle">MSE loss</div>
+<svg viewBox="0 0 1100 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MSE formula: one over n times the sum over data points of actual minus predicted, squared">
+<style>
+.mf{font-family:'IBM Plex Mono',monospace;font-size:34px;fill:#17171C}
+.msm{font-family:'IBM Plex Mono',monospace;font-size:18px;fill:#17171C}
+.man{font-family:'IBM Plex Mono',monospace;font-size:19px;fill:#2545FF}
+.mfr{stroke:#17171C;stroke-width:2.5}
+.mar{stroke:#2545FF;stroke-width:2.5;fill:none}
+</style>
+<text class="mf" x="60" y="130">MSE =</text>
+<text class="mf" x="215" y="105" text-anchor="middle">1</text>
+<line class="mfr" x1="195" y1="118" x2="235" y2="118"/>
+<text class="mf" x="215" y="160" text-anchor="middle">n</text>
+<text class="msm" x="290" y="75" text-anchor="middle">n</text>
+<text class="mf" x="290" y="132" text-anchor="middle" font-size="52">&#931;</text>
+<text class="msm" x="290" y="175" text-anchor="middle">i=1</text>
+<text class="mf" x="340" y="130">( y<tspan baseline-shift="super" font-size="19">(i)</tspan> - model(x<tspan baseline-shift="super" font-size="19">(i)</tspan>) )<tspan baseline-shift="super" font-size="19">2</tspan></text>
+<path class="mar" d="M395 150 v40"/>
+<path d="M395 150 l-6 10 h12 z" fill="#2545FF"/>
+<text class="man" x="395" y="218" text-anchor="middle">actual value of</text>
+<text class="man" x="395" y="242" text-anchor="middle">ith data point</text>
+<path class="mar" d="M640 150 v40"/>
+<path d="M640 150 l-6 10 h12 z" fill="#2545FF"/>
+<text class="man" x="640" y="218" text-anchor="middle">predicted value of</text>
+<text class="man" x="640" y="242" text-anchor="middle">ith data point</text>
+</svg>
+</div>
 
 <script>
 // network term highlighter
