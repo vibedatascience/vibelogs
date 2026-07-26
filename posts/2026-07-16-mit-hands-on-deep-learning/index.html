@@ -81,6 +81,7 @@ footer a{color:var(--muted)}
 <a href="#lecture-02">Lecture 2</a>
 <a class="sub" href="#l2-design">Design decisions</a>
 <a class="sub" href="#l2-training-recap">Training recap</a>
+<a class="sub" href="#l2-loss">Loss functions</a>
 </nav>
 
 <header class="post">
@@ -469,6 +470,11 @@ model   = keras.Model(inputs, outputs)</code></pre>
 <li>Training is finding values for the weights/coefficients so that the model's predictions come as close to the actual values as possible.</li>
 <li>lm and glm use optimization algorithms under the hood to find these best values. You never had to see the optimization for regression. For neural networks we get to see how it is done.</li>
 <li>Basically every trained model, even GPT, is the same thing. You have a skeleton of the model that lays out all the parameters, the weights and biases, and you have data. Then you use an optimization algorithm to minimize the loss, i.e. make the model's predictions as close to the actual values as possible.</li>
+</ul>
+
+<h3 id="l2-loss">Loss functions</h3>
+<ul>
+<li>The essence of training is to find the "best" values for the weights and biases, i.e. those that minimize a function that measures the discrepancy between the actual and predicted values. These functions are called loss functions in the DL world.</li>
 </ul>
 
 <script>
