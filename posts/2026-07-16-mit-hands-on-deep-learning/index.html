@@ -34,6 +34,10 @@ th,td{border:1px solid var(--rule);padding:8px 12px;text-align:left;vertical-ali
 th{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);background:#fff}
 .gotcha{border-left:3px solid var(--cobalt);padding:12px 16px;background:#fff;margin:0 0 18px}
 .gotcha strong{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;letter-spacing:0.08em;color:var(--cobalt)}
+details{border:1px solid var(--rule);border-radius:8px;padding:10px 16px;margin:0 0 10px;background:#fff}
+details summary{cursor:pointer;font-weight:500;color:var(--ink)}
+details summary::marker{color:var(--cobalt)}
+details p{margin:10px 0 4px;color:var(--ink)}
 .pipeline{font-family:'IBM Plex Mono',monospace;font-size:0.8rem;background:#fff;border:1px solid var(--rule);border-radius:8px;padding:16px 18px;margin:0 0 18px;overflow-x:auto;white-space:pre;line-height:1.8;color:var(--ink)}
 .pipeline b{color:var(--cobalt);font-weight:500}
 .toc{position:fixed;top:120px;left:calc(50% - 340px - 200px);width:170px;font-family:'IBM Plex Mono',monospace;font-size:0.72rem;line-height:1.5}
@@ -78,6 +82,7 @@ footer a{color:var(--muted)}
 <a class="sub" href="#l1-parameters">Parameters</a>
 <a class="sub" href="#l1-trained">Trained net</a>
 <a class="sub" href="#l1-wrap">Wrap-up</a>
+<a class="sub" href="#l1-qa">Q&amp;A</a>
 <a href="#lecture-02">Lecture 2</a>
 <a class="sub" href="#l2-design">Design decisions</a>
 <a class="sub" href="#l2-training-recap">Training recap</a>
@@ -402,6 +407,40 @@ y  = &sigma;(0.05 - 0.2&middot;a1 - 0.3&middot;a2 - 0.15&middot;a3)</div>
 <li>The split to remember: inputs and outputs are given by the problem. Hidden layers, neurons per layer, and hidden activations are yours to choose. The output activation must match the output type.</li>
 <li>Next lecture: how training actually finds the weights (loss functions, gradient descent), then ResNet gets fine-tuned in class, the first network to surpass human-level performance in image classification.</li>
 </ul>
+
+
+<h3 id="l1-qa">Q&amp;A from the room</h3>
+
+<details><summary>Why doesn't rules-based AI work?</summary>
+<p>Being time-intensive is not the real issue, computers keep getting faster. The killer is that hand-written rules do not generalize: there are an infinite number of new situations the rules never catered for.</p></details>
+
+<details><summary>How do you trust a model when the training labels themselves can be wrong?</summary>
+<p>Labels come from humans, e.g. radiologists marking mammograms, and that human judgment is the ground truth the model trains on. Labels will be wrong some small fraction of the time, so data needs to be complete, comprehensive, and correctly labeled. That said, neural networks still do a pretty good job even with some noise in the labels.</p></details>
+
+<details><summary>Will the class cover robotics and embodiment?</summary>
+<p>No, robots are embodied intelligence and there is no time for robotics, but much of what the class covers transfers.</p></details>
+
+<details><summary>Why write the model in graphical network form at all?</summary>
+<p>Partly usability when many functions flow through the network. The bigger point: the moment you draw it, you realize you could put lots of things in the middle instead of going straight from input to output.</p></details>
+
+<details><summary>Do we know which path an input took through the network? Who controls the number of layers?</summary>
+<p>For any input we know exactly how it flows through the network. The explainability problem is attribution: the attributes get enmeshed together, so we cannot easily give credit to any one of them. And the designer decides the number of layers and everything else in the middle.</p></details>
+
+<details><summary>Which functions have to be linear, and why?</summary>
+<p>The activations f(x) have to be nonlinear. A neuron is a linear function followed by a nonlinear activation.</p></details>
+
+<details><summary>How do you gauge which activation function suits your use case?</summary>
+<p>Hidden layers: use ReLU, it does an amazing job empirically. Output layer: you have no choice, the nature of the output dictates it. One probability means sigmoid; ten probabilities that must sum to 1 means softmax.</p></details>
+
+<details><summary>Can the network determine its own layers dynamically?</summary>
+<p>Not during training, the architecture stays fixed for optimization reasons. Searching over architectures is its own field, neural architecture search (NAS). The related trick the class will cover is dropout: randomly dropping nodes in a layer on each pass, an effective way to prevent overfitting.</p></details>
+
+<details><summary>Do we set the coefficients ourselves?</summary>
+<p>No. The whole name of the game is that training data plus a loss function plus an optimization algorithm let the network figure out its own weights so as to minimize prediction error.</p></details>
+
+<details><summary>What exactly is a node?</summary>
+<p>A linear function followed by a nonlinear activation. It receives a bunch of inputs, runs them through the linear function, passes the result through a ReLU or sigmoid, and out pops one number.</p></details>
+
 
 <h2 id="lecture-02">Lecture 2: Loss functions, gradient descent, SGD, backprop</h2>
 
