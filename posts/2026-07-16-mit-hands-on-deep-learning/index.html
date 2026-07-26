@@ -88,6 +88,10 @@ footer a{color:var(--muted)}
 <a class="sub" href="#l2-training-recap">Training recap</a>
 <a class="sub" href="#l2-loss">Loss functions</a>
 <a class="sub" href="#l2-gd">Gradient descent</a>
+<a class="sub" href="#l2-minloss">Minimizing the loss</a>
+<a class="sub" href="#l2-backprop">Backprop</a>
+<a class="sub" href="#l2-sgd">SGD</a>
+<a class="sub" href="#l2-flow">Training flow</a>
 </nav>
 
 <header class="post">
@@ -641,6 +645,50 @@ model   = keras.Model(inputs, outputs)</code></pre>
 
 <div class="gotcha"><strong>MENTAL MODEL &#183; WHEN DOES IT STOP</strong><br>
 Gradient descent stops when the slope is approximately zero or when you hit max iterations or run out of compute, whichever comes first. Approximately, never exactly: the steps are discrete, so you land near the flat point, not on it. And slope ~0 only says the ground is flat where you stand. It could be a local minimum, the global minimum, or a saddle point, and the algorithm cannot tell which. In practice nobody loses sleep over this: a decent flat spot on the training loss is usually good enough, and chasing the exact global minimum risks overfitting anyway.</div>
+
+<h3 id="l2-minloss">Minimizing the loss function</h3>
+<ul>
+<li>Back to the BCE loss. The variables to change to minimize it are the parameters hiding inside the model term: w1, w2, ..., w13. The values of x and y, on the other hand, are just data. You optimize weights, never data.</li>
+<li>Imagine replacing model(x) with its full mathematical expression wherever it appears in the loss. Now the loss is just a good old function of the w's, and you apply gradient descent to it as you normally would.</li>
+</ul>
+
+<h3 id="l2-backprop">Backprop</h3>
+<ul>
+<li>Never say backpropagation. Backprop.</li>
+<li>Backprop is an efficient way to compute the gradient of the loss function. The efficiency comes from exploiting the layer-by-layer architecture of NNs: organize the computation as a computational graph, start at the output, and calculate the gradient one layer at a time moving backwards, reusing intermediate results instead of recomputing them. It is the chain rule organized to fit the layer structure.</li>
+<li>Organized this way, the computation becomes a sequence of matrix multiplications. GPUs, originally invented to speed up video games, are perfectly suited for matrix multiplications.</li>
+<li>Backprop + GPUs = fast calculation of loss function gradients. This is the seminal reason the deep learning revolution exists. It burst onto the world stage when AlexNet won the 2012 ImageNet computer vision competition.</li>
+</ul>
+
+<h3 id="l2-sgd">Stochastic gradient descent</h3>
+<ul>
+<li>Problem: for large datasets (n in the millions), computing the gradient of the loss over all n points at every iteration is very expensive, and may not even fit in memory.</li>
+<li>Solution: at each iteration, randomly choose just a few of the n observations (a minibatch, e.g. 32 or 64) and use only those to compute the gradient. This is Stochastic Gradient Descent. Strictly speaking SGD uses one observation and this is minibatch gradient descent, but the field calls it SGD anyway.</li>
+<li>Each minibatch gets exactly one iteration: compute loss, compute gradient, update w once, move to the next minibatch.</li>
+<li>Because not all points are used, this only approximates the true gradient, yet it works extremely well in practice. And because it is only an approximation, it can sometimes escape local minima of the true loss function.</li>
+<li>SGD comes in many flavors. The course default is Adam.</li>
+<li>Real DL loss landscapes are wild terrain, hills, valleys, and cracks. See the <a href="https://arxiv.org/pdf/1712.09913.pdf">loss landscape visualization paper</a>.</li>
+</ul>
+
+<h3 id="l2-flow">Summary of the overall training flow</h3>
+
+<div class="pipeline">input ──▶ layer 1 ──▶ layer 2 ──▶ ... ──▶ prediction
+                                              │
+                              actuals ──▶ <b>loss function</b> ──▶ loss
+                                              │
+                                              ▼
+                    <b>optimizer</b> (SGD/Adam) computes gradient via backprop
+                                              │
+                                              ▼
+              every layer's weights updated: w ← w - &#945; &#183; gradient
+                                              │
+                                              ▼
+                                     repeat with next minibatch</div>
+
+<ul>
+<li>This loop is how the heart disease network gets trained, and GPT, and AlphaFold, and AlphaGo. Same flow.</li>
+</ul>
+
 
 <script>
 (function(){
