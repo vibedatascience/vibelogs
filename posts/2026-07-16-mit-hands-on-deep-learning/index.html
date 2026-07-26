@@ -80,6 +80,7 @@ footer a{color:var(--muted)}
 <a class="sub" href="#l1-wrap">Wrap-up</a>
 <a href="#lecture-02">Lecture 2</a>
 <a class="sub" href="#l2-design">Design decisions</a>
+<a class="sub" href="#l2-training-recap">Training recap</a>
 </nav>
 
 <header class="post">
@@ -420,6 +421,19 @@ y  = &sigma;(0.05 - 0.2&middot;a1 - 0.3&middot;a2 - 0.15&middot;a3)</div>
 h       = keras.layers.Dense(16, activation="relu")(inputs)
 outputs = keras.layers.Dense(1, activation="sigmoid")(h)
 model   = keras.Model(inputs, outputs)</code></pre>
+
+<h3 id="l2-training-recap">Training recap: lm and glm</h3>
+
+<div class="pipeline"><b>linear regression</b>
+y = b0 + b1*x1 + b2*x2 + ... + bn*xn   + data ──lm──▶   y = 2.8 + 0.89*x1 - 3.9*x2 + ... + 1.06*xn
+
+<b>logistic regression</b>
+y = 1 / (1 + e^-(b0 + b1*x1 + ... + bn*xn))   + data ──glm──▶   y = 1 / (1 + e^-(2.8 + 0.89*x1 - 3.9*x2 + ... + 1.06*xn))</div>
+
+<ul>
+<li>Training is finding values for the weights/coefficients so that the model's predictions come as close to the actual values as possible.</li>
+<li>lm and glm use optimization algorithms under the hood to find these best values. You never had to see the optimization for regression. For neural networks we get to see how it is done.</li>
+</ul>
 
 <script>
 // network term highlighter
