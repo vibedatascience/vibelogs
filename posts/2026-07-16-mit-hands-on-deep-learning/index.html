@@ -424,11 +424,7 @@ model   = keras.Model(inputs, outputs)</code></pre>
 
 <h3 id="l2-training-recap">Training recap: lm and glm</h3>
 
-<div class="pipeline"><b>linear regression</b>
-y = b0 + b1*x1 + b2*x2 + ... + bn*xn   + data ──lm──▶   y = 2.8 + 0.89*x1 - 3.9*x2 + ... + 1.06*xn
-
-<b>logistic regression</b>
-y = 1 / (1 + e^-(b0 + b1*x1 + ... + bn*xn))   + data ──glm──▶   y = 1 / (1 + e^-(2.8 + 0.89*x1 - 3.9*x2 + ... + 1.06*xn))</div>
+<img src="lm-glm-training-recap.png" alt="Training linear and logistic regression: model plus data through lm or glm gives fitted coefficients" style="width:100%;border:1px solid var(--rule);border-radius:6px">
 
 <ul>
 <li>Training is finding values for the weights/coefficients so that the model's predictions come as close to the actual values as possible.</li>
