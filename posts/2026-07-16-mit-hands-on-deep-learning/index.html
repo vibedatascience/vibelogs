@@ -411,7 +411,15 @@ y  = &sigma;(0.05 - 0.2&middot;a1 - 0.3&middot;a2 - 0.15&middot;a3)</div>
 <h3 id="l2-design">Design decisions first</h3>
 <ul>
 <li>Before designing a neural network you have to think through how many hidden layers you want, how many neurons in each layer, and what activation function to use. For the hidden layer activations there is nothing to decide: just go with ReLU.</li>
+<li>Counting parameters: a layer of A units fully connected to a layer of B units costs A&times;B weights plus B biases. The heart disease network: 29&times;16 + 16 + 16&times;1 + 1 = 497.</li>
+<li>Dense means fully connected: every unit in the layer connects to every unit in the neighboring layers.</li>
+<li>The output layer activation is dictated by the output type. Binary classification needs a probability, so the output is one unit with a sigmoid.</li>
 </ul>
+
+<pre><code>inputs  = keras.Input(shape=(29,))
+h       = keras.layers.Dense(16, activation="relu")(inputs)
+outputs = keras.layers.Dense(1, activation="sigmoid")(h)
+model   = keras.Model(inputs, outputs)</code></pre>
 
 <script>
 // network term highlighter
