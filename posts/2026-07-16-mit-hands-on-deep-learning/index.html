@@ -552,6 +552,7 @@ model   = keras.Model(inputs, outputs)</code></pre>
 <ul>
 <li>For data points with y = 1, loss = -log(predicted probability). For data points with y = 0, loss = -log(1 - predicted probability).</li>
 <li>The two cases can be compactly written as a single expression: when y = 1 the second term vanishes, when y = 0 the first term vanishes.</li>
+<li>Average this expression across all data points and you get the binary cross entropy loss function, the default for binary classification. When a giant network is trained on a binary classification problem, chances are this is the loss.</li>
 <li>This is just one loss function we can choose. There are others: the curve does not have to be a log, a linear penalty works too, and you can penalize one kind of mistake more than another (e.g. false negatives, or overestimates via the pinball loss). Hundreds of loss functions exist and a lot of DL breakthroughs are just clever loss definitions. The log version is picked because it is easy to work with, has good gradients, and is empirically very effective.</li>
 </ul>
 
