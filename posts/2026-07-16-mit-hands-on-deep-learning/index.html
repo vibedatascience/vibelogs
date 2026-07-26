@@ -468,6 +468,7 @@ model   = keras.Model(inputs, outputs)</code></pre>
 <ul>
 <li>Training is finding values for the weights/coefficients so that the model's predictions come as close to the actual values as possible.</li>
 <li>lm and glm use optimization algorithms under the hood to find these best values. You never had to see the optimization for regression. For neural networks we get to see how it is done.</li>
+<li>Basically every trained model, even GPT, is the same thing. You have a skeleton of the model that lays out all the parameters, the weights and biases, and you have data. Then you use an optimization algorithm to minimize the loss, i.e. make the model's predictions as close to the actual values as possible.</li>
 </ul>
 
 <script>
