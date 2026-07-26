@@ -424,7 +424,46 @@ model   = keras.Model(inputs, outputs)</code></pre>
 
 <h3 id="l2-training-recap">Training recap: lm and glm</h3>
 
-<img src="lm-glm-training-recap.png" alt="Training linear and logistic regression: model plus data through lm or glm gives fitted coefficients" style="width:100%;border:1px solid var(--rule);border-radius:6px">
+<div class="widget">
+<div class="wtitle">Training linear and logistic regression</div>
+<svg viewBox="0 0 1400 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Model plus data through lm or glm gives fitted coefficients">
+<style>
+.fl{font-family:'IBM Plex Mono',monospace;font-size:26px;fill:#17171C}
+.fs{font-family:'IBM Plex Mono',monospace;font-size:21px;fill:#17171C}
+.lbl{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;fill:#17171C}
+.aw{font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:500;fill:#FAFAF8}
+.bx{fill:#FAFAF8;stroke:#E7E7E2;stroke-width:2;rx:8}
+.fr{stroke:#17171C;stroke-width:2}
+</style>
+<text class="lbl" x="30" y="45">Linear Regression</text>
+<rect class="bx" x="30" y="70" width="490" height="80" rx="8"/>
+<text class="fl" x="55" y="120">y = b&#8320; + b&#8321;x&#8321; + b&#8322;x&#8322; + ... + b&#8345;x&#8345;</text>
+<text class="fl" x="560" y="120">+ data</text>
+<rect x="680" y="86" width="110" height="48" rx="8" fill="#2545FF"/>
+<text class="aw" x="718" y="118">lm</text>
+<path d="M790 110 L840 110" stroke="#2545FF" stroke-width="3"/>
+<path d="M840 110 l-14 -9 v18 z" fill="#2545FF"/>
+<rect class="bx" x="860" y="70" width="510" height="80" rx="8"/>
+<text class="fs" x="880" y="120">y = 2.8 + 0.89x&#8321; - 3.9x&#8322; + ... + 1.06x&#8345;</text>
+
+<text class="lbl" x="30" y="265">Logistic Regression</text>
+<rect class="bx" x="30" y="290" width="490" height="130" rx="8"/>
+<text class="fl" x="55" y="365">y =</text>
+<text class="fl" x="280" y="340" text-anchor="middle">1</text>
+<line class="fr" x1="130" y1="352" x2="480" y2="352"/>
+<text class="fs" x="280" y="392" text-anchor="middle">1 + e<tspan baseline-shift="super" font-size="15">-(b&#8320;+b&#8321;x&#8321;+...+b&#8345;x&#8345;)</tspan></text>
+<text class="fl" x="560" y="365">+ data</text>
+<rect x="680" y="331" width="110" height="48" rx="8" fill="#2545FF"/>
+<text class="aw" x="708" y="363">glm</text>
+<path d="M790 355 L840 355" stroke="#2545FF" stroke-width="3"/>
+<path d="M840 355 l-14 -9 v18 z" fill="#2545FF"/>
+<rect class="bx" x="860" y="290" width="510" height="130" rx="8"/>
+<text class="fl" x="885" y="365">y =</text>
+<text class="fl" x="1125" y="340" text-anchor="middle">1</text>
+<line class="fr" x1="960" y1="352" x2="1330" y2="352"/>
+<text class="fs" x="1125" y="392" text-anchor="middle">1 + e<tspan baseline-shift="super" font-size="15">-(2.8+0.89x&#8321;-3.9x&#8322;+...+1.06x&#8345;)</tspan></text>
+</svg>
+</div>
 
 <ul>
 <li>Training is finding values for the weights/coefficients so that the model's predictions come as close to the actual values as possible.</li>
