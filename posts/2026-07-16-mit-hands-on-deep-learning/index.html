@@ -38,6 +38,10 @@ details{border:1px solid var(--rule);border-radius:8px;padding:10px 16px;margin:
 details summary{cursor:pointer;font-weight:500;color:var(--ink)}
 details summary::marker{color:var(--cobalt)}
 details p{margin:10px 0 4px;color:var(--ink)}
+details.nb summary{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--cobalt)}
+details.nb{background:#FAFAF8}
+details.nb pre{margin:12px 0 0}
+.nbout{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;background:#fff;border:1px solid var(--rule);border-left:3px solid var(--cobalt);border-radius:6px;padding:10px 14px;margin:10px 0 0;white-space:pre;overflow-x:auto;line-height:1.5}
 .pipeline{font-family:'IBM Plex Mono',monospace;font-size:0.8rem;background:#fff;border:1px solid var(--rule);border-radius:8px;padding:16px 18px;margin:0 0 18px;overflow-x:auto;white-space:pre;line-height:1.8;color:var(--ink)}
 .pipeline b{color:var(--cobalt);font-weight:500}
 .toc{position:fixed;top:120px;left:calc(50% - 340px - 200px);width:170px;font-family:'IBM Plex Mono',monospace;font-size:0.72rem;line-height:1.5}
@@ -979,10 +983,31 @@ loss = (&#375; - y)&#178;</div>
 <ol start="1">
 <li><b>Set the seed.</b> set_random_seed(42) so the same code gives the same answer twice. Randomness enters in 4 places: initial weights, batch order, data splitting, dropout.</li>
 </ol>
+<details class="nb"><summary>code: seed</summary>
+<pre><code>import tensorflow as tf
+from tensorflow import keras
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+keras.utils.set_random_seed(42)</code></pre>
+</details>
+
 
 <ol start="2">
 <li><b>Look at the data.</b> Count the target values. 72.6% zeros, 27.4% ones. This gives the naive baseline: guess "no disease" every time and you're 72.6% right. Anything you build must beat that.</li>
 </ol>
+<details class="nb"><summary>code + output: load and count</summary>
+<pre><code>df = pd.read_csv("http://storage.googleapis.com/download.tensorflow.org/data/heart.csv")
+df.shape
+df.target.value_counts(normalize=True, dropna=False)</code></pre>
+<div class="nbout">(303, 14)
+
+0    0.726073
+1    0.273927
+Name: target, dtype: float64</div>
+</details>
+
 
 <ol start="3">
 <li><b>Preprocessing.</b> Sort columns into two lists, categorical vs numeric, then one-hot encode the categoricals with get_dummies. The two types need different treatment. One-hot turns "chest pain type = 4" into a row of 0s with a single 1, because nets only take numbers and the codes 1/2/3/4 aren't a real ordering. This is what grows 13 columns into 29.</li>
@@ -991,6 +1016,36 @@ loss = (&#375; - y)&#178;</div>
 <li>Convert to numpy arrays. Keras prefers arrays over dataframes.</li>
 <li>Separate X from y. np.delete grabs all columns except column 6 for X; column 6 alone becomes y. Result: train_X (242, 29), train_y (242,).</li>
 </ol>
+<details class="nb"><summary>code + output: preprocessing</summary>
+<pre><code>categorical_variables = ['sex', 'cp', 'fbs', 'restecg', 'exang', 'ca', 'thal']
+numerics = ['age', 'trestbps', 'chol', 'thalach', 'oldpeak', 'slope']
+
+df = pd.get_dummies(df, columns=categorical_variables)
+
+test_df = df.sample(frac=0.2, random_state=42)
+train_df = df.drop(test_df.index)
+
+means = train_df[numerics].mean()
+sd = train_df[numerics].std()
+train_df[numerics] = (train_df[numerics] - means)/sd
+test_df[numerics] = (test_df[numerics] - means)/sd
+
+train = train_df.to_numpy()
+test = test_df.to_numpy()
+
+train_X = np.delete(train, 6, axis=1)
+test_X = np.delete(test, 6, axis=1)
+train_y = train[:, 6]
+test_y = test[:, 6]
+
+train_X.shape, test_X.shape
+train_y.shape, test_y.shape</code></pre>
+<div class="nbout">train_df.shape: (242, 30)   test_df.shape: (61, 30)
+
+((242, 29), (61, 29))
+((242,), (61,))</div>
+</details>
+
 
 <ol start="8">
 <li><b>Build the model.</b> Define the input layer, width 29.</li>
@@ -998,17 +1053,73 @@ loss = (&#375; - y)&#178;</div>
 <li>Add the output layer, 1 unit, sigmoid activation. Sigmoid squashes to 0-1 because the answer is a probability of a yes/no.</li>
 <li>Wrap input and output into a Model, then inspect it. summary() shows 497 parameters, hand-verified as (29+1)&times;16 + (16+1)&times;1; plot_model() shows the same thing as a diagram.</li>
 </ol>
+<details class="nb"><summary>code + output: model and summary</summary>
+<pre><code>inputs = keras.Input(shape=(29,))
+hidden = keras.layers.Dense(16, activation="relu", name="Hidden")(inputs)
+outputs = keras.layers.Dense(1, activation="sigmoid", name="Output")(hidden)
+model = keras.Model(inputs, outputs)
+
+model.summary()
+(29 + 1)*16 + (16 + 1)*1</code></pre>
+<div class="nbout">Model: "model"
+_________________________________________________________
+ Layer (type)           Output Shape          Param #
+=========================================================
+ input_1 (InputLayer)   [(None, 29)]          0
+ Hidden (Dense)         (None, 16)            480
+ Output (Dense)         (None, 1)             17
+=========================================================
+Total params: 497 (1.94 KB)
+Trainable params: 497 (1.94 KB)
+
+497</div>
+</details>
+
 
 <ol start="12">
 <li><b>Train.</b> Compile: pick the loss (binary_crossentropy, correct for binary), the optimizer (adam), and what to print (accuracy).</li>
 <li>Fit: 300 epochs, batch size 32, hold back 20% of training rows as a validation set. Save the output into history.</li>
 </ol>
+<details class="nb"><summary>code + output: compile and fit</summary>
+<pre><code>model.compile(optimizer="adam",
+              loss="binary_crossentropy",
+              metrics=["accuracy"])
+
+history = model.fit(train_X, train_y,
+                    epochs=300,
+                    batch_size=32,
+                    verbose=1,
+                    validation_split=0.2)</code></pre>
+<div class="nbout">Epoch 1/300
+7/7 [====================] - 0s 26ms/step - loss: 0.1636 - accuracy: 0.9223 - val_loss: 0.4938 - val_accuracy: 0.8163
+Epoch 2/300
+7/7 [====================] - 0s 14ms/step - loss: 0.1633 - accuracy: 0.9223 - val_loss: 0.4947 - val_accuracy: 0.8163
+...
+Epoch 300/300
+7/7 [====================] - 0s 13ms/step - loss: 0.0860 - accuracy: 0.9845 - val_loss: 0.6660 - val_accuracy: 0.8163</div>
+</details>
+
 
 <ol start="14">
 <li><b>Check what happened.</b> Plot training vs validation loss. Training loss falls, validation loss rises. That's overfitting, the model is memorizing 242 patients. The fix is early stopping, quit at the epoch where validation loss bottoms out.</li>
 <li>Plot training vs validation accuracy. Same story.</li>
 <li>model.evaluate(test_X, test_y) on the untouched test set. 83.6%, better than the 72.6% baseline.</li>
 </ol>
+<details class="nb"><summary>code + output: curves and test evaluation</summary>
+<pre><code>history_dict = history.history
+
+loss_values = history_dict["loss"]
+val_loss_values = history_dict["val_loss"]
+epochs = range(1, len(loss_values) + 1)
+plt.plot(epochs, loss_values, "bo", label="Training loss")
+plt.plot(epochs, val_loss_values, "b", label="Validation loss")
+plt.legend(); plt.show()
+
+model.evaluate(test_X, test_y)</code></pre>
+<div class="nbout">2/2 [====================] - 0s 7ms/step - loss: 0.3866 - accuracy: 0.8361
+[0.3865666091442108, 0.8360655903816223]</div>
+</details>
+
 
 
 
