@@ -976,15 +976,15 @@ loss = (&#375; - y)&#178;</div>
 
 <h3 id="l3-colab">Colab: the heart disease notebook</h3>
 
-<ol>
+<ol start="1">
 <li><b>Set the seed.</b> set_random_seed(42) so the same code gives the same answer twice. Randomness enters in 4 places: initial weights, batch order, data splitting, dropout.</li>
 </ol>
 
-<ol>
+<ol start="2">
 <li><b>Look at the data.</b> Count the target values. 72.6% zeros, 27.4% ones. This gives the naive baseline: guess "no disease" every time and you're 72.6% right. Anything you build must beat that.</li>
 </ol>
 
-<ol>
+<ol start="3">
 <li><b>Preprocessing.</b> Sort columns into two lists, categorical vs numeric, then one-hot encode the categoricals with get_dummies. The two types need different treatment. One-hot turns "chest pain type = 4" into a row of 0s with a single 1, because nets only take numbers and the codes 1/2/3/4 aren't a real ordering. This is what grows 13 columns into 29.</li>
 <li>Split 80/20 into train and test. Done before normalizing, so the test set's mean and standard deviation never leak into training. Leakage would make your test score a lie.</li>
 <li>Compute mean and sd of the numeric columns from the training set only, then standardize both train and test with those numbers. Nets train badly when one input is 0-1 and another is 126-564.</li>
@@ -992,19 +992,19 @@ loss = (&#375; - y)&#178;</div>
 <li>Separate X from y. np.delete grabs all columns except column 6 for X; column 6 alone becomes y. Result: train_X (242, 29), train_y (242,).</li>
 </ol>
 
-<ol>
+<ol start="8">
 <li><b>Build the model.</b> Define the input layer, width 29.</li>
 <li>Add one hidden layer, 16 units, relu activation.</li>
 <li>Add the output layer, 1 unit, sigmoid activation. Sigmoid squashes to 0-1 because the answer is a probability of a yes/no.</li>
 <li>Wrap input and output into a Model, then inspect it. summary() shows 497 parameters, hand-verified as (29+1)&times;16 + (16+1)&times;1; plot_model() shows the same thing as a diagram.</li>
 </ol>
 
-<ol>
+<ol start="12">
 <li><b>Train.</b> Compile: pick the loss (binary_crossentropy, correct for binary), the optimizer (adam), and what to print (accuracy).</li>
 <li>Fit: 300 epochs, batch size 32, hold back 20% of training rows as a validation set. Save the output into history.</li>
 </ol>
 
-<ol>
+<ol start="14">
 <li><b>Check what happened.</b> Plot training vs validation loss. Training loss falls, validation loss rises. That's overfitting, the model is memorizing 242 patients. The fix is early stopping, quit at the epoch where validation loss bottoms out.</li>
 <li>Plot training vs validation accuracy. Same story.</li>
 <li>model.evaluate(test_X, test_y) on the untouched test set. 83.6%, better than the 72.6% baseline.</li>
