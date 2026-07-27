@@ -90,6 +90,7 @@ footer a{color:var(--muted)}
 <a class="sub" href="#l2-gd">Gradient descent</a>
 <a class="sub" href="#l2-minloss">Minimizing the loss</a>
 <a class="sub" href="#l2-backprop">Backprop</a>
+<a class="sub" href="#l2-bpex">Backprop example</a>
 <a class="sub" href="#l2-sgd">SGD</a>
 <a class="sub" href="#l2-flow">Training flow</a>
 <a class="sub" href="#l2-qa">Q&amp;A</a>
@@ -728,6 +729,98 @@ Gradient descent stops when the slope is approximately zero or when you hit max 
 <text class="bs" x="560" y="260" text-anchor="middle">chain rule, organized to fit the layer structure. GPUs eat this for breakfast.</text>
 </svg>
 </div>
+
+<h3 id="l2-bpex">Backprop: the worked example</h3>
+<ul>
+<li>From the course's step-by-step <a href="https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/resources/mit15_773_s24_lec02_backprop_example_pdf/">backprop example</a>. The setup is the simplest possible case so nothing distracts from the mechanism: two inputs x1 and x2, a continuous output, no hidden layer, MSE loss on a single data point. The parameters to be learned are b, w1, w2.</li>
+</ul>
+
+<div class="pipeline">model(x1, x2) = b + w1&#183;x1 + w2&#183;x2
+loss = (model(x1, x2) - y)&#178; = (b + w1&#183;x1 + w2&#183;x2 - y)&#178;</div>
+
+<ul>
+<li><b>Step 1, the old fashioned way.</b> Differentiate the loss directly with respect to each parameter using basic calculus:</li>
+</ul>
+
+<div class="pipeline">&#8706;loss/&#8706;b  = 2(b + w1&#183;x1 + w2&#183;x2 - y)
+&#8706;loss/&#8706;w1 = 2(b + w1&#183;x1 + w2&#183;x2 - y)&#183;x1
+&#8706;loss/&#8706;w2 = 2(b + w1&#183;x1 + w2&#183;x2 - y)&#183;x2</div>
+
+<ul>
+<li>This works, but notice every derivative recomputes the same inner expression from scratch. Three parameters, fine. Billions of parameters in a deep stack of layers, hopeless.</li>
+<li><b>Step 2, reorganize with intermediate variables.</b> Same math, but every quantity becomes one small step:</li>
+</ul>
+
+<div class="pipeline">a1 = w1&#183;x1
+a2 = w2&#183;x2
+&#375;  = b + a1 + a2
+loss = (&#375; - y)&#178;</div>
+
+<ul>
+<li><b>Step 3, apply the chain rule.</b> Any parameter's derivative decomposes into a product of small local ones. For w1:</li>
+</ul>
+
+<div class="pipeline">&#8706;loss/&#8706;w1 = &#8706;loss/&#8706;&#375; &#183; &#8706;&#375;/&#8706;a1 &#183; &#8706;a1/&#8706;w1</div>
+
+<ul>
+<li><b>Step 4, calculate the little derivatives.</b> Each one is trivially easy, because each intermediate equation is trivially simple:</li>
+</ul>
+
+<div class="pipeline">&#8706;loss/&#8706;&#375; = 2(&#375; - y)
+&#8706;&#375;/&#8706;b = 1     &#8706;&#375;/&#8706;a1 = 1     &#8706;&#375;/&#8706;a2 = 1
+&#8706;a1/&#8706;w1 = x1                  &#8706;a2/&#8706;w2 = x2</div>
+
+<ul>
+<li><b>Step 5, put it together.</b> &#8706;loss/&#8706;w1 = 2(&#375; - y) &#183; 1 &#183; x1 = 2(b + w1&#183;x1 + w2&#183;x2 - y)&#183;x1. Exactly matches the old fashioned answer, so nothing was lost in the reorganization.</li>
+<li><b>Step 6, draw the equations as a computational graph.</b> Each intermediate variable becomes a node, and each little derivative attaches to the edge between the nodes it relates:</li>
+</ul>
+
+<div class="widget">
+<div class="wtitle">The computational graph, with derivatives on the edges</div>
+<svg viewBox="0 0 1100 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Computational graph from inputs and weights through a1 a2 yhat to the loss, with each local derivative labeling its edge and the w1 path highlighted">
+<style>
+.gb{fill:#FAFAF8;stroke:#E7E7E2;stroke-width:2}
+.gbh{fill:#FAFAF8;stroke:#E60023;stroke-width:3}
+.gt{font-family:'IBM Plex Mono',monospace;font-size:21px;fill:#17171C}
+.ge{stroke:#6E6E76;stroke-width:2;fill:none}
+.geh{stroke:#E60023;stroke-width:3.5;fill:none}
+.gl{font-family:'IBM Plex Mono',monospace;font-size:16px;fill:#2545FF}
+.gc{font-family:'IBM Plex Mono',monospace;font-size:16px;fill:#6E6E76}
+</style>
+<rect class="gbh" x="40" y="60" width="90" height="52" rx="8"/><text class="gt" x="85" y="93" text-anchor="middle">w1</text>
+<rect class="gb" x="40" y="130" width="90" height="52" rx="8"/><text class="gt" x="85" y="163" text-anchor="middle">x1</text>
+<rect class="gb" x="40" y="230" width="90" height="52" rx="8"/><text class="gt" x="85" y="263" text-anchor="middle">w2</text>
+<rect class="gb" x="40" y="300" width="90" height="52" rx="8"/><text class="gt" x="85" y="333" text-anchor="middle">x2</text>
+<rect class="gb" x="300" y="360" width="90" height="52" rx="8"/><text class="gt" x="345" y="393" text-anchor="middle">b</text>
+<rect class="gbh" x="300" y="95" width="110" height="52" rx="8"/><text class="gt" x="355" y="128" text-anchor="middle">a1</text>
+<rect class="gb" x="300" y="265" width="110" height="52" rx="8"/><text class="gt" x="355" y="298" text-anchor="middle">a2</text>
+<rect class="gbh" x="590" y="180" width="110" height="52" rx="8"/><text class="gt" x="645" y="213" text-anchor="middle">&#375;</text>
+<rect class="gbh" x="860" y="180" width="120" height="52" rx="8"/><text class="gt" x="920" y="213" text-anchor="middle">loss</text>
+<path class="geh" d="M130 90 C 210 90, 230 112, 298 118"/>
+<path class="ge" d="M130 158 C 210 158, 230 130, 298 126"/>
+<path class="ge" d="M130 260 C 210 260, 230 284, 298 288"/>
+<path class="ge" d="M130 328 C 210 328, 230 300, 298 296"/>
+<path class="geh" d="M410 121 C 490 130, 510 175, 588 198"/>
+<path class="ge" d="M410 291 C 490 282, 510 235, 588 214"/>
+<path class="ge" d="M390 380 C 480 375, 530 250, 588 218"/>
+<path class="geh" d="M700 206 L 858 206"/>
+<text class="gl" x="215" y="80">&#8706;a1/&#8706;w1 = x1</text>
+<text class="gl" x="215" y="250">&#8706;a2/&#8706;w2 = x2</text>
+<text class="gl" x="455" y="130">&#8706;&#375;/&#8706;a1 = 1</text>
+<text class="gl" x="455" y="290">&#8706;&#375;/&#8706;a2 = 1</text>
+<text class="gl" x="480" y="360">&#8706;&#375;/&#8706;b = 1</text>
+<text class="gl" x="705" y="185">&#8706;loss/&#8706;&#375; = 2(&#375;-y)</text>
+<text class="gc" x="560" y="55">to get &#8706;loss/&#8706;w1: walk the red path backwards from loss,</text>
+<text class="gc" x="560" y="80">multiplying edge derivatives: 2(&#375;-y) &#183; 1 &#183; x1</text>
+</svg>
+</div>
+
+<ul>
+<li><b>Step 7, the backprop rule.</b> To calculate &#8706;loss/&#8706;anything, start from the loss and travel backwards to that parameter, multiplying the partial derivatives as you go. This is backpropagation.</li>
+<li><b>Why this is efficient.</b> &#8706;loss/&#8706;&#375; = 2(&#375; - y) sits on the shared first leg of every path, so it is computed once and reused for b, w1, and w2. In a real network the same holds at every layer: everything downstream of a layer is computed once and reused by everything upstream of it. That reuse is the whole trick.</li>
+<li>When the layers have more than one neuron, traversing backwards becomes a series of matrix multiplications, and GPUs are perfect for matrix multiplications. Same punchline as before, now earned.</li>
+</ul>
+
 
 <h3 id="l2-sgd">Stochastic gradient descent</h3>
 <ul>
