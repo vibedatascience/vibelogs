@@ -220,6 +220,51 @@ ul.plain li::before{content:"";position:absolute;left:2px;top:16px;width:7px;hei
 
 .kit{margin-top:26px}
 
+.log{margin-top:26px}
+.log .blockhead{background:var(--steel);border-color:var(--steel)}
+.log .blockhead h2{color:#fff}
+.log .blockhead .meta{color:#B9C4D4}
+.session{border-bottom:1px solid var(--line)}
+.session:last-of-type{border-bottom:none}
+.sessionhead{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:12px;
+  padding:12px 18px 6px;
+}
+.sessionhead .when{
+  font-family:var(--display);
+  font-size:17px;
+  font-weight:600;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+.sessionhead .what{
+  font-family:var(--data);
+  font-size:11px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--mute);
+}
+table.logtable{width:100%;border-collapse:collapse;font-size:14px}
+table.logtable th{
+  font-family:var(--data);
+  font-size:10px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--mute);
+  text-align:left;
+  font-weight:400;
+  padding:6px 18px;
+  border-bottom:1px solid var(--line);
+}
+table.logtable td{padding:7px 18px;border-bottom:1px dotted var(--line);vertical-align:top}
+table.logtable tr:last-child td{border-bottom:none}
+table.logtable td:first-child{color:#3A3F47}
+table.logtable td.num{font-family:var(--data);font-size:13px;white-space:nowrap}
+table.logtable th:last-child,table.logtable td:last-child{text-align:right}
+
 .resetrow{display:flex;justify-content:flex-end;padding:14px 0 0}
 .resetrow button{
   background:none;
@@ -280,6 +325,23 @@ ul.plain li::before{content:"";position:absolute;left:2px;top:16px;width:7px;hei
       <li>Treadmills, bikes, and other cardio machines.</li>
     </ul>
     <div class="tail">There is no squat rack and no straight barbell, so every lift below is a dumbbell, cable, or bodyweight version. Very little is lost. Dumbbells are arguably the better choice for a first twelve weeks, because each side has to work on its own and there is no loaded bar to get stuck under when a set goes wrong.</div>
+  </section>
+
+  <section class="block log">
+    <div class="blockhead"><h2>Log</h2><span class="meta">1 session</span></div>
+    <div class="session">
+      <div class="sessionhead"><span class="when">Sun 26 Jul</span><span class="what">Legs &middot; session 1</span></div>
+      <table class="logtable">
+        <tr><th>Exercise</th><th>Weight</th><th>Reps</th></tr>
+        <tr><td>Goblet squat</td><td class="num">30, 30, 25, 25</td><td class="num">10</td></tr>
+        <tr><td>Stiff leg deadlift</td><td class="num">15s, 15s, 25s</td><td class="num">10</td></tr>
+        <tr><td>Walking lunge</td><td class="num">10s, 20s, 20s</td><td class="num">12 each</td></tr>
+        <tr><td>Step up</td><td class="num">15s, 15s, 15s</td><td class="num">10 each</td></tr>
+        <tr><td>Calf raise</td><td class="num">15s, 15s, 15s</td><td class="num">15</td></tr>
+        <tr><td>Plank</td><td class="num">bodyweight</td><td class="num">45 sec</td></tr>
+      </table>
+      <div class="tail">First session, so most of it was finding weights rather than pushing them. Next legs day: hold 30 on the goblet squat for all four sets, open the stiff leg deadlift at a pair of 25s, and go heavier than a pair of 15s on the calf raise.</div>
+    </div>
   </section>
 
   <section class="block rules">
