@@ -655,7 +655,7 @@ Gradient descent stops when the slope is approximately zero or when you hit max 
 
 <div class="widget">
 <div class="wtitle">What gets optimized in the loss</div>
-<svg viewBox="0 0 1100 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The weights hiding inside the model term are the variables; x and y are just data">
+<svg viewBox="0 0 1100 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The weights hiding inside the model term are the variables; x and y are just data; model expands to the full sigmoid over ReLU expression">
 <style>
 .wf{font-family:'IBM Plex Mono',monospace;font-size:23px;fill:#17171C}
 .wsm{font-family:'IBM Plex Mono',monospace;font-size:16px;fill:#17171C}
@@ -681,6 +681,13 @@ Gradient descent stops when the slope is approximately zero or when you hit max 
 <path d="M320 110 l-6 10 h12 z" fill="#6E6E76"/>
 <text class="wa2" x="120" y="240">y and x are just data.</text>
 <text class="wa2" x="120" y="264">You never optimize data.</text>
+<text class="wa1" x="550" y="330" text-anchor="middle">every model(x&#8317;&#8305;&#8318;) above is this whole thing, the 2-input 3-neuron toy network written out:</text>
+<text class="wf" x="60" y="435">model(x&#8317;&#8305;&#8318;) =</text>
+<text class="wf" x="640" y="410" text-anchor="middle">1</text>
+<line x1="300" y1="425" x2="1070" y2="425" stroke="#17171C" stroke-width="2.5"/>
+<text class="wsm" x="310" y="462">1 + e<tspan baseline-shift="super" font-size="13">-(w&#8321;+w&#8322;max(0,w&#8323;+w&#8324;x&#8321;+w&#8325;x&#8322;)+w&#8326;max(0,w&#8327;+w&#8328;x&#8321;+w&#8329;x&#8322;)+w&#8321;&#8320;max(0,w&#8321;&#8321;+w&#8321;&#8322;x&#8321;+w&#8321;&#8323;x&#8322;))</tspan></text>
+<text class="wa2" x="550" y="520" text-anchor="middle">substitute this in and the loss is just a good old function of w&#8321;...w&#8321;&#8323;.</text>
+<text class="wa2" x="550" y="544" text-anchor="middle">apply gradient descent as we normally would.</text>
 </svg>
 </div>
 
