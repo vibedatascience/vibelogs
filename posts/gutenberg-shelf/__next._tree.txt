@@ -1,3 +1,3 @@
 :HL["/vibelogs/posts/gutenberg-shelf/_next/static/chunks/22orpu6sivfoh.css","style"]
 :HC["/",""]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"YD0TfWv0rDy-nqUny8Uce"}
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"fMW90Kq08bBijxfHVSlqF"}

@@ -100,11 +100,16 @@ export function VolumeReader({ book, onClose }: { book: CatalogBook; onClose: ()
   const [error, setError] = useState<string | null>(null);
   const [turning, setTurning] = useState<0 | 1 | -1>(0);
 
+  const rootRef = useRef<HTMLDivElement>(null);
   const flowRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<HTMLDivElement>(null);
   const [geo, setGeo] = useState({ colW: 0, gap: 96, per: 2 });
   const geom = useRef({ colW: 0, gap: 96, per: 2 });
   const storeKey = "gutenberg-shelf:" + (book.gutenbergId ?? book.id);
+
+  useEffect(() => {
+    rootRef.current?.focus({ preventScroll: true });
+  }, []);
 
   useEffect(() => {
     let dead = false;
@@ -196,6 +201,7 @@ export function VolumeReader({ book, onClose }: { book: CatalogBook; onClose: ()
   const page = useCallback(
     (dir: 1 | -1) => {
       if (phase !== "reading" || !chapters.length) return;
+      rootRef.current?.focus({ preventScroll: true });
       const last = Math.max(0, Math.ceil(cols / geo.per) - 1);
       if (dir > 0 && spread >= last) {
         if (ch < chapters.length - 1) {
@@ -255,7 +261,7 @@ export function VolumeReader({ book, onClose }: { book: CatalogBook; onClose: ()
       aria-label={"Reading " + book.title}
       data-testid="volume-reader"
       tabIndex={-1}
-      ref={(el) => el?.focus({ preventScroll: true })}
+      ref={rootRef}
       onKeyDown={(e) => {
         if (e.key === "Escape") {
           e.preventDefault();
@@ -338,12 +344,16 @@ export function VolumeReader({ book, onClose }: { book: CatalogBook; onClose: ()
               type="button"
               className="rdr-hit rdr-hit--l"
               aria-label="Previous page"
+              tabIndex={-1}
+              onMouseDown={(e) => e.preventDefault()}
               onClick={() => page(-1)}
             />
             <button
               type="button"
               className="rdr-hit rdr-hit--r"
               aria-label="Next page"
+              tabIndex={-1}
+              onMouseDown={(e) => e.preventDefault()}
               onClick={() => page(1)}
             />
             <div
