@@ -1,0 +1,142 @@
+[
+ {
+  "id": 2701,
+  "title": "Moby Dick; Or, The Whale",
+  "author": "Melville, Herman",
+  "cover": "../books/moby-dick-or-the-whale-1/cover.webp",
+  "slug": "moby-dick-or-the-whale-1"
+ },
+ {
+  "id": 1342,
+  "title": "Pride and Prejudice",
+  "author": "Austen, Jane",
+  "cover": "../books/pride-and-prejudice-2/cover.webp",
+  "slug": "pride-and-prejudice-2"
+ },
+ {
+  "id": 1513,
+  "title": "Romeo and Juliet",
+  "author": "Shakespeare, William",
+  "cover": "../books/romeo-and-juliet-3/cover.webp",
+  "slug": "romeo-and-juliet-3"
+ },
+ {
+  "id": 2641,
+  "title": "A Room with a View",
+  "author": "Forster, E. M. (Edward Morgan)",
+  "cover": "../books/a-room-with-a-view-4/cover.webp",
+  "slug": "a-room-with-a-view-4"
+ },
+ {
+  "id": 2554,
+  "title": "Crime and Punishment",
+  "author": "Dostoyevsky, Fyodor",
+  "cover": "../books/crime-and-punishment-5/cover.webp",
+  "slug": "crime-and-punishment-5"
+ },
+ {
+  "id": 11,
+  "title": "Alice's Adventures in Wonderland",
+  "author": "Carroll, Lewis",
+  "cover": "../books/alice-s-adventures-in-wonderland-6/cover.webp",
+  "slug": "alice-s-adventures-in-wonderland-6"
+ },
+ {
+  "id": 1184,
+  "title": "The Count of Monte Cristo",
+  "author": "Dumas, Alexandre",
+  "cover": "../books/the-count-of-monte-cristo-7/cover.webp",
+  "slug": "the-count-of-monte-cristo-7"
+ },
+ {
+  "id": 34413,
+  "title": "The Love Letters of Mary Wollstonecraft to Gilbert Imlay",
+  "author": "Wollstonecraft, Mary",
+  "cover": "../books/the-love-letters-of-mary-wollstonecraft-8/cover.webp",
+  "slug": "the-love-letters-of-mary-wollstonecraft-8"
+ },
+ {
+  "id": 2465,
+  "title": "Carmen",
+  "author": "Mérimée, Prosper",
+  "cover": "../books/carmen-9/cover.webp",
+  "slug": "carmen-9"
+ },
+ {
+  "id": 6133,
+  "title": "The Extraordinary Adventures of Arsène Lupin, Gentleman-Burglar",
+  "author": "Leblanc, Maurice",
+  "cover": "../books/the-extraordinary-adventures-of-ars-ne-l-10/cover.webp",
+  "slug": "the-extraordinary-adventures-of-ars-ne-l-10"
+ },
+ {
+  "id": 145,
+  "title": "Middlemarch",
+  "author": "Eliot, George",
+  "cover": "../books/middlemarch-11/cover.webp",
+  "slug": "middlemarch-11"
+ },
+ {
+  "id": 84,
+  "title": "Frankenstein; or, the modern prometheus",
+  "author": "Shelley, Mary Wollstonecraft",
+  "cover": "../books/frankenstein-or-the-modern-prometheus-12/cover.webp",
+  "slug": "frankenstein-or-the-modern-prometheus-12"
+ },
+ {
+  "id": 67979,
+  "title": "The Blue Castle: a novel",
+  "author": "Montgomery, L. M. (Lucy Maud)",
+  "cover": "../books/the-blue-castle-a-novel-13/cover.webp",
+  "slug": "the-blue-castle-a-novel-13"
+ },
+ {
+  "id": 100,
+  "title": "The Complete Works of William Shakespeare",
+  "author": "Shakespeare, William",
+  "cover": "../books/the-complete-works-of-william-shakespear-14/cover.webp",
+  "slug": "the-complete-works-of-william-shakespear-14"
+ },
+ {
+  "id": 21839,
+  "title": "Sense and Sensibility",
+  "author": "Austen, Jane",
+  "cover": "../books/sense-and-sensibility-15/cover.webp",
+  "slug": "sense-and-sensibility-15"
+ },
+ {
+  "id": 1661,
+  "title": "The Adventures of Sherlock Holmes",
+  "author": "Doyle, Arthur Conan",
+  "cover": "../books/the-adventures-of-sherlock-holmes-16/cover.webp",
+  "slug": "the-adventures-of-sherlock-holmes-16"
+ },
+ {
+  "id": 5197,
+  "title": "My Life  --  Volume 1",
+  "author": "Wagner, Richard",
+  "cover": "../books/my-life-volume-1-17/cover.webp",
+  "slug": "my-life-volume-1-17"
+ },
+ {
+  "id": 1260,
+  "title": "Jane Eyre: An Autobiography",
+  "author": "Brontë, Charlotte",
+  "cover": "../books/jane-eyre-an-autobiography-18/cover.webp",
+  "slug": "jane-eyre-an-autobiography-18"
+ },
+ {
+  "id": 37106,
+  "title": "Little Women; Or, Meg, Jo, Beth, and Amy",
+  "author": "Alcott, Louisa May",
+  "cover": "../books/little-women-or-meg-jo-beth-and-amy-19/cover.webp",
+  "slug": "little-women-or-meg-jo-beth-and-amy-19"
+ },
+ {
+  "id": 3011,
+  "title": "The Lady of the Lake",
+  "author": "Scott, Walter",
+  "cover": "../books/the-lady-of-the-lake-20/cover.webp",
+  "slug": "the-lady-of-the-lake-20"
+ }
+]

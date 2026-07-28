@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--room:#0f0d0b;--paper:#f4ece0;--paper2:#efe5d6;--ink:#241f1a;--faint:#8b7f6f;--edge:#d8cbb6;--board:#5a3a26}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{background:radial-gradient(ellipse at 50% 20%,#241d17 0%,var(--room) 70%);color:var(--paper);font-family:'Newsreader',Georgia,serif;overflow:hidden}
+#bar{position:fixed;top:0;left:0;right:0;height:52px;display:flex;align-items:center;gap:16px;padding:0 18px;font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:#b9ab97;z-index:40}
+#bar a,#bar button{font:inherit;color:#b9ab97;background:none;border:1px solid #3b322a;border-radius:6px;padding:6px 10px;cursor:pointer;text-decoration:none}
+#bar a:hover,#bar button:hover{color:var(--paper);border-color:#6b5c4a}
+#bar .grow{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#8b7f6f}
+#stage{position:absolute;inset:52px 0 0 0;display:flex;align-items:center;justify-content:center;perspective:2600px}
+#book{position:relative;width:min(94vw,1200px);height:min(80vh,780px);transform-style:preserve-3d}
+.spread{position:absolute;inset:0;display:flex;border-radius:5px;background:linear-gradient(90deg,var(--paper2) 0%,var(--paper) 12%,var(--paper) 48%,#e2d7c4 50%,var(--paper) 52%,var(--paper) 88%,var(--paper2) 100%);box-shadow:0 40px 90px rgba(0,0,0,.62),0 2px 0 #cbbfa8 inset;overflow:hidden}
+.spread::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:76px;transform:translateX(-50%);background:linear-gradient(90deg,rgba(0,0,0,0) 0%,rgba(90,64,40,.16) 44%,rgba(90,64,40,.3) 50%,rgba(90,64,40,.16) 56%,rgba(0,0,0,0) 100%);pointer-events:none}
+#leaf{position:absolute;inset:0;padding:52px 60px 46px}
+#view{position:relative;height:100%;overflow:hidden}
+#flow{height:100%;column-gap:112px;color:var(--ink);font-size:1.06rem;line-height:1.62;text-align:justify;hyphens:auto;transition:transform .42s cubic-bezier(.3,.7,.3,1)}
+#flow p{margin:0 0 0.85em;text-indent:1.4em}
+#flow p.first{text-indent:0}
+#flow p.verse{text-indent:0;margin-left:1.2em;font-size:0.98rem}
+#flow h2{font-size:1.16rem;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;margin:0 0 1.1em;text-align:center;text-indent:0;break-after:avoid}
+#flow p.first::first-letter{float:left;font-size:3.1em;line-height:.84;padding:.06em .09em 0 0;font-weight:500}
+#nums{position:absolute;left:60px;right:60px;bottom:16px;display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:0.66rem;color:var(--faint);pointer-events:none}
+#hitL,#hitR{position:absolute;top:0;bottom:0;width:22%;cursor:pointer;z-index:8}
+#hitL{left:0}#hitR{right:0}
+#turn{position:absolute;top:0;bottom:0;left:50%;width:50%;transform-origin:left center;transform-style:preserve-3d;pointer-events:none;opacity:0;background:linear-gradient(90deg,#efe6d7,#f6efe4);box-shadow:-14px 0 30px rgba(0,0,0,.22);border-radius:0 4px 4px 0}
+#turn.go{animation:flipR .42s ease-in forwards}
+#turn.goback{left:0;transform-origin:right center;box-shadow:14px 0 30px rgba(0,0,0,.22);border-radius:4px 0 0 4px;animation:flipL .42s ease-in forwards}
+@keyframes flipR{0%{opacity:1;transform:rotateY(0)}100%{opacity:1;transform:rotateY(-172deg)}}
+@keyframes flipL{0%{opacity:1;transform:rotateY(0)}100%{opacity:1;transform:rotateY(172deg)}}
+#cover{position:absolute;left:0;top:0;bottom:0;width:50%;transform-origin:right center;transform-style:preserve-3d;transition:transform 1.15s cubic-bezier(.4,.05,.2,1);z-index:20;border-radius:5px 3px 3px 5px;background:var(--board);box-shadow:0 30px 70px rgba(0,0,0,.6)}
+#cover.open{transform:rotateY(-168deg)}
+#cover .face{position:absolute;inset:0;backface-visibility:hidden;border-radius:5px 3px 3px 5px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--board)}
+#cover .face img{width:100%;height:100%;object-fit:cover;display:block}
+#cover .back{transform:rotateY(180deg);background:linear-gradient(90deg,#e8dcc8,#f1e8da)}
+#hint{position:absolute;left:50%;bottom:-38px;transform:translateX(-50%);font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:#8b7f6f;white-space:nowrap}
+#toc{position:fixed;top:52px;left:0;bottom:0;width:320px;max-width:84vw;background:#171310;border-right:1px solid #302820;overflow-y:auto;transform:translateX(-102%);transition:transform .3s ease;z-index:50;padding:14px 0}
+#toc.open{transform:none}
+#toc button{display:block;width:100%;text-align:left;background:none;border:0;color:#b9ab97;font-family:'Newsreader',serif;font-size:0.92rem;padding:9px 18px;cursor:pointer}
+#toc button:hover{background:#221c17;color:var(--paper)}
+#toc button.on{color:#e8c07a}
+#prog{position:fixed;left:0;right:0;bottom:0;height:3px;background:#241d17;z-index:40}
+#prog i{display:block;height:100%;background:#8a6a3f;width:0;transition:width .3s}
+#load{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--room);font-family:'IBM Plex Mono',monospace;font-size:0.76rem;color:#8b7f6f;z-index:60}
+@media (max-width:820px){#leaf{padding:34px 26px 40px}#flow{column-gap:0;font-size:1rem}.spread::after{display:none}#nums{left:26px;right:26px}#cover{width:100%}#turn{width:100%;left:0;transform-origin:center}}
+</style>
+</head>
+<body>
+<div id="bar">
+  <a id="back" href="../">&#8592; shelf</a>
+  <button id="tocBtn">contents</button>
+  <button id="smaller">A-</button>
+  <button id="bigger">A+</button>
+  <span class="grow" id="crumb"></span>
+</div>
+<nav id="toc"></nav>
+<div id="stage">
+  <div id="book">
+    <div class="spread">
+      <div id="leaf">
+        <div id="view"><div id="flow"></div></div>
+        <div id="nums"><span id="nL"></span><span id="nR"></span></div>
+      </div>
+      <div id="hitL"></div>
+      <div id="hitR"></div>
+      <div id="turn"></div>
+    </div>
+    <div id="cover">
+      <div class="face front"><img id="coverImg" alt=""></div>
+      <div class="face back"></div>
+    </div>
+    <div id="hint">click the cover to open</div>
+  </div>
+</div>
+<div id="prog"><i></i></div>
+<div id="load">opening the book...</div>
+<script>
+const qs = new URLSearchParams(location.search);
+const ID = qs.get('b');
+const flow = document.getElementById('flow');
+const view = document.getElementById('view');
+const book = document.getElementById('book');
+const cover = document.getElementById('cover');
+const turn = document.getElementById('turn');
+const tocEl = document.getElementById('toc');
+let meta = null, chapters = [], ch = 0, spread = 0, cols = 0, colW = 0, gap = 112, fs = 1.06, opened = false;
+
+const KEY = 'gutenberg-shelf:' + ID;
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ch, spread, fs})); } catch (e) {} };
+const restore = () => { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { return null; } };
+
+function splitChapters(raw){
+  const lines = raw.split('\n');
+  const marks = [];
+  const re = /^\s*(chapter|act|scene|letter|book|part|canto|volume)\s+([ivxlcdm]+|\d+)\b/i;
+  lines.forEach((l, i) => {
+    const t = l.trim();
+    if (t.length && t.length < 90 && re.test(t)) marks.push({i, title:t});
+  });
+  const out = [];
+  if (marks.length >= 3){
+    if (marks[0].i > 0) out.push({title:'Front matter', body:lines.slice(0, marks[0].i).join('\n')});
+    marks.forEach((m, k) => {
+      const end = k + 1 < marks.length ? marks[k+1].i : lines.length;
+      let title = m.title;
+      const nxt = (lines[m.i+1] || '').trim();
+      if (nxt && nxt.length < 70 && !re.test(nxt) && /[a-z]/i.test(nxt)) title += ' ' + String.fromCharCode(183) + ' ' + nxt;
+      out.push({title, body:lines.slice(m.i, end).join('\n')});
+    });
+  } else {
+    const paras = raw.split(/\n{2,}/);
+    let buf = [], size = 0, n = 1;
+    for (const p of paras){
+      buf.push(p); size += p.length;
+      if (size > 14000){ out.push({title:'Section ' + n++, body:buf.join('\n\n')}); buf = []; size = 0; }
+    }
+    if (buf.length) out.push({title:'Section ' + n, body:buf.join('\n\n')});
+  }
+  return out;
+}
+
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function render(i){
+  ch = Math.max(0, Math.min(chapters.length - 1, i));
+  const c = chapters[ch];
+  const paras = c.body.split(/\n{2,}/).map(p => p.replace(/\n+$/,'')).filter(p => p.trim());
+  let html = '<h2>' + esc(c.title.slice(0, 90)) + '</h2>';
+  let first = true;
+  paras.forEach((p, idx) => {
+    const ls = p.split('\n').filter(l => l.trim());
+    if (!ls.length) return;
+    const avg = ls.reduce((a,l) => a + l.trim().length, 0) / ls.length;
+    if (idx === 0 && ls.length === 1 && ls[0].trim().length < 90) return;
+    if (ls.length > 1 && avg < 52){
+      html += '<p class="verse">' + ls.map(l => esc(l.trim())).join('<br>') + '</p>';
+    } else {
+      const t = esc(ls.map(l => l.trim()).join(' '));
+      html += '<p class="' + (first ? 'first' : '') + '">' + t + '</p>';
+      first = false;
+    }
+  });
+  flow.innerHTML = html;
+  layout();
+  spread = 0;
+  apply();
+  [...tocEl.children].forEach((b, k) => b.classList.toggle('on', k === ch));
+  save();
+}
+
+function layout(){
+  const w = view.clientWidth;
+  const narrow = innerWidth <= 820;
+  gap = narrow ? 0 : 112;
+  colW = narrow ? w : (w - gap) / 2;
+  flow.style.fontSize = fs + 'rem';
+  flow.style.columnGap = gap + 'px';
+  flow.style.columnWidth = colW + 'px';
+  flow.style.transform = 'translateX(0)';
+  cols = Math.max(1, Math.round(flow.scrollWidth / (colW + gap)));
+}
+
+function apply(){
+  const per = innerWidth <= 820 ? 1 : 2;
+  const maxSpread = Math.max(0, Math.ceil(cols / per) - 1);
+  spread = Math.max(0, Math.min(maxSpread, spread));
+  flow.style.transform = 'translateX(' + (-spread * per * (colW + gap)) + 'px)';
+  const l = spread * per + 1;
+  document.getElementById('nL').textContent = l;
+  document.getElementById('nR').textContent = per === 2 ? (l + 1 <= cols ? l + 1 : '') : '';
+  document.getElementById('crumb').textContent = meta.title + ', ' + chapters[ch].title.slice(0, 40);
+  const frac = (ch + (maxSpread ? spread / (maxSpread + 1) : 0)) / chapters.length;
+  document.querySelector('#prog i').style.width = (frac * 100).toFixed(1) + '%';
+  save();
+}
+
+function page(dir){
+  if (!opened) return;
+  const per = innerWidth <= 820 ? 1 : 2;
+  const maxSpread = Math.max(0, Math.ceil(cols / per) - 1);
+  if (dir > 0 && spread >= maxSpread){
+    if (ch < chapters.length - 1){ flip(1, () => render(ch + 1)); }
+    return;
+  }
+  if (dir < 0 && spread <= 0){
+    if (ch > 0) flip(-1, () => { render(ch - 1); spread = 1e9; apply(); });
+    return;
+  }
+  flip(dir, () => { spread += dir; apply(); });
+}
+
+function flip(dir, done){
+  turn.className = dir > 0 ? 'go' : 'goback';
+  setTimeout(() => { done(); }, 210);
+  setTimeout(() => { turn.className = ''; turn.style.opacity = 0; }, 440);
+}
+
+document.getElementById('hitR').addEventListener('click', () => page(1));
+document.getElementById('hitL').addEventListener('click', () => page(-1));
+addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown'){ e.preventDefault(); page(1); }
+  if (e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); page(-1); }
+  if (e.key === 'Escape') location.href = '../';
+});
+let tx = 0;
+addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
+addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  if (Math.abs(dx) > 46) page(dx < 0 ? 1 : -1);
+}, {passive:true});
+document.getElementById('tocBtn').addEventListener('click', () => tocEl.classList.toggle('open'));
+document.getElementById('bigger').addEventListener('click', () => { fs = Math.min(1.5, fs + 0.08); layout(); apply(); });
+document.getElementById('smaller').addEventListener('click', () => { fs = Math.max(0.82, fs - 0.08); layout(); apply(); });
+let rt;
+addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { layout(); apply(); }, 180); });
+
+function openBook(){
+  if (opened) return;
+  opened = true;
+  cover.classList.add('open');
+  document.getElementById('hint').style.opacity = 0;
+  setTimeout(() => { cover.style.pointerEvents = 'none'; }, 1200);
+}
+cover.addEventListener('click', openBook);
+document.getElementById('hint').addEventListener('click', openBook);
+
+(async () => {
+  try {
+    const books = await (await fetch('books.json')).json();
+    meta = books.find(b => String(b.id) === String(ID)) || books[0];
+    document.title = meta.title;
+    document.getElementById('coverImg').src = meta.cover;
+    document.getElementById('coverImg').alt = meta.title;
+    const raw = await (await fetch('texts/' + meta.id + '.txt')).text();
+    chapters = splitChapters(raw);
+    tocEl.innerHTML = '';
+    chapters.forEach((c, i) => {
+      const b = document.createElement('button');
+      b.textContent = c.title.slice(0, 60);
+      b.addEventListener('click', () => { render(i); tocEl.classList.remove('open'); });
+      tocEl.appendChild(b);
+    });
+    const st = restore();
+    if (st && typeof st.fs === 'number') fs = st.fs;
+    render(st ? st.ch : 0);
+    if (st && st.spread){ spread = st.spread; apply(); }
+    document.getElementById('load').style.display = 'none';
+    setTimeout(openBook, 900);
+  } catch (e) {
+    document.getElementById('load').textContent = 'could not load this book: ' + e.message;
+  }
+})();
+</script>
+</body>
+</html>
