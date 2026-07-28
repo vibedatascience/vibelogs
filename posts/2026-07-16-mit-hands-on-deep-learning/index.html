@@ -102,6 +102,10 @@ footer a{color:var(--muted)}
 <a class="sub" href="#l3-things">Things in a model</a>
 <a class="sub" href="#l3-recap">Training flow recap</a>
 <a class="sub" href="#l3-colab">Colab walkthrough</a>
+<a class="sub" href="#l3-images">Images are numbers</a>
+<a class="sub" href="#l3-tasks">CV tasks</a>
+<a class="sub" href="#l3-softmax">Softmax</a>
+<a class="sub" href="#l3-encoding">Loss vs encoding</a>
 <a class="sub" href="#l3-qa">Q&amp;A</a>
 </nav>
 
@@ -1120,6 +1124,104 @@ model.evaluate(test_X, test_y)</code></pre>
 <div class="nbout">2/2 [====================] - 0s 7ms/step - loss: 0.3866 - accuracy: 0.8361
 [0.3865666091442108, 0.8360655903816223]</div>
 </details>
+
+
+
+<h3 id="l3-images">Computer vision: images are just numbers</h3>
+<ul>
+<li>A grayscale image is a rectangular array of pixels. The light intensity of each pixel is a number between 0 and 255: 0 is black, 255 is white, everything between is gray. The image IS the matrix.</li>
+<li>A color image stores three intensities per pixel, its redness, greenness, and blueness. So a color image is three matrices, the R, G, and B channels, each still 0-255.</li>
+</ul>
+
+<div class="widget">
+<div class="wtitle">An image is just a matrix of numbers</div>
+<svg viewBox="0 0 1100 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Grayscale image as a matrix of 0 to 255 intensities, color image as three stacked R G B matrices">
+<rect x="60" y="60" width="44" height="44" fill="rgb(25,25,25)" stroke="#E7E7E2"/><text x="82" y="87" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">25</text><rect x="106" y="60" width="44" height="44" fill="rgb(14,14,14)" stroke="#E7E7E2"/><text x="128" y="87" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">14</text><rect x="152" y="60" width="44" height="44" fill="rgb(30,30,30)" stroke="#E7E7E2"/><text x="174" y="87" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">30</text><rect x="198" y="60" width="44" height="44" fill="rgb(8,8,8)" stroke="#E7E7E2"/><text x="220" y="87" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">8</text><rect x="244" y="60" width="44" height="44" fill="rgb(238,238,238)" stroke="#E7E7E2"/><text x="266" y="87" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#17171C">238</text><rect x="290" y="60" width="44" height="44" fill="rgb(39,39,39)" stroke="#E7E7E2"/><text x="312" y="87" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">39</text><rect x="336" y="60" width="44" height="44" fill="rgb(11,11,11)" stroke="#E7E7E2"/><text x="358" y="87" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">11</text><rect x="382" y="60" width="44" height="44" fill="rgb(28,28,28)" stroke="#E7E7E2"/><text x="404" y="87" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">28</text><rect x="60" y="106" width="44" height="44" fill="rgb(8,8,8)" stroke="#E7E7E2"/><text x="82" y="133" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">8</text><rect x="106" y="106" width="44" height="44" fill="rgb(37,37,37)" stroke="#E7E7E2"/><text x="128" y="133" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">37</text><rect x="152" y="106" width="44" height="44" fill="rgb(18,18,18)" stroke="#E7E7E2"/><text x="174" y="133" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">18</text><rect x="198" y="106" width="44" height="44" fill="rgb(7,7,7)" stroke="#E7E7E2"/><text x="220" y="133" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">7</text><rect x="244" y="106" width="44" height="44" fill="rgb(204,204,204)" stroke="#E7E7E2"/><text x="266" y="133" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#17171C">204</text><rect x="290" y="106" width="44" height="44" fill="rgb(32,32,32)" stroke="#E7E7E2"/><text x="312" y="133" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">32</text><rect x="336" y="106" width="44" height="44" fill="rgb(31,31,31)" stroke="#E7E7E2"/><text x="358" y="133" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">31</text><rect x="382" y="106" width="44" height="44" fill="rgb(9,9,9)" stroke="#E7E7E2"/><text x="404" y="133" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">9</text><rect x="60" y="152" width="44" height="44" fill="rgb(20,20,20)" stroke="#E7E7E2"/><text x="82" y="179" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">20</text><rect x="106" y="152" width="44" height="44" fill="rgb(10,10,10)" stroke="#E7E7E2"/><text x="128" y="179" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">10</text><rect x="152" y="152" width="44" height="44" fill="rgb(40,40,40)" stroke="#E7E7E2"/><text x="174" y="179" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">40</text><rect x="198" y="152" width="44" height="44" fill="rgb(32,32,32)" stroke="#E7E7E2"/><text x="220" y="179" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">32</text><rect x="244" y="152" width="44" height="44" fill="rgb(207,207,207)" stroke="#E7E7E2"/><text x="266" y="179" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#17171C">207</text><rect x="290" y="152" width="44" height="44" fill="rgb(12,12,12)" stroke="#E7E7E2"/><text x="312" y="179" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">12</text><rect x="336" y="152" width="44" height="44" fill="rgb(19,19,19)" stroke="#E7E7E2"/><text x="358" y="179" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">19</text><rect x="382" y="152" width="44" height="44" fill="rgb(8,8,8)" stroke="#E7E7E2"/><text x="404" y="179" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">8</text><rect x="60" y="198" width="44" height="44" fill="rgb(232,232,232)" stroke="#E7E7E2"/><text x="82" y="225" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#17171C">232</text><rect x="106" y="198" width="44" height="44" fill="rgb(226,226,226)" stroke="#E7E7E2"/><text x="128" y="225" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#17171C">226</text><rect x="152" y="198" width="44" height="44" fill="rgb(210,210,210)" stroke="#E7E7E2"/><text x="174" y="225" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#17171C">210</text><rect x="198" y="198" width="44" height="44" fill="rgb(248,248,248)" stroke="#E7E7E2"/><text x="220" y="225" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#17171C">248</text><rect x="244" y="198" width="44" height="44" fill="rgb(221,221,221)" stroke="#E7E7E2"/><text x="266" y="225" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#17171C">221</text><rect x="290" y="198" width="44" height="44" fill="rgb(209,209,209)" stroke="#E7E7E2"/><text x="312" y="225" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#17171C">209</text><rect x="336" y="198" width="44" height="44" fill="rgb(231,231,231)" stroke="#E7E7E2"/><text x="358" y="225" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#17171C">231</text><rect x="382" y="198" width="44" height="44" fill="rgb(226,226,226)" stroke="#E7E7E2"/><text x="404" y="225" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#17171C">226</text><rect x="60" y="244" width="44" height="44" fill="rgb(14,14,14)" stroke="#E7E7E2"/><text x="82" y="271" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">14</text><rect x="106" y="244" width="44" height="44" fill="rgb(39,39,39)" stroke="#E7E7E2"/><text x="128" y="271" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">39</text><rect x="152" y="244" width="44" height="44" fill="rgb(12,12,12)" stroke="#E7E7E2"/><text x="174" y="271" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">12</text><rect x="198" y="244" width="44" height="44" fill="rgb(24,24,24)" stroke="#E7E7E2"/><text x="220" y="271" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">24</text><rect x="244" y="244" width="44" height="44" fill="rgb(202,202,202)" stroke="#E7E7E2"/><text x="266" y="271" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#17171C">202</text><rect x="290" y="244" width="44" height="44" fill="rgb(16,16,16)" stroke="#E7E7E2"/><text x="312" y="271" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">16</text><rect x="336" y="244" width="44" height="44" fill="rgb(11,11,11)" stroke="#E7E7E2"/><text x="358" y="271" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">11</text><rect x="382" y="244" width="44" height="44" fill="rgb(17,17,17)" stroke="#E7E7E2"/><text x="404" y="271" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">17</text><rect x="60" y="290" width="44" height="44" fill="rgb(28,28,28)" stroke="#E7E7E2"/><text x="82" y="317" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">28</text><rect x="106" y="290" width="44" height="44" fill="rgb(11,11,11)" stroke="#E7E7E2"/><text x="128" y="317" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">11</text><rect x="152" y="290" width="44" height="44" fill="rgb(40,40,40)" stroke="#E7E7E2"/><text x="174" y="317" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">40</text><rect x="198" y="290" width="44" height="44" fill="rgb(9,9,9)" stroke="#E7E7E2"/><text x="220" y="317" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">9</text><rect x="244" y="290" width="44" height="44" fill="rgb(242,242,242)" stroke="#E7E7E2"/><text x="266" y="317" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#17171C">242</text><rect x="290" y="290" width="44" height="44" fill="rgb(18,18,18)" stroke="#E7E7E2"/><text x="312" y="317" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">18</text><rect x="336" y="290" width="44" height="44" fill="rgb(36,36,36)" stroke="#E7E7E2"/><text x="358" y="317" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">36</text><rect x="382" y="290" width="44" height="44" fill="rgb(39,39,39)" stroke="#E7E7E2"/><text x="404" y="317" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">39</text><rect x="60" y="336" width="44" height="44" fill="rgb(32,32,32)" stroke="#E7E7E2"/><text x="82" y="363" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">32</text><rect x="106" y="336" width="44" height="44" fill="rgb(25,25,25)" stroke="#E7E7E2"/><text x="128" y="363" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">25</text><rect x="152" y="336" width="44" height="44" fill="rgb(34,34,34)" stroke="#E7E7E2"/><text x="174" y="363" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">34</text><rect x="198" y="336" width="44" height="44" fill="rgb(34,34,34)" stroke="#E7E7E2"/><text x="220" y="363" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">34</text><rect x="244" y="336" width="44" height="44" fill="rgb(204,204,204)" stroke="#E7E7E2"/><text x="266" y="363" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#17171C">204</text><rect x="290" y="336" width="44" height="44" fill="rgb(24,24,24)" stroke="#E7E7E2"/><text x="312" y="363" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">24</text><rect x="336" y="336" width="44" height="44" fill="rgb(20,20,20)" stroke="#E7E7E2"/><text x="358" y="363" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">20</text><rect x="382" y="336" width="44" height="44" fill="rgb(16,16,16)" stroke="#E7E7E2"/><text x="404" y="363" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">16</text><rect x="60" y="382" width="44" height="44" fill="rgb(20,20,20)" stroke="#E7E7E2"/><text x="82" y="409" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">20</text><rect x="106" y="382" width="44" height="44" fill="rgb(10,10,10)" stroke="#E7E7E2"/><text x="128" y="409" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">10</text><rect x="152" y="382" width="44" height="44" fill="rgb(24,24,24)" stroke="#E7E7E2"/><text x="174" y="409" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">24</text><rect x="198" y="382" width="44" height="44" fill="rgb(38,38,38)" stroke="#E7E7E2"/><text x="220" y="409" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">38</text><rect x="244" y="382" width="44" height="44" fill="rgb(248,248,248)" stroke="#E7E7E2"/><text x="266" y="409" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#17171C">248</text><rect x="290" y="382" width="44" height="44" fill="rgb(26,26,26)" stroke="#E7E7E2"/><text x="312" y="409" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">26</text><rect x="336" y="382" width="44" height="44" fill="rgb(33,33,33)" stroke="#E7E7E2"/><text x="358" y="409" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">33</text><rect x="382" y="382" width="44" height="44" fill="rgb(23,23,23)" stroke="#E7E7E2"/><text x="404" y="409" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#FAFAF8">23</text>
+<text x="245" y="35" text-anchor="middle" font-family="IBM Plex Mono" font-size="17" fill="#17171C">grayscale: one matrix, 0-255 per pixel</text>
+<text x="245" y="455" text-anchor="middle" font-family="IBM Plex Mono" font-size="15" fill="#6E6E76">0 = black, 255 = white</text>
+<rect x="600" y="120" width="300" height="230" rx="8" fill="#FAFAF8" stroke="#2545FF" stroke-width="2.5"/>
+<rect x="630" y="90" width="300" height="230" rx="8" fill="#FAFAF8" stroke="#0d9488" stroke-width="2.5"/>
+<rect x="660" y="60" width="300" height="230" rx="8" fill="#FAFAF8" stroke="#E60023" stroke-width="2.5"/>
+<text x="810" y="180" text-anchor="middle" font-family="IBM Plex Mono" font-size="17" fill="#E60023">red channel</text>
+<text x="700" y="305" font-family="IBM Plex Mono" font-size="15" fill="#0d9488">green</text>
+<text x="640" y="337" font-family="IBM Plex Mono" font-size="15" fill="#2545FF">blue</text>
+<text x="780" y="410" text-anchor="middle" font-family="IBM Plex Mono" font-size="17" fill="#17171C">color: three matrices, one per channel,</text>
+<text x="780" y="435" text-anchor="middle" font-family="IBM Plex Mono" font-size="17" fill="#17171C">each still 0-255</text>
+</svg>
+</div>
+
+<h3 id="l3-tasks">Key tasks in computer vision</h3>
+<ul>
+<li>Five tasks in increasing order of difficulty. Classification: one label for the whole image. Classification + localization: the label plus a bounding box. Object detection: boxes on every object. Semantic segmentation: every pixel classified into one of N categories. Instance segmentation: every pixel classified AND separate instances of the same category told apart (sheep 1 vs sheep 2 vs sheep 3).</li>
+</ul>
+
+<div class="widget">
+<div class="wtitle">Key tasks in computer vision, easiest to hardest</div>
+<svg viewBox="0 0 1100 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Five tasks: classification, classification with localization, object detection, semantic segmentation, instance segmentation">
+<rect x="20" y="60" width="190" height="150" rx="8" fill="#fff" stroke="#E7E7E2" stroke-width="2"/>
+<ellipse cx="115" cy="140" rx="26" ry="17" fill="#FAFAF8" stroke="#6E6E76" stroke-width="2"/><circle cx="135" cy="128" r="9" fill="#FAFAF8" stroke="#6E6E76" stroke-width="2"/><text x="115" y="95" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#2545FF">"sheep"</text>
+<text x="115" y="245" text-anchor="middle" font-family="IBM Plex Mono" font-size="15" fill="#17171C">classification</text>
+<text x="115" y="268" text-anchor="middle" font-family="IBM Plex Mono" font-size="12.5" fill="#6E6E76">one label: sheep</text><rect x="235" y="60" width="190" height="150" rx="8" fill="#fff" stroke="#E7E7E2" stroke-width="2"/>
+<ellipse cx="330" cy="140" rx="26" ry="17" fill="#FAFAF8" stroke="#6E6E76" stroke-width="2"/><circle cx="350" cy="128" r="9" fill="#FAFAF8" stroke="#6E6E76" stroke-width="2"/><rect x="292" y="108" width="80" height="58" fill="none" stroke="#2545FF" stroke-width="2.5"/>
+<text x="330" y="245" text-anchor="middle" font-family="IBM Plex Mono" font-size="15" fill="#17171C">+ localization</text>
+<text x="330" y="268" text-anchor="middle" font-family="IBM Plex Mono" font-size="12.5" fill="#6E6E76">label + one box</text><rect x="450" y="60" width="190" height="150" rx="8" fill="#fff" stroke="#E7E7E2" stroke-width="2"/>
+<ellipse cx="510" cy="120" rx="26" ry="17" fill="#FAFAF8" stroke="#6E6E76" stroke-width="2"/><circle cx="530" cy="108" r="9" fill="#FAFAF8" stroke="#6E6E76" stroke-width="2"/><ellipse cx="580" cy="165" rx="26" ry="17" fill="#FAFAF8" stroke="#6E6E76" stroke-width="2"/><circle cx="600" cy="153" r="9" fill="#FAFAF8" stroke="#6E6E76" stroke-width="2"/><rect x="475" y="90" width="74" height="52" fill="none" stroke="#2545FF" stroke-width="2.5"/><rect x="545" y="135" width="74" height="52" fill="none" stroke="#2545FF" stroke-width="2.5"/>
+<text x="545" y="245" text-anchor="middle" font-family="IBM Plex Mono" font-size="15" fill="#17171C">object detection</text>
+<text x="545" y="268" text-anchor="middle" font-family="IBM Plex Mono" font-size="12.5" fill="#6E6E76">boxes on every object</text><rect x="665" y="60" width="190" height="150" rx="8" fill="#fff" stroke="#E7E7E2" stroke-width="2"/>
+<ellipse cx="725" cy="120" rx="26" ry="17" fill="#BFD0FF" stroke="#2545FF" stroke-width="2"/><circle cx="745" cy="108" r="9" fill="#BFD0FF" stroke="#2545FF" stroke-width="2"/><ellipse cx="795" cy="165" rx="26" ry="17" fill="#BFD0FF" stroke="#2545FF" stroke-width="2"/><circle cx="815" cy="153" r="9" fill="#BFD0FF" stroke="#2545FF" stroke-width="2"/>
+<text x="760" y="245" text-anchor="middle" font-family="IBM Plex Mono" font-size="15" fill="#17171C">semantic seg.</text>
+<text x="760" y="268" text-anchor="middle" font-family="IBM Plex Mono" font-size="12.5" fill="#6E6E76">every pixel classified</text><rect x="880" y="60" width="190" height="150" rx="8" fill="#fff" stroke="#E7E7E2" stroke-width="2"/>
+<ellipse cx="940" cy="120" rx="26" ry="17" fill="#BFD0FF" stroke="#2545FF" stroke-width="2"/><circle cx="960" cy="108" r="9" fill="#BFD0FF" stroke="#2545FF" stroke-width="2"/><ellipse cx="1010" cy="165" rx="26" ry="17" fill="#FFC2CE" stroke="#E60023" stroke-width="2"/><circle cx="1030" cy="153" r="9" fill="#FFC2CE" stroke="#E60023" stroke-width="2"/>
+<text x="975" y="245" text-anchor="middle" font-family="IBM Plex Mono" font-size="15" fill="#17171C">instance seg.</text>
+<text x="975" y="268" text-anchor="middle" font-family="IBM Plex Mono" font-size="12.5" fill="#6E6E76">pixels + which sheep</text>
+</svg>
+</div>
+
+<h3 id="l3-softmax">Multi-class output: the softmax layer</h3>
+<ul>
+<li>Fashion-MNIST: 70,000 grayscale images of clothing across 10 categories. The goal is a from-scratch network above 90% accuracy.</li>
+<li>The build-up: we know how to output 10 numbers (a stack of 10 linear units). We know how to output 10 probabilities (sigmoid on each). What we need is 10 probabilities that sum to 1, since exactly one class is right.</li>
+<li>Softmax takes in n arbitrary numbers and converts them to n probabilities: exponentiate each, divide by the sum of the exponentials. Order is preserved, so the biggest input gets the biggest probability.</li>
+</ul>
+
+<div class="widget">
+<div class="wtitle">Softmax: n arbitrary numbers in, n probabilities out</div>
+<svg viewBox="0 0 1100 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three arbitrary numbers flow into a softmax box and come out as three probabilities that sum to one">
+<style>.sf{font-family:'IBM Plex Mono',monospace;font-size:22px;fill:#17171C}.ss{font-family:'IBM Plex Mono',monospace;font-size:16px;fill:#6E6E76}.se{stroke:#6E6E76;stroke-width:2.5;fill:none}</style>
+<text class="sf" x="120" y="90">z1 = 2.0</text>
+<text class="sf" x="120" y="160">z2 = 1.0</text>
+<text class="sf" x="120" y="230">z3 = 0.1</text>
+<rect x="420" y="70" width="230" height="180" rx="10" fill="#FAFAF8" stroke="#2545FF" stroke-width="2.5"/>
+<text class="sf" x="535" y="150" text-anchor="middle" fill="#2545FF">softmax</text>
+<text class="ss" x="535" y="185" text-anchor="middle">e&#7523; / &#931; e&#7523;</text>
+<path class="se" d="M300 82 h115"/><path d="M418 82 l-13 -7 v14 z" fill="#6E6E76"/>
+<path class="se" d="M300 152 h115"/><path d="M418 152 l-13 -7 v14 z" fill="#6E6E76"/>
+<path class="se" d="M300 222 h115"/><path d="M418 222 l-13 -7 v14 z" fill="#6E6E76"/>
+<path class="se" d="M650 82 h115"/><path d="M768 82 l-13 -7 v14 z" fill="#6E6E76"/>
+<path class="se" d="M650 152 h115"/><path d="M768 152 l-13 -7 v14 z" fill="#6E6E76"/>
+<path class="se" d="M650 222 h115"/><path d="M768 222 l-13 -7 v14 z" fill="#6E6E76"/>
+<text class="sf" x="790" y="90">0.659</text>
+<text class="sf" x="790" y="160">0.242</text>
+<text class="sf" x="790" y="230">0.099</text>
+<text class="ss" x="850" y="275" text-anchor="middle">sums to 1.0, biggest number wins</text>
+</svg>
+</div>
+
+<table>
+<tr><th>Output variable</th><th>Output layer</th><th>Loss function</th></tr>
+<tr><td>single number (regression)</td><td>1 linear unit</td><td>mean squared error</td></tr>
+<tr><td>single probability (binary classification)</td><td>sigmoid</td><td>binary cross entropy</td></tr>
+<tr><td>vector of n numbers (multi-output regression)</td><td>stack of n linear units</td><td>mean squared error</td></tr>
+<tr><td>n probabilities summing to 1 (multi-class)</td><td>softmax</td><td>categorical cross entropy</td></tr>
+</table>
+
+<h3 id="l3-encoding">Match the loss to the label encoding</h3>
+<ul>
+<li>Binary 0/1 labels: binary_crossentropy.</li>
+<li>Multi-class labels stored as integers (0, 1, ..., 9): sparse_categorical_crossentropy.</li>
+<li>Multi-class labels stored one-hot: categorical_crossentropy.</li>
+<li>Same math underneath for the two categorical versions; the only difference is how your y is encoded. Pick the Keras loss that matches or nothing lines up.</li>
+</ul>
 
 <h3 id="l3-qa">Q&amp;A from the room</h3>
 
