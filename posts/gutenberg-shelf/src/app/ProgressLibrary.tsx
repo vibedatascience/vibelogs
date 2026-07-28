@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { catalog } from "./catalog";
 import { ShelfEngine, type ShelfMode } from "./ShelfEngine";
+import { VolumeReader } from "./VolumeReader";
 import { siteConfig } from "./site-config";
 
 function ArrowIcon({ direction }: { direction: "left" | "right" }) {
@@ -21,6 +22,19 @@ export function ProgressLibrary() {
   const [mode, setMode] = useState<ShelfMode>("browse");
   const [ready, setReady] = useState(false);
   const [status, setStatus] = useState("Preparing the complete catalog");
+  const [readingIndex, setReadingIndex] = useState<number | null>(null);
+  const modeRef = useRef<ShelfMode>("browse");
+  const selectedRef = useRef<number | null>(null);
+  const tapRef = useRef<{ x: number; y: number; t: number } | null>(null);
+
+  const openSelected = () => {
+    window.setTimeout(() => {
+      const m = modeRef.current;
+      if ((m === "inspect" || m === "focusing") && selectedRef.current !== null) {
+        setReadingIndex(selectedRef.current);
+      }
+    }, 150);
+  };
 
   const activeBook = catalog[activeIndex];
   const selectedBook = useMemo(
@@ -43,6 +57,8 @@ export function ProgressLibrary() {
         onMode: (nextMode, index) => {
           setMode(nextMode);
           setSelectedIndex(index);
+          modeRef.current = nextMode;
+          selectedRef.current = index;
         },
         onStatus: setStatus,
         onReady: () => setReady(true),
@@ -70,7 +86,24 @@ export function ProgressLibrary() {
         data-testid="shelf-canvas"
         role="application"
         tabIndex={0}
-        aria-label={`Interactive three-dimensional shelf of ${catalog.length} books. Drag or use the arrow keys to browse. Press Enter to inspect the selected book.`}
+        aria-label={`Interactive three-dimensional shelf of ${catalog.length} books. Drag or use the arrow keys to browse. Press Enter to inspect the selected book, then press Enter again to open and read it.`}
+        onPointerDown={(event) => {
+          tapRef.current = { x: event.clientX, y: event.clientY, t: Date.now() };
+        }}
+        onPointerUp={(event) => {
+          const start = tapRef.current;
+          tapRef.current = null;
+          if (!start) return;
+          const moved = Math.hypot(event.clientX - start.x, event.clientY - start.y);
+          if (moved > 7 || Date.now() - start.t > 650) return;
+          openSelected();
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" && modeRef.current !== "browse") {
+            event.preventDefault();
+            openSelected();
+          }
+        }}
       />
 
       <header className="site-header">
@@ -208,18 +241,17 @@ export function ProgressLibrary() {
                 </div>
               </dl>
 
-              <a
+              <button
+                type="button"
                 className="official-link"
                 data-testid="official-link"
-                href={selectedBook.url}
-                target="_blank"
-                rel="noreferrer"
+                onClick={() =>
+                  selectedIndex !== null && setReadingIndex(selectedIndex)
+                }
               >
-                <span>
-                  {selectedBook.linkLabel ?? siteConfig.bookLinkLabel}
-                </span>
+                <span>Click the volume to open it</span>
                 <span aria-hidden="true">↗</span>
-              </a>
+              </button>
             </div>
 
             <div className="focus-controls" aria-label="Inspection controls">
@@ -236,6 +268,13 @@ export function ProgressLibrary() {
           </div>
         ) : null}
       </aside>
+
+      {readingIndex !== null ? (
+        <VolumeReader
+          book={catalog[readingIndex]}
+          onClose={() => setReadingIndex(null)}
+        />
+      ) : null}
 
       <div
         className="experience-status"
