@@ -102,6 +102,7 @@ footer a{color:var(--muted)}
 <a class="sub" href="#l3-things">Things in a model</a>
 <a class="sub" href="#l3-recap">Training flow recap</a>
 <a class="sub" href="#l3-colab">Colab walkthrough</a>
+<a class="sub" href="#l3-qa">Q&amp;A</a>
 </nav>
 
 <header class="post">
@@ -1119,6 +1120,59 @@ model.evaluate(test_X, test_y)</code></pre>
 <div class="nbout">2/2 [====================] - 0s 7ms/step - loss: 0.3866 - accuracy: 0.8361
 [0.3865666091442108, 0.8360655903816223]</div>
 </details>
+
+<h3 id="l3-qa">Q&amp;A from the room</h3>
+
+<details><summary>In SGD, is a batch a subset of the variables or of the data?</summary>
+<p>Rows, i.e. data points. From 1,000 patients or images you take, say, 32 as a batch, then the next 32, and so on, updating the weights after each batch.</p></details>
+
+<details><summary>What exactly is an epoch, and how many weight updates happen inside one?</summary>
+<p>An epoch is one full pass through the training data. Within it, the weights update once per batch, so updates per epoch = training set size divided by batch size, rounded up. Plain gradient descent is the special case of one update per epoch. And each batch runs through the entire network, because without going through every layer you get no prediction, and without a prediction you get no loss.</p></details>
+
+<details><summary>Does SGD give a better solution or need less compute?</summary>
+<p>Both. The reasons are in the previous lecture: cheaper per step, and the approximation noise helps escape local minima.</p></details>
+
+<details><summary>Doesn't using the validation set to fight overfitting itself cause overfitting?</summary>
+<p>No. The validation set is never used to calculate gradients. It only gets evaluated for loss and accuracy. Being kept out of training is what keeps you honest.</p></details>
+
+<details><summary>What is a tensor?</summary>
+<p>Simpler than it sounds, and it can be simpler than a matrix. A number is a tensor. A vector is a tensor. A matrix is a tensor. In general a rank-N tensor is just a list of rank N-1 tensors, so a color video is a stream of color images: iterate the first dimension and you get frames. That recursive view is the one thing worth remembering.</p></details>
+
+<details><summary>What is the naive baseline for the heart disease data?</summary>
+<p>Predict 0 every time. Since 72.6% of patients are 0, that scores 72.6% accuracy, and any model you build has to beat it.</p></details>
+
+<details><summary>Why split into train and test before standardizing?</summary>
+<p>Standardization is part of the modeling process. If its means and standard deviations include test rows, the test set has leaked into training and is no longer a clean measure. The test score would be a lie.</p></details>
+
+<details><summary>We already have a test set. Why hold out a validation set too?</summary>
+<p>Different jobs. The validation set answers training-time questions: when to stop early, which hyperparameter values to pick. The test set stays untouched until the very end for the final honest number.</p></details>
+
+<details><summary>Can we use metrics other than accuracy?</summary>
+<p>Yes, anything: error rates, F1, F-beta, confusion matrix numbers. Metrics are only reporting, they carry no mathematical weight in training, and Keras offers a dizzying list.</p></details>
+
+<details><summary>Is the validation set re-drawn every epoch?</summary>
+<p>No. It is taken out of the training set once at the very beginning (leaving 193 rows here), kept aside, and only evaluated at the end of each epoch. No cross-validation, no reshuffling.</p></details>
+
+<details><summary>What actually changes from one epoch to the next?</summary>
+<p>Only the weights. After every minibatch the weights have moved; at the end of an epoch you have seen all the data once, and you go back to the beginning and do it again with the new weights.</p></details>
+
+<details><summary>The rule of thumb was 20-30 epochs. Why run 300?</summary>
+<p>Because with only 20-30 you might never see the overfitting. Running long makes the divergence between training and validation visible, and then you know where the good stopping point is.</p></details>
+
+<details><summary>How can accuracy keep improving while validation loss gets worse?</summary>
+<p>They are related but not the same. Accuracy is discrete: a prediction of 0.49 counts as a 0 whether the model is barely unsure or badly miscalibrated. Loss is continuous and punishes growing confidence in wrong answers even when the rounded class calls stay the same.</p></details>
+
+<details><summary>Should you retrain and stop at epoch 50 where validation loss bottomed out?</summary>
+<p>Try it, and judge on the validation set. Here the loss favors stopping at 50 but the accuracy actually favors running longer, so the two criteria disagree, which is exactly why you look before deciding.</p></details>
+
+<details><summary>Can the model be built to give fewer false positives or false negatives?</summary>
+<p>Yes. Reporting them is trivial, and beyond that there are loss functions that bake the asymmetry between the two error types directly into training.</p></details>
+
+<details><summary>What do pixel values 0 to 255 measure?</summary>
+<p>A relative brightness scale. Digitizing a picture maps the amount of light at each pixel onto 0 to 255, nothing deeper than that.</p></details>
+
+<details><summary>For 10 classes, why probabilities instead of forcing a 1 for the right class?</summary>
+<p>You cannot force a network to emit exact 1s and 0s; it produces what it produces. The best you can do is tame the outputs into a range you like. With one right answer among 10, you need 10 probabilities that sum to 1, which is what softmax is for.</p></details>
 
 
 
