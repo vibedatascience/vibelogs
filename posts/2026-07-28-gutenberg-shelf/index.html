@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Rahul">
+<title>A Three.js shelf of the 20 most downloaded Gutenberg books | vibelogs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#FAFAF8;--ink:#17171C;--cobalt:#2545FF;--muted:#6E6E76;--rule:#E7E7E2;--chip:#EEF1FF}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:17px;line-height:1.7}
+.wrap{max-width:680px;margin:0 auto;padding:0 24px}
+.top{padding:40px 0 0;font-family:'IBM Plex Mono',monospace;font-size:0.8rem}
+.top a{color:var(--muted);text-decoration:none}
+.top a:hover{color:var(--cobalt)}
+header.post{padding:32px 0 24px;border-bottom:1px solid var(--rule)}
+.meta{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted);display:flex;gap:10px;align-items:center;margin-bottom:14px}
+.upd{color:var(--muted)}
+.tag{background:var(--chip);color:var(--cobalt);padding:1px 8px;border-radius:4px;font-weight:500}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.7rem,5vw,2.3rem);letter-spacing:-0.02em;line-height:1.2}
+article{padding:32px 0 60px}
+article h2{font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:1.3rem;margin:36px 0 12px}
+article p{margin:0 0 18px}
+article ol,article ul{margin:0 0 18px 22px}
+article li{margin-bottom:8px}
+article a{color:var(--cobalt)}
+pre{background:#111116;color:#E8E8EE;font-family:'IBM Plex Mono',monospace;font-size:0.82rem;line-height:1.55;padding:16px 18px;border-radius:8px;overflow-x:auto;margin:0 0 18px}
+code{font-family:'IBM Plex Mono',monospace;font-size:0.86em;background:var(--chip);padding:1px 5px;border-radius:4px}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;margin:0 0 18px;font-size:0.9rem}
+th,td{border:1px solid var(--rule);padding:8px 12px;text-align:left;vertical-align:top}
+th{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);background:#fff}
+.gotcha{border-left:3px solid var(--cobalt);padding:12px 16px;background:#fff;margin:0 0 18px}
+.gotcha strong{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;letter-spacing:0.08em;color:var(--cobalt)}
+.viz{margin:0 0 18px}
+.viz iframe{width:100%;height:640px;border:1px solid var(--rule);border-radius:8px;background:#02040a}
+.viz .open{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;margin-top:8px}
+footer{border-top:1px solid var(--rule);padding:24px 0 56px;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted)}
+footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><a href="../../">← vibelogs</a></div>
+
+<header class="post">
+</head>
+<body>
+<div class="wrap">
+<div class="top"><a href="../../">&#8592; vibelogs</a></div>
+
+<header class="post">
+  <div class="meta"><span>[2026-07-28]</span><span>Rahul</span><span class="upd">updated 2026-07-28</span><span class="tag">DATA-SCIENCE</span></div>
+  <h1>A Three.js shelf of the 20 most downloaded Gutenberg books</h1>
+</header>
+
+<article>
+<p>Mint published <a href="https://play.mint.gg/complete-shelf">The Complete Shelf</a>, a browsable Three.js bookshelf with a demo catalog of Stripe Press titles. I wanted the same thing pointed at Project Gutenberg, so this is a shelf built from scratch that holds the 20 most downloaded books on Gutenberg as of today. Drag or scroll to move along the shelf, and click a book to pull it out, turn it, and read its catalog record.</p>
+
+<div class="viz">
+<iframe src="shelf.html" title="The Gutenberg Shelf" loading="lazy"></iframe>
+<div class="open"><a href="shelf.html">open full screen &#8594;</a></div>
+</div>
+
+<h2>Where the books come from</h2>
+<p>The catalog is one call to <a href="https://gutendex.com/">Gutendex</a>, a free JSON API over the Gutenberg catalog that needs no key. Sorting by popularity gives the download ranking, and each record carries the title, author with birth and death years, Library of Congress subject headings, a 30 day download count, and a link to a cover image.</p>
+<pre><code>GET https://gutendex.com/books?sort=popular</code></pre>
+<p>Nothing on the page is fetched at runtime. The 20 records are frozen into a <code>catalog.js</code> file and the cover images are resized to 420px wide and served from the post folder, which is 396KB for all 20. That keeps the shelf working if Gutendex is down and stops the ranking from silently rearranging itself later. Only bibliographic metadata is stored, and none of the book text.</p>
+
+<h2>How a book gets built</h2>
+<p>Each book is one <code>BoxGeometry</code> with six materials, and the interesting part is that the box dimensions come out of the data rather than being picked by hand.</p>
+<ul>
+<li>Height is a hash of the Gutenberg ID, so it is stable per book and the shelf line is uneven the way a real one is.</li>
+<li>Depth is height multiplied by the aspect ratio of the real cover scan, so the cover fits the face without stretching.</li>
+<li>Spine thickness scales with download count, which makes Moby Dick the fattest volume on the shelf.</li>
+</ul>
+<p>The spine is a 160 by 1024 canvas texture: cloth color, a gradient for the rounded edges, a thin gilt rule, then the title and the author surname drawn rotated 90 degrees. The front cover face gets the Gutenberg scan loaded as a texture, with the cloth color as the fallback if the image fails. The top, bottom, and fore edge share one small canvas of cream page stripes.</p>
+
+<h2>Browse and focus</h2>
+<p>There are two states and no camera library. In browse the camera slides along x and always looks at the same point on the shelf, driven by drag, wheel, arrow keys, or the tick marks at the bottom. In focus the camera stays put and the book itself flies forward and rotates, so dragging spins the volume rather than orbiting the world. The background is pushed away by raising the exponential fog density from 0.018 to 0.115 over about a second, which fades the rest of the shelf toward the paper background without touching a single material.</p>
+
+<div class="gotcha"><strong>GOTCHA &#183; TOP</strong><br>
+Naming a mesh <code>const top</code> at script scope throws "Identifier 'top' has already been declared", because <code>window.top</code> already exists as a property of the global object. The page rendered nothing and the only clue was that one line in the console. Same trap waits on <code>name</code>, <code>status</code>, <code>length</code>, and <code>parent</code>.</div>
+
+<div class="gotcha"><strong>GOTCHA &#183; CANVAS FONTS</strong><br>
+Canvas text draws with whatever font is loaded at the moment <code>fillText</code> runs. Building spine textures during setup gives you Georgia fallback on a cold load. The fix is to build once, then rebuild the spine textures inside <code>document.fonts.ready.then()</code> and dispose the first set.</div>
+
+<div class="gotcha"><strong>GOTCHA &#183; MATERIAL ORDER</strong><br>
+Material index order on a box is +x, -x, +y, -y, +z, -z. The spine faces the camera at +z, so it is index 4, and the cover sits on +x at index 0. Rotating <code>rotation.y</code> to -90 degrees is what swings that cover face toward the viewer in focus mode.</div>
+
+<h2>Checking it without a screen</h2>
+<p>I cannot see the page while building it, so the render loop was verified with headless Chromium through Puppeteer, using <code>--use-gl=swiftshader</code> for software WebGL. The script loads the page, screenshots the browse state, clicks the middle of the viewport, waits, and screenshots the focus state, while collecting page errors and any response with a status of 400 or higher. That is what caught the <code>top</code> collision on the first run.</p>
+</article>
+
+<footer>
+<a href="../../">&#8592; back to all logs</a>
+</footer>
+</div>
+</body>
+</html>
