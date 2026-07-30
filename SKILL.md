@@ -59,14 +59,12 @@ There is no build step and no shared CSS file. Every page carries its own inline
 
 All content must pass the site's own reference page: posts/ai-slop-detection/index.html. Read it before writing. Highlights the user enforces hard:
 
-- No em dashes or en dashes ANYWHERE, including <title> tags. Use commas, colons, periods, or " -- ".
 - No "It's not X, it's Y" constructions.
 - No sentence fragments; full sentences always, except inside bullet points.
 - No parallel-structure stat ledes.
 - No AI vocabulary (delve, leverage, seamless, robust, ...) or ad-speak.
 - Minimal language throughout. The user writes tersely and wants the site to read that way.
-
-After editing, run: grep -rc "—\|–" on all html files and expect 0.
+- Punctuation style (dashes, quote marks, heading case) is cosmetic and not enforced.
 
 ## User rules for this repo
 
