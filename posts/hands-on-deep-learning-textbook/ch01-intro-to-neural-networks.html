@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A hands-on deep learning textbook companion to MIT 15.773">
+  <title>Chapter 1: Introduction to Neural Networks and Deep Learning · Hands-On Deep Learning</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
+  </script>
+  <script defer src="mathjax/tex-svg.js"></script>
+  <script defer src="search-index.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"></div>
+  <aside class="sidebar">
+    <a class="brand" href="index.html">Hands-On Deep Learning</a>
+    <div class="brand-subtitle">MIT 15.773 · Spring 2024 companion</div>
+    <input class="search" type="search" placeholder="Search the full book…" data-search aria-label="Search">
+    <div class="search-results hidden" data-search-results></div>
+    <nav><div class="nav-part">Front Matter</div>
+<a class="nav-link" href="index.html">Start Here</a>
+<div class="nav-part">Part I · Foundations</div>
+<a class="nav-link active" href="ch01-intro-to-neural-networks.html">1 · Neural Networks</a>
+<a class="nav-link" href="ch02-training-deep-networks.html">2 · Training Deep Networks</a>
+<a class="nav-link" href="ch03-keras-and-cnns-from-scratch.html">3 · Keras and Vision Basics</a>
+<div class="nav-part">Part II · Computer Vision</div>
+<a class="nav-link" href="ch04-cnns-transfer-learning.html">4 · CNNs and Transfer Learning</a>
+<div class="nav-part">Part III · Natural Language</div>
+<a class="nav-link" href="ch05-nlp-basics.html">5 · Text Vectorization</a>
+<a class="nav-link" href="ch06-embeddings.html">6 · Embeddings</a>
+<a class="nav-link" href="ch07-transformers.html">7 · Transformers</a>
+<a class="nav-link" href="ch08-transformers-ii-self-supervised.html">8 · Self-Supervised Learning</a>
+<div class="nav-part">Part IV · Generative AI</div>
+<a class="nav-link" href="ch09-llms-and-rag.html">9 · LLMs and RAG</a>
+<a class="nav-link" href="ch10-peft-lora.html">10 · PEFT and LoRA</a>
+<a class="nav-link" href="ch11-diffusion-text-to-image.html">11 · Diffusion Models</a>
+<div class="nav-part">Appendices</div>
+<a class="nav-link" href="appendix-a-homework.html">A · Homework and Solutions</a>
+<a class="nav-link" href="appendix-b-resources.html">B · Resource Index</a></nav>
+    <div class="sidebar-actions">
+      <button data-theme-toggle type="button">Light / dark</button>
+      <button data-print type="button">Print</button>
+    </div>
+    <div class="sidebar-actions">
+      <a class="button" href="complete-book.html">Complete book</a>
+      <a class="button" href="notebooks.html">Notebooks</a>
+    </div>
+  </aside>
+  <main class="page">
+    <article class="article">
+      <div class="eyebrow">Part I · Foundations</div>
+      <h1 id="chapter-1-introduction-to-neural-networks-and-deep-learning">Chapter 1: Introduction to Neural Networks and Deep Learning</h1>
+<blockquote>
+<p><strong>Lecture video:</strong> <a href="https://www.youtube.com/watch?v=kyQ0CRkYhy4">https://www.youtube.com/watch?v=kyQ0CRkYhy4</a>
+<strong>Slides (PDF):</strong> <a href="https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/mit15_773_s24_lec01.pdf">https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/mit15_773_s24_lec01.pdf</a></p>
+</blockquote>
+<p>This chapter is based on Lecture 1 of MIT 15.773 <em>Hands-on Deep Learning</em> (Spring 2024), taught by Professors Vivek Farias and Rama Ramakrishnan at the MIT Sloan School of Management. The course philosophy is worth stating up front, because it shapes everything that follows: focus on the key concepts that underlie deep learning, skip most of the heavy math, and <em>code</em> deep learning models — because, as the instructors put it, coding is "the only way to develop a visceral (not just intellectual) understanding of how this stuff works." The goal is not to turn you into an ML engineer, but to enable you to build a V1.0 deep learning model yourself, without waiting for a data scientist to help you out.</p>
+<p><strong>Learning objectives.</strong> After working through this chapter, you should be able to:</p>
+<ul>
+<li>Explain the relationship between Artificial Intelligence, Machine Learning, Deep Learning, and Generative AI, and describe the breakthrough that motivated each.</li>
+<li>State Polanyi's Paradox and explain why the traditional rule-based approach to AI succeeded in only a few areas.</li>
+<li>Distinguish structured from unstructured data, and explain why the "raw form" of unstructured data defeats traditional machine learning.</li>
+<li>Explain what a <em>representation</em> of data is, why learning representations automatically was the key breakthrough of deep learning, and what "human bottleneck" it removed.</li>
+<li>Re-express logistic regression as a network of mathematical operations, and use the network view to motivate hidden layers.</li>
+<li>Define the core vocabulary of neural networks: neuron, weight, bias, layer, hidden layer, activation function, dense (fully connected) layer, architecture.</li>
+<li>Describe the sigmoid, linear, and ReLU activation functions and know when each is used.</li>
+<li>Count the parameters of a small feedforward network and hand-compute a forward pass (a prediction) through it.</li>
+</ul>
+<h2 id="11-a-very-short-history-of-ai-three-breakthroughs">1.1 A Very Short History of AI: Three Breakthroughs</h2>
+<figure id="fig-ai-landscape"><img src="figures/generated/ai-landscape.png" alt="Nested concept map of artificial intelligence, machine learning, deep learning, and generative AI" loading="lazy"><figcaption>The modern AI landscape, consolidated from the progressive concept maps in Lecture 1.</figcaption></figure>
+
+<p>The field of Artificial Intelligence was founded in 1956 at a summer workshop at Dartmouth College. MIT was well represented among the founders — Marvin Minsky (who went on to found the MIT AI Lab), John McCarthy (inventor of LISP), and Claude Shannon (inventor of information theory) were all there. The founders were brilliant and, in retrospect, wildly optimistic: they expected AI to be substantially solved "by that fall." Nearly seven decades later, Ramakrishnan argues, the field has instead gone through three seminal breakthroughs beyond the original, traditional approach: <strong>machine learning</strong>, <strong>deep learning</strong>, and <strong>generative AI</strong>. Understanding what motivated each breakthrough is the fastest way to understand where deep learning fits.</p>
+<h3 id="the-traditional-approach-and-why-it-failed">The traditional approach and why it failed</h3>
+<p>The goal of AI, informally, is to give computers the ability to do tasks that traditionally only humans have been able to do — cognitive tasks, perception, judgment. The traditional approach was commonsensical: ask human experts how they do it, write their knowledge down as IF–THEN rules, and program those rules explicitly into the computer. Want a chess program? Interview grandmasters about board positions and moves. Want to read ECGs? Interview cardiologists and encode their diagnostic rules.</p>
+<p>This approach had success in only a few areas. Why didn't it work more broadly? Two reasons, one practical and one deep.</p>
+<p>The practical reason is that hand-written rules are <strong>brittle</strong>: the real world presents an effectively infinite variety of situations, and any set of rules you write down covers only a small sample of them. Rule-based systems do not <em>generalize</em> to new situations — and the world is full of edge cases.</p>
+<p>The deeper reason is <strong>Polanyi's Paradox</strong>: <em>"We know more than we can tell."</em> We can do many things easily — recognizing a dog versus a cat takes a human on the order of tens of milliseconds — but we find it very hard to describe how exactly we do them. Ask someone how they recognized the cat and they will offer alleged reasons ("it has whiskers"), but their articulation is both incomplete and often has no correspondence with what their brain actually did.</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "If you can't even tell me how you do something, how am I supposed to take it and put it into a computer? It doesn't work."</p>
+</blockquote>
+<h3 id="machine-learning-learn-from-examples-instead">Machine learning: learn from examples instead</h3>
+<p>To address this problem, a different approach was developed. Instead of explicitly telling the computer what to do, provide it with lots of examples of <strong>inputs and outputs</strong> — chess positions and next moves, ECGs and diagnoses — and use statistical techniques to learn the relationship between them. This is <strong>Machine Learning (ML)</strong>, which sits inside AI as a subfield. As Ramakrishnan puts it in lecture, machine learning is "just a fancy way of saying: learn from input–output examples using statistical techniques."</p>
+<p>There are numerous ways to build ML models — linear regression, logistic regression, classification and regression trees, support vector machines, random forests, gradient boosted machines, and neural networks, among others. (If you have ever run a linear regression, congratulations: you have been doing machine learning.) ML has had tremendous worldwide impact — credit scoring, loan approval, disease prediction, demand forecasting, and countless other applications. In fact, when people talk about "AI" in industry, chances are they are actually talking about machine learning; AI just sounds cooler.</p>
+<h2 id="12-the-unstructured-data-problem-and-the-idea-of-representations">1.2 The Unstructured Data Problem and the Idea of Representations</h2>
+<figure id="fig-learned-representations"><img src="figures/generated/learned-representations.png" alt="Traditional feature engineering compared with hierarchical representations learned by deep networks" loading="lazy"><figcaption>Deep learning replaces hand-designed feature pipelines with learned hierarchies of representations.</figcaption></figure>
+
+<p>Machine learning's success stories share one crucial property: the input data is <strong>structured</strong> — data that can be "numericalized" into the rows and columns of a spreadsheet (an informal but useful definition). Age, blood pressure, smoking status (yes/no), past purchases: these are either numbers already, or categorical variables that are easily converted to numbers (for example, via one-hot encoding).</p>
+<p>The situation is very different for <strong>unstructured data</strong>: images, video, text, audio. Consider a photograph of a puppy. (In lecture, Ramakrishnan uses a photo of his own late dog — whose name, delightfully, was Google.) Digitally, the picture is just three tables of numbers — the amount of red, green, and blue light at each pixel, each on a scale of 0 to 255. Here is the problem: a value of 251 in the blue channel tells you there is a lot of blue light at that pixel — but not <em>why</em>. It could be sky, water, or a bucket of blue paint. <strong>The raw form of unstructured data has no intrinsic meaning</strong>: there is no connection between the number and the underlying object it describes. And if there's no connection between the numbers and the reality, no traditional algorithm can do anything useful with the numbers directly.</p>
+<p>The historical workaround was <strong>feature engineering</strong> (also called feature extraction): manually transform the raw data into a better <strong>representation</strong> before applying machine learning. Building a bird-species classifier? Take each photo and measure beak length, wingspan, primary color, and so on — in effect, manually structuring the unstructured data. Once you had a good representation, you could often finish the job with something as simple as linear or logistic regression. The whole name of the game was the representations. Ramakrishnan notes that computer-vision PhD students would spend <em>years</em> handcrafting representations to solve one narrow problem — say, detecting evidence of a particular kind of stroke in CT scans.</p>
+<p>This dependence on manual, expert-crafted representations created a massive <strong>human bottleneck</strong> that sharply limited the reach of machine learning. Hold on to the word <em>representation</em> — it is the single most important concept in this chapter.</p>
+<h2 id="13-deep-learning-representations-learned-automatically">1.3 Deep Learning: Representations Learned Automatically</h2>
+<p><strong>Deep Learning (DL)</strong> sits inside machine learning, and it exists to solve exactly this problem: it can handle unstructured input data <em>without upfront manual preprocessing</em>, because it <strong>automatically learns smart representations from the raw input</strong>. "Automatically" is the keyword. You can feed it structured data, pictures, text — anything — and it extracts useful representations by itself.</p>
+<p>The conceptual picture is a pipeline: raw data comes in; a stack of machinery in the middle learns representations automatically, without your help; and at the end you attach a plain linear or logistic regression to make the prediction. That, in a nutshell, is deep learning.</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "This simple idea is just incredibly powerful. It has led to ChatGPT, to AlphaGo, to AlphaFold. I've been doing deep learning for about ten years, and I still get goosebumps that something so simple could be so powerful."</p>
+</blockquote>
+<p>Deep learning demolished the human bottleneck for using machine learning with unstructured data. The breakthrough came from the confluence of <strong>three forces</strong>:</p>
+<ol>
+<li><strong>New algorithmic ideas</strong>,</li>
+<li><strong>Unprecedented amounts of data</strong> (from the digitization of everything), and</li>
+<li><strong>Compute power</strong>, specifically the parallel-processing muscle of <strong>Graphics Processing Units (GPUs)</strong>.</li>
+</ol>
+<p>These three forces were applied to an old ML idea — <strong>neural networks</strong> — and deep learning was born.</p>
+<h3 id="the-immediate-application-give-every-sensor-a-brain">The immediate application: give every sensor a brain</h3>
+<p>What is the no-brainer application of automatically handling unstructured data? Every "sensor" in the world can be given the ability to detect, recognize, and classify what it is sensing. A sensor is just a receptacle for unstructured data: a camera collects images or video, a microphone collects audio. Attach a small deep learning system behind the sensor, and suddenly you can count, classify, detect — analyze and predict.</p>
+<p>The lecture offers a string of examples: Face ID on your phone (camera + image classifier), breast-cancer detection from mammograms, pedestrian and stoplight detection in self-driving systems, and automated visual inspection in manufacturing (dent detectors, scratch detectors). One example is worth retelling. MIT EECS professor Regina Barzilay built a deep-learning breast-cancer detection system deployed at Massachusetts General Hospital. Herself a breast cancer survivor, she reportedly ran the system on her own mammograms from years earlier — mammograms a radiologist had read as clean — and the system flagged a problem. Deep learning systems can pick up signals that human experts miss.</p>
+<p>Ramakrishnan frames this as a lens for spotting business opportunities: look at the world and ask, <em>where are the sensors, and can I attach a deep learning system behind them?</em> His freshly spotted example: the world's first "smart binoculars" (Swarovski Optik's AX Visio), which identify the bird species you are looking at, in the binoculars. Binoculars + DL = smart binoculars.</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "There are no long-term monopoly windows in the world — only short-term windows. So the hunt is always on for a little monopoly window."</p>
+</blockquote>
+<h2 id="14-generative-ai-unstructured-outputs-and-the-x-to-y-world">1.4 Generative AI: Unstructured Outputs, and the X-to-Y World</h2>
+<p>So far we have discussed the <em>input</em> side. What about outputs? With deep learning, structured outputs were always easy: a single number (the probability a borrower repays a loan; next week's demand for a product), or a few numbers (the four probabilities that an image contains a chair, stool, table, or sofa; the two GPS coordinates of a taxi). What deep learning historically could <em>not</em> do well was <strong>generate unstructured output</strong> — produce a new image, a paragraph of text, a piece of music. We could consume unstructured data, but not create it.</p>
+<p><strong>Generative AI</strong> removed that limitation. It sits inside deep learning — it still runs on deep learning; it is one kind of deep learning — and it can produce unstructured outputs:</p>
+<ul>
+<li><strong>Text-to-text</strong>: ChatGPT and other large language models (LLMs).</li>
+<li><strong>Image-to-text</strong>: captioning ("two cats laying on a pink blanket with remotes").</li>
+<li><strong>Text-to-image</strong>: elaborate prompts turned into photorealistic concept art (e.g., Stable Diffusion).</li>
+<li><strong>Text-to-music</strong>: a prompt describing an arcade-game soundtrack turned into audio (e.g., MusicLM).</li>
+<li><strong>Multi-modal</strong>: text <em>and</em> images in, text (and images) out.</li>
+</ul>
+<p>A fun multi-modal example from lecture: someone photographed a notoriously complicated San Francisco parking sign and asked GPT-4, "It's Wednesday at 4 PM. Can I park here? Tell me in one line." GPT-4 answered: yes, for up to one hour starting at 4 PM — and Ramakrishnan double-checked that it was correct. ("We all know these things hallucinate. Can you imagine getting a parking ticket and telling the judge, 'I'm sorry, I didn't realize it was hallucinating'?") The separate circles inside GenAI — text-to-text, text-to-image, text-to-music — are merging as multi-modal models become the norm.</p>
+<p>The summary slide compresses the whole landscape into one picture: <strong>X → Deep Learning → Y</strong>, where <em>X and Y can be anything, and can be multi-modal</em>. You can learn a mapping from anything to anything, as long as you have enough data. And note carefully: <strong>all of the current AI excitement — LLMs, ChatGPT, text-to-image, all of it — stems from the success of deep learning.</strong> If you understand deep learning, everything becomes possible.</p>
+<h2 id="15-so-what-is-a-neural-network-start-with-logistic-regression">1.5 So What Is a Neural Network? Start with Logistic Regression</h2>
+<figure id="fig-feedforward-network"><img src="figures/generated/feedforward-network.png" alt="A configurable feedforward neural network with input, hidden, and output layers" loading="lazy"><figcaption>A feedforward deep neural network and its principal design choices, reconstructed from the architecture discussion in Lecture 1.</figcaption></figure>
+
+<p>Let's start at the beginning. Recall logistic regression: you send in a vector of numbers $[x_1, x_2, \dots, x_k]$ and get out a probability between 0 and 1. The model takes a linear function of the inputs and passes the result through the sigmoid:</p>
+<p>$$
+y = \frac{1}{1 + e^{-(b + w_1 x_1 + w_2 x_2 + \cdots + w_k x_k)}}
+$$</p>
+<p>This should be familiar. The new move — the whole point of this lecture — is to look at this humble operation <em>through the lens of a network of mathematical operations</em>.</p>
+<h3 id="a-concrete-example-predicting-interview-callbacks">A concrete example: predicting interview callbacks</h3>
+<p>We will use a simple classification problem throughout: given two independent variables, <strong>GPA</strong> and years of <strong>Experience</strong>, predict whether a job applicant will be called for an interview (1) or not (0). Fitting a logistic regression to the lecture's small dataset (using <code>glm</code> in R, or <code>statsmodels</code>/<code>scikit-learn</code> in Python — any standard tool) yields:</p>
+<p>$$
+P(\text{interview}) = \frac{1}{1 + e^{-(0.4 + 0.2\,\text{GPA} + 0.5\,\text{Exp})}}
+$$</p>
+<p>with intercept $0.4$, GPA coefficient $0.2$, and Experience coefficient $0.5$.</p>
+<h3 id="rewriting-the-formula-as-a-network">Rewriting the formula as a network</h3>
+<p>Now redraw this formula as data flowing left-to-right through a network (slide 61 shows the picture):</p>
+<ul>
+<li>On the left, two <strong>input nodes</strong>: circles holding GPA and Experience.</li>
+<li>Each input flows along an arrow and is multiplied by its coefficient as it travels: GPA is multiplied by 0.2, Experience by 0.5.</li>
+<li>The arrows converge on a node marked "+", which adds everything coming into it — including the intercept 0.4, drawn as its own incoming arrow.</li>
+<li>The sum flows into a final node that applies the sigmoid $\sigma(a) = 1/(1+e^{-a})$, and out pops a probability.</li>
+</ul>
+<p>To make a prediction, just push numbers through. An applicant with GPA 3.8 and 1.2 years of experience: $0.2 \times 3.8 = 0.76$; $0.5 \times 1.2 = 0.6$; sum with the intercept, $0.76 + 0.6 + 0.4 = 1.76$; apply the sigmoid, $\sigma(1.76) = 0.85$. The predicted probability of an interview callback is <strong>0.85</strong>. So far we are doing nothing but logistic regression, in what Ramakrishnan cheerfully admits is a "ridiculously long-winded way of writing a simple function." The payoff comes next.</p>
+<h3 id="terminology-weights-and-biases">Terminology: weights and biases</h3>
+<p>The world of neural networks has its own vocabulary for things statistics named long ago. What regression calls <strong>coefficients</strong>, neural networks call <strong>weights</strong>. What regression calls the <strong>intercept</strong>, neural networks call the <strong>bias</strong>. (Loosely, people often call the whole collection "the weights.") So when you read in the news that some famous model's <em>weights</em> were leaked on the internet, this is what leaked: the learned coefficients. Given the weights and the architecture, you can reconstruct the model.</p>
+<h2 id="16-why-the-network-view-matters-doing-things-in-the-middle">1.6 Why the Network View Matters: Doing Things in the Middle</h2>
+<p>Why bother drawing a simple formula as a network? One answer is usability — with lots of operations, a graphical form is easier to reason about. But the deeper answer is this:</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "The moment you write it down as a network, you suddenly realize: I could have lots of things in the middle. I don't have to go from the input to the output directly."</p>
+</blockquote>
+<p>Recall the notion of learning smart representations of the input. Where does that automatic learning happen? Right here — in the middle. The output is the output; it's a dog or a cat, and you have no agency over that. The input is the input. The only agency you have is to <em>transform the raw input one or more times before you make the prediction</em>.</p>
+<p>What is the simplest transformation in all of mathematics? A <strong>linear function</strong>. So the simplest thing we can do is insert linear functions between input and output. Take all $k$ inputs and run them through a linear function — think $2x_1 + 4x_3 + \cdots + 9x_k + \text{intercept}$ — producing one number. In network notation, that is a circle with a "+" in it: <em>a circle with a plus is shorthand for a linear function</em>.</p>
+<p>But why stop at one? We can insert a <strong>stack</strong> of linear functions — say three of them, each with its own weights and bias, each producing its own number. Now we have transformed a $k$-dimensional input (where $k$ might be 1,000) into a 3-dimensional vector. Is 3 the right number? Maybe 4, maybe 10 — how to choose comes later.</p>
+<p>Next, each of those three numbers flows through another small function. As we will see shortly, that function is called an <strong>activation function</strong>, and it must be chosen to be <em>nonlinear</em> — if it isn't, all this stacking effort is a total waste of time. (Take that on faith for the moment; Chapter 2 and the discussion of ReLU will make it plausible. The intuition: a linear function of a linear function is just another linear function, so without nonlinearity the whole stack collapses back to plain logistic regression.) Note the dimensionality: three numbers in, three numbers out — the activation transforms each number individually.</p>
+<p>And once we've done this once, we can do it again. And again — 100 times if we want. Every repetition gives the network more <strong>capacity</strong> to learn something interesting from the data:</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "If I don't even give you the opportunity to transform the input once, you have no opportunity. If I give you ten chances to transform it, you have ten shots at doing something useful."</p>
+</blockquote>
+<p>Whether the network actually lives up to that potential depends on training — the subject of Chapter 2. Finally, when we are done transforming, we feed the resulting vector to our good old logistic-regression-style sigmoid output, exactly as before.</p>
+<p><strong>Key takeaway (slide 77):</strong> <em>Instead of feeding the raw input to logistic regression, we feed a repeatedly transformed input.</em> Before: input → linear function → sigmoid → output. After: input → transform → transform → … → sigmoid → output. The input hasn't changed; the output hasn't changed; everything interesting happens in the middle.</p>
+<p><strong>This is a neural network.</strong> A neural network is nothing more than repeatedly transformed inputs that are finally fed to a linear or logistic regression model.</p>
+<h2 id="17-the-vocabulary-of-neural-networks">1.7 The Vocabulary of Neural Networks</h2>
+<p>With the picture in place, the standard terminology attaches to it directly:</p>
+<ul>
+<li><strong>Neuron (or node, or unit):</strong> one linear function followed by a nonlinear activation function. A neuron receives many numbers in, runs them through its linear function, passes the resulting single number through its activation, and emits <strong>one number</strong> out. That one number may be copied to every node in the next layer, but each node outputs a single number. (The name is loosely inspired by biological neurons — in the brain, dendrites of one neuron connect to axons of others at synapses, forming a network — but the connections between neuroscience and deep learning are heavily argued, and for building practical DL systems you need not worry about them.)</li>
+<li><strong>Layer:</strong> a vertical stack of neurons.</li>
+<li><strong>Activation function:</strong> the small scalar-in, scalar-out nonlinear function inside each neuron (Section 1.8).</li>
+<li><strong>Input layer:</strong> the inputs themselves. "Layer" is in scare quotes here — it doesn't compute anything; it's just where the data enters.</li>
+<li><strong>Output layer:</strong> the final layer that produces the output.</li>
+<li><strong>Hidden layers:</strong> everything in between.</li>
+<li><strong>Dense / fully connected:</strong> a layer is dense (fully connected) when every neuron in it is connected to every neuron in the next layer — that is, each neuron's single output number is sent along an arrow to <em>every</em> neuron in the following layer.</li>
+<li><strong>Weights and biases (parameters):</strong> the coefficients and intercepts of all the linear functions in the network.</li>
+</ul>
+<p>Under this vocabulary, plain logistic regression is itself a neural network — just about the simplest one imaginable, with an input layer and an output layer and <strong>no hidden layers</strong>. Barely a neural network at all.</p>
+<p>And now the punchline of the chapter's title. <strong>Deep Learning is just neural networks with lots and lots of hidden layers.</strong> The lecture shows the architecture diagram of <strong>ResNet</strong> — famous as (roughly) the first network to surpass human-level performance at image classification ("the Skynet of image classification," Ramakrishnan jokes) — a skyscraper of stacked layers. The course returns to ResNet later to fine-tune it on a real problem.</p>
+<h2 id="18-activation-functions">1.8 Activation Functions</h2>
+<figure id="fig-activation-functions"><img src="figures/generated/activation-functions.png" alt="Graphs and equations for linear, ReLU, and sigmoid activation functions" loading="lazy"><figcaption>Linear, ReLU, and sigmoid activations have different ranges and therefore different roles in a network.</figcaption></figure>
+
+<p>The activation function of a node is just a function that receives a single number and outputs a single number — scalar in, scalar out. The linear function inside the neuron may combine a thousand inputs, but what it hands to the activation is one number. Three activations cover most of what you need:</p>
+<p><strong>Sigmoid.</strong>
+$$
+\sigma(a) = \frac{1}{1 + e^{-a}}
+$$
+An S-shaped curve squashing any real number into $(0, 1)$. For very negative inputs the output is near 0 (the node barely "activates"); for very large inputs it is near 1; all the action — the steep, sensitive region — is in the middle. Because its output lives in $(0,1)$, the sigmoid is the natural choice when the output must be a probability.</p>
+<p><strong>Linear (identity).</strong>
+$$
+f(a) = a
+$$
+Ramakrishnan is "almost embarrassed to call it an activation function because it's literally not doing anything" — it passes its input straight through. It is listed for completeness (and it is what you use in an output layer that must produce an unconstrained number).</p>
+<p><strong>ReLU (Rectified Linear Unit) — "the hero of deep learning."</strong>
+$$
+\text{ReLU}(a) = \max(0, a)
+$$
+If the number is positive, pass it along unchanged; if it is negative, send out 0 instead — squash it. Your million-variable linear function produced a carefully computed negative number? The ReLU is not impressed: out comes 0. Many longtime practitioners believe the adoption of ReLUs is one of the key factors behind deep learning's success, thanks to properties discussed in Chapter 2 (in particular, how gradients flow through it).</p>
+<p>The slides introduce a <strong>visual shorthand</strong> used for the rest of the course: a node drawn with a straight diagonal line is a linear activation, a node with a hockey-stick bend (flat then rising — mimicking the graph) is a ReLU, and a node with an S-curve is a sigmoid.</p>
+<p>There are many other activation functions — tanh, leaky ReLU, GELU, swish; "a menagerie," as Ramakrishnan puts it, since researchers keep proposing variants. The practical guidance is simple and worth memorizing:</p>
+<ul>
+<li><strong>Hidden layers:</strong> just use ReLU. There is a mountain of empirical evidence that it is a great default; you can get almost anything done with it.</li>
+<li><strong>Output layer:</strong> you don't really have a choice — the <em>nature of the output dictates the activation</em>. A probability in $(0,1)$? Sigmoid. Ten class probabilities that must sum to 1? Softmax (introduced in the next lecture). An unconstrained number? Linear.</li>
+</ul>
+<h2 id="19-designing-and-using-a-dnn-the-interview-classifier-end-to-end">1.9 Designing and Using a DNN: The Interview Classifier, End to End</h2>
+<p>Designing a deep neural network comes down to a clean division of labor. <strong>Given to you by the problem:</strong> the input (its size and content) and the output (its type). <strong>Chosen by you:</strong> the number of hidden layers, the number of units in each hidden layer, and the activation functions for the hidden layers — plus an output activation that matches the output type. (A rule of thumb from lecture: start with the simplest network you can think of; if it gets the job done, stop.)</p>
+<p>Let's apply this to the interview classifier. The problem hands us two inputs ($x_1$ = GPA, $x_2$ = Experience) and one output that must lie in $(0,1)$. Design choices: <strong>one hidden layer with 3 neurons, ReLU activations</strong>; and since the output is a probability, <strong>a sigmoid output layer</strong> — no choice there.</p>
+<h3 id="counting-parameters">Counting parameters</h3>
+<p>First concept check: how many parameters (weights <em>and</em> biases) does this network have? Count: 2 inputs × 3 hidden neurons = 6 weights, plus 3 hidden-layer biases; 3 hidden outputs × 1 output neuron = 3 weights, plus 1 output bias. Total: $6 + 3 + 3 + 1 = \mathbf{13}$. The classic mistake (which yields 12) is forgetting a bias. Ramakrishnan's advice: for your first few networks, get in the habit of hand-calculating the parameter count until it's reflexive <em>(video 50:00)</em>.</p>
+<h3 id="a-forward-pass-through-a-trained-network">A forward pass through a trained network</h3>
+<figure id="fig-forward-pass"><img src="figures/generated/forward-pass.png" alt="Worked arithmetic for a forward pass through a two-input, three-hidden-unit neural network" loading="lazy"><figcaption>A complete forward pass: affine hidden computations, ReLU activations, and a sigmoid callback probability.</figcaption></figure>
+
+<p>Suppose training (covered in Chapter 2) has produced these parameter values — hidden layer: top neuron with bias $-0.3$ and weights $(0.5, 0.1)$; middle neuron with bias $0.2$ and weights $(-0.1, 0.3)$; bottom neuron with bias $0.5$ and weights $(0.2, -0.1)$; output neuron with bias $0.05$ and weights $(-0.15, -0.2, -0.3)$ on the three hidden outputs.</p>
+<p>The hidden layer computes, for any input $(x_1, x_2)$:</p>
+<p>$$
+\begin{aligned}
+a_1 &amp;= \max(0,\; -0.3 + 0.5 x_1 + 0.1 x_2) \
+a_2 &amp;= \max(0,\; \phantom{-}0.2 - 0.1 x_1 + 0.3 x_2) \
+a_3 &amp;= \max(0,\; \phantom{-}0.5 + 0.2 x_1 - 0.1 x_2)
+\end{aligned}
+$$</p>
+<p>and the output layer computes</p>
+<p>$$
+y = \sigma!\left(0.05 - 0.15\,a_1 - 0.2\,a_2 - 0.3\,a_3\right).
+$$</p>
+<p>Now push a specific applicant through: $x_1 = 2.3$, $x_2 = 10.2$.</p>
+<p>$$
+\begin{aligned}
+a_1 &amp;= \max(0,\; -0.3 + 0.5(2.3) + 0.1(10.2)) = \max(0, 1.87) = 1.87 \
+a_2 &amp;= \max(0,\; 0.2 - 0.1(2.3) + 0.3(10.2)) = \max(0, 3.03) = 3.03 \
+a_3 &amp;= \max(0,\; 0.5 + 0.2(2.3) - 0.1(10.2)) = \max(0, -0.06) = 0
+\end{aligned}
+$$</p>
+<p>Notice the ReLU at work in $a_3$: the linear part came out negative, so the neuron emits 0. Then:</p>
+<p>$$
+y = \sigma!\left(0.05 - 0.15(1.87) - 0.2(3.03) - 0.3(0)\right) = \sigma(-0.8365) \approx 0.226
+$$</p>
+<p>The network predicts a probability of about <strong>0.226</strong>. Work through this example until the mechanics are automatic — the lecture is emphatic that if the forward pass isn't reflexive now, transformers later in the course will be hard.</p>
+<h3 id="the-network-as-a-function-and-why-complexity-is-the-point">The network as a function — and why complexity is the point</h3>
+<p>If you feel "a little mathy," you can write the whole trained network as one closed-form function: substitute the three $\max(0, \cdot)$ expressions into the output sigmoid. The result is an unwieldy nested expression — "super interpretable, right?" — which makes two points at once. First, the graphical network layout is vastly easier to reason about than the raw formula (this is a real advantage of the network lens). Second, contrast it with the logistic regression from Section 1.5:</p>
+<p>$$
+y = \frac{1}{1 + e^{-(0.4 + 0.2 x_1 + 0.5 x_2)}}
+$$</p>
+<p>Even this tiny network — one hidden layer, three neurons, the same two inputs and one output — is a <em>far</em> more complex function of $x_1$ and $x_2$ than logistic regression, and it can therefore capture far more complex relationships between inputs and output.</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "It is from this complexity that springs the ability of these networks to do basically magical things — as long as we know how to train them the right way. That's the secret sauce."</p>
+</blockquote>
+<p>A note on interpretability, raised by a student in lecture: for any given input we know <em>exactly</em> how it flows through the network — there is no mystery about the computation. What is hard is <em>ascribing credit</em>: saying the prediction was high "because of this particular attribute" is difficult, because the attributes get enmeshed together through the layers. The fields of explainability and interpretability tackle this, and the course returns to it later.</p>
+<h2 id="110-architecture-putting-it-all-together">1.10 Architecture: Putting It All Together</h2>
+<p>A network like the ones in this chapter — where data flows strictly left to right, layer by layer — is called a <strong>feedforward</strong> (or "vanilla") neural network. (This contrasts with <em>recurrent</em> networks, which the course skips because transformers have proven more capable and have become the norm.) The overall arrangement — how neurons are organized into layers, which activation functions are used, and how layers are connected — is called the network's <strong>architecture</strong>. The famous <em>transformer</em> is simply one particular architecture, just as <em>convolutional neural networks</em> (coming up for computer vision) are another. Everything in this course builds on the picture assembled in this chapter:</p>
+<ul>
+<li><strong>Input layer</strong> (your independent variables) — fixed by the problem.</li>
+<li><strong>Hidden layers</strong> — your design choices: how many layers, how many neurons each, which activations (default: ReLU).</li>
+<li><strong>Output layer</strong> — its size and activation dictated by the type of output you must produce.</li>
+</ul>
+<p>In the next chapter, we take this designed-but-untrained network and answer the obvious question: where do the weights and biases come from? The answer — loss functions, gradient descent, and backpropagation — is the secret sauce of deep learning.</p>
+<h2 id="key-takeaways">Key Takeaways</h2>
+<ul>
+<li>AI has gone through successive breakthroughs: traditional rule-based AI → machine learning → deep learning → generative AI. Each solved the central limitation of the one before.</li>
+<li>Rule-based AI failed broadly because of Polanyi's Paradox ("we know more than we can tell") and because hand-written rules don't generalize to the endless edge cases of the real world.</li>
+<li>Machine learning learns from input–output examples using statistical techniques, and works wonderfully — when the input data is <em>structured</em> (numericalizable into a spreadsheet).</li>
+<li>The raw form of unstructured data (pixels, waveforms, characters) has no intrinsic meaning, so ML historically required manual <em>feature engineering</em> to create good representations — a massive human bottleneck.</li>
+<li>Deep learning's defining capability is <em>automatically learning smart representations</em> from raw unstructured data; feed those representations to a simple linear/logistic model and you get remarkable performance. The breakthrough came from new algorithms + massive data + GPUs, applied to the old idea of neural networks.</li>
+<li>Generative AI (a subset of deep learning) added the ability to <em>generate</em> unstructured outputs. The modern landscape is "X → DL → Y" where X and Y can be anything, including multi-modal combinations.</li>
+<li>A neural network is just repeatedly transformed inputs finally fed to a linear or logistic regression. Logistic regression itself is a neural network with no hidden layers; <em>deep</em> learning means many hidden layers.</li>
+<li>Core vocabulary: weights (coefficients), biases (intercepts), neurons (linear function + nonlinear activation, one number out), layers, hidden layers, dense/fully-connected connections, architecture.</li>
+<li>Activations: use ReLU ($\max(0,a)$) in hidden layers by default; the output activation is dictated by the output type (sigmoid for probabilities, linear for unconstrained numbers).</li>
+<li>You choose the hidden structure; the problem fixes the input and output. Always be able to count a small network's parameters and hand-compute a forward pass.</li>
+</ul>
+<h2 id="check-your-understanding">Check Your Understanding</h2>
+<p><strong>1. What is Polanyi's Paradox, and why did it doom the traditional (rule-based) approach to AI?</strong></p>
+<details><summary>Answer</summary>
+
+Polanyi's Paradox: "We know more than we can tell." Humans perform many tasks (like recognizing a cat in ~20 ms) without being able to articulate how they do it — and even when they offer explanations, those explanations often don't correspond to what their brains actually do. If experts can't accurately state their own rules, we can't encode those rules into a computer. Combined with the brittleness of any finite rule set in a world full of edge cases (rules don't generalize to new situations), this limited rule-based AI to success in only a few areas.
+
+</details>
+
+<p><strong>2. Why can't traditional machine learning work directly on the raw pixels of an image?</strong></p>
+<details><summary>Answer</summary>
+
+Because the raw form of unstructured data has no intrinsic meaning. Each pixel value just records the amount of red, green, or blue light (0–255) at a location. A blue channel value of 251 is the same whether the object is sky, water, or blue paint — the number carries no connection to the underlying object. With no relationship between the raw numbers and the semantics of the task, traditional algorithms have nothing to work with; historically, humans had to manually engineer better representations (features) first.
+
+</details>
+
+<p><strong>3. In one sentence each: what new capability did (a) machine learning, (b) deep learning, and (c) generative AI add?</strong></p>
+<details><summary>Answer</summary>
+
+(a) Machine learning replaced hand-coded rules with learning the input→output relationship from examples using statistical techniques. (b) Deep learning added the ability to *automatically learn representations* from raw unstructured input data, removing the manual feature-engineering bottleneck. (c) Generative AI added the ability to *generate unstructured outputs* (text, images, audio), not just consume unstructured inputs and emit numbers.
+
+</details>
+
+<p><strong>4. Translate: what neural-network terms correspond to regression's "coefficients" and "intercept"? And what does it mean when a company's model "weights" are leaked?</strong></p>
+<details><summary>Answer</summary>
+
+Coefficients are called **weights**; the intercept is called the **bias** (informally, "weights" can mean both). If the weights are leaked, all the learned parameter values are public — and since the weights plus the architecture are sufficient to reconstruct the model, the model itself has effectively been leaked. The weights are the crown jewels: they encode the result of all the training data and compute.
+
+</details>
+
+<p><strong>5. A feedforward network has 2 inputs, one hidden layer with 3 ReLU neurons, and a single sigmoid output neuron. How many parameters does it have? Show the count.</strong></p>
+<details><summary>Answer</summary>
+
+13. Input→hidden: $2 \times 3 = 6$ weights, plus 3 hidden biases (one per hidden neuron). Hidden→output: $3 \times 1 = 3$ weights, plus 1 output bias. $6 + 3 + 3 + 1 = 13$. The most common wrong answer is 12 — from forgetting a bias.
+
+</details>
+
+<p><strong>6. Using the trained interview network of Section 1.9 (hidden neurons: $a_1 = \max(0, -0.3 + 0.5x_1 + 0.1x_2)$, $a_2 = \max(0, 0.2 - 0.1x_1 + 0.3x_2)$, $a_3 = \max(0, 0.5 + 0.2x_1 - 0.1x_2)$; output $y = \sigma(0.05 - 0.15a_1 - 0.2a_2 - 0.3a_3)$), what roles do the ReLUs play when you evaluate the input $(x_1, x_2) = (2.3, 10.2)$?</strong></p>
+<details><summary>Answer</summary>
+
+For that input, the first two neurons' linear parts are positive ($1.87$ and $3.03$), so their ReLUs pass the values through unchanged: $a_1 = 1.87$, $a_2 = 3.03$. The third neuron's linear part is negative ($0.5 + 0.46 - 1.02 = -0.06$), so its ReLU squashes it to $a_3 = 0$ — the neuron is "off" for this input. The output is $\sigma(0.05 - 0.15(1.87) - 0.2(3.03) - 0.3(0)) \approx 0.226$. This selective on/off behavior across inputs is the nonlinearity that gives the network its expressive power.
+
+</details>
+
+<p><strong>7. Why must the hidden-layer activation functions be nonlinear?</strong></p>
+<details><summary>Answer</summary>
+
+Because a composition of linear functions is itself just a linear function. If every activation were linear, stacking any number of hidden layers would collapse into a single linear transformation of the input, and the whole network would be equivalent to plain linear/logistic regression — all the stacking effort would be "a total waste of time." Nonlinear activations are what allow each additional layer to add genuine capacity to learn more complex representations and input–output relationships.
+
+</details>
+
+<p><strong>8. What parts of a DNN's design are dictated by the problem, and what parts are the designer's choice? What are the default/forced choices for activation functions?</strong></p>
+<details><summary>Answer</summary>
+
+Dictated by the problem: the input layer (size/content of the independent variables) and the *type* of the output (which fixes the output layer's size and activation). Designer's choices: the number of hidden layers, the number of neurons in each, and the hidden activation functions. Defaults: use ReLU in hidden layers (strong empirical track record); for the output layer you have essentially no choice — sigmoid for a single probability, softmax for multi-class probabilities summing to 1, linear for an unconstrained numeric output.
+
+</details>
+      <nav class="chapter-footer" aria-label="Chapter navigation"><a class="previous" href="index.html">← Start Here</a><a class="next" href="ch02-training-deep-networks.html">2 · Training Deep Networks →</a></nav>
+    </article>
+  </main>
+</body>
+</html>

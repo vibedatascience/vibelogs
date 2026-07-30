@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A hands-on deep learning textbook companion to MIT 15.773">
+  <title>Chapter 6: Word Embeddings · Hands-On Deep Learning</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
+  </script>
+  <script defer src="mathjax/tex-svg.js"></script>
+  <script defer src="search-index.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"></div>
+  <aside class="sidebar">
+    <a class="brand" href="index.html">Hands-On Deep Learning</a>
+    <div class="brand-subtitle">MIT 15.773 · Spring 2024 companion</div>
+    <input class="search" type="search" placeholder="Search the full book…" data-search aria-label="Search">
+    <div class="search-results hidden" data-search-results></div>
+    <nav><div class="nav-part">Front Matter</div>
+<a class="nav-link" href="index.html">Start Here</a>
+<div class="nav-part">Part I · Foundations</div>
+<a class="nav-link" href="ch01-intro-to-neural-networks.html">1 · Neural Networks</a>
+<a class="nav-link" href="ch02-training-deep-networks.html">2 · Training Deep Networks</a>
+<a class="nav-link" href="ch03-keras-and-cnns-from-scratch.html">3 · Keras and Vision Basics</a>
+<div class="nav-part">Part II · Computer Vision</div>
+<a class="nav-link" href="ch04-cnns-transfer-learning.html">4 · CNNs and Transfer Learning</a>
+<div class="nav-part">Part III · Natural Language</div>
+<a class="nav-link" href="ch05-nlp-basics.html">5 · Text Vectorization</a>
+<a class="nav-link active" href="ch06-embeddings.html">6 · Embeddings</a>
+<a class="nav-link" href="ch07-transformers.html">7 · Transformers</a>
+<a class="nav-link" href="ch08-transformers-ii-self-supervised.html">8 · Self-Supervised Learning</a>
+<div class="nav-part">Part IV · Generative AI</div>
+<a class="nav-link" href="ch09-llms-and-rag.html">9 · LLMs and RAG</a>
+<a class="nav-link" href="ch10-peft-lora.html">10 · PEFT and LoRA</a>
+<a class="nav-link" href="ch11-diffusion-text-to-image.html">11 · Diffusion Models</a>
+<div class="nav-part">Appendices</div>
+<a class="nav-link" href="appendix-a-homework.html">A · Homework and Solutions</a>
+<a class="nav-link" href="appendix-b-resources.html">B · Resource Index</a></nav>
+    <div class="sidebar-actions">
+      <button data-theme-toggle type="button">Light / dark</button>
+      <button data-print type="button">Print</button>
+    </div>
+    <div class="sidebar-actions">
+      <a class="button" href="complete-book.html">Complete book</a>
+      <a class="button" href="notebooks.html">Notebooks</a>
+    </div>
+  </aside>
+  <main class="page">
+    <article class="article">
+      <div class="eyebrow">Part III · Natural Language</div>
+      <h1 id="chapter-6-word-embeddings">Chapter 6: Word Embeddings</h1>
+<blockquote>
+<p><strong>Lecture video:</strong> <a href="https://www.youtube.com/watch?v=LqFc0z-pQTg">https://www.youtube.com/watch?v=LqFc0z-pQTg</a>
+<strong>Slides (PDF):</strong> <a href="https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/mit15_773_s24_lec06.pdf">https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/mit15_773_s24_lec06.pdf</a>
+<strong>Companion Colab notebook:</strong> <a href="https://colab.research.google.com/drive/18kk6roX0txFf_blUT5b0WtdX4ATQH2fS">https://colab.research.google.com/drive/18kk6roX0txFf_blUT5b0WtdX4ATQH2fS</a></p>
+</blockquote>
+<p><strong>Learning objectives.</strong> By the end of this chapter, you should be able to:</p>
+<ul>
+<li>Explain the two fundamental problems with one-hot word vectors: their size scales with the vocabulary, and their geometry carries no information about word meaning (every pair of one-hot vectors is exactly $\sqrt{2}$ apart).</li>
+<li>Define <strong>word embeddings</strong> as dense, low-dimensional word vectors whose geometric relationships mirror semantic relationships.</li>
+<li>State Firth's distributional hypothesis — "you shall know a word by the company it keeps" — and explain how a word–word <strong>co-occurrence matrix</strong> captures context.</li>
+<li>Explain the <strong>GloVe</strong> weighted least-squares objective, including target/context vectors, biases, nonzero co-occurrences, and the weighting function.</li>
+<li>Interpret <strong>embedding arithmetic</strong> such as $(\text{brother} - \text{man}) + \text{woman} \approx \text{sister}$, and explain why direction, not just distance, matters.</li>
+<li>Distinguish stand-alone embeddings from <strong>contextual</strong> embeddings, and explain why polysemous words ("bank") need context.</li>
+<li>Weigh the pros and cons of pretrained embeddings (GloVe/word2vec) versus embeddings learned from scratch, as a function of dataset size.</li>
+<li>Build Keras models that use a <code>TextVectorization</code> layer (integer output, padding/truncation), an <code>Embedding</code> layer (frozen, fine-tuned, or trained from scratch), and <code>GlobalAveragePooling1D</code>.</li>
+</ul>
+<p>The previous chapter turned text into numbers with one-hot vectors and the bag-of-words model. This chapter confronts what those representations get wrong and introduces embeddings — which, as Ramakrishnan puts it, form the core atomic unit of all modern natural language (and vision) processing. Specifically, we study <em>stand-alone</em> embeddings here; the next chapters make them <em>contextual</em> via transformers.</p>
+<h2 id="61-the-problem-with-one-hot-vectors">6.1 The Problem with One-Hot Vectors</h2>
+<p>Recall the STIE pipeline: standardize, tokenize, index, encode. Until now, the encoding step assigned each vocabulary token a one-hot vector — a vector as long as the vocabulary with a single 1 in the token's index position. (Recall also, from lecture: modern practice has drifted toward minimal standardization — Keras's default is just lowercasing and punctuation stripping, with no stemming or stop-word removal — which is why words like "the" survive in our vocabulary.)</p>
+<p>One-hot encoding has two serious shortcomings.</p>
+<p><strong>Problem 1: Size.</strong> If the vocabulary is very long, each token's vector is as long as the vocabulary. With 500,000 vocabulary words, every little word that arrives is represented by a 500,000-long vector — "a gross waste of stuff." Choosing only the most frequent words mitigates this somewhat, but the long input vectors still inflate the number of weights the model must learn, increasing compute time, data requirements, and the risk of overfitting.</p>
+<p><strong>Problem 2: No meaning.</strong> This is the deeper problem. We would hope that words with similar meanings get similar vectors: "great" and "awesome," or "movie" and "film," should be close; "good" and "bad" should be far apart. Let's check. Take vectors $\mathbf{u}$ and $\mathbf{v}$ for "movie" and "film" and measure closeness the simplest way — Euclidean distance. Each vector is all zeros except a single 1, and the 1s are in different positions. Subtracting, squaring, summing, and taking the square root: the zeros contribute nothing, and the two mismatched 1s each contribute 1, giving</p>
+<p>$$|\mathbf{u} - \mathbf{v}| = \sqrt{1 + 1} = \sqrt{2}.$$</p>
+<p>Now try "good" and "bad" — words with <em>opposite</em> meanings. Same computation: $\sqrt{2}$. In fact, take <strong>any</strong> two words in the vocabulary: the distance between their one-hot vectors is always $\sqrt{2}$.</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "If any two words have the same distance, does this even have a notion of distance? It doesn't. There's no notion of distance from one-hot vectors. It has no connection to the actual meanings of these words."</p>
+</blockquote>
+<p>To summarize: one-hot vectors are (1) as long as the vocabulary, and (2) geometrically disconnected from meaning. Both problems need fixing.</p>
+<h2 id="62-wouldnt-it-be-nice-if">6.2 Wouldn't It Be Nice If…</h2>
+<p>Wouldn't it be nice if the vectors representing synonyms (movie/film) or related words (apple/banana) were <em>close</em> to each other, and vectors for words that mean very different things were <em>far</em> apart? More generally: wouldn't it be nice if the <strong>geometric relationship</strong> between word vectors represented the <strong>semantic relationship</strong> between the words?</p>
+<p><strong>Word embeddings are word vectors designed to achieve exactly this</strong> — and, as we'll see, they fix the size problem too, because they can be short and dense.</p>
+<p>A pair of visual quizzes (from Cohere's embeddings tutorial, shown in lecture) builds the intuition. Imagine plotting word vectors in two dimensions and finding neat clusters: buildings (factory, home, building) here, vehicles (bicycle, truck, car) there, fruits in a third region, sports balls in a fourth. Where should "apple" go? Into the fruit cluster, obviously — and a good embedding puts it there.</p>
+<p>The second quiz shows why <em>relationship</em> means more than <em>distance</em>. Plot "puppy" and "dog" side by side horizontally, with "calf" below "puppy." Where should "cow" go? Below "dog": moving horizontally takes you from the baby animal to the grown animal (puppy → dog, calf → cow), while moving vertically moves you across species at the same maturity stage. It's an analogy in geometry — puppy is to dog as calf is to cow — and it means <em>directions</em> in embedding space carry meaning, not just distances.</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "The relationship is distance and direction. Both have to be involved."</p>
+</blockquote>
+<h3 id="one-more-requirement-context">One more requirement: context</h3>
+<p>Suppose we obtain embeddings that satisfy all of the above. Are we done? Not quite. The same word can mean different things depending on the surrounding words. Consider "bank": a financial institution, the side of a river, a plane turning, someone <em>banking on</em> an outcome. A single fixed vector for a polysemous word can only be some <em>average</em> of its meanings — and the average isn't very good. (Linguists call this <strong>polysemy</strong>.)</p>
+<p>So we also need <strong>contextual word embeddings</strong>: word vectors that (1) encode semantic relationships geometrically and (2) take the other words in the sentence into account. The key to computing contextual embeddings is the <strong>transformer</strong> — that is precisely why transformers are justifiably famous. The plan: this chapter computes <em>stand-alone</em> (context-free) embeddings; the following chapters make them contextual.</p>
+<h2 id="63-learning-embeddings-from-data-the-company-it-keeps">6.3 Learning Embeddings from Data: "The Company It Keeps"</h2>
+<p><img alt="Projected semantic embedding space with related words grouped into clusters" src="figures/generated/semantic-embeddings.png"></p>
+<p><em>Figure: Semantic neighborhoods in an embedding space. The two-dimensional view is illustrative; learned embeddings typically have hundreds or thousands of dimensions.</em></p>
+<p>How can embeddings be learned? The naive approach — manually collect synonyms, antonyms, and related words, and hand-assign vectors satisfying our requirements — would be long, painful, and never quite complete. Being machine-learning people, we ask: can we learn all of this from data, with no manual effort?</p>
+<p>We can. The key insight is a line from the linguist John Firth:</p>
+<blockquote>
+<p><em>"You shall know a word by the company it keeps."</em></p>
+</blockquote>
+<p>Consider the sentence template: <strong>"The acting in the ____ was superb."</strong> Which words are likely to fill the blank? <em>Movie. Film. Musical. Play. Show.</em> Which are unlikely? <em>Truck. Banana. Tensor.</em> ("The acting in the banana was superb" is clearly nonsensical.)</p>
+<p>Notice what just happened: if certain words are <em>interchangeable</em> in a sentence — you can swap them in and the sentence still makes sense — they are probably related. You infer their relatedness not by looking at the words directly but by seeing <em>where they live</em>. As Ramakrishnan says, it's a very clever idea that slowly sinks in. Generalizing:</p>
+<ul>
+<li>If {movie, film, musical} appear in the same contexts very often, they are likely to be related.</li>
+<li>More generally, <strong>related words appear in similar contexts</strong>.</li>
+<li>So: let's <em>quantify</em> how often words co-occur in similar contexts, and learn embeddings from that data.</li>
+</ul>
+<h3 id="the-co-occurrence-matrix">The co-occurrence matrix</h3>
+<p>First we must define "context." Many definitions are possible; we go with a simple one: two words share a context if they appear <strong>in the same sentence</strong>. (Not necessarily adjacent — a word at the end of a long sentence can alter the meaning of a word at the beginning, so we take the whole sentence.)</p>
+<p>Now imagine taking a huge corpus — say, all of Wikipedia — breaking it into billions of sentences, identifying all the distinct words (say 500,000), and, for every <em>pair</em> of words, counting the number of sentences in which both appear. The result is a 500,000 × 500,000 <strong>word–word co-occurrence matrix</strong>: the cell for row word $i$ and column word $j$ holds the count $X_{ij}$. For example, "deep" and "learning" might co-occur in 3,025 sentences, so that cell holds 3,025. Most word pairs never share a sentence, so most of the matrix is zero. (The diagonal is typically ignored — all the action is off-diagonal.)</p>
+<p>This matrix embodies all the context information in the corpus in a compact, elegant way.</p>
+<p><strong>How does the matrix capture context?</strong> A student in lecture asked exactly this. Consider the rows for "apple" and "banana." Each row records, for every other word in the vocabulary, how many times that word co-occurred with apple (respectively, banana). If apple and banana are interchangeable — near-synonyms in usage — then these two <em>rows of numbers</em> will look very similar: the words will "zig and zag together" through the co-occurrence matrix. Interchangeable words have highly correlated rows; unrelated words (apple and <em>tensor</em>) have essentially uncorrelated rows. The row pattern <em>is</em> the word's context signature. (For truly polysemous words like "bank," the row mixes all the word's senses, so the resulting embedding is an average of meanings — the limitation contextual embeddings will later fix.)</p>
+<h2 id="64-the-glove-model">6.4 The GloVe Model</h2>
+<p>Two classic methods brought stand-alone embeddings to deep-learning NLP: <strong>word2vec</strong> and <strong>GloVe</strong>. They are comparable in effectiveness and use slightly different mechanisms; the course develops GloVe because it is easier to understand.</p>
+<p>The idea: <strong>find embedding vectors that can approximate the observed co-occurrence matrix.</strong> Why is that the right test? Suppose someone hands you embeddings and claims they are good. You could spot-check that "movie" and "film" are close and "movie" and "tensor" are far — but you'd never finish checking. A systematic validation procedure: use the embeddings to <em>recreate</em> the co-occurrence matrix. If the recreated matrix closely matches the real one (predicting ~3,002 where the truth is 3,000, ~48 where the truth is 50), the embeddings must have captured the underlying context structure — you can't reproduce that structure with high fidelity by accident.</p>
+<p>So we treat this as a modeling problem:</p>
+<ul>
+<li>the <strong>embedding vectors are just weights</strong> in a model, and</li>
+<li>the <strong>co-occurrence matrix is just data</strong>,</li>
+</ul>
+<p>and we learn the weights that minimize prediction error. Remarkably, the machinery is nothing more than (fancy) linear regression.</p>
+<h3 id="notation-and-model">Notation and model</h3>
+<ul>
+<li>$X_{ij}$ is the observed co-occurrence count of target word $i$ with context word $j$.</li>
+<li>$w_i$ and $\tilde w_j$ are separate target and context embedding vectors.</li>
+<li>$b_i$ and $\tilde b_j$ are scalar biases that absorb differences in raw word frequency.</li>
+</ul>
+<p>The lecture gives a deliberately simplified intuition: explain the log co-occurrence count with
+word popularity plus a dot product. The canonical <strong>GloVe</strong> objective makes that intuition precise:</p>
+<p>$$
+J =
+\sum_{i,j:X_{ij}&gt;0}
+f(X_{ij})
+\left(
+w_i^\top \tilde w_j + b_i + \tilde b_j - \log X_{ij}
+\right)^2.
+$$</p>
+<p>There are three details worth preserving:</p>
+<ol>
+<li>GloVe learns <strong>two</strong> vector tables, one for target words and one for context words.</li>
+<li>It trains only on <strong>nonzero</strong> co-occurrences; it does not manufacture observations by adding
+   one to every zero count.</li>
+<li>The weighting function $f(X_{ij})$ prevents extremely rare and extremely common pairs from
+   dominating the fit. In the original paper,
+   $f(x)=(x/x_{\max})^\alpha$ below a cutoff and $1$ above it.</li>
+</ol>
+<p>The dot product still carries the lecture's central intuition: words with similar co-occurrence
+profiles acquire geometrically related vectors, while the biases account for overall popularity.</p>
+<h3 id="solving-the-model">Solving the model</h3>
+<p>Initialize the vectors and biases, then minimize $J$ with stochastic gradient descent or a related
+optimizer. A key point from lecture remains exactly right: gradient-based optimization is useful
+well beyond neural networks whenever the objective is differentiable.</p>
+<p>For the lecture's tiny sketch, suppose "deep" and "learning" co-occur 104 times and embeddings are
+two-dimensional. The model prediction is
+$w_{\text{deep}}^\top\tilde w_{\text{learning}}+b_{\text{deep}}+\tilde
+b_{\text{learning}}$; its target is $\log 104$, and the squared residual is weighted by $f(104)$.
+Training repeats this calculation across observed pairs.</p>
+<p>After training, implementations commonly combine or select the target and context vectors (for
+example, $w_i+\tilde w_i$) and discard the biases. The semantic representation lives in the learned
+vectors; the biases were nuisance parameters for frequency.</p>
+<p>Two subtleties raised by students are worth keeping:</p>
+<ul>
+<li><em>Aren't there more parameters than data?</em> No — with $n$ words and dimension $d$, there are $nd + n$ parameters but $\sim n^2$ co-occurrence entries. Because the matrix is order $n^2$, data outnumbers parameters here. (In neural networks more broadly, the traditional overfitting intuitions can break down in interesting ways — look up "double descent.")</li>
+<li><em>Why worry about overfitting at all if there's no out-of-sample prediction?</em> Because every dataset contains noise, and you want the embeddings to capture the signal, not the noise — otherwise the insights you draw from them may be flawed.</li>
+<li><em>Why not just use the co-occurrence rows themselves as word vectors?</em> Two immediate reasons: each row is 500,000 long, and the raw counts aren't normalized, so dot products between rows aren't comparable. Both objections can be patched (and this used to be common practice), but learned embeddings have proven much more effective — a compact representation of relationships that isn't tied to the corpus size and has a much longer shelf life.</li>
+</ul>
+<h3 id="dense-short-learned">Dense, short, learned</h3>
+<p>We get to <em>choose</em> the embedding dimension $d$ — it is a hyperparameter, exactly like the number of hidden units in a layer, or (a student's analogy that Ramakrishnan loved) the number of filters in a convolutional layer. Longer vectors give the model more flexibility to reproduce the co-occurrence matrix, but more parameters also mean more risk of fitting noise. The practical advice: start small, increase until performance flattens or overfits.</p>
+<p>Crucially, embedding vectors can be far <em>shorter</em> than one-hot vectors because they are <strong>dense</strong>: instead of a single 1 among hundreds of thousands of 0s, every dimension holds some learned real number. What does each dimension mean? Nobody knows — not even the people who trained the vectors. The first dimension might encode some blend of brightness, speed, and "animalness." All we know is that the vectors reproduce the co-occurrence matrix well, so they have figured <em>something</em> out. In sum: word embeddings are <strong>dense, low-dimensional, and learned from data</strong> — the exact opposite of sparse, vocabulary-length, hand-defined one-hot vectors.</p>
+<h2 id="65-semantic-arithmetic-the-geometry-of-meaning">6.5 Semantic Arithmetic: The Geometry of Meaning</h2>
+<p>Do GloVe vectors actually deliver "geometry = semantics"? Plotting them (via t-SNE, a technique that projects high-dimensional vectors — here 100-dimensional — into 2D for visualization) reveals striking structure. Family words cluster together: brother, nephew, uncle, sister, niece, aunt. Nearby, man/woman, sir/madam, heir/heiress, duke, emperor, king.</p>
+<p>But the deeper magic is in the <strong>directions</strong>. Take the arrow that leads from "man" to "brother" — it encodes something like <em>becoming a sibling</em>. Now place that same arrow at "woman." Where does it land? At "sister." In vector algebra:</p>
+<p>$$(\text{brother} - \text{man}) + \text{woman} \approx \text{sister}$$</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "We didn't tell it any of these things. We just literally gave it the co-occurrence matrix and asked it to reproduce it. I find it pretty shocking that these things are actually true — it gives us comfort that whatever has been learned has some deep connection to the underlying nature of what's going on. It's not some statistical fluky artifact."</p>
+</blockquote>
+<p>One important caveat, raised by a student: if the corpus is biased, the embeddings will faithfully learn — and, if you're not careful, perpetuate and amplify — those biases. Any data scraped from the internet carries the biases of whoever produced it. This is a serious topic in its own right, and one to keep in mind whenever you deploy embedding-based models.</p>
+<h2 id="66-pretrained-embeddings-vs-your-own">6.6 Pretrained Embeddings vs. Your Own</h2>
+<p>Should you download pretrained embeddings like GloVe, or learn your own? The trade-offs:</p>
+<ul>
+<li><strong>Use pretrained embeddings when you don't have much data.</strong> The fundamentals of English are the fundamentals of English — there's no reason for your small model to relearn them. Learn them once from all of Wikipedia and piggyback. (This is the same transfer-learning logic as the handbags-vs-shoes classifier from the vision lectures, where ResNet features took 100 examples to ~100% accuracy.)</li>
+<li><strong>The drawback: no customization.</strong> Pretrained embeddings capture generic language structure, not your domain. For medical or legal applications packed with jargon, Wikipedia-trained vectors may not know your terms' meanings accurately. You can mitigate this by <em>fine-tuning</em> the pretrained embeddings on your domain data.</li>
+<li><strong>With plenty of data, learn from scratch.</strong> You can train task-specific embeddings jointly with your model — and when data is abundant, that often wins.</li>
+</ul>
+<p>The Colab demonstrates all three options on the genre-classification task, and the results tell exactly this story.</p>
+<h2 id="67-working-with-embeddings-in-keras">6.7 Working with Embeddings in Keras</h2>
+<p>In the embedding world, the STIE pipeline gets split across two layers: the <code>TextVectorization</code> layer does <strong>S, T, I</strong> (stopping at integers), and a new <strong><code>Embedding</code> layer</strong> does the <strong>E</strong>.</p>
+<h3 id="textvectorization-integer-mode">TextVectorization, integer mode</h3>
+<p>Two key differences from the bag-of-words setup:</p>
+<ol>
+<li><strong><code>output_mode="int"</code>.</strong> We tell the layer to stop after indexing and output the sequence of integer token indices, rather than aggregating into a multi-hot vector.</li>
+<li><strong>Fixed sequence length.</strong> Incoming sentences have varying lengths, so we choose a <code>max_length</code> and tell the layer to normalize every sentence to exactly that length: sentences that are too short are <strong>padded</strong> with a special <code>[PAD]</code> token (index 0 in Keras), and sentences that are too long are <strong>truncated</strong>. For example, with <code>max_length = 5</code>, "the cat sat on the mat" is truncated after five tokens, while "I love you" becomes <code>[i, love, you, PAD, PAD]</code>.</li>
+</ol>
+<h3 id="the-embedding-layer">The Embedding layer</h3>
+<p>The <code>Embedding</code> layer is conceptually trivial: <strong>it is just a lookup table mapping integer indices to vectors</strong> — one row per vocabulary token, one column per embedding dimension. You construct it by specifying the number of rows (the vocabulary size, <code>max_tokens</code>) and the vector length (the embedding dimension):</p>
+<div class="highlight"><pre><span></span><code><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">max_tokens</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="the-overall-flow">The overall flow</h3>
+<p>When an input sentence arrives:</p>
+<ol>
+<li>The <code>TextVectorization</code> layer runs S-T-I and pads/truncates to <code>max_length</code>, producing a fixed-length integer sequence — say <code>[23, 9, 5, 0, 0]</code>.</li>
+<li>The <code>Embedding</code> layer looks up the corresponding row vectors, producing a <code>max_length × embedding_dim</code> <strong>table</strong>.</li>
+<li>Neural networks want <em>vectors</em>, not tables, so we must convert. Options: flatten into one long vector, or sum/average the embedding vectors. We take the simplest route — <strong>average</strong> them — with the <code>GlobalAveragePooling1D</code> layer, which averages each dimension across the sequence positions (dimension 1 averaged, dimension 2 averaged, and so on).</li>
+<li>The resulting <code>embedding_dim</code>-long vector feeds into ordinary hidden layers, and we're back on familiar ground.</li>
+</ol>
+<p>Does averaging throw away meaning? Yes, some — averaging the embeddings of very different words loses nuance. The real question is whether it's good enough, and very often it is. Contextual embeddings (next chapters) do better, at the cost of bigger, more powerful models.</p>
+<h2 id="68-three-experiments-on-the-lyrics-dataset">6.8 Three Experiments on the Lyrics Dataset</h2>
+<p>The Colab returns to the ~49,000-song genre-classification task from Chapter 5 and runs three experiments: frozen GloVe embeddings, fine-tuned GloVe embeddings, and embeddings learned from scratch. Setup is as before:</p>
+<div class="highlight"><pre><span></span><code><span class="n">train_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">train_url</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">val_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">val_url</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">test_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">test_url</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1"># Train: 48991, Validation: 16331, Test: 21774</span>
+
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">train_df</span><span class="p">[</span><span class="s1">&#39;Genre&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="n">y_val</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">val_df</span><span class="p">[</span><span class="s1">&#39;Genre&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">test_df</span><span class="p">[</span><span class="s1">&#39;Genre&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+</code></pre></div>
+
+<h3 id="experiment-1-pretrained-glove-embeddings-frozen">Experiment 1: Pretrained GloVe embeddings, frozen</h3>
+<p><strong>Download GloVe.</strong> Stanford's GloVe vectors, trained on the 2014 English Wikipedia, come in several sizes; we use the 100-dimensional version, which covers 400,000 words:</p>
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">nlp</span><span class="o">.</span><span class="n">stanford</span><span class="o">.</span><span class="n">edu</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">glove</span><span class="mf">.6</span><span class="n">B</span><span class="o">.</span><span class="n">zip</span>
+<span class="err">!</span><span class="n">unzip</span> <span class="o">-</span><span class="n">q</span> <span class="n">glove</span><span class="mf">.6</span><span class="n">B</span><span class="o">.</span><span class="n">zip</span>
+
+<span class="n">embedding_dim</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">path_to_glove_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;glove.6B.</span><span class="si">{</span><span class="n">embedding_dim</span><span class="si">}</span><span class="s2">d.txt&quot;</span>
+
+<span class="n">embeddings_index</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path_to_glove_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">word</span><span class="p">,</span> <span class="n">coefs</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">coefs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">coefs</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="n">embeddings_index</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">=</span> <span class="n">coefs</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">embeddings_index</span><span class="p">)</span><span class="si">}</span><span class="s2"> word vectors.&quot;</span><span class="p">)</span>
+<span class="c1"># Found 400000 word vectors.</span>
+</code></pre></div>
+
+<p>You can peek at individual vectors — <code>embeddings_index["movie"]</code>, <code>embeddings_index["film"]</code> — 100 inscrutable numbers each. We don't know what the dimensions mean, but the proof is in the pudding.</p>
+<p><strong>Vectorization layer.</strong> We choose <code>max_length = 300</code> because roughly 90% of the songs in the dataset have at most 300 words — the standard pragmatic approach. (Look at the length distribution and pick a high percentile; sizing for the single longest song, maybe 3,000 words, would waste enormous capacity on padding.)</p>
+<div class="highlight"><pre><span></span><code><span class="n">max_length</span> <span class="o">=</span> <span class="mi">300</span>  <span class="c1"># 90% of songs</span>
+<span class="n">max_tokens</span> <span class="o">=</span> <span class="mi">5000</span>
+
+<span class="n">text_vectorization</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">TextVectorization</span><span class="p">(</span>
+    <span class="n">max_tokens</span><span class="o">=</span><span class="n">max_tokens</span><span class="p">,</span>
+    <span class="n">output_mode</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">,</span>
+    <span class="n">output_sequence_length</span><span class="o">=</span><span class="n">max_length</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">text_vectorization</span><span class="o">.</span><span class="n">adapt</span><span class="p">(</span><span class="n">train_df</span><span class="p">[</span><span class="s1">&#39;Lyric&#39;</span><span class="p">])</span>
+
+<span class="n">text_vectorization</span><span class="o">.</span><span class="n">get_vocabulary</span><span class="p">()[:</span><span class="mi">10</span><span class="p">]</span>
+<span class="c1"># [&#39;&#39;, &#39;[UNK]&#39;, &#39;the&#39;, &#39;you&#39;, &#39;i&#39;, &#39;to&#39;, &#39;and&#39;, &#39;a&#39;, &#39;me&#39;, &#39;it&#39;]</span>
+</code></pre></div>
+
+<p><strong>Important indexing change from Chapter 5:</strong> with <code>output_mode="int"</code>, index <strong>0</strong> is the empty string — the <code>[PAD]</code> token used to pad short sentences — and <code>[UNK]</code> moves to index <strong>1</strong>. A quick probe confirms both tokens in action:</p>
+<div class="highlight"><pre><span></span><code><span class="n">text_vectorization</span><span class="p">([</span><span class="s2">&quot;HODL, you are the best!&quot;</span><span class="p">])</span>
+<span class="c1"># [[  1,   3,  13,   2, 118,   0,   0, ..., 0]]  (300 long)</span>
+</code></pre></div>
+
+<p>"HODL" is not among GloVe's 400,000 words (not yet, anyway), so it becomes 1 (<code>[UNK]</code>); the sentence's real words get their indices; and everything after position 5 is 0 (<code>[PAD]</code>) out to length 300. We then vectorize all splits:</p>
+<div class="highlight"><pre><span></span><code><span class="n">X_train</span> <span class="o">=</span> <span class="n">text_vectorization</span><span class="p">(</span><span class="n">train_df</span><span class="p">[</span><span class="s1">&#39;Lyric&#39;</span><span class="p">])</span>
+<span class="n">X_val</span> <span class="o">=</span> <span class="n">text_vectorization</span><span class="p">(</span><span class="n">val_df</span><span class="p">[</span><span class="s1">&#39;Lyric&#39;</span><span class="p">])</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">text_vectorization</span><span class="p">(</span><span class="n">test_df</span><span class="p">[</span><span class="s1">&#39;Lyric&#39;</span><span class="p">])</span>
+</code></pre></div>
+
+<p><strong>Build the embedding matrix.</strong> We downloaded 400,000 GloVe vectors, but our vocabulary has only 5,000 tokens (the most frequent words Keras chose during <code>adapt</code>). So we assemble a 5,000 × 100 lookup matrix containing just the GloVe vectors for our vocabulary, in our index order:</p>
+<div class="highlight"><pre><span></span><code><span class="n">vocabulary</span> <span class="o">=</span> <span class="n">text_vectorization</span><span class="o">.</span><span class="n">get_vocabulary</span><span class="p">()</span>
+<span class="n">word_index</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">))))</span>
+
+<span class="n">embedding_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">max_tokens</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">word_index</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">max_tokens</span><span class="p">:</span>
+        <span class="n">embedding_vector</span> <span class="o">=</span> <span class="n">embeddings_index</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">embedding_vector</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">embedding_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">embedding_vector</span>
+
+<span class="n">embedding_matrix</span><span class="o">.</span><span class="n">shape</span>   <span class="c1"># (5000, 100)</span>
+</code></pre></div>
+
+<p>The first two rows stay all zeros — they correspond to <code>[PAD]</code> and <code>[UNK]</code>, which GloVe knows nothing about.</p>
+<p><strong>The Embedding layer</strong>, initialized with the GloVe matrix and frozen:</p>
+<div class="highlight"><pre><span></span><code><span class="n">embedding_layer</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span>
+    <span class="n">max_tokens</span><span class="p">,</span>
+    <span class="n">embedding_dim</span><span class="p">,</span>
+    <span class="n">embeddings_initializer</span><span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">initializers</span><span class="o">.</span><span class="n">Constant</span><span class="p">(</span><span class="n">embedding_matrix</span><span class="p">),</span>
+    <span class="n">trainable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">mask_zero</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</code></pre></div>
+
+<p>Like any layer's weights, an Embedding layer's internal token-vector table would normally be adjusted by backpropagation during training. Setting <code>trainable=False</code> freezes it — Stanford spent a lot of money computing these vectors, and for starters we don't want to disturb them. The <code>mask_zero=True</code> flag tells Keras to ignore <code>[PAD]</code> tokens (index 0) in loss and backprop computations — padding is a bookkeeping device with no meaning, so it should never influence learning.</p>
+<p><strong>The model:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">inputs</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">max_length</span><span class="p">,))</span>
+<span class="n">embedded</span> <span class="o">=</span> <span class="n">embedding_layer</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>                          <span class="c1"># 300 x 100 table comes out</span>
+<span class="n">embedded</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">GlobalAveragePooling1D</span><span class="p">()(</span><span class="n">embedded</span><span class="p">)</span>  <span class="c1"># 100-element vector</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)(</span><span class="n">embedded</span><span class="p">)</span>      <span class="c1"># only hidden layer</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;softmax&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>    <span class="c1"># output layer</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</code></pre></div>
+
+<p>The summary shows roughly 500,835 total parameters but only <strong>835 trainable</strong> — the 500,000 frozen GloVe weights (5,000 × 100) don't train; only the hidden layer (100 × 8 + 8), and output layer (8 × 3 + 3) do. You can inspect any layer's weights via <code>model.layers[1].weights</code> — the first two embedding rows are all zeros (<code>[PAD]</code>, <code>[UNK]</code>), the rest are GloVe.</p>
+<div class="highlight"><pre><span></span><code><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;adam&quot;</span><span class="p">,</span>
+              <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;categorical_crossentropy&quot;</span><span class="p">,</span>
+              <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">])</span>
+
+<span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span>
+                    <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">X_val</span><span class="p">,</span> <span class="n">y_val</span><span class="p">),</span>
+                    <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_test</span><span class="p">)</span>
+<span class="c1"># loss: 0.7939 - accuracy: 0.6320</span>
+</code></pre></div>
+
+<p>The loss curves are well behaved — training and validation move in lockstep, no massive overfitting. But the test accuracy is only <strong>~63%</strong> — <em>worse</em> than the ~72% bag-of-words model from Chapter 5. Why don't the fancy embeddings help here? Two reasons discussed in lecture: (1) there may be a mismatch between the corpus the embeddings were trained on (Wikipedia) and the language of song lyrics; and (2) we have ~49,000 examples — a <em>lot</em> of data — and pretrained representations shine precisely when data is scarce, not abundant. (Averaging 300 embeddings into one vector also loses nuance.) Checking <code>model.layers[1].weights</code> after training confirms the GloVe vectors are unchanged — frozen means frozen.</p>
+<h3 id="experiment-2-fine-tuning-the-glove-embeddings">Experiment 2: Fine-tuning the GloVe embeddings</h3>
+<p>A student asked the natural question: if we're optimizing everything else jointly, why treat the embeddings as sacred? Let's unleash backprop on them. The only change is <code>trainable=True</code> (we also add dropout):</p>
+<div class="highlight"><pre><span></span><code><span class="n">embedding_layer</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span>
+    <span class="n">max_tokens</span><span class="p">,</span>
+    <span class="n">embedding_dim</span><span class="p">,</span>
+    <span class="n">embeddings_initializer</span><span class="o">=</span><span class="n">keras</span><span class="o">.</span><span class="n">initializers</span><span class="o">.</span><span class="n">Constant</span><span class="p">(</span><span class="n">embedding_matrix</span><span class="p">),</span>
+    <span class="n">trainable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># note that this has changed from before!!</span>
+    <span class="n">mask_zero</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="n">inputs</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">max_length</span><span class="p">,))</span>
+<span class="n">embedded</span> <span class="o">=</span> <span class="n">embedding_layer</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+<span class="n">embedded</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">GlobalAveragePooling1D</span><span class="p">()(</span><span class="n">embedded</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)(</span><span class="n">embedded</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;softmax&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Compile and fit exactly as before (10 epochs), then evaluate:</p>
+<div class="highlight"><pre><span></span><code><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_test</span><span class="p">)</span>
+<span class="c1"># loss: 0.6977 - accuracy: 0.6882</span>
+</code></pre></div>
+
+<p><strong>~69%, up from ~63%.</strong> Training the GloVe embeddings on our data helps meaningfully. (There are no guarantees — fine-tuning can also trigger overfitting, which is why you check empirically.) Inspecting the embedding weights after training confirms they changed — with one telling exception:</p>
+<blockquote>
+<p>The first row — corresponding to <code>[PAD]</code> — was all zeros before training <strong>and is still all zeros</strong>. How come backprop didn't update it? By design: <code>[PAD]</code> tokens have no meaning; they exist only so all sentences share a length (which makes matrix multiplication efficient). <code>mask_zero=True</code> tells Keras to exclude them from loss and backprop, so the <code>[PAD]</code> vector is untouched. The <code>[UNK]</code> row (index 1), by contrast, <em>did</em> get updated.</p>
+</blockquote>
+<h3 id="experiment-3-learning-embeddings-from-scratch">Experiment 3: Learning embeddings from scratch</h3>
+<p>If fine-tuning GloVe helps, why not abandon GloVe and train our own embeddings end to end? Unlike the GloVe team — who had no specific objective beyond generally useful vectors — we have a very specific objective: predict song genre accurately. And we don't need any co-occurrence matrix machinery: we simply insert a <em>fresh</em> <code>Embedding</code> layer and let backprop learn its table jointly with the classifier. We (arbitrarily) choose dimension 64 rather than 100 — it runs faster:</p>
+<div class="highlight"><pre><span></span><code><span class="n">inputs</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">max_length</span><span class="p">,))</span>
+
+<span class="n">embedded</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="n">max_tokens</span><span class="p">,</span>
+                                  <span class="n">output_dim</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+                                  <span class="n">mask_zero</span><span class="o">=</span><span class="kc">True</span><span class="p">)(</span><span class="n">inputs</span><span class="p">)</span>
+
+<span class="n">embedded</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">GlobalAveragePooling1D</span><span class="p">()(</span><span class="n">embedded</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)(</span><span class="n">embedded</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;softmax&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Before training, the embedding rows are small random numbers — including rows 0 and 1. That's fine: the <code>[PAD]</code> row can be anything (it's masked out of backprop), and the <code>[UNK]</code> row will be learned like any other. Compile, fit for 10 epochs, evaluate:</p>
+<div class="highlight"><pre><span></span><code><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_test</span><span class="p">)</span>
+<span class="c1"># loss: 0.7050 - accuracy: 0.7137</span>
+</code></pre></div>
+
+<p><strong>~71–72%</strong> — better than frozen GloVe (63%) and fine-tuned GloVe (69%), with far fewer trainable parameters than the fine-tuned model, and likely improvable further by tuning the embedding dimension and hidden-layer width. After training, every embedding row has changed <em>except</em> row 0 (<code>[PAD]</code>), again by design of <code>mask_zero</code>.</p>
+<h3 id="the-moral">The moral</h3>
+<p>The three experiments line up exactly with the theory in Section 6.6:</p>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Test accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Frozen GloVe embeddings</td>
+<td>~63%</td>
+</tr>
+<tr>
+<td>Fine-tuned GloVe embeddings</td>
+<td>~69%</td>
+</tr>
+<tr>
+<td>Embeddings learned from scratch</td>
+<td>~72%</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "GloVe is a general-purpose tool, and a general-purpose tool is really good when you don't have a lot of data — that's a good starting point. But when you have a lot of data, you should always try to do your own thing and see if it's any better."</p>
+</blockquote>
+<p>With ~50,000 labeled examples, task-specific embeddings win. If you have "plenty" of data, pretrained embeddings may not help (though they're still worth a try); when data is scarce, they can be very beneficial.</p>
+<h2 id="hands-on-lab">Hands-On Lab</h2>
+<p>The companion Colab, <em>"Stand-alone" Word Embeddings</em>, proceeds as follows:</p>
+<ol>
+<li><strong>Setup.</strong> Standard imports, <code>keras.utils.set_random_seed(42)</code>, plus helper functions <code>plot_loss_curves</code> and <code>plot_acc_curves</code> for visualizing training history.</li>
+<li><strong>Data.</strong> Load the same lyrics dataset as Chapter 5 (48,991 train / 16,331 validation / 21,774 test) and one-hot encode the genre target with <code>pd.get_dummies</code>.</li>
+<li><strong>Download GloVe.</strong> <code>wget</code> and unzip <code>glove.6B.zip</code>; parse <code>glove.6B.100d.txt</code> into a dictionary of 400,000 word → 100-dim vector entries; inspect <code>embeddings_index["movie"]</code>.</li>
+<li><strong>Vectorize to integers.</strong> Configure <code>TextVectorization</code> with <code>max_tokens=5000</code>, <code>output_mode="int"</code>, <code>output_sequence_length=300</code> (300 covers ~90% of songs); <code>adapt</code> on the training lyrics; note <code>''</code> (<code>[PAD]</code>) at index 0 and <code>[UNK]</code> at index 1; probe with <code>"HODL, you are the best!"</code> to see UNK and PAD in action; vectorize all splits.</li>
+<li><strong>Build the embedding matrix.</strong> Map the 5,000-token vocabulary to its GloVe vectors in a <code>(5000, 100)</code> NumPy array; verify rows 0–1 are zeros.</li>
+<li><strong>Experiment 1 — frozen GloVe.</strong> <code>Embedding(..., embeddings_initializer=Constant(embedding_matrix), trainable=False, mask_zero=True)</code> → <code>GlobalAveragePooling1D</code> → <code>Dense(8, relu)</code> → <code>Dense(3, softmax)</code>; only 835 of ~500K parameters trainable; 10 epochs; <strong>test accuracy ≈ 63%</strong>; confirm weights unchanged.</li>
+<li><strong>Experiment 2 — fine-tuned GloVe.</strong> Same model with <code>trainable=True</code> and <code>Dropout(0.5)</code>; <strong>test accuracy ≈ 69%</strong>; confirm the weights changed — except the masked <code>[PAD]</code> row.</li>
+<li><strong>Experiment 3 — from scratch.</strong> Fresh <code>Embedding(input_dim=5000, output_dim=64, mask_zero=True)</code> with <code>Dense(16, relu)</code> and dropout; <strong>test accuracy ≈ 71–72%</strong>, with far fewer parameters.</li>
+<li><strong>Reflect.</strong> Compare the three results and internalize the data-size rule of thumb: pretrained embeddings help most when your dataset is small.</li>
+</ol>
+<h2 id="key-takeaways">Key Takeaways</h2>
+<ul>
+<li>One-hot vectors have two fatal flaws: they are as long as the vocabulary, and their geometry is meaningless — the distance between <em>any</em> two one-hot vectors is $\sqrt{2}$, whether the words are synonyms or antonyms.</li>
+<li><strong>Word embeddings</strong> are dense, low-dimensional vectors learned from data, designed so that geometric relationships (distance <em>and</em> direction) mirror semantic relationships.</li>
+<li>The learning signal comes from Firth's principle — "you shall know a word by the company it keeps": interchangeable words appear in similar contexts, so a word–word <strong>co-occurrence matrix</strong> (counts of same-sentence appearances across a huge corpus) encodes relatedness. Related words have similar co-occurrence rows.</li>
+<li><strong>GloVe</strong> fits $w_i^\top\tilde w_j+b_i+\tilde b_j$ to $\log X_{ij}$ for nonzero co-occurrences using a weighting function $f(X_{ij})$. It learns separate target/context vectors with weighted least squares; biases absorb raw popularity and are discarded afterward.</li>
+<li>Embeddings that merely reproduce co-occurrence counts turn out to support <strong>semantic arithmetic</strong>: $(\text{brother} - \text{man}) + \text{woman} \approx \text{sister}$. Nobody told the model this; it emerged from the data. (So do the data's biases — beware.)</li>
+<li>Stand-alone embeddings assign one vector per word, so polysemous words ("bank") get an unsatisfying <em>average</em> of their meanings. <strong>Contextual embeddings</strong>, computed by transformers, fix this.</li>
+<li>In Keras, <code>TextVectorization(output_mode="int", output_sequence_length=L)</code> performs S-T-I with padding/truncation (<code>[PAD]</code>=0, <code>[UNK]</code>=1); the <code>Embedding</code> layer is a trainable integer-to-vector lookup table; <code>GlobalAveragePooling1D</code> averages the resulting table into a fixed-length vector; <code>mask_zero=True</code> keeps <code>[PAD]</code> out of backprop.</li>
+<li>On the lyrics task (~49K examples): frozen GloVe ≈ 63%, fine-tuned GloVe ≈ 69%, from-scratch embeddings ≈ 72%. Rule of thumb: pretrained embeddings shine when data is scarce; with plenty of data, train your own.</li>
+<li>The embedding dimension is a hyperparameter — like the number of convolutional filters. Start small; grow until performance flattens or overfitting appears.</li>
+</ul>
+<h2 id="check-your-understanding">Check Your Understanding</h2>
+<p><strong>1. Compute the Euclidean distance between the one-hot vectors for "movie" and "film" in a 100,000-word vocabulary. What about "good" and "bad"? What does this reveal?</strong></p>
+<details><summary>Answer</summary>
+Both distances are $\sqrt{2}$. Each vector has a single 1 in a different position; subtracting gives two nonzero entries (+1 and −1), whose squares sum to 2. In fact every pair of distinct one-hot vectors is exactly $\sqrt{2}$ apart — so one-hot encoding carries no notion of distance at all, and no connection between a word's vector and its meaning.
+</details>
+
+<p><strong>2. State Firth's principle and explain how it lets us learn word relatedness without ever defining word meanings by hand.</strong></p>
+<details><summary>Answer</summary>
+"You shall know a word by the company it keeps." Words that are interchangeable in sentences — movie/film/musical in "The acting in the ____ was superb" — appear in similar contexts, and related words generally do. So instead of hand-curating synonyms, we quantify context by counting, for every word pair, how often they appear in the same sentence across a huge corpus (the co-occurrence matrix), and learn embeddings that reproduce those counts. Relatedness is inferred from where words live, not from the words themselves.
+</details>
+
+<p><strong>3. Write down the GloVe objective and explain the role of each term. Why use a logarithm and a weighting function?</strong></p>
+<details><summary>Answer</summary>
+$J=\sum_{i,j:X_{ij}>0}f(X_{ij})[w_i^\top\tilde w_j+b_i+\tilde b_j-\log X_{ij}]^2$. Here $X_{ij}$ is an observed nonzero co-occurrence count; $w_i,\tilde w_j$ are target/context vectors; and $b_i,\tilde b_j$ absorb frequency effects. The log compresses the count range, while $f(X_{ij})$ limits the influence of very rare and very frequent pairs. After fitting, implementations retain or combine the learned vectors and discard the biases.
+</details>
+
+<p><strong>4. How can you systematically validate that a set of embeddings is "good," without spot-checking word pairs one at a time?</strong></p>
+<details><summary>Answer</summary>
+Use the embeddings (with the biases) to reconstruct the co-occurrence matrix and compare against the real one. If the reconstruction closely matches the observed counts — e.g., predicting ~3,002 where the truth is 3,000 — the embeddings must have captured the underlying context structure, because such fidelity can't happen by accident. This reconstruction objective is exactly what GloVe optimizes.
+</details>
+
+<p><strong>5. Why does "bank" pose a problem for stand-alone embeddings, and what is the fix?</strong></p>
+<details><summary>Answer</summary>
+"Bank" is polysemous — financial institution, riverside, a plane banking, banking on an outcome. A stand-alone embedding assigns one fixed vector per word, so a polysemous word gets an average of all its senses, which represents none of them well. The fix is contextual word embeddings, which compute a word's vector taking the other words in the sentence into account — and the key machinery for that is the transformer.
+</details>
+
+<p><strong>6. In the Keras embedding workflow, what do <code>output_mode="int"</code>, <code>output_sequence_length</code>, and <code>mask_zero=True</code> each accomplish? Why did <code>[UNK]</code> move from index 0 (Chapter 5) to index 1?</strong></p>
+<details><summary>Answer</summary>
+`output_mode="int"` tells `TextVectorization` to stop after the indexing step and output integer token indices (S-T-I only), leaving encoding to the `Embedding` layer. `output_sequence_length` fixes every sentence to the same length by padding short ones with the `[PAD]` token and truncating long ones. `mask_zero=True` on the `Embedding` layer tells Keras to exclude `[PAD]` (index 0) from loss and backprop — padding is meaningless bookkeeping, which is why the `[PAD]` embedding row stays all zeros even after training. In integer mode, index 0 is reserved for `[PAD]` (the empty string), so `[UNK]` shifts to index 1.
+</details>
+
+<p><strong>7. The frozen-GloVe model scored ~63% on the lyrics task — worse than Chapter 5's ~72% bag-of-words model. Give two reasons from lecture, and state the general rule of thumb about when pretrained embeddings help.</strong></p>
+<details><summary>Answer</summary>
+(1) Corpus mismatch: GloVe was trained on Wikipedia, whose language differs from song lyrics. (2) Data abundance: with ~49,000 labeled examples, there's enough data to learn good task-specific representations from scratch, so generic pretrained features add little. (Averaging 300 embeddings into one vector also discards nuance.) Rule of thumb: pretrained embeddings are most valuable when your dataset is small — you piggyback on what was learned from a giant corpus; with plenty of data, try training your own.
+</details>
+
+<p><strong>8. Interpret the equation $(\text{brother} - \text{man}) + \text{woman} \approx \text{sister}$ geometrically. Why is it remarkable that GloVe vectors satisfy it?</strong></p>
+<details><summary>Answer</summary>
+The difference vector $\text{brother} - \text{man}$ is an arrow encoding a semantic transformation — roughly "person → sibling." Adding that same arrow to "woman" lands near "sister": directions in embedding space carry consistent meaning, not just distances. It's remarkable because nothing in training asked for this — the model was only asked to reproduce co-occurrence counts — yet coherent semantic structure emerged, evidence that the embeddings capture something real about language rather than a statistical artifact.
+</details>
+      <nav class="chapter-footer" aria-label="Chapter navigation"><a class="previous" href="ch05-nlp-basics.html">← 5 · Text Vectorization</a><a class="next" href="ch07-transformers.html">7 · Transformers →</a></nav>
+    </article>
+  </main>
+</body>
+</html>

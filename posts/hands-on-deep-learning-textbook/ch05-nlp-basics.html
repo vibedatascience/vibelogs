@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A hands-on deep learning textbook companion to MIT 15.773">
+  <title>Chapter 5: NLP Basics — Text Vectorization and the Bag-of-Words Model · Hands-On Deep Learning</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
+  </script>
+  <script defer src="mathjax/tex-svg.js"></script>
+  <script defer src="search-index.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"></div>
+  <aside class="sidebar">
+    <a class="brand" href="index.html">Hands-On Deep Learning</a>
+    <div class="brand-subtitle">MIT 15.773 · Spring 2024 companion</div>
+    <input class="search" type="search" placeholder="Search the full book…" data-search aria-label="Search">
+    <div class="search-results hidden" data-search-results></div>
+    <nav><div class="nav-part">Front Matter</div>
+<a class="nav-link" href="index.html">Start Here</a>
+<div class="nav-part">Part I · Foundations</div>
+<a class="nav-link" href="ch01-intro-to-neural-networks.html">1 · Neural Networks</a>
+<a class="nav-link" href="ch02-training-deep-networks.html">2 · Training Deep Networks</a>
+<a class="nav-link" href="ch03-keras-and-cnns-from-scratch.html">3 · Keras and Vision Basics</a>
+<div class="nav-part">Part II · Computer Vision</div>
+<a class="nav-link" href="ch04-cnns-transfer-learning.html">4 · CNNs and Transfer Learning</a>
+<div class="nav-part">Part III · Natural Language</div>
+<a class="nav-link active" href="ch05-nlp-basics.html">5 · Text Vectorization</a>
+<a class="nav-link" href="ch06-embeddings.html">6 · Embeddings</a>
+<a class="nav-link" href="ch07-transformers.html">7 · Transformers</a>
+<a class="nav-link" href="ch08-transformers-ii-self-supervised.html">8 · Self-Supervised Learning</a>
+<div class="nav-part">Part IV · Generative AI</div>
+<a class="nav-link" href="ch09-llms-and-rag.html">9 · LLMs and RAG</a>
+<a class="nav-link" href="ch10-peft-lora.html">10 · PEFT and LoRA</a>
+<a class="nav-link" href="ch11-diffusion-text-to-image.html">11 · Diffusion Models</a>
+<div class="nav-part">Appendices</div>
+<a class="nav-link" href="appendix-a-homework.html">A · Homework and Solutions</a>
+<a class="nav-link" href="appendix-b-resources.html">B · Resource Index</a></nav>
+    <div class="sidebar-actions">
+      <button data-theme-toggle type="button">Light / dark</button>
+      <button data-print type="button">Print</button>
+    </div>
+    <div class="sidebar-actions">
+      <a class="button" href="complete-book.html">Complete book</a>
+      <a class="button" href="notebooks.html">Notebooks</a>
+    </div>
+  </aside>
+  <main class="page">
+    <article class="article">
+      <div class="eyebrow">Part III · Natural Language</div>
+      <h1 id="chapter-5-nlp-basics-text-vectorization-and-the-bag-of-words-model">Chapter 5: NLP Basics — Text Vectorization and the Bag-of-Words Model</h1>
+<blockquote>
+<p><strong>Lecture video:</strong> <a href="https://www.youtube.com/watch?v=duBLxHjaecQ">https://www.youtube.com/watch?v=duBLxHjaecQ</a>
+<strong>Slides (PDF):</strong> <a href="https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/mit15_773_s24_lec05.pdf">https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/mit15_773_s24_lec05.pdf</a>
+<strong>Companion Colab notebook:</strong> <a href="https://colab.research.google.com/drive/1u-6wjRZKvZWV1p2OFFF_NMI-bW9gYKuf">https://colab.research.google.com/drive/1u-6wjRZKvZWV1p2OFFF_NMI-bW9gYKuf</a></p>
+</blockquote>
+<p><strong>Learning objectives.</strong> By the end of this chapter, you should be able to:</p>
+<ul>
+<li>Explain why natural language processing matters and describe the major application families that fit the simple "text in, text out" formalism (classification, extraction, summarization, generation, question-answering).</li>
+<li>Trace the historical arc of NLP from hand-crafted linguistic rules through statistical methods and recurrent networks to transformers.</li>
+<li>Describe the four-step text vectorization pipeline — <strong>S</strong>tandardize, <strong>T</strong>okenize, <strong>I</strong>ndex, <strong>E</strong>ncode ("STIE") — and justify each step.</li>
+<li>Define one-hot encoding of tokens and explain the role of the vocabulary and the special <code>[UNK]</code> token.</li>
+<li>Explain how count encoding and multi-hot encoding aggregate a variable-length sequence of one-hot vectors into a fixed-length <strong>bag-of-words</strong> representation, and articulate the model's shortcomings.</li>
+<li>Build a bag-of-words text classifier in Keras using the <code>TextVectorization</code> layer and a small feed-forward network.</li>
+<li>Use bigrams (and n-grams generally) to recover some local word-order information, and explain why this helps.</li>
+<li>Describe what dropout does and the intuition for why it reduces overfitting.</li>
+</ul>
+<p>This chapter begins the deep-learning-for-NLP arc of the course: this lecture covers text vectorization and the bag-of-words model, the next covers embeddings, and the two after that cover transformers in theory and in application, before the course culminates in large language models.</p>
+<h2 id="51-why-natural-language-processing">5.1 Why Natural Language Processing?</h2>
+<p>Nearly everything humans know, say, and create is encoded in natural language. Human knowledge is (mostly) text; the internet is (mostly) text; human communication is (mostly) text; and cultural production — books, movies, journalism, art criticism — is overwhelmingly text-heavy. As Ramakrishnan explains in lecture, text is not just a large fraction of the world's media: it is also the medium in which we think and communicate, so its primacy is unparalleled in how we represent the world.</p>
+<p>The tantalizing possibility, then, is a system that could read and "understand" all of this automatically. Imagine an AI system that reads all of PubMed and comes back to report that, for a particular disease, a particular malfunctioning protein is the culprit — and that a specific small molecule will dock into that protein and cure the disease. Discoveries of that kind may well happen; the open question is only when.</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "Imagine if we had an AI system which could just read and, quote unquote, 'understand' all this text… You can imagine such a system reading all of PubMed, reading all the medical literature, and then coming back and saying, for this particular disease, this particular protein is actually the malfunctioning protein."</p>
+</blockquote>
+<p>NLP is already in action all around us, often invisibly. According to Google, autocomplete saves roughly 200 years of typing time every day — and, more importantly, it made mobile computing viable at all. Without word prediction, typing on a phone would be so painful that mobile e-commerce would have been dramatically dampened. Ramakrishnan recounts that even the very first iPhone soft keyboard used basic word-continuation prediction to <em>subtly enlarge</em> the key for the most likely next letter, improving the odds your finger would land on it. NLP quietly reshapes user interfaces in real time everywhere.</p>
+<h3 id="the-text-in-text-out-formalism">The "text in, text out" formalism</h3>
+<p>A remarkable amount of NLP's application surface can be captured by one deceptively simple picture: text goes in, text comes out. This humble formalism covers:</p>
+<ul>
+<li><strong>Text classification.</strong> Classify incoming text by sentiment, by routing destination (customer support), by user intent (search), or for content filtering (toxicity detection).</li>
+<li><strong>Text extraction.</strong> Pull structured data out of free-form text: company financials from news articles (hedge funds do this heavily), customer names and contact information from chat logs, or disease and medication codes from doctors' notes (a whole cluster of startups transcribes doctor–patient conversations and extracts diagnosis codes automatically).</li>
+<li><strong>Text summarization.</strong> Compress long-form text into bullet points, abstracts, or titles.</li>
+<li><strong>Text generation.</strong> Produce marketing copy, sales emails, market summaries, job descriptions, social posts — and, troublingly for educators, college application essays.</li>
+<li><strong>Code generation.</strong> Code is just text, so "text in, code out" is a special case of the same formalism.</li>
+<li><strong>Question answering.</strong> Concatenate a question with a set of documents — the whole bundle is still just text — and produce an answer, enabling chatbots for medical, legal, compliance, and call-center use cases.</li>
+</ul>
+<p>The call-center domain illustrates how rich a single vertical can be. Feed in call transcripts plus internal documentation and FAQs, and you can start answering questions like: What are the top reasons customers are upset? Which agent interventions actually work? What characterizes the best support agents versus the rest? How should we grade this agent's interaction with customer X? How should the script change? How should we coach the agent in real time? Every one of these is amenable to the humble text-in, text-out model — and it is where a great deal of enterprise money is currently being spent.</p>
+<p>The public now recognizes this potential because of the meteoric rise of large language models. A startup "gold rush" is under way to build NLP-based products, and enterprise vendors are racing to add NLP features to existing products (Salesforce's Einstein GPT, Microsoft's Copilot, and so on). As Ramakrishnan wryly notes, "some of it is real, a lot of it is not."</p>
+<h3 id="the-arc-of-nlp-progress">The arc of NLP progress</h3>
+<p>How did we get here? NLP has moved through four broad eras:</p>
+<ol>
+<li><strong>Hand-crafted rules based on linguistics (up to the early 1990s).</strong> Linguists who deeply understood grammar wrote explicit rules for processing and analyzing language.</li>
+<li><strong>Statistical / machine-learning methods (1990s – early 2010s).</strong> These methods discarded the complicated linguistic knowledge and simply <em>counted things</em> — co-occurrences, frequencies — and, shockingly, they outperformed the lovingly hand-curated rules. The famous quip from speech researcher Frederick Jelinek captures the moment: <em>"Every time I fire a linguist, the performance of the speech recognizer goes up."</em></li>
+<li><strong>Recurrent neural networks (2014–2017).</strong> Deep learning arrived around 2012, and RNNs moved the ball forward for language.</li>
+<li><strong>Transformers (2017–present).</strong> Invented in 2017, the transformer replaced everything else across the board.</li>
+</ol>
+<p>This course leapfrogs directly from the basics to transformers, skipping RNNs entirely — not because RNNs are dead (there is interesting research trying to revive them for modern LLM-style workloads), but because transformers are what matter today.</p>
+<h2 id="52-the-20000-foot-view-fancy-regression-again">5.2 The 20,000-Foot View: Fancy Regression, Again</h2>
+<p>Like most things in deep learning, NLP is, at the highest level, just fancy regression:</p>
+<p>$$\hat{y} = f(x, w)$$</p>
+<p>Here $x$ is text; $\hat{y}$ can be text, labels, or numbers; $w$ is the weights; and $f(\cdot, \cdot)$ is a deep neural network. By this point in the course, that picture should be blindingly obvious. The two key questions specific to NLP are:</p>
+<ol>
+<li><strong>How do we represent $x$?</strong> For images, this was easy — pixels are already numbers between 0 and 255, so we fed them straight in. But when the sentence "I love deep learning" arrives, what numbers do we feed the network? Everything entering a neural network must be numerical. This subtle, important question is the focus of this chapter.</li>
+<li><strong>What network architecture is best for processing text?</strong> That is the subject of the transformer lectures to come.</li>
+</ol>
+<h2 id="53-text-vectorization-the-stie-pipeline">5.3 Text Vectorization: The STIE Pipeline</h2>
+<p>Turning raw text into numbers follows a standard four-step process called <strong>text vectorization</strong>:</p>
+<p><strong>Standardize → Tokenize → Index → Encode</strong></p>
+<p>Ramakrishnan suggests keeping the acronym <strong>STIE</strong> in your head. The setup: we have a collection of text documents called the <strong>training corpus</strong>. Whether each item is a novel or a single sentence doesn't matter — we treat the corpus as a big list of strings. We apply the first two steps (standardize, tokenize) to every string in the corpus; the last two steps (index, encode) operate on the vocabulary that results.</p>
+<h3 id="standardization">Standardization</h3>
+<p>Standardization cleans and normalizes the raw text. The typical operations, in decreasing order of how routinely they are applied:</p>
+<ul>
+<li><strong>Strip capitalization, punctuation, and accents</strong> (almost always).</li>
+<li><strong>Remove stop words</strong> — filler words like <em>a</em>, <em>the</em>, <em>it</em> that are needed for grammatical sentences but often carry no predictive value (often).</li>
+<li><strong>Stemming</strong> — map morphological variants like <em>ate, eaten, eating</em> to a common root such as <em>eats</em> (sometimes).</li>
+</ul>
+<p>Why do any of this? The key insight parallels what we learned in computer vision. There, we wanted a vertical-line detector to fire wherever a vertical line appears, rather than wasting model capacity learning that a line on the left is "the same thing" as a line on the right. Here, whether a word is uppercase or lowercase almost never matters for what you want to predict — so the easiest way to tell the model that "The" and "the" are the same is to just lowercase everything. Stop-word removal has a slightly different rationale: whether "and" appears in a movie review probably doesn't affect its sentiment, so drop it. Stemming is like lowercasing: <em>ate</em> and <em>eating</em> mean roughly the same thing for most tasks, so collapse them.</p>
+<p>A worked example from the slides. The raw sentence</p>
+<blockquote>
+<p>"Hola! What do you picture when you think of traveling to Mexico? Sipping a real margarita while soaking up the sun on a laid-back beach in Puerto Vallarta?"</p>
+</blockquote>
+<p>standardizes (lowercase, strip punctuation, stem) to</p>
+<blockquote>
+<p><code>hola what do you picture when you [thinks] of [travels] to mexico [sips] real margarita while [soaks] up sun on laidback beach in puerto vallarta</code></p>
+<p>💬 <strong>From the lecture:</strong> "In practice, what I find these days is: don't even bother to stem. Don't even bother to remove the stop words. It's going to work well enough." Indeed, Keras's default standardization does only lowercasing and punctuation stripping.</p>
+</blockquote>
+<h3 id="tokenization">Tokenization</h3>
+<p>Next we split each standardized string into <strong>tokens</strong>. The typical default: split on whitespace, so each word is a token. (How many consecutive words make up a token is a design choice we return to in Section 5.7.) The standardized Mexico sentence becomes the token list <code>"hola", "what", "do", "you", "picture", …, "puerto", "vallarta"</code>.</p>
+<p>Word-level tokenization has real disadvantages, which students in lecture identified quickly:</p>
+<ul>
+<li><strong>Order is lost downstream</strong> (in the bag-of-words model we build below): "the cat sat on the mat" and "the mat sat on the cat" produce the same token multiset.</li>
+<li><strong>Compound entities are split.</strong> "Puerto Vallarta" is a single name; "father-in-law" is a single concept.</li>
+<li><strong>Many languages don't use spaces.</strong> Some languages run words together, with native speakers chunking by context — whitespace splitting would produce one giant token per passage. Others, like German, build extremely long compound words. (And some languages have gloriously specific single words — Japanese <em>komorebi</em>, sunlight filtering through leaves, has no compact English equivalent.)</li>
+</ul>
+<p>The standardization and tokenization described here are a good default for many NLP tasks — text classification, in particular — but they fail badly for <strong>text generation</strong>. When ChatGPT answers you, it uses perfect punctuation (so punctuation clearly wasn't stripped), correct casing (so case wasn't stripped), and can even use brand-new words you just made up (so it isn't limited to a fixed word list). Modern LLMs therefore use a cleverer tokenization scheme called <strong>byte-pair encoding (BPE)</strong>, which the course returns to in the LLM lectures.</p>
+<h3 id="indexing">Indexing</h3>
+<p>Once standardization and tokenization have been run over every string in the training corpus, we collect the list of <em>distinct</em> tokens. That list is our <strong>vocabulary</strong>. From here on, the pipeline works only with the vocabulary.</p>
+<p><strong>Indexing</strong> assigns a unique integer to each distinct token. If the corpus were a large chunk of English literature, the vocabulary might run from <em>a</em> (index 1) through <em>zebra</em> (index 50,000). We also add one special token, <code>&lt;UNK&gt;</code> ("unknown"), at index 0 — a placeholder whose purpose becomes clear shortly.</p>
+<h3 id="encoding">Encoding</h3>
+<p><strong>Encoding</strong> assigns a <em>vector</em> to each integer in the vocabulary. The requirement is minimal: distinct tokens must get distinct vectors. The simplest scheme is <strong>one-hot encoding</strong>: treat the vocabulary as the levels of a categorical variable. With a vocabulary of size $V$, each token's vector is $V$-dimensional, all zeros except a single 1 at the token's index position:</p>
+<p>$$\text{<UNK>} \to \begin{bmatrix} 1 \ 0 \ 0 \ \vdots \ 0 \end{bmatrix}, \qquad \text{a} \to \begin{bmatrix} 0 \ 1 \ 0 \ \vdots \ 0 \end{bmatrix}, \qquad \cdots \qquad \text{zebra} \to \begin{bmatrix} 0 \ 0 \ 0 \ \vdots \ 1 \end{bmatrix}$$</p>
+<p>The dimension of the encoding vector equals the number of distinct tokens in the corpus plus one for <code>&lt;UNK&gt;</code> — this total is called the <strong>vocabulary size</strong>. At this point every distinct token has a one-hot vector, and basic preprocessing is complete.</p>
+<h2 id="54-feeding-a-new-sentence-into-a-deep-neural-network">5.4 Feeding a New Sentence into a Deep Neural Network</h2>
+<p>Suppose we have completed STIE on a training corpus and found 99 distinct tokens; adding <code>&lt;UNK&gt;</code> gives a vocabulary of size 100. Now a fresh input string arrives — "The cat sat on the mat" — and we run it through the same STIE pipeline. What comes out?</p>
+<p>After standardization and tokenization we have 6 tokens; each maps to a 100-dimensional one-hot vector. So the output is a <strong>6 × 100 table</strong>: one row per token, one column per vocabulary entry, each row containing a single 1.</p>
+<p>Can we feed this table directly into a dense network? Two problems arise:</p>
+<ol>
+<li><strong>Flattening explodes.</strong> We could flatten the table into a single long vector, as we did with images. But with a realistic vocabulary of 50,000, six words become a 300,000-long vector. Feeding that into even a 100-unit hidden layer means $300{,}000 \times 100 = 30$ million parameters — far too many to learn well.</li>
+<li><strong>Variable length.</strong> Each incoming sentence has a different number of words, so the flattened vector's length changes from input to input. Dense networks need fixed-length inputs.</li>
+</ol>
+<h3 id="aggregation-the-bag-of-words-model">Aggregation: the bag-of-words model</h3>
+<p>The fix is to <strong>aggregate</strong> the rows of the table into a single vector of length $V$:</p>
+<ul>
+<li><strong>Sum the vectors</strong> column by column, so each entry records <em>how many times</em> the corresponding vocabulary word appeared. This is <strong>count encoding</strong> (also called sum encoding).</li>
+<li><strong>"OR" the vectors</strong> — put a 1 in a column if <em>any</em> row has a 1 there, i.e., record only the <em>presence or absence</em> of each word. This is <strong>multi-hot encoding</strong>.</li>
+</ul>
+<p>Either way, every input — whether it's the phrase "I love you" or the collected works of Shakespeare — becomes a single fixed-length vector of size $V$. This aggregation approach is called the <strong>Bag-of-Words (BoW) model</strong>: we have a bag containing the input's words (or their counts), with no record of the order in which they appeared.</p>
+<h3 id="shortcomings-of-bag-of-words">Shortcomings of bag-of-words</h3>
+<p>Does bag-of-words have weaknesses? Several:</p>
+<ul>
+<li><strong>We lose sequentiality.</strong> "The cat sat on the mat" and "the mat sat on the cat" have <em>identical</em> count and multi-hot encodings. The meaning inherent in word order is gone. Shockingly, for many applications this doesn't matter much — BoW is often good enough.</li>
+<li><strong>Every input is vocabulary-length, regardless of its size.</strong> A three-word phrase and a novel both become $V$-long vectors, and if $V$ is large this wastes compute and forces the model's first layer to have $V \times (\text{hidden units})$ weights — increasing training time and the risk of overfitting.</li>
+<li><strong>Sparsity.</strong> The vectors are mostly zeros carrying a little information, though computer-science tricks for sparse data can mitigate this.</li>
+</ul>
+<p>The vocabulary-length problem can be softened by keeping only the <strong>most frequent words</strong>. English has roughly 500,000 words, but the top 50,000 or so account for essentially everything you will ever see; the rest are a long tail. So we pragmatically cap the vocabulary. But this creates a new situation: what happens when a capped-out word arrives at prediction time? Suppose "Hamlet" was dropped from the vocabulary and the input "Hamlet was a bad prince" arrives. The system cannot find "Hamlet" anywhere — so it replaces it with <code>&lt;UNK&gt;</code>. That is exactly what the unknown token is for. Note the cost: if "Romeo," "Juliet," and "Hamlet" were all dropped, they all become the <em>same</em> <code>&lt;UNK&gt;</code> and can no longer be distinguished.</p>
+<p>(A student asked whether this is where LLM "hallucination" comes from. It is not — modern LLMs use byte-pair encoding, which can tokenize <em>anything</em>, including made-up words, so they have no <code>&lt;UNK&gt;</code> problem at all.)</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "Despite its shortcomings, bag-of-words is actually a really good default for many NLP tasks. In the spirit of 'do the simple stuff first, and do complicated things only if the simple stuff doesn't work,' we'll use the bag-of-words model."</p>
+</blockquote>
+<h2 id="55-the-task-music-genre-classification">5.5 The Task: Music Genre Classification</h2>
+<p>The running application for this chapter is fun: predict the <strong>genre of a song from its lyrics</strong>. Given a verse like</p>
+<blockquote>
+<p><em>I grew up on the crime side, the New York Times side / Stayin' alive was no jive…</em></p>
+</blockquote>
+<p>or</p>
+<blockquote>
+<p><em>I walked through the door with you / The air was cold…</em></p>
+</blockquote>
+<p>classify it as <strong>hip-hop</strong>, <strong>rock</strong>, or <strong>pop</strong>. This is a multi-class classification problem over a dataset of nearly 90,000 songs. (A word of caution from lecture: real lyrics datasets contain content that may not be safe for work.)</p>
+<h3 id="the-simplest-neural-classifier">The simplest neural classifier</h3>
+<p>What is the simplest neural-network classifier we can build? Worked out on the blackboard in lecture:</p>
+<ul>
+<li><strong>Input layer.</strong> Run each song through STIE with multi-hot encoding. Every song becomes a vector $x_1, x_2, \ldots, x_V$ where $V$ is the vocabulary size.</li>
+<li><strong>Hidden layer.</strong> One hidden layer of ReLU units — in this course, at least one hidden layer is required for the model to count as a neural network. (Zero hidden layers would essentially be logistic regression.) Trial and error found that <strong>8 ReLU neurons</strong> work well here.</li>
+<li><strong>Output layer.</strong> Three nodes — one each for hip-hop, rock, pop — with a <strong>softmax</strong> activation, producing three probabilities that sum to 1.</li>
+</ul>
+<p>Why softmax rather than simply taking the maximum of three raw scores? Because training requires backpropagation, and backpropagation is differentiation: every piece of the network must have well-behaved gradients. The hard $\max$ function does not, so we use its differentiable "soft" version. As Ramakrishnan notes, many tricks in the neural-network literature exist precisely to replace an obvious-but-non-differentiable choice with a smooth surrogate — just as we optimize cross-entropy instead of accuracy.</p>
+<h2 id="56-text-vectorization-in-keras">5.6 Text Vectorization in Keras</h2>
+<p>The beautiful thing is that the entire STIE pipeline is implemented in Keras as a single layer: <code>TextVectorization</code>. We start with the usual preliminaries:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">keras</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="n">keras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+</code></pre></div>
+
+<p>We <em>configure</em> the layer by telling it which S, T, I, and E we want. In this first example we use the default standardization (lowercase + strip punctuation), the default word-level tokenization (split on whitespace), and multi-hot output:</p>
+<div class="highlight"><pre><span></span><code><span class="n">text_vectorization</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">TextVectorization</span><span class="p">(</span>
+    <span class="n">output_mode</span> <span class="o">=</span> <span class="s1">&#39;multi_hot&#39;</span><span class="p">,</span>
+    <span class="n">standardize</span><span class="o">=</span><span class="s1">&#39;lower_and_strip_punctuation&#39;</span><span class="p">,</span>
+    <span class="n">split</span><span class="o">=</span><span class="s1">&#39;whitespace&#39;</span>
+<span class="p">)</span>
+</code></pre></div>
+
+<p>Configuration alone does nothing — the layer must be <em>populated</em> with a vocabulary by running it over a training corpus. That is the job of the <code>adapt()</code> method. Here is a tiny four-string corpus:</p>
+<div class="highlight"><pre><span></span><code><span class="n">dataset</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;I write, erase, rewrite&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Erase again, and then&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;A poppy blooms.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Hola! are you laid-back in Mexico&quot;</span>
+<span class="p">]</span>
+
+<span class="c1"># Index vocabulary of the text</span>
+<span class="n">text_vectorization</span><span class="o">.</span><span class="n">adapt</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Once adapted, we can inspect the result with <code>get_vocabulary()</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">vocabulary</span> <span class="o">=</span> <span class="n">text_vectorization</span><span class="o">.</span><span class="n">get_vocabulary</span><span class="p">()</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">)</span>     <span class="c1"># 17</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">)</span>
+<span class="c1"># [&#39;[UNK]&#39;, &#39;erase&#39;, &#39;you&#39;, &#39;write&#39;, &#39;then&#39;, &#39;rewrite&#39;, &#39;poppy&#39;,</span>
+<span class="c1">#  &#39;mexico&#39;, &#39;laidback&#39;, &#39;in&#39;, &#39;i&#39;, &#39;hola&#39;, &#39;blooms&#39;, &#39;are&#39;, &#39;and&#39;,</span>
+<span class="c1">#  &#39;again&#39;, &#39;a&#39;]</span>
+</code></pre></div>
+
+<p>Two things to notice. First, <code>[UNK]</code> sits at index 0 — the default placeholder for out-of-vocabulary words. Second, the words are <strong>sorted by frequency</strong>: "erase" appears twice in the corpus, so it comes first among real words. Why sort by frequency when the layer can't yet know which words will be useful? Because it makes vocabulary capping trivial: if you later say "keep only the 100 most frequent tokens," Keras just truncates the list. Note also that after <code>adapt()</code> finishes, the training corpus itself is forgotten — the only thing that survives is the vocabulary.</p>
+<p>(A small programming tip from lecture: to pretty-print a Python list, wrap it in a pandas DataFrame — <code>pd.DataFrame(vocabulary)</code> — and print that.)</p>
+<p>Now any sentence can be run through the layer:</p>
+<div class="highlight"><pre><span></span><code><span class="n">test_sentence</span> <span class="o">=</span> <span class="s2">&quot;I write, rewrite, and still rewrite again&quot;</span>
+<span class="n">encoded_sentence</span> <span class="o">=</span> <span class="n">text_vectorization</span><span class="p">(</span><span class="n">test_sentence</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">encoded_sentence</span><span class="p">)</span>
+<span class="c1"># tf.Tensor([1 0 0 1 0 1 0 0 0 0 1 0 0 0 1 1 0], shape=(17,), dtype=int64)</span>
+</code></pre></div>
+
+<p>The output is a 0–1 vector exactly 17 long — the vocabulary size, a good sanity check. Why is there a 1 in position 0, the <code>[UNK]</code> slot? Because the word "still" never appeared in our four-sentence corpus:</p>
+<div class="highlight"><pre><span></span><code><span class="s2">&quot;still&quot;</span> <span class="ow">in</span> <span class="n">vocabulary</span>   <span class="c1"># False</span>
+</code></pre></div>
+
+<p>In the spirit of <em>making small changes to the code to really understand what's going on</em> — a habit Ramakrishnan strongly recommends for those without deep programming experience — what does <code>text_vectorization("Sloan, HODL, DMD")</code> produce? All three words are out-of-vocabulary, so all three map to <code>[UNK]</code>; multi-hot encoding then ORs the three identical one-hot vectors into a single 1:</p>
+<div class="highlight"><pre><span></span><code><span class="n">text_vectorization</span><span class="p">(</span><span class="s2">&quot;Sloan, HODL, DMD&quot;</span><span class="p">)</span>
+<span class="c1"># &lt;tf.Tensor: shape=(17,), dtype=int64,</span>
+<span class="c1">#  numpy=array([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])&gt;</span>
+</code></pre></div>
+
+<p>(Had we used count encoding instead, that first entry would be 3.)</p>
+<h2 id="57-building-the-genre-classifier">5.7 Building the Genre Classifier</h2>
+<h3 id="loading-the-data">Loading the data</h3>
+<p>The lyrics dataset comes pre-split into train, validation, and test sets:</p>
+<div class="highlight"><pre><span></span><code><span class="n">train_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">train_url</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">val_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">val_url</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">test_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">test_url</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1"># Train samples: 48991</span>
+<span class="c1"># Validation samples: 16331</span>
+<span class="c1"># Test samples: 21774</span>
+</code></pre></div>
+
+<p>Each row has a <code>Lyric</code> column and a <code>Genre</code> column ("Oh, girl. I can't get ready…" → Pop; "[Hook]. Beamer, Benz, Or Bentley…" → Hip Hop). Before modeling, we check the class proportions to establish a <strong>baseline</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">train_df</span><span class="p">[</span><span class="s1">&#39;Genre&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span> <span class="o">/</span> <span class="n">train_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="c1"># Rock       0.549448</span>
+<span class="c1"># Pop        0.295136</span>
+<span class="c1"># Hip Hop    0.155416</span>
+</code></pre></div>
+
+<p>Rock is about 55% of the training set, so a naive model that always predicts "Rock" achieves roughly 55% accuracy. Any model we build must beat that to be worth anything.</p>
+<p>The target itself must be one-hot encoded (three categories), which <code>pd.get_dummies</code> handles:</p>
+<div class="highlight"><pre><span></span><code><span class="n">y_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">train_df</span><span class="p">[</span><span class="s1">&#39;Genre&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="n">y_val</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">val_df</span><span class="p">[</span><span class="s1">&#39;Genre&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">test_df</span><span class="p">[</span><span class="s1">&#39;Genre&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="c1"># y_train looks like [[0,1,0], [0,1,0], [0,0,1], ...]</span>
+</code></pre></div>
+
+<h3 id="vectorizing-the-lyrics">Vectorizing the lyrics</h3>
+<p>Rather than keeping every word across 49,000 songs, we cap the vocabulary at the <strong>5,000 most frequent tokens</strong> via <code>max_tokens</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">max_tokens</span> <span class="o">=</span> <span class="mi">5000</span>
+<span class="n">text_vectorization</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">TextVectorization</span><span class="p">(</span>
+    <span class="n">max_tokens</span><span class="o">=</span><span class="n">max_tokens</span><span class="p">,</span>
+    <span class="n">output_mode</span><span class="o">=</span><span class="s2">&quot;multi_hot&quot;</span><span class="p">)</span>
+
+<span class="n">text_vectorization</span><span class="o">.</span><span class="n">adapt</span><span class="p">(</span><span class="n">train_df</span><span class="p">[</span><span class="s1">&#39;Lyric&#39;</span><span class="p">])</span>
+</code></pre></div>
+
+<p>Why cap? Efficiency is part of it, but there's a deeper point: the number of tokens dictates the vocabulary size, which dictates the input-vector length, which dictates the parameter count of the first layer (roughly input length × hidden units). Make the input ten times longer and you have ten times as many parameters to learn from the same finite data — a recipe for heavy overfitting. How to choose the cap in practice? Adapt once <em>without</em> <code>max_tokens</code>, look at the frequency statistics of rare words, find where frequency falls off dramatically, and set the cap there.</p>
+<p>The adapted vocabulary is unsurprising at the frequent end (<code>'[UNK]', 'the', 'you', 'i', 'to', 'and', ...</code>) and colorful at the rare end (<code>'dagger', 'cheddar', 'terrified', 'motto', 'legacy', ...</code>). Now vectorize all three splits:</p>
+<div class="highlight"><pre><span></span><code><span class="n">X_train</span> <span class="o">=</span> <span class="n">text_vectorization</span><span class="p">(</span><span class="n">train_df</span><span class="p">[</span><span class="s1">&#39;Lyric&#39;</span><span class="p">])</span>
+<span class="n">X_val</span> <span class="o">=</span> <span class="n">text_vectorization</span><span class="p">(</span><span class="n">val_df</span><span class="p">[</span><span class="s1">&#39;Lyric&#39;</span><span class="p">])</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">text_vectorization</span><span class="p">(</span><span class="n">test_df</span><span class="p">[</span><span class="s1">&#39;Lyric&#39;</span><span class="p">])</span>
+<span class="c1"># X_train: &lt;tf.Tensor: shape=(48991, 5000), dtype=float32&gt;</span>
+</code></pre></div>
+
+<p>Each song is now a 5,000-long multi-hot vector — one row per song, one column per vocabulary word, a 1 indicating that word's presence.</p>
+<h3 id="the-model">The model</h3>
+<p>The blackboard network translates into a few lines of the Keras functional API — by now, this code should feel like second nature:</p>
+<div class="highlight"><pre><span></span><code><span class="n">inputs</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">max_tokens</span><span class="p">,</span> <span class="p">))</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">)(</span><span class="n">inputs</span><span class="p">)</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;softmax&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</code></pre></div>
+
+<p>The parameter count is worth verifying by hand: the input-to-hidden weights are $5{,}000 \times 8 = 40{,}000$, plus 8 biases, plus the hidden-to-output weights $8 \times 3 = 24$ and 3 biases — about 40,000 parameters in total.</p>
+<p>Because the target <code>y_train</code> is itself one-hot encoded (rather than integer labels), we use plain <code>categorical_crossentropy</code> rather than the sparse variant:</p>
+<div class="highlight"><pre><span></span><code><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;adam&quot;</span><span class="p">,</span>
+              <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;categorical_crossentropy&quot;</span><span class="p">,</span>
+              <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">])</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span>
+          <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">X_val</span><span class="p">,</span> <span class="n">y_val</span><span class="p">),</span>
+          <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+          <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_test</span><span class="p">)</span>
+<span class="c1"># loss: 0.8323 - accuracy: 0.7203</span>
+</code></pre></div>
+
+<p><strong>Result: about 72% test accuracy</strong>, versus the ~55% naive baseline — a solid win for a model this simple.</p>
+<h2 id="58-adding-context-with-bigrams">5.8 Adding Context with Bigrams</h2>
+<p>Can we do better? What aspect of the text is the bag-of-words model failing to capture? <strong>Word order.</strong> Consider this movie review:</p>
+<blockquote>
+<p>"Kate Winslet's performance as a detective trying to solve a terrible crime in a small Pennsylvania town is anything but disappointing."</p>
+</blockquote>
+<p>A model that looks at each word separately sees "terrible" and "disappointing" and screams <em>negative sentiment</em>. But "terrible" modifies <em>crime</em>, not the movie, and "anything but disappointing" inverts "disappointing" entirely — this is a positive review. Nearby words provide valuable context for interpreting each word. (They also matter for multi-word atomic concepts like "United States.")</p>
+<p>The bag-of-words fix is <strong>bigrams</strong>: in addition to single words (<strong>unigrams</strong>), treat every pair of <em>adjacent</em> words as a token too. Three adjacent words gives trigrams; in general, <strong>n-grams</strong>. For "the cat sat on the mat":</p>
+<ul>
+<li>Unigrams: <code>{"cat", "mat", "on", "sat", "the"}</code></li>
+<li>With bigrams: <code>{"the", "the cat", "cat", "cat sat", "sat", "sat on", "on", "on the", "the mat", "mat"}</code></li>
+</ul>
+<p>Keras makes this a one-argument change — and from <code>ngrams=2</code> you can immediately infer that <code>ngrams=1</code> is the default (which is why we never had to specify it):</p>
+<div class="highlight"><pre><span></span><code><span class="n">text_vectorization</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">TextVectorization</span><span class="p">(</span>
+    <span class="n">ngrams</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">output_mode</span><span class="o">=</span><span class="s2">&quot;multi_hot&quot;</span><span class="p">)</span>
+
+<span class="n">text_vectorization</span><span class="o">.</span><span class="n">adapt</span><span class="p">([</span><span class="s2">&quot;the cat sat on the mat.&quot;</span><span class="p">])</span>
+<span class="n">text_vectorization</span><span class="o">.</span><span class="n">get_vocabulary</span><span class="p">()</span>
+<span class="c1"># [&#39;[UNK]&#39;, &#39;the&#39;, &#39;the mat&#39;, &#39;the cat&#39;, &#39;sat on&#39;, &#39;sat&#39;,</span>
+<span class="c1">#  &#39;on the&#39;, &#39;on&#39;, &#39;mat&#39;, &#39;cat sat&#39;, &#39;cat&#39;]</span>
+</code></pre></div>
+
+<p>Back to the songs. With bigrams, the space of possible tokens explodes — 5,000 possible first words × 5,000 possible second words is 25 million combinations. Most never occur in real data, so we don't need anywhere near that, but we should enlarge the vocabulary beyond 5,000. We go with 20,000:</p>
+<div class="highlight"><pre><span></span><code><span class="n">text_vectorization</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">TextVectorization</span><span class="p">(</span>
+    <span class="n">ngrams</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">max_tokens</span><span class="o">=</span><span class="mi">20000</span><span class="p">,</span>  <span class="c1"># increased from 5000 to accommodate bigrams</span>
+    <span class="n">output_mode</span><span class="o">=</span><span class="s2">&quot;multi_hot&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">text_vectorization</span><span class="o">.</span><span class="n">adapt</span><span class="p">(</span><span class="n">train_df</span><span class="p">[</span><span class="s1">&#39;Lyric&#39;</span><span class="p">])</span>
+</code></pre></div>
+
+<p>Adapting is noticeably slower now — bigrams and trigrams get much more compute-intensive. The most frequent vocabulary entries remain single words (as expected — individual words are more frequent than any pair), while the tail fills with bigrams like <code>'your mom'</code>, <code>'you shot'</code>, <code>'ya all'</code>.</p>
+<p>The model is the same shape but with a 20,000-long input, plus one new ingredient — a <strong>dropout</strong> layer:</p>
+<div class="highlight"><pre><span></span><code><span class="n">X_train</span> <span class="o">=</span> <span class="n">text_vectorization</span><span class="p">(</span><span class="n">train_df</span><span class="p">[</span><span class="s1">&#39;Lyric&#39;</span><span class="p">])</span>
+<span class="n">X_val</span> <span class="o">=</span> <span class="n">text_vectorization</span><span class="p">(</span><span class="n">val_df</span><span class="p">[</span><span class="s1">&#39;Lyric&#39;</span><span class="p">])</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">text_vectorization</span><span class="p">(</span><span class="n">test_df</span><span class="p">[</span><span class="s1">&#39;Lyric&#39;</span><span class="p">])</span>
+
+<span class="n">inputs</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">20000</span><span class="p">,))</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">)(</span><span class="n">inputs</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;softmax&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;adam&quot;</span><span class="p">,</span>
+              <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;categorical_crossentropy&quot;</span><span class="p">,</span>
+              <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">])</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span>
+          <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">X_val</span><span class="p">,</span> <span class="n">y_val</span><span class="p">),</span>
+          <span class="n">epochs</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+          <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_test</span><span class="p">)</span>
+<span class="c1"># loss: 0.5784 - accuracy: 0.7509</span>
+</code></pre></div>
+
+<p><strong>Result: about 75% test accuracy after only 3 epochs</strong>, up from 72% with unigrams over 10 epochs — a meaningful jump that highlights the importance of local word order. Running for more epochs might do even better.</p>
+<h3 id="sidebar-dropout">Sidebar: Dropout</h3>
+<p>Dropout is a regularization layer you can insert like any other layer. What it does is simple: for each number arriving from the previous layer, it flips a coin and, with the specified probability (here 0.5), replaces that number with zero — randomly, independently, on every training step.</p>
+<p>Why is this so effective against overfitting? As Ramakrishnan explains in lecture, when a layer's neurons overfit, it's because they effectively <em>collude</em> — they become correlated with each other in ways that latch onto spurious patterns in the training data. Randomly killing neurons breaks the collusion: no neuron can depend on any other neuron being available, so each must learn independently useful features. The (possibly apocryphal) origin story: Geoffrey Hinton noticed that his bank kept rotating the staff at his branch and surmised that constantly changing personnel prevents collusive fraud between employees and customers — and the same logic, applied to neurons, became dropout. Why not instead diagnose multicollinearity formally, as in classical statistics? Because these networks are massive and nonlinear — there is no tractable analog of principal-components remedies — so dropout solves the problem "in one shot," randomly.</p>
+<h3 id="trying-it-live">Trying it live</h3>
+<p>A small helper function lets us classify arbitrary lyrics:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">lyric_predict</span><span class="p">(</span><span class="n">phrase</span><span class="p">):</span>
+    <span class="n">vect_data</span> <span class="o">=</span> <span class="n">text_vectorization</span><span class="p">([</span><span class="n">phrase</span><span class="p">])</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">vect_data</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">predictions</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> % Hip-Hop&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">predictions</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> % Pop&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">predictions</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> % Rock&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>In lecture, "Another One Bites the Dust" came out rock (correct), and a student's request — ABBA's "Dancing Queen" — came out <strong>53.0% Pop, 45.9% Rock, 1.1% Hip-Hop</strong>. A photo finish, but the model got it right, to applause.</p>
+<p>Two practical questions from lecture are worth recording. <em>How do you pick the number of hidden neurons (here, 8)?</em> Trial and error — and to be systematic about it, use hyperparameter-optimization tooling like <strong>KerasTuner</strong>, which sweeps neurons, activations, learning rates, and more. <em>Will rerunning the notebook give identical accuracy?</em> Roughly, yes, thanks to the random seed — but tiny differences arise from hardware and device drivers, and from whatever else has already run in the notebook.</p>
+<h2 id="hands-on-lab">Hands-On Lab</h2>
+<p>The companion Colab, <em>Music Genre Classification</em>, walks through the chapter's full arc:</p>
+<ol>
+<li><strong>Setup.</strong> Import TensorFlow/Keras and the "holy trinity" of NumPy, pandas, and Matplotlib; set the random seed to 42.</li>
+<li><strong>Meet <code>TextVectorization</code>.</strong> Configure the layer with <code>output_mode='multi_hot'</code>, default standardization (<code>'lower_and_strip_punctuation'</code>), and whitespace splitting; <code>adapt()</code> it on a toy four-sentence corpus; inspect the 17-token vocabulary with <code>get_vocabulary()</code> and note <code>[UNK]</code> at index 0 and frequency-sorted order.</li>
+<li><strong>Probe the layer.</strong> Encode <code>"I write, rewrite, and still rewrite again"</code> and explain the 1 in the <code>[UNK]</code> slot ("still" is out-of-vocabulary); predict-then-verify what <code>"Sloan, HODL, DMD"</code> encodes to (a single <code>[UNK]</code> hit).</li>
+<li><strong>Load the lyrics data.</strong> ~49K training / 16K validation / 22K test songs; check class balance (Rock ≈ 55%) to set the naive baseline; one-hot encode the <code>Genre</code> target with <code>pd.get_dummies</code>.</li>
+<li><strong>Bag-of-words baseline.</strong> Adapt a <code>TextVectorization</code> layer with <code>max_tokens=5000</code>, multi-hot output, on the training lyrics; vectorize all splits; build <code>Input(5000) → Dense(8, relu) → Dense(3, softmax)</code>; compile with Adam + categorical cross-entropy; train 10 epochs. <strong>Test accuracy ≈ 72%.</strong></li>
+<li><strong>Bigrams.</strong> Warm up on "the cat sat on the mat" with <code>ngrams=2</code>; then re-adapt with <code>ngrams=2, max_tokens=20000</code>; build the same network with a <code>Dropout(0.5)</code> layer after the hidden layer; train just 3 epochs. <strong>Test accuracy ≈ 75%.</strong></li>
+<li><strong>Play.</strong> Use the <code>lyric_predict</code> helper to classify any lyrics you paste in — try your own favorite song.</li>
+</ol>
+<h2 id="key-takeaways">Key Takeaways</h2>
+<ul>
+<li>NLP's application surface is enormous, and much of it fits a single formalism: text in, text out. Deep-learning NLP is "fancy regression" $\hat{y} = f(x, w)$ where $x$ is text — so the first challenge is representing text numerically.</li>
+<li>Text vectorization follows four steps — <strong>S</strong>tandardize, <strong>T</strong>okenize, <strong>I</strong>ndex, <strong>E</strong>ncode (<strong>STIE</strong>) — turning raw strings into vectors. In Keras, all four are packaged in the <code>TextVectorization</code> layer, configured at construction and populated via <code>adapt()</code>.</li>
+<li>Standardization (lowercasing, punctuation stripping, optionally stop-word removal and stemming) tells the model that superficially different strings are the same thing, saving model capacity — the same "don't relearn identical patterns" logic as translation invariance in vision.</li>
+<li>One-hot encoding gives each vocabulary token a $V$-dimensional vector with a single 1. The vocabulary is typically capped at the most frequent words; anything unseen at inference time maps to the special <code>[UNK]</code> token (at the cost of losing all distinctions among unknown words).</li>
+<li>The <strong>bag-of-words model</strong> aggregates a sentence's one-hot vectors into one fixed-length vector via count encoding (sum) or multi-hot encoding (OR). It discards word order entirely — yet is a remarkably strong default for classification tasks.</li>
+<li>A one-hidden-layer network (8 ReLUs) on 5,000-token multi-hot vectors classifies song genre at ~72% test accuracy versus a 55% majority-class baseline.</li>
+<li><strong>Bigrams</strong> re-inject local word order ("terrible crime," "anything but disappointing") and lift accuracy to ~75% — with a larger vocabulary (20,000) to accommodate the combinatorial growth in tokens.</li>
+<li><strong>Dropout</strong> randomly zeroes activations during training, preventing neurons from "colluding" on spurious correlations and thereby reducing overfitting.</li>
+<li>Word-level tokenization breaks down for text generation; modern LLMs use byte-pair encoding instead, which handles novel words, casing, and punctuation — and eliminates <code>[UNK]</code> entirely.</li>
+</ul>
+<h2 id="check-your-understanding">Check Your Understanding</h2>
+<p><strong>1. The STIE pipeline runs on a training corpus with vocabulary size 100 (including <code>[UNK]</code>). The sentence "The cat sat on the mat" arrives. What is the shape of the table produced by one-hot encoding, and why?</strong></p>
+<details><summary>Answer</summary>
+6 × 100. After standardization and whitespace tokenization the sentence has 6 tokens; each token becomes a one-hot vector whose length equals the vocabulary size (100). One row per token, one column per vocabulary entry.
+</details>
+
+<p><strong>2. Why do we standardize text (e.g., lowercase everything) before tokenizing? Give the capacity-based argument from lecture.</strong></p>
+<details><summary>Answer</summary>
+Case (and usually punctuation, and often morphological variants) almost never changes what we want to predict. If we leave "The" and "the" as distinct tokens, the model must waste capacity and data learning that they behave identically — just as a vision model shouldn't have to separately learn a vertical-line detector for every image location. Lowercasing tells the model up front that the variants are the same thing. Stop-word removal has a different rationale: those words carry little predictive signal, so drop them.
+</details>
+
+<p><strong>3. What is the difference between count encoding and multi-hot encoding? For the input "Sloan, HODL, DMD" run through a layer whose vocabulary contains none of these words, what does each produce in the <code>[UNK]</code> position?</strong></p>
+<details><summary>Answer</summary>
+Count encoding sums the one-hot vectors column-wise, recording how many times each vocabulary word appears; multi-hot encoding ORs them, recording only presence/absence (0 or 1). All three words map to `[UNK]`, so count encoding puts a 3 in position 0 while multi-hot encoding puts a 1. All other positions are 0 in both.
+</details>
+
+<p><strong>4. Name the two main shortcomings of the bag-of-words model discussed in lecture.</strong></p>
+<details><summary>Answer</summary>
+(1) It loses sequentiality — the order of words and the meaning it carries are discarded; "the cat sat on the mat" and "the mat sat on the cat" encode identically. (2) Every input, no matter how short, becomes a vector as long as the vocabulary, which inflates the first layer's parameter count, increases compute, and raises overfitting risk. (Sparsity of the resulting vectors is a related practical issue.)
+</details>
+
+<p><strong>5. What is the purpose of the <code>[UNK]</code> token, and what information is lost when it is used?</strong></p>
+<details><summary>Answer</summary>
+When the vocabulary is capped at the most frequent words (or is simply built from a limited corpus), words encountered at prediction time that aren't in the vocabulary must map to something — they all map to `[UNK]`. The cost is that all unknown words become indistinguishable from one another: if "Romeo," "Juliet," and "Hamlet" were all dropped from the vocabulary, the model cannot tell them apart.
+</details>
+
+<p><strong>6. Why does the genre classifier use a softmax output layer instead of just taking the max of three raw scores?</strong></p>
+<details><summary>Answer</summary>
+Training via backpropagation requires every component to be differentiable with well-behaved gradients. The hard max function is not differentiation-friendly, so we use its smooth surrogate, softmax, which produces three probabilities summing to 1 and feeds cleanly into the cross-entropy loss. (This is the same reason we optimize cross-entropy rather than accuracy directly.)
+</details>
+
+<p><strong>7. The bigram model raised test accuracy from ~72% to ~75%. Explain, using the Kate Winslet movie-review example, <em>why</em> bigrams help — and why the vocabulary cap was raised from 5,000 to 20,000.</strong></p>
+<details><summary>Answer</summary>
+In "…a terrible crime… is anything but disappointing," the words "terrible" and "disappointing" look negative in isolation, but the adjacent words ("terrible crime," "anything but disappointing") reveal the true, positive meaning. Bigrams add each adjacent word pair as a token, letting the model see this local context. The cap was raised because pairing words multiplies the space of possible tokens (5,000 × 5,000 in principle) — most pairs never occur, but the vocabulary still needs headroom beyond what unigrams alone require.
+</details>
+
+<p><strong>8. Describe what a <code>Dropout(0.5)</code> layer does during training and the intuition for why it reduces overfitting.</strong></p>
+<details><summary>Answer</summary>
+For each activation coming from the previous layer, it flips a fair coin on every training step and replaces the value with zero on heads (probability 0.5). Overfitting arises when neurons "collude" — develop correlated behavior that latches onto spurious patterns in the training data. Randomly zeroing neurons means no neuron can rely on another being present, breaking the collusion and forcing each to learn independently robust features.
+</details>
+      <nav class="chapter-footer" aria-label="Chapter navigation"><a class="previous" href="ch04-cnns-transfer-learning.html">← 4 · CNNs and Transfer Learning</a><a class="next" href="ch06-embeddings.html">6 · Embeddings →</a></nav>
+    </article>
+  </main>
+</body>
+</html>

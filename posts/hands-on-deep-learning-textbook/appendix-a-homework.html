@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A hands-on deep learning textbook companion to MIT 15.773">
+  <title>Appendix A: Homework Assignments · Hands-On Deep Learning</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
+  </script>
+  <script defer src="mathjax/tex-svg.js"></script>
+  <script defer src="search-index.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"></div>
+  <aside class="sidebar">
+    <a class="brand" href="index.html">Hands-On Deep Learning</a>
+    <div class="brand-subtitle">MIT 15.773 · Spring 2024 companion</div>
+    <input class="search" type="search" placeholder="Search the full book…" data-search aria-label="Search">
+    <div class="search-results hidden" data-search-results></div>
+    <nav><div class="nav-part">Front Matter</div>
+<a class="nav-link" href="index.html">Start Here</a>
+<div class="nav-part">Part I · Foundations</div>
+<a class="nav-link" href="ch01-intro-to-neural-networks.html">1 · Neural Networks</a>
+<a class="nav-link" href="ch02-training-deep-networks.html">2 · Training Deep Networks</a>
+<a class="nav-link" href="ch03-keras-and-cnns-from-scratch.html">3 · Keras and Vision Basics</a>
+<div class="nav-part">Part II · Computer Vision</div>
+<a class="nav-link" href="ch04-cnns-transfer-learning.html">4 · CNNs and Transfer Learning</a>
+<div class="nav-part">Part III · Natural Language</div>
+<a class="nav-link" href="ch05-nlp-basics.html">5 · Text Vectorization</a>
+<a class="nav-link" href="ch06-embeddings.html">6 · Embeddings</a>
+<a class="nav-link" href="ch07-transformers.html">7 · Transformers</a>
+<a class="nav-link" href="ch08-transformers-ii-self-supervised.html">8 · Self-Supervised Learning</a>
+<div class="nav-part">Part IV · Generative AI</div>
+<a class="nav-link" href="ch09-llms-and-rag.html">9 · LLMs and RAG</a>
+<a class="nav-link" href="ch10-peft-lora.html">10 · PEFT and LoRA</a>
+<a class="nav-link" href="ch11-diffusion-text-to-image.html">11 · Diffusion Models</a>
+<div class="nav-part">Appendices</div>
+<a class="nav-link active" href="appendix-a-homework.html">A · Homework and Solutions</a>
+<a class="nav-link" href="appendix-b-resources.html">B · Resource Index</a></nav>
+    <div class="sidebar-actions">
+      <button data-theme-toggle type="button">Light / dark</button>
+      <button data-print type="button">Print</button>
+    </div>
+    <div class="sidebar-actions">
+      <a class="button" href="complete-book.html">Complete book</a>
+      <a class="button" href="notebooks.html">Notebooks</a>
+    </div>
+  </aside>
+  <main class="page">
+    <article class="article">
+      <div class="eyebrow">Appendices</div>
+      <h1 id="appendix-a-homework-assignments">Appendix A: Homework Assignments</h1>
+<p>The course included two substantial homework assignments, each a Colab notebook that alternates provided scaffolding with <code>### YOUR CODE HERE ###</code> blocks and written-response prompts. Homework 1 exercises the computer-vision half of the course (CNNs, data augmentation, transfer learning); Homework 2 exercises the NLP half (bag-of-words, GloVe embeddings, BERT). Both are designed around a comparative theme: build several models for the <em>same</em> task and reason carefully about <em>why</em> their performances differ.</p>
+<ul>
+<li><strong>Homework 1 (CNNs):</strong> <a href="https://colab.research.google.com/drive/1_OLQUdX5y8VLRj9I77t0IQtVnArf-xh0">assignment Colab</a> · <a href="https://colab.research.google.com/drive/1Djskzq5DtTvZgTm6wDHTlDiw2nLXNWdY">solutions Colab</a></li>
+<li><strong>Homework 2 (NLP):</strong> <a href="https://colab.research.google.com/drive/1hOsoyhxD3XwV1xtNeYq6M8mDNBfqRQ5F">assignment Colab</a> · <a href="https://colab.research.google.com/drive/1oYoyB-2rHj9CyUKq3ckV6W_zsOEKzXjJ">solutions Colab</a></li>
+</ul>
+<hr>
+<h2 id="homework-1-convolutional-neural-networks">Homework 1: Convolutional Neural Networks</h2>
+<h3 id="the-assignment">The assignment</h3>
+<p><strong>Task and dataset.</strong> Detect emotion from facial images using the 2013 Facial Expression Recognition (FER2013) dataset: ~36,000 grayscale 48×48 face images, each labeled with one of seven emotions — <em>angry, disgust, fear, happy, sad, surprise, neutral</em>. The assignment walks you through:</p>
+<ol>
+<li>Building a CNN <em>from scratch</em> to classify emotions (Problems 1–2),</li>
+<li>Using <strong>data augmentation</strong> to effectively enlarge the training data (Problem 3),</li>
+<li>Using <strong>transfer learning</strong> with a pretrained model (VGG19) and comparing degrees of fine-tuning (Problem 4).</li>
+</ol>
+<p><strong>Skills tested.</strong> Assembling Keras functional-API models layer by layer; counting parameters by hand (a favorite exam-style check that you truly understand convolutions and dense layers); understanding epochs, batches, and validation splits; reading training/validation accuracy curves for overfitting; using augmentation layers; freezing and unfreezing layers of a pretrained backbone; and interpreting confusion matrices.</p>
+<p><strong>Preprocessing (provided).</strong> Each image arrives as a space-separated string of 2,304 pixel values, reshaped to 48×48. Because pretrained backbones such as VGG19 expect 3-channel inputs, the grayscale image is stacked three times into a <code>(48, 48, 3)</code> tensor — a grayscale image is just one where the red, green, and blue channels are identical:</p>
+<div class="highlight"><pre><span></span><code><span class="n">face</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">face</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>   <span class="c1"># 2304-vector → 48×48</span>
+<span class="n">face</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">face</span><span class="p">,)</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>              <span class="c1"># 48×48 → 48×48×3</span>
+</code></pre></div>
+
+<p>Emotions are one-hot encoded with <code>pd.get_dummies</code> (hence the <code>categorical_crossentropy</code> loss later), and the first 28,709 images are reserved for training, the remaining 7,178 for testing.</p>
+<p><strong>Key task prompts</strong> (condensed from the notebook):</p>
+<ul>
+<li><strong>Problem 1 (30 pts).</strong> (a) Fill in the code to build a CNN — three Conv2D(16 filters, 2×2 kernel, ReLU) + MaxPool blocks, Flatten, Dense(256, ReLU), Dense(7, softmax) — so that <code>model.summary()</code> matches a given target. (b) "The model has 106,743 trainable parameters, computed by 208 + 1040 + 1040 + 102656 + 1799. Explain how each of these 5 numbers is calculated." (c) Compile with <code>categorical_crossentropy</code>/<code>adam</code>/<code>accuracy</code>, fit with batch size 64, 30 epochs, 20% validation split; explain the epoch/batch relationship and why there are 359 batches per epoch; plot accuracy curves and compute test accuracy.</li>
+<li><strong>Problem 2 (30 pts).</strong> Build a <strong>wider</strong> model (32 filters instead of 16; 215,527 parameters) and a <strong>deeper</strong> model (a second Dense(256) layer; 172,535 parameters), train both, and compare: "Did widening the model or deepening the model result in better performance? Why? Do you think this result generally holds true for all problems?"</li>
+<li><strong>Problem 3 (15 pts).</strong> Add <code>RandomFlip("horizontal")</code> and <code>RandomZoom(0.2)</code> layers in front of the wider model, retrain, and answer: "Did data augmentation reduce overfitting? Did it improve test set accuracy?"</li>
+<li><strong>Problem 4 (25 pts).</strong> Transfer learning with headless VGG19 (<code>include_top=False</code>, ImageNet weights) plus a small head (Flatten → Dense(256) → Dense(7)), trained with <code>Adam(2e-5)</code> under three regimes: (a) VGG19 fully <strong>frozen</strong>, (b) first 15 layers frozen (blocks 4–5 trainable), (c) <strong>everything trainable</strong>. For each: accuracy curve, test accuracy, and confusion matrix via a provided <code>show_confusion_matrix</code> helper. Finally: "Why do models (b) and (c) perform so much better than <code>wider_model</code>? Why does model (a) perform so poorly? Why does (c) beat (b)?"</li>
+</ul>
+<h3 id="solution-walkthrough">Solution walkthrough</h3>
+<p><strong>Problem 1 — the base CNN.</strong> The architecture is the classic pattern from lecture: rescale, then alternate convolution and pooling so the spatial extent shrinks while features accumulate, then flatten into a small dense classifier head.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">input</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">48</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;input&quot;</span><span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Rescaling</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="mi">255</span><span class="p">)(</span><span class="nb">input</span><span class="p">)</span>                                    <span class="c1"># normalize to [0,1]</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">MaxPool2D</span><span class="p">()(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">MaxPool2D</span><span class="p">()(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">MaxPool2D</span><span class="p">()(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Flatten</span><span class="p">()(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;softmax&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;output&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;CNN_model&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Why these choices: <code>Rescaling</code> goes <em>inside</em> the model so raw 0–255 pixels can be fed at inference time; softmax on the output because this is a 7-class problem with one-hot targets; ReLU everywhere else as the course default.</p>
+<p><strong>Parameter counting (the "why" behind 106,743).</strong> Each count follows the rule <em>parameters = weights per filter/neuron × number of filters/neurons + biases</em>:</p>
+<ul>
+<li>First conv layer: 16 filters, each 2×2 over 3 input channels → $16 \cdot 3 \cdot 4 + 16 = 208$.</li>
+<li>Second and third conv layers: 16 input channels now, so $16 \cdot 4 \cdot 16 + 16 = 1040$ each.</li>
+<li>Dense(256) after Flatten: the flattened volume has 400 nodes, so $400 \cdot 256 + 256 = 102{,}656$.</li>
+<li>Output: $256 \cdot 7 + 7 = 1799$.</li>
+</ul>
+<p>This exercise is worth doing by hand once in your life: it cements that a convolution's parameter count depends on kernel size, input channels, and filter count — <em>not</em> on the image size — while a dense layer's count explodes with input size.</p>
+<p><strong>Epochs, batches, and the mysterious 359.</strong> SGD updates weights once per <em>batch</em>; an <em>epoch</em> is one full pass through the training data. With 28,709 training points and 20% held out for validation, 22,967 points remain; at batch size 64, $22{,}967 / 64 = 358.9$, i.e., 358 full batches plus one partial batch of 55 → <strong>359 batches/epoch</strong>. The base model reaches about <strong>50.5%</strong> test accuracy — far above the ~25% you'd get by always guessing "happy," but with plenty of headroom.</p>
+<p><strong>Problem 2 — wider vs. deeper.</strong> The wider model just swaps 16 → 32 filters (and the flattened volume doubles to 800 nodes, giving $800 \cdot 256 + 256 = 205{,}056$ dense parameters); the deeper model inserts a second <code>Dense(256)</code>. Results:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Test accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>base <code>model</code></td>
+<td>50.1%</td>
+</tr>
+<tr>
+<td><code>wider_model</code></td>
+<td>51.6%</td>
+</tr>
+<tr>
+<td><code>deeper_model</code></td>
+<td>47.9%</td>
+</tr>
+</tbody>
+</table>
+<p>The solution's reasoning: more filters let the network learn more low-level representations (more "lines and circles"), so 16 filters per layer was apparently a bottleneck; the extra dense layer only adds capacity for <em>combining</em> representations, which was not the bottleneck here. The wider model also overfits more visibly — its training accuracy races toward 100% much sooner — exactly what you'd expect from more parameters. Crucially, the solution warns that this ranking is problem-specific: you generally cannot know whether wider or deeper will win without trying both.</p>
+<p><strong>Problem 3 — data augmentation.</strong> The idea: alter each image so slightly that its label cannot change (a flipped or slightly zoomed angry face is still angry), giving the optimizer effectively new examples every epoch. Augmentation is added as <em>layers</em>, so it happens on the fly during training:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">input</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">48</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">RandomFlip</span><span class="p">(</span><span class="s2">&quot;horizontal&quot;</span><span class="p">)(</span><span class="nb">input</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">RandomZoom</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Rescaling</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="mi">255</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="c1"># ... then the wider_model layers as before ...</span>
+</code></pre></div>
+
+<p>Test accuracy jumps from 51.6% to <strong>56.8%</strong>, and the accuracy curves show the fingerprints of reduced overfitting: training accuracy no longer saturates at 100%, and validation accuracy keeps improving for more epochs.</p>
+<p><strong>Problem 4 — transfer learning with VGG19.</strong> The construction pattern is the same in all three parts — augmentation + rescaling, then the headless VGG19 layers, then a small trainable head:</p>
+<div class="highlight"><pre><span></span><code><span class="n">base_model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">applications</span><span class="o">.</span><span class="n">VGG19</span><span class="p">(</span>
+    <span class="n">include_top</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>        <span class="c1"># this makes VGG19 &quot;headless&quot;</span>
+    <span class="n">weights</span><span class="o">=</span><span class="s2">&quot;imagenet&quot;</span><span class="p">,</span>
+    <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">48</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">base_model</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># part (a): freeze everything</span>
+
+<span class="n">inputs</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">48</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">RandomFlip</span><span class="p">(</span><span class="s2">&quot;horizontal&quot;</span><span class="p">)(</span><span class="n">inputs</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">RandomZoom</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Rescaling</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="mi">255</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">base_model</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>      <span class="c1"># graft VGG19&#39;s layers into our graph</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Flatten</span><span class="p">()(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;softmax&#39;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Part (b) instead freezes only the first 15 layers, leaving VGG19's blocks 4–5 trainable:</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">partial_model</span><span class="o">.</span><span class="n">layers</span><span class="p">[:</span><span class="mi">15</span><span class="p">]:</span>
+    <span class="n">layer</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="kc">False</span>
+</code></pre></div>
+
+<p>Part (c) leaves everything trainable. All three use a deliberately small learning rate, <code>Adam(2e-5)</code>, because large updates would destroy the delicate pretrained weights. Results:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Test accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(a) VGG19 frozen</td>
+<td>37.6%</td>
+</tr>
+<tr>
+<td>(b) partial fine-tuning</td>
+<td>60.0%</td>
+</tr>
+<tr>
+<td>(c) full fine-tuning</td>
+<td>64.9%</td>
+</tr>
+<tr>
+<td><code>wider_model</code> (from scratch)</td>
+<td>~50%</td>
+</tr>
+</tbody>
+</table>
+<p>The written analysis is the heart of the problem:</p>
+<ul>
+<li><strong>(b) and (c) beat the from-scratch model</strong> because they inherit representations learned from millions of ImageNet images — edges, textures, and shapes useful for everyday objects transfer to faces, so the model doesn't have to "reinvent the wheel" from ~23,000 training faces.</li>
+<li><strong>(a) performs <em>worse</em> than training from scratch</strong> (37.6%, with a confusion matrix that lumps a disproportionate share of everything into "happy") because frozen VGG19 features are tuned for distinguishing animals, vehicles, and landscapes — not for the subtle differences between human facial expressions. Off-the-shelf features are only as good as their match to your task.</li>
+<li><strong>(c) beats (b)</strong> because more trainable parameters give more flexibility to adapt those features — though the solution cautions this is not guaranteed in general, since more trainable parameters also means more capacity to overfit.</li>
+</ul>
+<details><summary>Full solution code (Problem 4, parts b and c)</summary>
+
+
+<div class="highlight"><pre><span></span><code><span class="c1"># ---------- Part (b): partial fine-tuning ----------</span>
+<span class="n">base_model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">applications</span><span class="o">.</span><span class="n">VGG19</span><span class="p">(</span><span class="n">include_top</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s2">&quot;imagenet&quot;</span><span class="p">,</span>
+                                      <span class="n">input_tensor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                      <span class="n">pooling</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                                      <span class="n">classifier_activation</span><span class="o">=</span><span class="s2">&quot;softmax&quot;</span><span class="p">)</span>
+
+<span class="n">inputs</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">48</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">RandomFlip</span><span class="p">(</span><span class="s2">&quot;horizontal&quot;</span><span class="p">)(</span><span class="n">inputs</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">RandomZoom</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Rescaling</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="mi">255</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">base_model</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Flatten</span><span class="p">()(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;softmax&#39;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">partial_model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;partial_fine_tune_model&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">partial_model</span><span class="o">.</span><span class="n">layers</span><span class="p">[:</span><span class="mi">15</span><span class="p">]:</span>   <span class="c1"># freeze blocks 1-3; train blocks 4-5</span>
+    <span class="n">layer</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="n">partial_model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;categorical_crossentropy&#39;</span><span class="p">,</span>
+                      <span class="n">optimizer</span><span class="o">=</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="mf">2e-5</span><span class="p">),</span>
+                      <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">])</span>
+<span class="n">partial_model_history</span> <span class="o">=</span> <span class="n">partial_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_faces</span><span class="p">,</span> <span class="n">train_emotions</span><span class="p">,</span>
+                                          <span class="n">epochs</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">validation_split</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+
+<span class="c1"># ---------- Part (c): full fine-tuning ----------</span>
+<span class="c1"># Identical construction, but no layers are frozen:</span>
+<span class="n">tuned_model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;full_fine_tune_model&#39;</span><span class="p">)</span>
+<span class="n">tuned_model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;categorical_crossentropy&#39;</span><span class="p">,</span>
+                    <span class="n">optimizer</span><span class="o">=</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="mf">2e-5</span><span class="p">),</span>
+                    <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">])</span>
+<span class="n">tuned_model_history</span> <span class="o">=</span> <span class="n">tuned_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_faces</span><span class="p">,</span> <span class="n">train_emotions</span><span class="p">,</span>
+                                      <span class="n">epochs</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">validation_split</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+
+<span class="c1"># ---------- Evaluation helper (provided) ----------</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">show_confusion_matrix</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_faces</span><span class="p">)</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">y_actual</span> <span class="o">=</span> <span class="n">test_emotions</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Test Accuracy: </span><span class="si">%.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_actual</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
+    <span class="n">cm</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_actual</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">),</span>
+                      <span class="n">index</span><span class="o">=</span><span class="n">emotions_names</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">emotions_names</span><span class="p">)</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">cm</span><span class="p">)</span>
+    <span class="n">cm</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">cm</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>      <span class="c1"># normalize each row to 1.0</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;.2f&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+
+</details>
+
+<hr>
+<h2 id="homework-2-natural-language-processing">Homework 2: Natural Language Processing</h2>
+<h3 id="the-assignment_1">The assignment</h3>
+<p><strong>Task and dataset.</strong> Build text classifiers with three progressively richer representations — <strong>bag-of-words (BoW)</strong>, <strong>GloVe embeddings</strong>, and <strong>BERT</strong> — on the classic <strong>20 Newsgroups</strong> dataset, restricted to 6 of the 20 topics (<code>alt.atheism</code>, <code>talk.religion.misc</code>, <code>comp.graphics</code>, <code>sci.space</code>, <code>sci.med</code>, <code>rec.autos</code>) to keep training times reasonable: 3,222 training and 2,145 test posts, with fairly balanced labels.</p>
+<p><strong>The unifying theme</strong> is the <strong>impact of the number of training examples</strong>: every model is evaluated twice — once trained on only the first <strong>200</strong> examples, once on <strong>all</strong> examples. This design lets the homework demonstrate empirically where pretrained representations pay off.</p>
+<p><strong>Skills tested.</strong> Keras <code>TextVectorization</code> (multi-hot, count, n-gram, and integer-sequence modes); building embedding layers initialized from pretrained GloVe vectors, frozen vs. fine-tuned; understanding padding/<code>[UNK]</code> tokens and masking; a first encounter with data leakage through email headers; and using BERT's <code>[CLS]</code> embedding as a feature extractor.</p>
+<p><strong>Key task prompts</strong> (condensed):</p>
+<ul>
+<li><strong>Problem 1 — BoW (30 pts).</strong> (a) Configure a <code>TextVectorization</code> layer with max 2000 tokens, unigrams, multi-hot output, lowercase + punctuation stripping; build a one-hidden-layer network (128 ReLU neurons; 256,902 parameters); train on 200 then all examples and report test accuracies. "What is the baseline performance by predicting the most frequent class?" (b) Rerun with three independent modifications — bigrams instead of unigrams; <code>max_tokens</code> 2000 → 5000; count instead of multi-hot — and for each, discuss why one might expect it to help and whether it actually did.</li>
+<li><strong>Problem 2 — GloVe without fine-tuning (20 pts).</strong> Load 400,000 pretrained 300-d GloVe vectors; vectorize text as integer token sequences (max length 400); build an <code>Embedding</code> layer initialized to the GloVe matrix with <code>trainable=False, mask_zero=True</code>, followed by <code>GlobalAveragePooling1D</code>, two Dense(128)+Dropout(0.2) blocks (655,814 parameters, 55,814 trainable). Side questions: which word is token 14? which tokens are index 0 and 1? Then: "Propose an explanation for why GloVe did not perform as well as BoW."</li>
+<li><strong>Problem 3 — GloVe with fine-tuning (30 pts).</strong> (a) Investigate the token <code>henryzootorontoedu</code> (a mangled email address from post headers) and explain why BoW has an advantage over frozen GloVe. (b) Re-fetch the dataset with <code>remove=('headers','footers','quotes')</code> and retrain BoW; does performance drop, confirming the hypothesis? (c) Set <code>trainable=True</code> on the embedding layer and compare; "explain when fine-tuning can be helpful and/or hurtful."</li>
+<li><strong>Problem 4 — BERT (15 pts).</strong> Using provided helper functions that tokenize text and extract the 768-d embedding of the <code>[CLS]</code> token from a frozen 12-layer BERT, build a small classifier head (two Dense(128)+Dropout(0.1) blocks) and compare against BoW and GloVe — especially in the 200-example regime.</li>
+<li><strong>Conclusion (5 pts).</strong> General takeaways.</li>
+</ul>
+<h3 id="solution-walkthrough_1">Solution walkthrough</h3>
+<p><strong>Problem 1 — bag-of-words.</strong> The vectorization layer turns each post into a 2000-dimensional multi-hot vector (1 if the token appears, 0 otherwise), and the classifier is nearly the simplest network imaginable:</p>
+<div class="highlight"><pre><span></span><code><span class="n">text_vectorization</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">TextVectorization</span><span class="p">(</span>
+    <span class="n">max_tokens</span><span class="o">=</span><span class="n">max_tokens</span><span class="p">,</span>                         <span class="c1"># 2000</span>
+    <span class="n">output_mode</span><span class="o">=</span><span class="s1">&#39;multi_hot&#39;</span><span class="p">,</span>
+    <span class="n">standardize</span><span class="o">=</span><span class="s1">&#39;lower_and_strip_punctuation&#39;</span><span class="p">,</span>
+    <span class="n">ngrams</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">text_vectorization</span><span class="o">.</span><span class="n">adapt</span><span class="p">(</span><span class="n">train_df</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">])</span>         <span class="c1"># learn vocabulary from training corpus</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">text_vectorization</span><span class="p">(</span><span class="n">train_df</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">])</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">text_vectorization</span><span class="p">(</span><span class="n">test_df</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">])</span>
+
+<span class="n">inputs</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">max_tokens</span><span class="p">,))</span>          <span class="c1"># input size = vocabulary size</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">)(</span><span class="n">inputs</span><span class="p">)</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;softmax&#39;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">bow_model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Note that <code>adapt</code> is called only on the <em>training</em> corpus — the vocabulary must never be built from test data. Results: <strong>62.1%</strong> with 200 examples, <strong>82.7%</strong> with all examples, against a majority-class baseline of only ~18% (the classes are roughly balanced six ways). BoW, despite throwing away all word order, is a formidable baseline.</p>
+<p>The hyperparameter explorations, each made independently:</p>
+<table>
+<thead>
+<tr>
+<th>Modification</th>
+<th>200 examples</th>
+<th>All examples</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baseline (unigram, 2000 tokens, multi-hot)</td>
+<td>62%</td>
+<td>83%</td>
+<td>—</td>
+</tr>
+<tr>
+<td>bigrams</td>
+<td>56%</td>
+<td>78%</td>
+<td>hurt</td>
+</tr>
+<tr>
+<td><code>max_tokens</code> = 5000</td>
+<td>65%</td>
+<td>87%</td>
+<td>helped</td>
+</tr>
+<tr>
+<td>counts instead of multi-hot</td>
+<td>61%</td>
+<td>83%</td>
+<td>no effect</td>
+</tr>
+</tbody>
+</table>
+<p>The reasoning in the solutions: <strong>bigrams</strong> could in principle capture richer signal (word pairs), but because <code>max_tokens</code> stayed at 2000, meaningless bigrams like "of the" crowded useful unigrams out of the vocabulary. <strong>More tokens</strong> helped, showing the 2000-word vocabulary was too small. <strong>Counts</strong> would matter if a word's <em>frequency</em> carried class information (as in sentiment, where whichever polarity of word dominates decides the label), but mere presence suffices for topic classification.</p>
+<p><strong>Problem 2 — frozen GloVe.</strong> The pipeline changes representation entirely: <code>output_mode="int"</code> produces sequences of token indices (truncated/padded to 400), and an embedding matrix is assembled by looking up each vocabulary word among the 400,000 GloVe vectors:</p>
+<div class="highlight"><pre><span></span><code><span class="n">vocabulary</span> <span class="o">=</span> <span class="n">text_vectorization_glove</span><span class="o">.</span><span class="n">get_vocabulary</span><span class="p">()</span>
+<span class="n">word_index</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">))))</span>
+
+<span class="n">embedding_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">max_tokens</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">))</span>   <span class="c1"># 2000 × 300</span>
+<span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">word_index</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">max_tokens</span><span class="p">:</span>
+        <span class="n">embedding_vector</span> <span class="o">=</span> <span class="n">embeddings_index</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">embedding_vector</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">embedding_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">embedding_vector</span>
+</code></pre></div>
+
+<p>Any word without a GloVe vector — including the special tokens — stays all-zeros. The side questions have tidy answers: <strong>token 14 is "from"</strong>, because every newsgroup post begins with a <code>From: someone@email.com</code> header line; <strong>indices 0 and 1 are the <code>[PAD]</code> and <code>[UNK]</code> tokens</strong>.</p>
+<p>The model averages the word vectors of a document and classifies the average:</p>
+<div class="highlight"><pre><span></span><code><span class="n">embedding_layer</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span>
+    <span class="n">max_tokens</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">,</span>
+    <span class="n">embeddings_initializer</span><span class="o">=</span><span class="n">keras</span><span class="o">.</span><span class="n">initializers</span><span class="o">.</span><span class="n">Constant</span><span class="p">(</span><span class="n">embedding_matrix</span><span class="p">),</span>
+    <span class="n">trainable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>      <span class="c1"># frozen: use GloVe as-is</span>
+    <span class="n">mask_zero</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>       <span class="c1"># ignore [PAD] positions when pooling</span>
+<span class="p">)</span>
+
+<span class="n">inputs</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">max_length</span><span class="p">,))</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">embedding_layer</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">GlobalAveragePooling1D</span><span class="p">()(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;sigmoid&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+</code></pre></div>
+
+<p><code>mask_zero=True</code> matters: without it, the padding token's zero vectors would be counted in the average and dilute short documents. Results: <strong>55.8% / 79.5%</strong> — <em>worse than plain BoW on both counts</em>. The solutions offer two explanations: GloVe vectors were trained on Wikipedia-style text and may not reflect word usage in 1990s newsgroup posts, and averaging 400 word vectors drowns signal under common words.</p>
+<p><strong>Problem 3 — the data-leakage detective story.</strong> This is the most instructive part of the assignment. The token <code>henryzootorontoedu</code> (the mangled email <code>henry@zoo.toronto.edu</code> after punctuation stripping) appears at vocabulary index 1121, occurs in 89 training posts — and <em>every one of them</em> is labeled <code>sci.space</code>. Henry Spencer of the University of Toronto was evidently a prolific poster on the space newsgroup.</p>
+<ul>
+<li><strong>Why BoW wins:</strong> for BoW, this token is a nearly perfect one-feature classifier, and the dense layer learns the association immediately.</li>
+<li><strong>Why frozen GloVe can't:</strong> <code>henryzootorontoedu</code> is not among GloVe's 400,000 English words, so its embedding is the all-zeros vector — the model literally cannot see one of the most predictive features in the corpus.</li>
+<li><strong>What fine-tuning will do:</strong> once the embedding layer is trainable, the token will acquire a non-zero embedding and (the solution predicts) migrate near other <code>sci.space</code> words like <em>Titan</em>, <em>satellite</em>, <em>Mars</em>. Indeed, after Part (c) the notebook prints the token's embedding and confirms it is no longer all zeros.</li>
+</ul>
+<p>Part (b) tests the hypothesis directly: re-fetch the data with headers, footers, and quotes stripped and retrain BoW. Accuracy falls from 62%/83% to <strong>49.8% / 67.5%</strong> — a large drop, confirming that BoW had been leaning heavily on author emails and names rather than topical content. This is a textbook example of <strong>leakage</strong>: a model that looks great on this benchmark by memorizing authors would generalize poorly to posts by new authors.</p>
+<p>Part (c) flips one flag — <code>trainable=True</code> in the embedding layer — and nothing else. Results: <strong>68.2% / 84.1%</strong> (versus 55.8%/79.5% frozen). The pattern in the solution's words: fine-tuning made things <em>better with all examples</em> and can make things <em>worse with very few</em> — with only 200 examples, training 600,000 embedding parameters is an invitation to overfit, whereas with the full dataset the embeddings adapt usefully to the task.</p>
+<p><strong>Problem 4 — BERT as a feature extractor.</strong> The provided helpers tokenize each post for BERT (adding the <code>[CLS]</code> token 101 at the start and <code>[SEP]</code> 102 at the end, padding to 512) and run a <em>frozen</em> 12-layer, 768-unit, 12-head BERT encoder, keeping only the output embedding at position 0 — the <code>[CLS]</code> "classification token" summary of the document:</p>
+<div class="highlight"><pre><span></span><code><span class="n">output</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">inputs</span><span class="p">)[</span><span class="s1">&#39;sequence_output&#39;</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>   <span class="c1"># 768-d [CLS] embedding</span>
+</code></pre></div>
+
+<p>The classifier head on top is small and simple:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">input</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">bert_units</span><span class="p">,))</span>               <span class="c1"># 768</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)(</span><span class="nb">input</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;softmax&#39;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Results: <strong>72.9%</strong> with 200 examples and <strong>80.5%</strong> with all. The 200-example number is the headline: no other model comes close in the low-data regime (BoW managed 62%, frozen GloVe 56%). This is the power of a large pretrained transformer — its representations are so rich that a couple hundred labeled examples suffice for a respectable classifier. Yet with all 3,222 examples, humble BoW (82.7%, or 87% with a 5,000-token vocabulary) still edges BERT out. The solution's interpretation: this topic-classification problem simply isn't that hard, so given enough data, BERT is "a bit overkill" — the distinguishing vocabulary alone carries the signal (helped, as Problem 3 showed, by leaky header features that BERT's <code>[CLS]</code> summary exploits less directly).</p>
+<p><strong>Overall takeaways</strong> (the intended answers to the Conclusion section):</p>
+<ol>
+<li><strong>Simple baselines are strong.</strong> Bag-of-words, which discards all word order, is remarkably competitive on topic classification — always measure fancy models against it.</li>
+<li><strong>Pretrained representations shine when data is scarce.</strong> The models rank differently at 200 vs. 3,222 examples; BERT dominates the low-data regime.</li>
+<li><strong>Fine-tuning is a double-edged sword.</strong> It adapts generic embeddings to your domain (rescuing tokens like <code>henryzootorontoedu</code>) but overfits badly with few examples — the same lesson as HW1's frozen vs. fine-tuned VGG19.</li>
+<li><strong>Know what your model is actually using.</strong> The header-leakage investigation shows why you should inspect features and stress-test with cleaned data before trusting a benchmark number.</li>
+</ol>
+<details><summary>Full solution code (HW2 Problem 3(c): fine-tuned GloVe model)</summary>
+
+
+<div class="highlight"><pre><span></span><code><span class="n">embedding_layer</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span>
+    <span class="n">max_tokens</span><span class="p">,</span>
+    <span class="n">embedding_dim</span><span class="p">,</span>
+    <span class="n">embeddings_initializer</span><span class="o">=</span><span class="n">keras</span><span class="o">.</span><span class="n">initializers</span><span class="o">.</span><span class="n">Constant</span><span class="p">(</span><span class="n">embedding_matrix</span><span class="p">),</span>
+    <span class="n">trainable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>          <span class="c1"># the only change from Problem 2</span>
+    <span class="n">mask_zero</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">inputs</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">max_length</span><span class="p">,))</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">embedding_layer</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">GlobalAveragePooling1D</span><span class="p">()(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;sigmoid&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">glove_model_tuned</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+<span class="n">glove_model_tuned</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;adam&#39;</span><span class="p">,</span>
+                          <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;categorical_crossentropy&#39;</span><span class="p">,</span>
+                          <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">])</span>
+
+<span class="n">glove_model_tuned</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X_train_glove</span><span class="p">[:</span><span class="mi">200</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">[:</span><span class="mi">200</span><span class="p">],</span>
+                      <span class="n">epochs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test accuracy with 200 Examples </span><span class="si">%.4f</span><span class="s2">&quot;</span>
+      <span class="o">%</span> <span class="n">glove_model_tuned</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X_test_glove</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_test</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">glove_model_tuned</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X_train_glove</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span>
+                      <span class="n">epochs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test accuracy with All Examples </span><span class="si">%.4f</span><span class="s2">&quot;</span>
+      <span class="o">%</span> <span class="n">glove_model_tuned</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X_test_glove</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_test</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># Verify the previously all-zero token now has a learned embedding:</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The embedding for token </span><span class="si">%d</span><span class="s1"> is&#39;</span> <span class="o">%</span> <span class="n">idx</span><span class="p">,</span>
+      <span class="n">glove_model_tuned</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">idx</span><span class="p">,</span> <span class="p">:])</span>
+</code></pre></div>
+
+
+
+</details>
+
+<details><summary>Full solution code (HW2 Problem 4: BERT tokenization and feature extraction helpers)</summary>
+
+
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow_hub</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">hub</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow_text</span>
+
+<span class="n">bert_preprocess</span> <span class="o">=</span> <span class="s1">&#39;https://tfhub.dev/tensorflow/bert_en_uncased_preprocess/3&#39;</span>
+<span class="n">bert_layers</span><span class="p">,</span> <span class="n">bert_units</span><span class="p">,</span> <span class="n">bert_heads</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">768</span><span class="p">,</span> <span class="mi">12</span>
+<span class="n">bert_encoder</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;https://tfhub.dev/tensorflow/&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;bert_en_uncased_L-</span><span class="si">{</span><span class="n">bert_layers</span><span class="si">}</span><span class="s1">_H-</span><span class="si">{</span><span class="n">bert_units</span><span class="si">}</span><span class="s1">_A-</span><span class="si">{</span><span class="n">bert_heads</span><span class="si">}</span><span class="s1">/4&#39;</span><span class="p">)</span>
+
+<span class="n">max_length</span> <span class="o">=</span> <span class="mi">512</span>
+<span class="n">preprocessor</span> <span class="o">=</span> <span class="n">hub</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">bert_preprocess</span><span class="p">)</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">hub</span><span class="o">.</span><span class="n">KerasLayer</span><span class="p">(</span><span class="n">bert_encoder</span><span class="p">,</span> <span class="n">trainable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">bert_textvect</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a list of strings into a list of tokens for BERT.&quot;&quot;&quot;</span>
+    <span class="nb">input</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">)</span>
+    <span class="n">tokenized_input</span> <span class="o">=</span> <span class="n">hub</span><span class="o">.</span><span class="n">KerasLayer</span><span class="p">(</span><span class="n">preprocessor</span><span class="o">.</span><span class="n">tokenize</span><span class="p">)(</span><span class="nb">input</span><span class="p">)</span>
+    <span class="n">bert_pack_inputs</span> <span class="o">=</span> <span class="n">hub</span><span class="o">.</span><span class="n">KerasLayer</span><span class="p">(</span><span class="n">preprocessor</span><span class="o">.</span><span class="n">bert_pack_inputs</span><span class="p">,</span>
+                                      <span class="n">arguments</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">seq_length</span><span class="o">=</span><span class="n">max_length</span><span class="p">))</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">bert_pack_inputs</span><span class="p">([</span><span class="n">tokenized_input</span><span class="p">])</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">bert_features</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts the list of tokens into 768-dimensional embeddings for BERT.&quot;&quot;&quot;</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">input_word_ids</span><span class="o">=</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">max_length</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
+        <span class="n">input_mask</span><span class="o">=</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">max_length</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
+        <span class="n">input_type_ids</span><span class="o">=</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">max_length</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">inputs</span><span class="p">)[</span><span class="s1">&#39;sequence_output&#39;</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>   <span class="c1"># [CLS] embedding</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">X_bert_train</span> <span class="o">=</span> <span class="n">bert_textvect</span><span class="p">(</span><span class="n">train_df</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">])</span>
+<span class="n">X_bert_test</span> <span class="o">=</span> <span class="n">bert_textvect</span><span class="p">(</span><span class="n">test_df</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">])</span>
+<span class="n">features_train</span> <span class="o">=</span> <span class="n">bert_features</span><span class="p">(</span><span class="n">X_bert_train</span><span class="p">)</span>   <span class="c1"># shape (3222, 768)</span>
+<span class="n">features_test</span> <span class="o">=</span> <span class="n">bert_features</span><span class="p">(</span><span class="n">X_bert_test</span><span class="p">)</span>
+</code></pre></div>
+
+
+
+</details>
+      <nav class="chapter-footer" aria-label="Chapter navigation"><a class="previous" href="ch11-diffusion-text-to-image.html">← 11 · Diffusion Models</a><a class="next" href="appendix-b-resources.html">B · Resource Index →</a></nav>
+    </article>
+  </main>
+</body>
+</html>

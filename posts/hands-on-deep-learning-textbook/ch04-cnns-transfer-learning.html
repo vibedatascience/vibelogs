@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A hands-on deep learning textbook companion to MIT 15.773">
+  <title>Chapter 4: Convolutional Neural Networks and Transfer Learning · Hands-On Deep Learning</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
+  </script>
+  <script defer src="mathjax/tex-svg.js"></script>
+  <script defer src="search-index.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"></div>
+  <aside class="sidebar">
+    <a class="brand" href="index.html">Hands-On Deep Learning</a>
+    <div class="brand-subtitle">MIT 15.773 · Spring 2024 companion</div>
+    <input class="search" type="search" placeholder="Search the full book…" data-search aria-label="Search">
+    <div class="search-results hidden" data-search-results></div>
+    <nav><div class="nav-part">Front Matter</div>
+<a class="nav-link" href="index.html">Start Here</a>
+<div class="nav-part">Part I · Foundations</div>
+<a class="nav-link" href="ch01-intro-to-neural-networks.html">1 · Neural Networks</a>
+<a class="nav-link" href="ch02-training-deep-networks.html">2 · Training Deep Networks</a>
+<a class="nav-link" href="ch03-keras-and-cnns-from-scratch.html">3 · Keras and Vision Basics</a>
+<div class="nav-part">Part II · Computer Vision</div>
+<a class="nav-link active" href="ch04-cnns-transfer-learning.html">4 · CNNs and Transfer Learning</a>
+<div class="nav-part">Part III · Natural Language</div>
+<a class="nav-link" href="ch05-nlp-basics.html">5 · Text Vectorization</a>
+<a class="nav-link" href="ch06-embeddings.html">6 · Embeddings</a>
+<a class="nav-link" href="ch07-transformers.html">7 · Transformers</a>
+<a class="nav-link" href="ch08-transformers-ii-self-supervised.html">8 · Self-Supervised Learning</a>
+<div class="nav-part">Part IV · Generative AI</div>
+<a class="nav-link" href="ch09-llms-and-rag.html">9 · LLMs and RAG</a>
+<a class="nav-link" href="ch10-peft-lora.html">10 · PEFT and LoRA</a>
+<a class="nav-link" href="ch11-diffusion-text-to-image.html">11 · Diffusion Models</a>
+<div class="nav-part">Appendices</div>
+<a class="nav-link" href="appendix-a-homework.html">A · Homework and Solutions</a>
+<a class="nav-link" href="appendix-b-resources.html">B · Resource Index</a></nav>
+    <div class="sidebar-actions">
+      <button data-theme-toggle type="button">Light / dark</button>
+      <button data-print type="button">Print</button>
+    </div>
+    <div class="sidebar-actions">
+      <a class="button" href="complete-book.html">Complete book</a>
+      <a class="button" href="notebooks.html">Notebooks</a>
+    </div>
+  </aside>
+  <main class="page">
+    <article class="article">
+      <div class="eyebrow">Part II · Computer Vision</div>
+      <h1 id="chapter-4-convolutional-neural-networks-and-transfer-learning">Chapter 4: Convolutional Neural Networks and Transfer Learning</h1>
+<blockquote>
+<p><strong>Lecture video:</strong> <a href="https://www.youtube.com/watch?v=8xh7Y0pBrCE">https://www.youtube.com/watch?v=8xh7Y0pBrCE</a>
+<strong>Slides:</strong> <a href="https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/mit15_773_s24_lec04.pdf">Lecture 4 — Deep Learning for Computer Vision: CNNs and Transfer Learning</a>
+<strong>Worked convolution example (Excel):</strong> <a href="https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/mit15_773_s24_lec04_convolution_example.xlsx">Convolution Example spreadsheet</a>
+<strong>Companion Colabs:</strong> <a href="https://colab.research.google.com/drive/1hN7v4_Yt3E1TpHmH1n7PImFrjDrQ61_t">Learning a CNN for Image Classification</a> · <a href="https://colab.research.google.com/drive/1TJU7ft-IrOOnA2H5s-Uj4oTB8PvZcz-3">Handbags–Shoes Classifier with Transfer Learning</a></p>
+</blockquote>
+<p>In Chapter 3 we trained a neural network with a single hidden layer on Fashion MNIST and reached accuracy in the high 80s — even though that network had no idea it was looking at images. It simply flattened each 28×28 grid of pixels into a 784-long vector and processed it like any other list of numbers. This chapter asks the obvious follow-up: <em>if we tell the network that its input is an image, can we do better?</em> The answer — the convolutional neural network (CNN) — turned out to be one of the great unlocks in machine learning. We build the concept up from its atomic unit (the convolutional filter), assemble filters into layers and layers into architectures, and then confront a practical reality: most real-world problems don't come with 60,000 labeled images. For that we learn <strong>transfer learning</strong> — adapting a large pre-trained network such as ResNet to your own problem — and close with the live-in-lecture demo in which a classifier trained on fewer than 100 examples per class correctly identifies a student's shoe and handbag through a laptop webcam.</p>
+<h2 id="learning-objectives">Learning objectives</h2>
+<p>After working through this chapter and its two companion Colabs, you should be able to:</p>
+<ul>
+<li>Explain the three problems that arise when a flattened image is fed to a dense layer: too many parameters, loss of spatial adjacency, and no translation invariance.</li>
+<li>Perform the <strong>convolution operation</strong> by hand — overlay a filter on an image patch, multiply matching elements, sum, and pass through a ReLU — and verify your arithmetic against the course's worked Excel spreadsheet.</li>
+<li>Describe how a convolutional layer with $f$ filters transforms an input tensor, including the rank-3 filters needed for color (RGB) images, and predict the shape of the output tensor.</li>
+<li>Explain <strong>max pooling</strong> and <strong>average pooling</strong>, and articulate the "OR condition" intuition for why max pooling acts as a feature detector.</li>
+<li>Sketch the architecture of a basic CNN — convolutional blocks that shrink in height/width but grow in depth, followed by flattening and dense layers — and build one in Keras with <code>Conv2D</code> and <code>MaxPool2D</code>.</li>
+<li>Use <code>image_dataset_from_directory</code>, a <code>Rescaling</code> layer, and <strong>data augmentation</strong> layers (<code>RandomFlip</code>, <code>RandomRotation</code>, <code>RandomZoom</code>) to train a CNN on your own folder of images.</li>
+<li>Explain the logic of <strong>transfer learning</strong>: why a "headless" ImageNet-trained network produces a smart representation of everyday images, and how to attach and train a small classification head on top of it.</li>
+<li>Distinguish <strong>feature extraction</strong> (frozen pre-trained backbone) from <strong>fine-tuning</strong> (training end-to-end starting from the pre-trained weights), and know where to find pre-trained models — TensorFlow Hub, PyTorch Hub, and the Hugging Face Hub.</li>
+</ul>
+<h2 id="41-why-flattening-images-is-the-wrong-thing-to-do">4.1 Why flattening images is the wrong thing to do</h2>
+<p>The dense network of Chapter 3 treated an image as an arbitrary vector of numbers. As Ramakrishnan puts it at the start of the lecture, that network "didn't know what was coming in was an image. It literally took this table of numbers... concatenated all the rows into one giant, long vector, and then sent it in." The clue for doing better is precisely that the network <em>failed to exploit</em> the input's type. Three things go wrong when we flatten <em>(video 1:30)</em>.</p>
+<p><strong>Problem 1: Too many parameters.</strong> A photo from a modern phone is roughly $3024 \times 3024$ pixels. In color, that means three channels — about $3024 \times 3024 \times 3 \approx 27$ million numbers per image, each between 0 and 255. Connect that flattened vector to a <em>single</em> dense layer of just 100 neurons and you get</p>
+<p>$$27{,}000{,}000 \times 100 \approx 2.7 \text{ billion parameters}$$</p>
+<p>in one small piece of the network alone (ignoring biases). As Ramakrishnan asks the class: do you think we can find 2.7 billion images to train this thing so it doesn't overfit? The approach is computationally demanding, extraordinarily data-hungry, and practically guaranteed to overfit.</p>
+<p><strong>Problem 2: We lose spatial adjacency.</strong> If a pixel sits in the middle of a t-shirt, knowing that the surrounding pixels belong to the same underlying concept — "t-shirt" — is enormously informative. Flattening literally ignores what's nearby.</p>
+<p><strong>Problem 3: No learn-once, reuse-everywhere.</strong> Suppose the image contains a vertical line in the top-left and another in the bottom-right. A dense network must learn to detect each <em>independently</em>, which makes no sense — a vertical line is a vertical line, wherever it appears. We want to detect a feature once and reuse the detector everywhere. In math-speak this property is called <strong>translation invariance</strong> ("translation" just means moving things around) <em>(video 5:01)</em>.</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "Detect once, reuse everywhere. That's what you need to do."</p>
+</blockquote>
+<p>Convolutional layers were developed precisely to address these three shortcomings — and, as we'll see, they are an elegant solution to all three at once.</p>
+<h2 id="42-convolutional-filters-and-the-convolution-operation">4.2 Convolutional filters and the convolution operation</h2>
+<figure id="fig-convolution-operation"><img src="figures/generated/convolution-operation.png" alt="A 3 by 3 edge-detection filter sliding across a 7 by 7 input to produce one feature-map value" loading="lazy"><figcaption>The convolution operation, reconstructed as an original textbook figure and checked against Lecture 4, slide 15.</figcaption></figure>
+
+<p>The atomic building block of a convolutional layer is the <strong>convolutional filter</strong>: nothing more than a small square matrix of numbers, such as a $3 \times 3$ grid. A <strong>convolutional layer</strong> is simply composed of one or more of these filters.</p>
+<p>What makes this humble object magical is that if you choose its numbers carefully and <em>apply</em> it to an image, the filter can detect features — lines, curves, gradations of color, circles. For example, this filter detects <strong>horizontal lines</strong>:</p>
+<p>$$\begin{bmatrix} 1 &amp; 1 &amp; 1 \ 0 &amp; 0 &amp; 0 \ -1 &amp; -1 &amp; -1 \end{bmatrix}$$</p>
+<p>and this one detects <strong>vertical lines</strong>:</p>
+<p>$$\begin{bmatrix} 1 &amp; 0 &amp; -1 \ 1 &amp; 0 &amp; -1 \ 1 &amp; 0 &amp; -1 \end{bmatrix}$$</p>
+<h3 id="the-mechanics">The mechanics</h3>
+<p>What does "applying" a filter mean? Take a small grayscale image (a grid of numbers between 0 and 255) and a $3 \times 3$ filter. The <strong>convolution operation</strong> works as follows <em>(video 8:00)</em>:</p>
+<ol>
+<li><strong>Overlay</strong> the filter on the top-left corner of the image, so that nine filter numbers sit directly on top of nine image numbers.</li>
+<li><strong>Multiply matching elements and add them up.</strong> In the lecture's example: $0{\cdot}1 + 0{\cdot}1 + 0{\cdot}1 + 5{\cdot}0 + 5{\cdot}0 + 5{\cdot}0 + 10{\cdot}(-1) + 10{\cdot}(-1) + 10{\cdot}(-1) = -30$.</li>
+<li><strong>Run the result through a ReLU:</strong> $\max(0, -30) = 0$. (Strictly speaking the ReLU isn't part of the convolution operation itself, but the course includes it here for convenience, since that is how it is used inside a network.) This number becomes the top-left cell of the output.</li>
+<li><strong>Slide</strong> the filter one step to the right and repeat, producing the next output cell. When you finish a row, move to the start of the next row — and continue until you reach the bottom-right corner of the image.</li>
+</ol>
+<p>The output is a new, slightly smaller grid of numbers — a <strong>feature map</strong>: a map of <em>where in the image the filter's feature was found</em>. There are nuances the course deliberately sets aside — you can <strong>pad</strong> the image's borders so the filter can hang over the edge, and you can slide more than one step at a time (the <strong>stride</strong>) — but, as Ramakrishnan notes in lecture, the basic default approach "works well, amazingly well, almost all the time."</p>
+<h3 id="seeing-it-work-the-excel-spreadsheet">Seeing it work: the Excel spreadsheet</h3>
+<p>To make the mechanics tangible, the lecture switches to a worked Excel spreadsheet (courtesy of the fast.ai team), which you should download and explore: <a href="https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/mit15_773_s24_lec04_convolution_example.xlsx">convolution example spreadsheet</a> <em>(video 12:00)</em>. The spreadsheet contains an image of the digit <strong>3</strong> as a table of pixel values (normalized to 0–1 by dividing by 255), with conditional formatting that colors high values red — so the 3 visually pops out of the grid. Alongside it are the horizontal- and vertical-line filters, and output tables in which every cell is literally the Excel formula "multiply the nine matching cells, add them up, take <code>max(0, ...)</code>." Apply the horizontal filter and <em>only the horizontal strokes of the 3 light up</em> in the output; the vertical filter lights up only the vertical strokes.</p>
+<p>Tracing a single bright output cell back to its inputs reveals <em>why</em>: the filter is an <strong>edge detector</strong>. It looks for places where a row of large values sits above a row of small values — the $+1$'s multiply the large values, the $-1$'s multiply the small values below, and the sum comes out strongly positive exactly at a horizontal edge, and near zero in flat regions where positives and negatives cancel.</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "Spend some time with it, with Excel, and it will become clear to you what I'm talking about here."</p>
+</blockquote>
+<p>For further hands-on practice, the slides also point to the interactive demo at <a href="https://setosa.io/ev/image-kernels/">setosa.io/ev/image-kernels</a>, where you can punch in your own filter numbers and watch what they detect.</p>
+<h2 id="43-layers-with-many-filters-and-color-images">4.3 Layers with many filters, and color images</h2>
+<p>A convolutional layer contains one or more filters, each a <strong>specialist</strong> for one particular feature — one may specialize in vertical lines, another in horizontal lines, another in semicircles. Modern images are complicated, so we typically want many filters. Crucially, though, <em>we never assign the specialties</em>. As Ramakrishnan says in lecture, you don't tell one filter "you better specialize in detecting vertical lines... stay in your lane" — the system figures out for itself what it wants to detect. There is no human bottleneck (there used to be one, as we'll see in a moment).</p>
+<p>When a layer has multiple filters, they all run <strong>in parallel</strong> on the same input. Each filter produces its own 2-D feature map. If a layer with 2 filters applied to a small image produces two $5 \times 5$ output matrices, those are packaged as a tensor of shape $5 \times 5 \times 2$ (or equivalently $2 \times 5 \times 5$ — which convention you use is arbitrary) <em>(video 17:30)</em>. This is why the tensor machinery of Chapter 3 matters: with 103 filters, the output would be a $5 \times 5 \times 103$ tensor.</p>
+<h3 id="color-images-make-the-filter-rank-3">Color images: make the filter rank-3</h3>
+<p>Grayscale images are 2-D tensors, but a color image is a <strong>rank-3 tensor</strong> — say $6 \times 6 \times 3$, with red, green, and blue channels. Should we just apply our 2-D filter to each channel independently? No — that would fail to inform the network that the three numbers at each pixel location are <em>part of the same underlying thing</em>. The fix is simple and elegant: <strong>make the filter rank-3 as well, with the same depth as the input</strong> <em>(video 20:00)</em>. A $3 \times 3$ filter becomes a $3 \times 3 \times 3$ cube. At each position we now match up 27 image numbers with 27 filter numbers, multiply, add, and ReLU — every other aspect of the operation is unchanged. If the input were 10 channels deep, the filter would be 10 deep.</p>
+<p>One point worth internalizing: <strong>no matter how deep the input and filter are, each filter's output is always a 2-D table</strong>, because at each position the whole multiply-and-add collapses to a single number. Depth in the <em>output</em> comes from having many filters: one rank-3 filter on a $6 \times 6 \times 3$ image yields a $4 \times 4$ map; $f$ filters yield a $4 \times 4 \times f$ tensor. (Chapter 8.1 of the course textbook — Chollet's <em>Deep Learning with Python</em> — covers these mechanics in more detail. As Ramakrishnan advises, "this convolutional stuff grows in the telling": revisit it a few times and it becomes muscle memory.)</p>
+<h2 id="44-the-big-idea-learn-the-filters-from-data">4.4 The Big Idea: learn the filters from data</h2>
+<p>These filters seem excellent — but where are the numbers supposed to come from? Historically, they were <strong>designed by hand</strong>. Computer vision researchers invested prodigious amounts of time, effort, and talent devising filters for specific applications — for instance, hand-crafting exactly the right filter to extract stroke-predictive features from MRI images <em>(video 26:00)</em>.</p>
+<p>Then, as the field figured out how to train deep networks with many weights — ReLU activations, stochastic gradient descent, backpropagation, GPUs — a big idea emerged:</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "Why don't we think of the numbers in the filter as just weights? And why don't we just simply learn them from the data using backprop, just like we learn all the other weights? ... This simple idea — and it feels blindingly obvious in hindsight; I'm sure it was not obvious in foresight — this was the breakthrough."</p>
+</blockquote>
+<p>This is possible because a convolutional filter <em>is just a neuron</em> — a slightly special one. Where a traditional first-hidden-layer neuron connects to <em>all</em> pixels of the input, a convolutional-filter neuron connects only to the pixels in one small window, and sliding the filter across the image can be thought of as a different neuron for each window position <em>but with the same shared weights</em>. (The lecture's appendix slide spells this out.) The weight-sharing delivers all three properties we wanted: local adjacency is preserved, there are far fewer parameters, and the same pattern is detected wherever it appears — translation invariance. And because a filter is just a neuron, our entire machinery — layers, loss functions, gradient descent, SGD — is immediately applicable, with nothing new to invent.</p>
+<p>Historically, this was the turning point for the computer vision field. As Ramakrishnan recounts, in 2012 a system called <strong>AlexNet</strong> built on this idea "burst out onto the world stage" at the ImageNet competition: the previous best error rate was 26%, and AlexNet came in at 16% — in a field accustomed to yearly improvements of half a percent, a ten-point jump that looked like a typo <em>(video 28:00)</em>.</p>
+<h3 id="hierarchical-features-later-layers-see-more">Hierarchical features: later layers see more</h3>
+<p>One more conceptual pillar. With each successive convolutional layer, a filter implicitly "sees" more of the original input image. A cell in the first layer's output corresponds to a tiny patch of the photo — the top of a chimney, say; but a cell in the <em>second</em> layer's output is computed from a window of first-layer cells, each of which already summarizes a patch, so it reflects a much larger region. Stack enough layers and the network builds a <strong>hierarchical understanding</strong>: the first layer learns lines and edges; middle layers assemble them into corners, arcs, and textures; deeper layers assemble those into object parts and whole objects. The lecture shows the famous visualization from a face-detection network — lines and edges, then partial facial features (an ear, an eye), then entire faces emerging in the deepest layers <em>(video 29:30)</em>. In the slides' shorthand: lines ⇒ edges, circles ⇒ faces!</p>
+<h2 id="45-pooling-layers">4.5 Pooling layers</h2>
+<p>The second building block of a CNN is the <strong>pooling layer</strong> (also called a down-sampling or subsampling layer). Its job is to <em>shrink</em> the tensor coming out of a convolutional layer — and the very act of making it smaller forces the network to summarize what is going on in the complicated thing coming into it <em>(video 31:00)</em>.</p>
+<p>The mechanics are trivial, and — importantly — <strong>a pooling layer has no weights to learn</strong>; it is pure arithmetic. Take a $4 \times 4$ feature map and superimpose an empty $2 \times 2$ grid on its top-left corner:</p>
+<ul>
+<li><strong>Max pooling:</strong> record the largest of the four numbers, then slide the $2\times2$ window over and repeat.</li>
+<li><strong>Average pooling:</strong> record the average of the four numbers instead.</li>
+</ul>
+<p>The lecture's worked example:</p>
+<p>$$\begin{bmatrix} 23 &amp; 14 &amp; 0 &amp; 109 \ 9 &amp; 43 &amp; 58 &amp; 15 \ 105 &amp; 85 &amp; 35 &amp; 25 \ 24 &amp; 69 &amp; 17 &amp; 7 \end{bmatrix} \xrightarrow{\ 2\times2 \text{ max pool}\ } \begin{bmatrix} 43 &amp; 109 \ 105 &amp; 35 \end{bmatrix} \qquad \xrightarrow{\ 2\times2 \text{ avg pool}\ } \begin{bmatrix} 22.2 &amp; 45.5 \ 70.75 &amp; 21 \end{bmatrix}$$</p>
+<p>A $2 \times 2$ pooling reduces the number of entries by 75%, and the shrunken output feeds the next layer as usual. When the input is a deep tensor — say $224 \times 224 \times 64$ — pooling operates on <strong>each of the 64 slices independently</strong>: every $224 \times 224$ table shrinks to $112 \times 112$, but the number of tables (the depth) does not change <em>(video 36:30)</em>.</p>
+<h3 id="why-max-pooling-works-the-or-intuition">Why max pooling works: the "OR" intuition</h3>
+<p>Why would throwing away three quarters of the numbers <em>help</em>? A large value in a feature map means "the filter's feature was detected here." Max pooling over a region asks: <strong>did anything light up anywhere in this region?</strong> It behaves like an OR condition — if the feature exists <em>anywhere</em> in its input window, max pooling will pick it up. In that sense, max pooling itself acts like a feature detector.</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "You want to step back and say: in this picture, the top left, nothing lit up. The top right, something lit up... So you're operating at a higher level of abstraction. That's the effect of pooling."</p>
+</blockquote>
+<p>Doesn't this destroy spatial information? Not really — by the time pooling summarizes a region, the network has <em>already moved up a level of abstraction</em>: an eye detector firing in the top-left tells you "there is an eye in the top-left" without needing pixel coordinates, and this coarsening proceeds slowly and incrementally across many layers. Since successive convolutional layers see more and more of the original image, the pooling layers that follow them can detect whether a feature exists in more and more of the original image too. By the seventh or eighth layer, the network is, in effect, operating with the image's features <strong>tagged at multiple resolutions</strong>.</p>
+<h2 id="46-the-architecture-of-a-basic-cnn">4.6 The architecture of a basic CNN</h2>
+<p>We can now assemble the standard blueprint. A basic CNN is a series of <strong>convolutional blocks</strong> — each typically one or two convolutional layers followed by a pooling layer — capped by a classification head <em>(video 37:30)</em>:</p>
+<ol>
+<li>The input image passes through convolutional block after convolutional block.</li>
+<li>As we go deeper, each block's tensor gets <strong>smaller in height and width</strong> (because of pooling) but <strong>deeper</strong> (because we choose to give later layers more filters).</li>
+<li>At the end, the final tensor is <strong>flattened</strong> into a long vector, run through zero or more dense hidden layers, and connected to the output layer (softmax for multi-class, sigmoid for binary).</li>
+</ol>
+<p>Why smaller-but-deeper? Depth is a design choice — you decide how many filters a layer gets, just as you decide how many neurons a dense layer gets — and the field has found empirically that shrinking height/width while growing depth works remarkably well. Ramakrishnan's intuition <em>(video 40:30)</em>: the number of <em>atomic</em> features worth detecting (lines, curves, color gradations) is small, but the ways they combine into real-world things are <strong>combinatorial</strong> — "I have 10 kinds of atoms; how many molecules can I make from them?" More depth means more filters, each able to capture some combination of what came before.</p>
+<p>A concrete number to hold onto: ResNet, the famous network we will use shortly, takes in a $224 \times 224 \times 3$ color image and, after all its convolution-and-pooling business, ends with a tensor of shape $7 \times 7 \times 2048$ — dramatically smaller in height and width, dramatically deeper <em>(video 39:30)</em>.</p>
+<h2 id="47-a-cnn-for-fashion-mnist">4.7 A CNN for Fashion MNIST</h2>
+<p>Time to build one. We return to Fashion MNIST from Chapter 3 — where a plain dense network got roughly 88% test accuracy — and follow the same workflow: data prep, define model, set optimization parameters, train, evaluate <em>(video 43:00)</em>.</p>
+<h3 id="data-prep">Data prep</h3>
+<p>As before, we normalize pixel values to the 0–1 range. One new wrinkle: convolutional layers expect a <strong>channel dimension</strong>. Color images have three channels; a grayscale image has one — a single table of numbers — so we reshape each image from $28 \times 28$ to $28 \times 28 \times 1$. Conceptually it's the same data; it's simply the format <code>Conv2D</code> expects.</p>
+<div class="highlight"><pre><span></span><code><span class="n">x_train</span> <span class="o">=</span> <span class="n">x_train</span> <span class="o">/</span> <span class="mf">255.0</span>
+<span class="n">x_test</span> <span class="o">=</span> <span class="n">x_test</span> <span class="o">/</span> <span class="mf">255.0</span>
+
+<span class="n">x_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">x_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">x_train</span><span class="o">.</span><span class="n">shape</span>   <span class="c1"># (60000, 28, 28, 1)</span>
+</code></pre></div>
+
+<h3 id="define-the-model">Define the model</h3>
+<p>Here is the course's first CNN, written in the Keras functional API from Chapter 3. Two new layer types appear: <code>Conv2D</code> for a convolutional layer (there are also <code>Conv1D</code> and <code>Conv3D</code> for other data shapes, but for images Conv2D is all you need) and <code>MaxPool2D</code> for max pooling.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># input layer</span>
+<span class="nb">input</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">x_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+<span class="c1"># the first convolutional block</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span>                    <span class="c1"># Number of filters</span>
+                        <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>    <span class="c1"># The shape of each filter</span>
+                        <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">,</span>     <span class="c1"># RELU activation as usual</span>
+                        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Conv_1&quot;</span><span class="p">)(</span><span class="nb">input</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">MaxPool2D</span><span class="p">()(</span><span class="n">x</span><span class="p">)</span>               <span class="c1"># pooling layer</span>
+
+<span class="c1"># the second convolutional block</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span>
+                        <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                        <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">,</span>
+                        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Conv_2&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">MaxPool2D</span><span class="p">()(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># flatten, then a fully-connected (dense) ReLU layer</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Flatten</span><span class="p">()(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># output softmax layer: 10 clothing categories</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;softmax&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Reading it top to bottom: 32 filters of size $2 \times 2$ with ReLU, then max pooling — that's convolutional block one. Block two is a copy-paste ("I know how to cut and paste," Ramakrishnan jokes in lecture). A second block would often get <em>more</em> filters (say 64) to add depth, but for this simple problem 32 again is a fine starting point. Then flatten, one dense layer of 256 neurons, and a 10-way softmax. <code>model.summary()</code> reports about <strong>302,000 parameters</strong> — which the lecture invites you to hand-calculate and verify. (A style note from the class Q&amp;A: reusing the variable name <code>x</code> for every layer's output isn't naming the layers — it's just notational convenience; Keras tracks the actual graph under the hood.)</p>
+<h3 id="compile-train-evaluate">Compile, train, evaluate</h3>
+<p>The same compile-and-fit recipe as Chapter 3: Adam optimizer, sparse categorical cross-entropy (integer labels, 10 classes), batch size 64, 10 epochs, 20% validation split:</p>
+<div class="highlight"><pre><span></span><code><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;sparse_categorical_crossentropy&#39;</span><span class="p">,</span>
+              <span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;adam&#39;</span><span class="p">,</span>
+              <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">])</span>
+
+<span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span>
+                    <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+                    <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                    <span class="n">validation_split</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Convolutional networks have more going on per example, so training runs a bit slower than the dense model. Training loss falls steadily while validation flattens out around the eighth epoch — the beginnings of overfitting, which is why 10 epochs is plenty. Then the moment of truth:</p>
+<div class="highlight"><pre><span></span><code><span class="n">score</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test accuracy:&quot;</span><span class="p">,</span> <span class="n">score</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="c1"># 313/313 [====] - loss: 0.2704 - accuracy: 0.9058</span>
+<span class="c1"># Test accuracy: 0.9058</span>
+</code></pre></div>
+
+<p><strong>90.6% test accuracy</strong> <em>(video 52:00)</em>. If going from 88% to 90.6% doesn't impress you, reframe it the way the lecture does: these are the proverbial diminishing-returns problems, so look at the <em>error that's left</em>. We had roughly 12% error; the CNN knocked about 2 points off that. The state of the art on Fashion MNIST is about <strong>96.9%</strong>, and the Colab issues a challenge: can you get to the mid-90s by playing with the architecture — more blocks, more filters, different kernel sizes?</p>
+<h3 id="iteratively-improving-the-model">Iteratively improving the model</h3>
+<p>The Colab ends with a practical tip: once a model is built, look at the test-set predictions it gets <em>wrong</em> — that often suggests how to improve it. For image data, visualization helps:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># get the predictions and collect the mistakes</span>
+<span class="n">y_hat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">misses</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">y_hat</span> <span class="o">!=</span> <span class="n">y_test</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Plotting a random sample of 25 misclassified images (predicted label vs. ground truth) shows the model struggling with <em>visually similar</em> categories. A <strong>confusion matrix</strong> completes the picture:</p>
+<div class="highlight"><pre><span></span><code><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Predictions&#39;</span><span class="p">:</span> <span class="n">predictions</span><span class="p">,</span> <span class="s1">&#39;Actuals&#39;</span><span class="p">:</span> <span class="n">actuals</span><span class="p">})</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Predictions</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">Actuals</span><span class="p">)</span>
+</code></pre></div>
+
+<p>The most common mistake is confusing "Shirt" with "T-shirt/Top" — understandable, since the products genuinely look alike. The suggested remedy: get more data on exactly those confusable categories, enrich the training set, and retrain.</p>
+<p>A question from the class Q&amp;A is worth preserving: <em>will a neural network always beat classical machine learning?</em> For <strong>unstructured data</strong> (images, text, audio), deep learning is the best game in town. For <strong>structured/tabular data</strong> like Chapter 3's heart-disease problem, methods like gradient boosting (XGBoost) often work just as well or better — try both.</p>
+<h2 id="48-kicking-it-up-a-notch-handbags-vs-shoes-with-100-images">4.8 Kicking it up a notch: handbags vs. shoes with ~100 images</h2>
+<p>Fashion MNIST is grayscale and comes with 60,000 training examples; real problems are rarely so generous. The second half of the lecture poses a deliberately audacious challenge <em>(video 55:30)</em>: Ramakrishnan web-scraped roughly <strong>100 color images each of handbags and shoes</strong>. With ~200 images total — when even 60,000-image Fashion MNIST starts overfitting within a few epochs — can we build a genuinely good classifier?</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "It seems kind of absurd — 200 examples is not that much... Obviously there is hope. Otherwise it wouldn't be in the lecture."</p>
+</blockquote>
+<h3 id="working-with-your-own-image-files">Working with your own image files</h3>
+<p>Unlike Keras's packaged datasets, this one arrives as a zip file of JPEGs, so we get practice with the realities of custom data. First we split the files into train/validation/test folders, with a subfolder per class:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">shutil</span><span class="o">,</span><span class="w"> </span><span class="nn">pathlib</span>
+<span class="n">base_dir</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/content/handbags-shoes&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">category</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;handbags&#39;</span><span class="p">,</span> <span class="s1">&#39;shoes&#39;</span><span class="p">):</span>
+  <span class="n">fnames</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">base_dir</span><span class="o">/</span><span class="n">category</span><span class="p">)</span>
+
+  <span class="nb">dir</span> <span class="o">=</span> <span class="n">base_dir</span> <span class="o">/</span> <span class="s1">&#39;train&#39;</span> <span class="o">/</span> <span class="n">category</span>
+  <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">fnames</span><span class="p">[:</span><span class="mi">50</span><span class="p">]:</span>    <span class="c1"># the first 50 examples go into the training set</span>
+      <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="n">base_dir</span><span class="o">/</span><span class="n">category</span><span class="o">/</span><span class="n">fname</span><span class="p">,</span> <span class="n">dst</span><span class="o">=</span><span class="nb">dir</span><span class="o">/</span><span class="n">fname</span><span class="p">)</span>
+
+  <span class="nb">dir</span> <span class="o">=</span> <span class="n">base_dir</span> <span class="o">/</span> <span class="s1">&#39;validation&#39;</span> <span class="o">/</span> <span class="n">category</span>
+  <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">fnames</span><span class="p">[</span><span class="mi">50</span><span class="p">:</span><span class="mi">75</span><span class="p">]:</span>  <span class="c1"># the next 25 go into the validation set</span>
+      <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="n">base_dir</span><span class="o">/</span><span class="n">category</span><span class="o">/</span><span class="n">fname</span><span class="p">,</span> <span class="n">dst</span><span class="o">=</span><span class="nb">dir</span><span class="o">/</span><span class="n">fname</span><span class="p">)</span>
+
+  <span class="nb">dir</span> <span class="o">=</span> <span class="n">base_dir</span> <span class="o">/</span> <span class="s1">&#39;test&#39;</span> <span class="o">/</span> <span class="n">category</span>
+  <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">fnames</span><span class="p">[</span><span class="mi">75</span><span class="p">:]:</span>    <span class="c1"># the remaining examples go into the test set</span>
+      <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="n">base_dir</span><span class="o">/</span><span class="n">category</span><span class="o">/</span><span class="n">fname</span><span class="p">,</span> <span class="n">dst</span><span class="o">=</span><span class="nb">dir</span><span class="o">/</span><span class="n">fname</span><span class="p">)</span>
+</code></pre></div>
+
+<p>This directory-per-class convention is the standard trick for image data: create one folder per class (here, <code>handbags/</code> and <code>shoes/</code>), point Keras at the parent directory, and it infers the labels from the folder names. When working with JPEGs we need to (1) read them in, (2) convert them to tensors, (3) resize them to a standard size — web-scraped images come in all shapes and sizes — and (4) group them into batches. One Keras utility does all four in one shot:</p>
+<div class="highlight"><pre><span></span><code><span class="n">train_dataset</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">image_dataset_from_directory</span><span class="p">(</span>
+    <span class="n">base_dir</span> <span class="o">/</span> <span class="s1">&#39;train&#39;</span><span class="p">,</span>
+    <span class="n">image_size</span><span class="o">=</span><span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">),</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+
+<span class="n">validation_dataset</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">image_dataset_from_directory</span><span class="p">(</span>
+    <span class="n">base_dir</span> <span class="o">/</span> <span class="s1">&#39;validation&#39;</span><span class="p">,</span>
+    <span class="n">image_size</span><span class="o">=</span><span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">),</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+
+<span class="n">test_dataset</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">image_dataset_from_directory</span><span class="p">(</span>
+    <span class="n">base_dir</span> <span class="o">/</span> <span class="s1">&#39;test&#39;</span><span class="p">,</span>
+    <span class="n">image_size</span><span class="o">=</span><span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">),</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+<span class="c1"># Found 97 files belonging to 2 classes.</span>
+<span class="c1"># Found 48 files belonging to 2 classes.</span>
+<span class="c1"># Found 40 files belonging to 2 classes.</span>
+</code></pre></div>
+
+<p>Fewer than 100 examples in the training set! Why resize to exactly $224 \times 224$? Because ResNet — the pre-trained network we're building toward — expects inputs of shape $224 \times 224 \times 3$. A quick check confirms each image is <code>(224, 224, 3)</code>: three channels, since these are color images.</p>
+<h3 id="a-from-scratch-cnn-baseline">A from-scratch CNN baseline</h3>
+<p>First, the honest baseline: the same two-block CNN as before, adapted to color inputs and binary output. One upgrade: instead of manually dividing by 255, we graduate to a <strong><code>Rescaling</code> layer</strong>, so the normalization lives <em>inside</em> the model and can never be forgotten at prediction time <em>(video 58:30)</em>.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">input</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+<span class="c1"># we normalize &quot;inside&quot; the model with a Rescaling layer</span>
+<span class="c1"># so that we don&#39;t have to remember to do it every time</span>
+<span class="c1"># we need to use the model to make a prediction</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Rescaling</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="mi">255</span><span class="p">)(</span><span class="nb">input</span><span class="p">)</span>
+
+<span class="c1"># first convolutional block</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                        <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Conv_1&quot;</span><span class="p">)(</span><span class="n">h</span><span class="p">)</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">MaxPool2D</span><span class="p">()(</span><span class="n">h</span><span class="p">)</span>
+
+<span class="c1"># second convolutional block</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                        <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Conv_2&quot;</span><span class="p">)(</span><span class="n">h</span><span class="p">)</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">MaxPool2D</span><span class="p">()(</span><span class="n">h</span><span class="p">)</span>
+
+<span class="c1"># flatten layer</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Flatten</span><span class="p">()(</span><span class="n">h</span><span class="p">)</span>
+
+<span class="c1"># output layer: handbag vs. shoe is binary, so one sigmoid neuron</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;sigmoid&quot;</span><span class="p">)(</span><span class="n">h</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;binary_crossentropy&#39;</span><span class="p">,</span>
+              <span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;adam&#39;</span><span class="p">,</span>
+              <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">])</span>
+
+<span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_dataset</span><span class="p">,</span>
+                    <span class="n">epochs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+                    <span class="n">validation_data</span><span class="o">=</span><span class="n">validation_dataset</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Because this is binary classification, we use one sigmoid output neuron and <code>binary_crossentropy</code> — the pairing rule from Chapter 3. The model has about <strong>101,000 parameters</strong> against roughly 90 training examples, so what happens next is no surprise: training accuracy climbs toward 100% while the (very noisy — only ~50 validation images) validation accuracy hovers in the 80s. Classic overfitting. On the test set <em>(video 62:00)</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">test_dataset</span><span class="p">)</span>
+<span class="c1"># 2/2 [====] - loss: 0.2934 - accuracy: 0.8684</span>
+</code></pre></div>
+
+<p>About <strong>87% accuracy</strong> — actually pretty good given ~100 examples per class, but we built the whole thing from scratch. Can we do better?</p>
+<h2 id="49-data-augmentation-an-unbelievable-free-lunch">4.9 Data augmentation: an unbelievable free lunch</h2>
+<p>Before reaching for a bigger model, consider making the <em>data</em> bigger. Rotate a photo of a handbag by 10 degrees, zoom in slightly, or flip it left-to-right, and it is, as Ramakrishnan puts it, "sure as hell still a handbag" — the meaning doesn't change under small perturbations. So take every training image, perturb it slightly in random ways, and treat the perturbed versions as new training examples. This is <strong>data augmentation</strong> <em>(video 63:00)</em>.</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "It's an unbelievable free lunch, frankly."</p>
+</blockquote>
+<p>Keras provides these transformations as pre-built <em>layers</em> inserted right after the input; they perturb images randomly during training (only some images, in some ways, keeping diversity up):</p>
+<div class="highlight"><pre><span></span><code><span class="nb">input</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+<span class="c1"># data augmentation layers, inserted right after the input</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">RandomFlip</span><span class="p">(</span><span class="s2">&quot;horizontal&quot;</span><span class="p">)(</span><span class="nb">input</span><span class="p">)</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">RandomRotation</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)(</span><span class="n">h</span><span class="p">)</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">RandomZoom</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)(</span><span class="n">h</span><span class="p">)</span>
+
+<span class="c1"># rest of the model is the same as before</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Rescaling</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="mi">255</span><span class="p">)(</span><span class="n">h</span><span class="p">)</span>
+<span class="c1"># ... convolutional blocks, flatten, sigmoid output as above ...</span>
+</code></pre></div>
+
+<p>The Colab includes a fun demonstration: apply the augmentation function nine times to the same handbag photo and plot the results — the bag appears slightly rotated one way, then the other, a bit zoomed, flipped <em>(video 65:00)</em>. Because we effectively have more data, we can also train longer at lower risk of overfitting.</p>
+<p>One caution from lecture: <strong>make sure your augmentation doesn't change the meaning of the picture.</strong> Horizontal flips are fine for everyday objects; vertical flips usually are not — "how many times will you have an upside-down dog picture that you need to classify?" — and domains like satellite imagery have their own rules. Don't let your augmentation go nuts. (The same family of ideas works for text too, as we'll see later in the course — and data augmentation figures prominently in Homework 1.)</p>
+<h2 id="410-transfer-learning-with-pre-trained-networks">4.10 Transfer learning with pre-trained networks</h2>
+<p>Augmentation stretches your 100 images further, but the real breakthrough comes from a different question: <em>has someone else already learned most of what we need?</em> <strong>Transfer learning</strong> rides on two research trends <em>(video 60:30)</em>: first, researchers have designed architectures matched to data types — convolutional layers for images, <strong>transformers</strong> for sequences (natural language, audio, video, gene sequences — the subject of the coming weeks), residual connections for all deep networks. Second, using those innovations, they have trained high-performance networks on vast real-world datasets and made the weights publicly available.</p>
+<p><strong>Transfer learning means customizing such a pre-trained network to your problem rather than designing and training one from scratch.</strong> (Though, as the slides note with a wink, the <em>first</em> thing to do is check whether someone has already built the exact classifier you need and put it on GitHub.)</p>
+<h3 id="the-logic-step-by-step">The logic, step by step</h3>
+<p>Handbags and shoes are <em>everyday objects</em>, and there is a dataset — <strong>ImageNet</strong> — containing millions of images of everyday objects in 1,000 categories: furniture, animals, automobiles, and so on. So we look for networks trained on ImageNet. A network that does well on ImageNet has necessarily developed a smart, <strong>hierarchical representation</strong> of everyday objects across its layers — the lecture shows the Zeiler–Fergus visualizations in which layer 1 picks up color gradations and lines, layer 2 edges, layer 3 honeycomb textures and human torsos, and deeper layers something that looks unmistakably like a Labrador retriever <em>(video 66:30)</em>.</p>
+<p>The <strong>ResNet</strong> family was trained on ImageNet and performed very well in its competition; its learned weights embody "knowledge" about lines, shapes, curves, and objects in millions of everyday images. But we can't use ResNet <em>as is</em>: it was built to classify an image into 1,000 categories, and we only care about two. So we perform a little surgery <em>(video 68:30)</em>:</p>
+<ol>
+<li><strong>Chop off the head.</strong> Take ResNet and stop just before its final 1,000-way classification layer, giving a "headless" ResNet.</li>
+<li><strong>Run our images through it.</strong> What comes out is a <em>smart representation</em> of the image — imagine the image getting "tagged" with lots of general-purpose tags that can be used for any downstream categorization.</li>
+<li><strong>Attach a small network.</strong> Feed that representation into a simple one-hidden-layer network ending in a sigmoid: handbag or shoe.</li>
+</ol>
+<p>Because the inputs to our little network are now at a much higher level of abstraction than raw pixels, it can plausibly learn to separate handbags from shoes with <em>very few examples</em>.</p>
+<h3 id="feature-extraction-in-keras">Feature extraction in Keras</h3>
+<p>ResNet comes pre-packaged with Keras (the course uses <strong>ResNet-50</strong>, the 50-layer member of the family). The key argument is <code>include_top=False</code> — "the very top (final) layer, don't give it to me; give me everything up to but not including that" <em>(video 71:00)</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">resnet50_base</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">applications</span><span class="o">.</span><span class="n">ResNet50</span><span class="p">(</span>
+    <span class="n">weights</span><span class="o">=</span><span class="s1">&#39;imagenet&#39;</span><span class="p">,</span>       <span class="c1"># download the ImageNet-trained weights</span>
+    <span class="n">include_top</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>        <span class="c1"># chop off the 1000-way classification head</span>
+    <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+<span class="n">resnet50_base</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>       <span class="c1"># ~23 million parameters. It is a DEEP network!</span>
+</code></pre></div>
+
+<p>Now we run every image — train, validation, and test — through headless ResNet once and store what comes out. (Note the model-specific <code>preprocess_input</code>: each pre-trained family expects images prepared exactly as during its original training.)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_features_and_labels</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+  <span class="n">all_features</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="n">all_labels</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span> <span class="n">images</span><span class="p">,</span> <span class="n">labels</span> <span class="ow">in</span> <span class="n">dataset</span><span class="p">:</span>
+    <span class="n">preprocessed_images</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">applications</span><span class="o">.</span><span class="n">resnet50</span><span class="o">.</span><span class="n">preprocess_input</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
+    <span class="n">features</span> <span class="o">=</span> <span class="n">resnet50_base</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">preprocessed_images</span><span class="p">)</span>
+    <span class="n">all_features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+    <span class="n">all_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">all_features</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">all_labels</span><span class="p">)</span>
+
+<span class="n">train_features</span><span class="p">,</span> <span class="n">train_labels</span> <span class="o">=</span> <span class="n">get_features_and_labels</span><span class="p">(</span><span class="n">train_dataset</span><span class="p">)</span>
+<span class="n">val_features</span><span class="p">,</span>   <span class="n">val_labels</span>   <span class="o">=</span> <span class="n">get_features_and_labels</span><span class="p">(</span><span class="n">validation_dataset</span><span class="p">)</span>
+<span class="n">test_features</span><span class="p">,</span>  <span class="n">test_labels</span>  <span class="o">=</span> <span class="n">get_features_and_labels</span><span class="p">(</span><span class="n">test_dataset</span><span class="p">)</span>
+
+<span class="n">train_features</span><span class="o">.</span><span class="n">shape</span>
+<span class="c1"># (98, 7, 7, 2048)</span>
+</code></pre></div>
+
+<p>There it is — the shape from Section 4.6: each $224 \times 224 \times 3$ image has become a $7 \times 7 \times 2048$ tensor, small in height and width, very deep. These smart representations become the <em>inputs</em> to a tiny model of our own:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">input</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">2048</span><span class="p">))</span>
+
+<span class="n">h</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Flatten</span><span class="p">()(</span><span class="nb">input</span><span class="p">)</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">)(</span><span class="n">h</span><span class="p">)</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)(</span><span class="n">h</span><span class="p">)</span>   <span class="c1"># first time we are using this!</span>
+
+<span class="n">output</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;sigmoid&quot;</span><span class="p">)(</span><span class="n">h</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;binary_crossentropy&#39;</span><span class="p">,</span>
+              <span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;adam&#39;</span><span class="p">,</span>
+              <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">])</span>
+
+<span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_features</span><span class="p">,</span> <span class="n">train_labels</span><span class="p">,</span>
+                    <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                    <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">val_features</span><span class="p">,</span> <span class="n">val_labels</span><span class="p">))</span>
+</code></pre></div>
+
+<p>(The <code>Dropout</code> layer is a regularization technique covered properly the following week — don't worry about it for now.) Training is <em>blazingly fast</em>: the expensive ResNet pass was done once, up front, so we are fitting a small dense network on pre-computed features. Training and validation accuracy are both very high, and then <em>(video 73:30)</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">test_features</span><span class="p">,</span> <span class="n">test_labels</span><span class="p">)</span>
+<span class="c1"># 2/2 [====] - loss: 0.0000e+00 - accuracy: 1.0000</span>
+</code></pre></div>
+
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "On the test set, it's achieving 100% accuracy. It's unbelievable... We have built an amazingly accurate handbags-or-shoes classifier with <em>just</em> 100 training images. That's the power of transfer learning!"</p>
+</blockquote>
+<p>(A dose of statistical humility: the test set has only 40 images, so treat "100%" as "near-perfect on a small sample" — but the qualitative point stands. Transfer learning turned a data-starved problem into a solved one.)</p>
+<h3 id="fine-tuning-getting-fancier">Fine-tuning: getting fancier</h3>
+<p>What we just did — use the frozen pre-trained network purely as a feature extractor and train only a new head — is the basic recipe. You can get fancier: connect headless ResNet <em>directly</em> to your little network and train <strong>the entire assembly end-to-end</strong>. This is called <strong>fine-tuning</strong> <em>(video 69:45)</em>. One rule is non-negotiable:</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "You MUST start the training with the weights and biases that came with ResNet, rather than start from scratch — because that is the crown jewel that's been learned."</p>
+</blockquote>
+<p>In Keras, the pattern (explored in Homework 1, and demonstrated in the course notebook with a Vision Transformer backbone from KerasHub) is to freeze the backbone via its <code>trainable</code> flag, train the new head briefly, and only then consider unfreezing:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Freeze the backbone initially</span>
+<span class="n">backbone</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="c1"># Compile the model for initial training</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+    <span class="n">optimizer</span><span class="o">=</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">),</span>
+    <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;categorical_crossentropy&quot;</span><span class="p">,</span>
+    <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="c1"># Train only the classification head</span>
+<span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">train_dataset</span><span class="p">,</span>
+    <span class="n">validation_data</span><span class="o">=</span><span class="n">validation_dataset</span><span class="p">,</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span>
+<span class="p">)</span>
+</code></pre></div>
+
+<p>Setting <code>backbone.trainable = False</code> means backpropagation updates only the new head's weights; the pre-trained knowledge is protected. Fine-tuning then flips <code>trainable</code> back on (typically with a much smaller learning rate) so the whole network can adapt gently to your data — always starting from the downloaded weights.</p>
+<h3 id="where-to-find-pre-trained-models-intro-to-the-hugging-face-hub">Where to find pre-trained models: intro to the Hugging Face Hub</h3>
+<p>Pre-trained models are available all over the internet: the <strong>TensorFlow Hub</strong>, the <strong>PyTorch Hub</strong>, Keras's own <code>keras.applications</code> collection — and, above all, the <strong>Hugging Face Hub</strong> (<a href="https://huggingface.co/models">huggingface.co/models</a>) <em>(video 70:30)</em>. Ramakrishnan notes in lecture that when he checked the day before class, the Hugging Face Hub hosted <strong>over half a million models</strong> available for download — up from about 50,000 the previous year he taught the course. Each model comes with its weights, configuration, and documentation, and the Hub spans vision, language, audio, and multimodal tasks. The practical upshot: rather than doing anything from scratch, "it's much better to just download a pre-trained model and adapt it for your particular problem. That is the norm by which people do these things." (The course builds a CNN from scratch anyway, for a reason worth quoting: "you should know how it was done. It should not be a black box to you.") One student asked whether publicly known weights create exposure to <strong>adversarial attacks</strong> — yes, there is some adversarial risk when everyone knows your backbone's weights; it's a real consideration in production.</p>
+<h3 id="the-live-demo">The live demo</h3>
+<p>The lecture ends with the payoff <em>(video 73:50)</em>. A Colab snippet captures a photo from the laptop webcam; a helper function loads it, resizes to $224 \times 224$, applies ResNet preprocessing, and runs it through headless ResNet and then the little classifier:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">predict_image</span><span class="p">(</span><span class="n">im</span><span class="p">):</span>
+  <span class="n">img</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">preprocessing</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load_img</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">target_size</span><span class="o">=</span><span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">))</span>
+  <span class="n">arr</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">preprocessing</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">img_to_array</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+  <span class="n">arr</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">applications</span><span class="o">.</span><span class="n">resnet50</span><span class="o">.</span><span class="n">preprocess_input</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+  <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+  <span class="n">arr</span> <span class="o">=</span> <span class="n">resnet50_base</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>          <span class="c1"># smart representation from headless ResNet</span>
+  <span class="n">pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>          <span class="c1"># our little classifier</span>
+  <span class="n">pred</span> <span class="o">=</span> <span class="s2">&quot;SHOE&quot;</span> <span class="k">if</span> <span class="n">pred</span> <span class="o">&gt;</span> <span class="mf">0.5</span> <span class="k">else</span> <span class="s2">&quot;HANDBAG&quot;</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;...........it is a </span><span class="si">{</span><span class="n">pred</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>A student volunteers a (rather large) shoe — "if it can't get this shoe, I'm worried about this model" — and the model gets it: <em>"It's a shoe!"</em> Applause. Then a handbag: <em>"It's a handbag!"</em> More applause. "I swear," Ramakrishnan concludes, "every time I do the demo, I age a few years." <em>(video 74:30)</em></p>
+<h2 id="hands-on-lab">Hands-On Lab</h2>
+<h3 id="lab-4a-learning-a-cnn-for-image-classification">Lab 4A — <a href="https://colab.research.google.com/drive/1hN7v4_Yt3E1TpHmH1n7PImFrjDrQ61_t">Learning a CNN for Image Classification</a></h3>
+<p>This Colab upgrades Chapter 3's Fashion MNIST model to a CNN.</p>
+<ol>
+<li><strong>Setup and data.</strong> Import TensorFlow/Keras, set <code>keras.utils.set_random_seed(42)</code>, load Fashion MNIST with <code>keras.datasets.fashion_mnist.load_data()</code>, and reuse the <code>plot_loss_curves</code> / <code>plot_acc_curves</code> helpers from the previous Colab.</li>
+<li><strong>Data prep.</strong> Normalize to 0–1 by dividing by 255, then add the channel dimension with <code>np.expand_dims(x_train, -1)</code> so shapes become <code>(60000, 28, 28, 1)</code>.</li>
+<li><strong>Define the model.</strong> Two convolutional blocks — <code>Conv2D(32, kernel_size=(2,2), activation="relu")</code> followed by <code>MaxPool2D()</code> — then <code>Flatten()</code>, <code>Dense(256, activation="relu")</code>, and a 10-way softmax. About 302K parameters.</li>
+<li><strong>Compile and train.</strong> <code>sparse_categorical_crossentropy</code> loss, <code>adam</code> optimizer, accuracy metric; fit for 10 epochs with <code>batch_size=64</code> and <code>validation_split=0.2</code>. Watch validation flatten near epoch 8.</li>
+<li><strong>Evaluate.</strong> <code>model.evaluate(x_test, y_test)</code> → about <strong>90.6%</strong> test accuracy, up from ~88% for the dense model. SOTA is ~96.9% — try to close the gap by varying the architecture.</li>
+<li><strong>Error analysis.</strong> Collect misclassifications with <code>np.argmax(model.predict(x_test), axis=1)</code> and <code>np.where(y_hat != y_test)</code>, plot 25 of them, and build a confusion matrix with <code>pd.crosstab</code>. Observe the Shirt / T-shirt confusion; the remedy is more data on the confusable classes.</li>
+</ol>
+<h3 id="lab-4b-handbagsshoes-classifier-with-transfer-learning">Lab 4B — <a href="https://colab.research.google.com/drive/1TJU7ft-IrOOnA2H5s-Uj4oTB8PvZcz-3">Handbags–Shoes Classifier with Transfer Learning</a></h3>
+<p>This Colab works with a real, tiny, web-scraped dataset and builds models of increasing power.</p>
+<ol>
+<li><strong>Get the data.</strong> <code>wget</code> the zip of ~100 handbag and ~100 shoe images from Dropbox and unzip it.</li>
+<li><strong>Organize into folders.</strong> Use <code>os</code>/<code>shutil</code>/<code>pathlib</code> to split each class into <code>train/</code> (50), <code>validation/</code> (25), and <code>test/</code> (remainder) subfolders — the directory-per-class convention Keras understands.</li>
+<li><strong>Load with one utility.</strong> <code>keras.utils.image_dataset_from_directory(..., image_size=(224, 224), batch_size=32)</code> reads the JPEGs, converts to tensors, resizes to $224 \times 224$ (ResNet's expected size), and batches. Result: 97 training, 48 validation, 40 test images. Plot a 3×3 grid to inspect them.</li>
+<li><strong>From-scratch CNN.</strong> Build the two-block CNN with an in-model <code>Rescaling(1./255)</code> layer and a single-sigmoid output; compile with <code>binary_crossentropy</code> and Adam; train 20 epochs. Diagnose overfitting from the curves (training accuracy near 100%, noisy validation in the 80s); <code>model.evaluate(test_dataset)</code> → ~<strong>86.8%</strong>.</li>
+<li><strong>Data augmentation.</strong> Define <code>RandomFlip("horizontal")</code>, <code>RandomRotation(0.1)</code>, <code>RandomZoom(0.2)</code> layers; visualize nine augmented variants of one image; insert the layers right after <code>keras.Input</code> and retrain (left as an exercise — it also appears in Homework 1).</li>
+<li><strong>Transfer learning.</strong> Download headless ResNet-50 with <code>keras.applications.ResNet50(weights='imagenet', include_top=False, input_shape=(224,224,3))</code> (~23M parameters). Run all splits through it once via <code>get_features_and_labels</code>, obtaining $7 \times 7 \times 2048$ feature tensors. Train a small head — <code>Flatten</code> → <code>Dense(256, relu)</code> → <code>Dropout(0.5)</code> → sigmoid — for 10 epochs. <code>model.evaluate(test_features, test_labels)</code> → <strong>100%</strong> on the 40-image test set.</li>
+<li><strong>Live webcam demo.</strong> Use the Colab camera-capture snippet plus <code>predict_image</code> (load → resize → <code>resnet50.preprocess_input</code> → headless ResNet → head → "SHOE"/"HANDBAG") to classify objects held up to your webcam.</li>
+</ol>
+<h2 id="key-takeaways">Key Takeaways</h2>
+<ul>
+<li>Flattening an image and feeding it to dense layers creates too many parameters (a phone photo into 100 neurons ≈ 2.7 billion weights), discards spatial adjacency, and forces the network to re-learn the same feature at every location.</li>
+<li>A <strong>convolutional filter</strong> is a small matrix of numbers; applying it — overlay, multiply matching elements, sum, ReLU, slide — produces a <strong>feature map</strong> showing where its feature occurs. Work through the course's Excel spreadsheet to see edge detection happen cell by cell.</li>
+<li>A layer with $f$ filters produces an output tensor of depth $f$. For color images each filter becomes rank-3 with depth matching the input, but each filter's output is still a 2-D map.</li>
+<li><strong>The Big Idea:</strong> treat filter numbers as <em>weights</em> and learn them by backprop. A filter is just a special neuron with local connections and shared weights, so the whole training machinery applies unchanged — the breakthrough behind AlexNet's 2012 ImageNet win.</li>
+<li><strong>Pooling</strong> (max or average) shrinks feature maps with zero learned parameters; max pooling acts like an OR condition — a feature detector at a higher level of abstraction. Each depth slice shrinks, but the number of slices doesn't change.</li>
+<li>A basic CNN is a stack of <strong>convolutional blocks</strong> (1–2 conv layers + pooling) that get smaller in height/width but deeper, then flatten → dense layer(s) → output. ResNet compresses $224 \times 224 \times 3$ down to $7 \times 7 \times 2048$.</li>
+<li>On Fashion MNIST, a simple two-block CNN lifts test accuracy from ~88% to ~90.6% — judge improvements by the fraction of <em>remaining error</em> removed, not raw percentage points.</li>
+<li><strong>Data augmentation</strong> (random flips, rotations, zooms) is a near-free way to enlarge small datasets — provided the perturbations don't change the image's meaning.</li>
+<li><strong>Transfer learning:</strong> chop the task-specific head off a pre-trained network (e.g., ResNet on ImageNet), use the "headless" output as a smart representation, and train a small classifier on top. With ~100 examples per class this achieved 100% test accuracy on handbags vs. shoes.</li>
+<li><strong>Fine-tuning</strong> trains the connected network end-to-end — but you must start from the pre-trained weights, never from scratch. Freeze the backbone (<code>trainable = False</code>) while training the new head first.</li>
+<li>Pre-trained models live in the TensorFlow Hub, PyTorch Hub, and above all the <strong>Hugging Face Hub</strong> (over half a million models). Adapting a pre-trained model is the norm in practice — but build one from scratch once, so it's never a black box to you.</li>
+</ul>
+<h2 id="check-your-understanding">Check Your Understanding</h2>
+<p><strong>1. Name the three "undesirable things" that happen when you flatten an image into a long vector and feed it to a dense layer.</strong></p>
+<details><summary>Answer</summary>
+
+(1) Too many parameters — a 3024×3024 color photo (≈27M numbers) into a single 100-neuron dense layer needs ≈2.7 billion weights: computationally demanding, data-hungry, and prone to overfitting. (2) Loss of local spatial adjacency — the relationships among neighboring pixels that define image features are ignored. (3) No learn-once-reuse-everywhere — the same feature must be learned separately for every location instead of being detected wherever it appears (no translation invariance).
+</details>
+
+<p><strong>2. A $3\times3$ filter with rows $(1,1,1)$, $(0,0,0)$, $(-1,-1,-1)$ is overlaid on an image patch whose rows are $(0,0,0)$, $(5,5,5)$, $(10,10,10)$. Carry out the convolution operation, including the ReLU.</strong></p>
+<details><summary>Answer</summary>
+
+Multiply matching elements and add: $0{\cdot}1+0{\cdot}1+0{\cdot}1 + 5{\cdot}0+5{\cdot}0+5{\cdot}0 + 10{\cdot}(-1)+10{\cdot}(-1)+10{\cdot}(-1) = -30$. Then apply the ReLU: $\max(0, -30) = 0$, which becomes the corresponding cell of the output feature map. (The bright-below/dark-above pattern is the *opposite* of what this horizontal-edge filter looks for, so it doesn't fire.)
+</details>
+
+<p><strong>3. A convolutional layer with 2 filters is applied to an image and each filter produces a $5\times5$ output. What is the shape of the layer's output? What if there were 103 filters? What changes for a color input?</strong></p>
+<details><summary>Answer</summary>
+
+A tensor of shape $5\times5\times2$ (equivalently $2\times5\times5$ — a matter of convention). With 103 filters it would be $5\times5\times103$. For a color (rank-3) input, each filter becomes rank-3 with depth matching the input (e.g., $3\times3\times3$ for RGB) — but each filter still outputs a single 2-D map, so output depth still equals the number of filters.
+</details>
+
+<p><strong>4. Where do the numbers inside a convolutional filter come from, and why was this "the breakthrough"?</strong></p>
+<details><summary>Answer</summary>
+
+They are treated as *weights* and learned from data by backpropagation, like all other network weights. Previously, computer vision researchers designed filters by hand for each application — a human bottleneck. Because a convolutional filter is just a special neuron (locally connected, weight-shared), the entire existing machinery — layers, loss functions, gradient descent — applies without inventing anything new. The idea led to massive improvements in computer vision, dramatized by AlexNet cutting ImageNet error from 26% to 16% in 2012.
+</details>
+
+<p><strong>5. Apply $2\times2$ max pooling and $2\times2$ average pooling to the matrix with rows $(23,14,0,109)$, $(9,43,58,15)$, $(105,85,35,25)$, $(24,69,17,7)$. How many parameters does the pooling layer learn?</strong></p>
+<details><summary>Answer</summary>
+
+Max pooling: $\begin{bmatrix}43 & 109\\ 105 & 35\end{bmatrix}$. Average pooling: $\begin{bmatrix}22.2 & 45.5\\ 70.75 & 21\end{bmatrix}$. A pooling layer learns **zero** parameters — it is fixed arithmetic. $2\times2$ pooling removes 75% of the entries, and max pooling acts like an OR condition: it reports whether the feature fired anywhere in each window.
+</details>
+
+<p><strong>6. If a tensor of shape $224 \times 224 \times 64$ passes through a $2\times2$ pooling layer, what shape comes out, and why?</strong></p>
+<details><summary>Answer</summary>
+
+$112 \times 112 \times 64$. Pooling operates independently on each of the 64 depth slices: every $224\times224$ table shrinks to $112\times112$, but the number of tables — the depth — does not change.
+</details>
+
+<p><strong>7. Why couldn't the course use ImageNet-trained ResNet "as is" for the handbags/shoes problem, and what surgery makes it usable?</strong></p>
+<details><summary>Answer</summary>
+
+ResNet was trained to classify images into ImageNet's 1,000 categories; the target problem has only two. The fix: remove the final 1,000-way classification layer — in Keras, `include_top=False` — leaving a "headless" ResNet whose output ($7\times7\times2048$ per image) is a smart, general-purpose representation of everyday images. Then attach and train a small new head (Flatten → Dense(256, ReLU) → Dropout → sigmoid) on that representation. Because the head's inputs are at a high level of abstraction, very few labeled examples suffice — the course reached 100% on its 40-image test set with under 100 training images per class.
+</details>
+
+<p><strong>8. What is fine-tuning, and what is the one thing you MUST do when fine-tuning a pre-trained network?</strong></p>
+<details><summary>Answer</summary>
+
+Fine-tuning connects the headless pre-trained backbone to your new head and trains the *entire* network end-to-end (in Keras, controlled with the backbone's `trainable` flag — typically frozen while the new head trains first, then unfrozen). The non-negotiable rule: you **must start training from the downloaded pre-trained weights**, never from scratch — those weights are "the crown jewel that's been learned," and random re-initialization would destroy exactly the knowledge you are trying to transfer.
+</details>
+      <nav class="chapter-footer" aria-label="Chapter navigation"><a class="previous" href="ch03-keras-and-cnns-from-scratch.html">← 3 · Keras and Vision Basics</a><a class="next" href="ch05-nlp-basics.html">5 · Text Vectorization →</a></nav>
+    </article>
+  </main>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A hands-on deep learning textbook companion to MIT 15.773">
+  <title>Hands-On Deep Learning · Hands-On Deep Learning</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
+  </script>
+  <script defer src="mathjax/tex-svg.js"></script>
+  <script defer src="search-index.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"></div>
+  <aside class="sidebar">
+    <a class="brand" href="index.html">Hands-On Deep Learning</a>
+    <div class="brand-subtitle">MIT 15.773 · Spring 2024 companion</div>
+    <input class="search" type="search" placeholder="Search the full book…" data-search aria-label="Search">
+    <div class="search-results hidden" data-search-results></div>
+    <nav><div class="nav-part">Front Matter</div>
+<a class="nav-link active" href="index.html">Start Here</a>
+<div class="nav-part">Part I · Foundations</div>
+<a class="nav-link" href="ch01-intro-to-neural-networks.html">1 · Neural Networks</a>
+<a class="nav-link" href="ch02-training-deep-networks.html">2 · Training Deep Networks</a>
+<a class="nav-link" href="ch03-keras-and-cnns-from-scratch.html">3 · Keras and Vision Basics</a>
+<div class="nav-part">Part II · Computer Vision</div>
+<a class="nav-link" href="ch04-cnns-transfer-learning.html">4 · CNNs and Transfer Learning</a>
+<div class="nav-part">Part III · Natural Language</div>
+<a class="nav-link" href="ch05-nlp-basics.html">5 · Text Vectorization</a>
+<a class="nav-link" href="ch06-embeddings.html">6 · Embeddings</a>
+<a class="nav-link" href="ch07-transformers.html">7 · Transformers</a>
+<a class="nav-link" href="ch08-transformers-ii-self-supervised.html">8 · Self-Supervised Learning</a>
+<div class="nav-part">Part IV · Generative AI</div>
+<a class="nav-link" href="ch09-llms-and-rag.html">9 · LLMs and RAG</a>
+<a class="nav-link" href="ch10-peft-lora.html">10 · PEFT and LoRA</a>
+<a class="nav-link" href="ch11-diffusion-text-to-image.html">11 · Diffusion Models</a>
+<div class="nav-part">Appendices</div>
+<a class="nav-link" href="appendix-a-homework.html">A · Homework and Solutions</a>
+<a class="nav-link" href="appendix-b-resources.html">B · Resource Index</a></nav>
+    <div class="sidebar-actions">
+      <button data-theme-toggle type="button">Light / dark</button>
+      <button data-print type="button">Print</button>
+    </div>
+    <div class="sidebar-actions">
+      <a class="button" href="complete-book.html">Complete book</a>
+      <a class="button" href="notebooks.html">Notebooks</a>
+    </div>
+  </aside>
+  <main class="page">
+    <article class="article">
+      <div class="eyebrow">Front Matter</div>
+      <h1 id="hands-on-deep-learning">Hands-On Deep Learning</h1>
+<h3 id="a-textbook-companion-to-mit-15773-spring-2024">A Textbook Companion to MIT 15.773 (Spring 2024)</h3>
+<p><strong>Based on the lectures of Prof. Rama Ramakrishnan</strong>, Professor of the Practice, AI/ML, MIT Sloan School of Management (course co-taught with Prof. Vivek Farias).</p>
+<blockquote>
+<p>This book was assembled from the openly published materials of MIT OpenCourseWare course <a href="https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/">15.773 Hands-On Deep Learning, Spring 2024</a>: lecture videos and their transcripts, lecture slide decks, companion Google Colab notebooks, and homework assignments with solutions. MIT OCW materials are shared under a <a href="https://ocw.mit.edu/pages/privacy-and-terms-of-use/">Creative Commons BY-NC-SA license</a>. This companion is a derivative study aid, not an official MIT publication.</p>
+</blockquote>
+<hr>
+<h2 id="about-the-course">About the Course</h2>
+<p>Deep learning is the engine behind the predictive and generative AI advances around us today. Starting around 2010, this single algorithmic strategy has beaten incumbents and broken records in speech recognition, image recognition, natural language processing, and more. Many consider deep learning a general-purpose technology — like electricity and the Internet — whose impact will be pervasive and profound.</p>
+<p>This course unpacks deep learning by developing its building blocks from scratch. The emphasis is on a deep, <em>hands-on</em> understanding of how to build models that process unstructured inputs (e.g., detecting whether a driver is falling asleep) and generate unstructured outputs (e.g., summarizing a customer-service call transcript). Throughout, the course connects the technology to sources of <strong>business value</strong> — it was designed for MIT Sloan MBA and analytics students, and roughly 229 graduate students took it in Spring 2024.</p>
+<p><strong>Prerequisites:</strong> working Python and fundamental machine-learning concepts (train/validation/test splits, overfitting/underfitting, regularization).</p>
+<p><strong>Companion textbook used in the course:</strong> <em>Deep Learning with Python</em>, 2nd ed., by François Chollet (Manning, 2021). ISBN 9781617296864.</p>
+<p><strong>Original grading:</strong> 10% class participation, 50% homework (2 × 25%), 40% final project.</p>
+<h2 id="how-to-use-this-book">How to Use This Book</h2>
+<p>Each chapter corresponds to one lecture and is built from three ingredients:</p>
+<ol>
+<li><strong>The lecture itself</strong> — the narrative, intuition, analogies, and business framing come from the video transcript. Watch the linked video for the full experience; timestamps like <em>(video 12:30)</em> point you to live demos.</li>
+<li><strong>The slide deck</strong> — definitions, equations, and figures. Each chapter links the original PDF.</li>
+<li><strong>The Colab notebook(s)</strong> — nearly every chapter has a <em>Hands-On Lab</em> built on the course's actual notebooks. <strong>Open them in Colab and run every cell.</strong> The course's whole philosophy is that you learn deep learning by training models, not by reading about them.</li>
+</ol>
+<p>Every chapter ends with <strong>Key Takeaways</strong> and <strong>Check Your Understanding</strong> self-test questions (with hidden answers). Appendix A contains both homework assignments with full solution walkthroughs — do the homework <em>before</em> reading the solutions.</p>
+<h2 id="table-of-contents">Table of Contents</h2>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Chapter</th>
+<th>Topic</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>I. Foundations</strong></td>
+<td><a href="ch01-intro-to-neural-networks.html">1. Introduction to Neural Networks and Deep Learning</a></td>
+<td>AI history, learned representations, layers, activations</td>
+</tr>
+<tr>
+<td></td>
+<td><a href="ch02-training-deep-networks.html">2. Training Deep Neural Networks</a></td>
+<td>Loss functions, gradient descent, backpropagation, regularization</td>
+</tr>
+<tr>
+<td></td>
+<td><a href="ch03-keras-and-cnns-from-scratch.html">3. Keras/TensorFlow and CNNs from Scratch</a></td>
+<td>The Keras workflow, tabular data, first vision models</td>
+</tr>
+<tr>
+<td><strong>II. Computer Vision</strong></td>
+<td><a href="ch04-cnns-transfer-learning.html">4. CNNs, Transfer Learning, and Fine-Tuning</a></td>
+<td>Convolution, pooling, pretrained backbones, HuggingFace</td>
+</tr>
+<tr>
+<td><strong>III. Natural Language</strong></td>
+<td><a href="ch05-nlp-basics.html">5. NLP Basics: Tokenization and Bag-of-Words</a></td>
+<td>Text vectorization, n-grams, genre classification</td>
+</tr>
+<tr>
+<td></td>
+<td><a href="ch06-embeddings.html">6. Embeddings</a></td>
+<td>Word vectors, embedding layers, semantic arithmetic</td>
+</tr>
+<tr>
+<td></td>
+<td><a href="ch07-transformers.html">7. Transformers</a></td>
+<td>Attention, self-attention, the transformer block</td>
+</tr>
+<tr>
+<td></td>
+<td><a href="ch08-transformers-ii-self-supervised.html">8. Transformers II and Self-Supervised Learning</a></td>
+<td>Pretraining, BERT/GPT, HuggingFace pipelines</td>
+</tr>
+<tr>
+<td><strong>IV. Generative AI</strong></td>
+<td><a href="ch09-llms-and-rag.html">9. Large Language Models and RAG</a></td>
+<td>How LLMs are built, prompting, retrieval-augmented generation</td>
+</tr>
+<tr>
+<td></td>
+<td><a href="ch10-peft-lora.html">10. Adapting LLMs: Parameter-Efficient Fine-Tuning</a></td>
+<td>Prompt vs. RAG vs. fine-tune, LoRA</td>
+</tr>
+<tr>
+<td></td>
+<td><a href="ch11-diffusion-text-to-image.html">11. Text-to-Image Diffusion Models</a></td>
+<td>Forward/reverse diffusion, Stable Diffusion</td>
+</tr>
+<tr>
+<td><strong>Appendices</strong></td>
+<td><a href="appendix-a-homework.html">A. Homework Assignments and Solutions</a></td>
+<td>HW1 and HW2 with walkthroughs</td>
+</tr>
+<tr>
+<td></td>
+<td><a href="appendix-b-resources.html">B. Resource Index</a></td>
+<td>Every video, PDF, and Colab in one table</td>
+</tr>
+</tbody>
+</table>
+<h2 id="course-schedule-as-taught">Course Schedule (as taught)</h2>
+<table>
+<thead>
+<tr>
+<th>Session</th>
+<th>Topic</th>
+<th>Key dates</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Intro to neural networks and deep learning; training deep NNs</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Training deep NNs (cont.); intro to Keras/TensorFlow; tabular data</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Computer vision — CNNs from scratch</td>
+<td>HW1 posted</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Computer vision — transfer learning and fine-tuning; HuggingFace</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>NLP basics — tokenization, n-grams, bag-of-words</td>
+<td>HW1 due</td>
+</tr>
+<tr>
+<td>6</td>
+<td>NLP — embeddings</td>
+<td>HW2 posted</td>
+</tr>
+<tr>
+<td>7</td>
+<td>NLP — transformers</td>
+<td>Project proposal due</td>
+</tr>
+<tr>
+<td>8</td>
+<td>NLP — transformers, self-supervised learning</td>
+<td></td>
+</tr>
+<tr>
+<td>9</td>
+<td>Generative AI — LLMs and RAG</td>
+<td>HW2 due</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Generative AI — parameter-efficient fine-tuning</td>
+<td></td>
+</tr>
+<tr>
+<td>11</td>
+<td>Generative AI — text-to-image models</td>
+<td>Projects due</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Project presentations</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+      <nav class="chapter-footer" aria-label="Chapter navigation"><span></span><a class="next" href="ch01-intro-to-neural-networks.html">1 · Neural Networks →</a></nav>
+    </article>
+  </main>
+</body>
+</html>

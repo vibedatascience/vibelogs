@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A hands-on deep learning textbook companion to MIT 15.773">
+  <title>Chapter 3: The Keras/TensorFlow Workflow — From Tabular Data to Image Classification · Hands-On Deep Learning</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
+  </script>
+  <script defer src="mathjax/tex-svg.js"></script>
+  <script defer src="search-index.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"></div>
+  <aside class="sidebar">
+    <a class="brand" href="index.html">Hands-On Deep Learning</a>
+    <div class="brand-subtitle">MIT 15.773 · Spring 2024 companion</div>
+    <input class="search" type="search" placeholder="Search the full book…" data-search aria-label="Search">
+    <div class="search-results hidden" data-search-results></div>
+    <nav><div class="nav-part">Front Matter</div>
+<a class="nav-link" href="index.html">Start Here</a>
+<div class="nav-part">Part I · Foundations</div>
+<a class="nav-link" href="ch01-intro-to-neural-networks.html">1 · Neural Networks</a>
+<a class="nav-link" href="ch02-training-deep-networks.html">2 · Training Deep Networks</a>
+<a class="nav-link active" href="ch03-keras-and-cnns-from-scratch.html">3 · Keras and Vision Basics</a>
+<div class="nav-part">Part II · Computer Vision</div>
+<a class="nav-link" href="ch04-cnns-transfer-learning.html">4 · CNNs and Transfer Learning</a>
+<div class="nav-part">Part III · Natural Language</div>
+<a class="nav-link" href="ch05-nlp-basics.html">5 · Text Vectorization</a>
+<a class="nav-link" href="ch06-embeddings.html">6 · Embeddings</a>
+<a class="nav-link" href="ch07-transformers.html">7 · Transformers</a>
+<a class="nav-link" href="ch08-transformers-ii-self-supervised.html">8 · Self-Supervised Learning</a>
+<div class="nav-part">Part IV · Generative AI</div>
+<a class="nav-link" href="ch09-llms-and-rag.html">9 · LLMs and RAG</a>
+<a class="nav-link" href="ch10-peft-lora.html">10 · PEFT and LoRA</a>
+<a class="nav-link" href="ch11-diffusion-text-to-image.html">11 · Diffusion Models</a>
+<div class="nav-part">Appendices</div>
+<a class="nav-link" href="appendix-a-homework.html">A · Homework and Solutions</a>
+<a class="nav-link" href="appendix-b-resources.html">B · Resource Index</a></nav>
+    <div class="sidebar-actions">
+      <button data-theme-toggle type="button">Light / dark</button>
+      <button data-print type="button">Print</button>
+    </div>
+    <div class="sidebar-actions">
+      <a class="button" href="complete-book.html">Complete book</a>
+      <a class="button" href="notebooks.html">Notebooks</a>
+    </div>
+  </aside>
+  <main class="page">
+    <article class="article">
+      <div class="eyebrow">Part I · Foundations</div>
+      <h1 id="chapter-3-the-kerastensorflow-workflow-from-tabular-data-to-image-classification">Chapter 3: The Keras/TensorFlow Workflow — From Tabular Data to Image Classification</h1>
+<blockquote>
+<p><strong>Lecture video:</strong> <a href="https://www.youtube.com/watch?v=8QuyDcMIdRc">https://www.youtube.com/watch?v=8QuyDcMIdRc</a>
+<strong>Slides:</strong> <a href="https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/mit15_773_s24_lec03a.pdf">Lecture 3A — Lightning Introduction to Keras/TF</a> · <a href="https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/mit15_773_s24_lec03b.pdf">Lecture 3B — Deep Learning for Computer Vision: The Basics</a>
+<strong>Companion Colabs:</strong> <a href="https://colab.research.google.com/drive/1flLafeFpy8JjLN4H_ertcs5wJE3--TdQ">Predicting Heart Disease (tabular binary classification)</a> · <a href="https://colab.research.google.com/drive/1IDS6F8nkfszgqm54EvvnCPaUBXGgsZzf">Fashion MNIST from Scratch (image classification)</a></p>
+</blockquote>
+<p>In the previous chapters we assembled the conceptual machinery of deep learning: neurons, layers, loss functions, and gradient descent. This chapter is where the course becomes truly <em>hands-on</em>. We will train our first two real models in Keras — a binary classifier that predicts heart disease from tabular patient data, and a ten-way image classifier for the Fashion MNIST clothing dataset. Along the way we make precise several ideas that were only sketched before: what exactly an <em>epoch</em> and a <em>batch</em> are, how overfitting shows up during training and how to guard against it, what a <em>tensor</em> is, and what TensorFlow and Keras actually do for you.</p>
+<h2 id="learning-objectives">Learning objectives</h2>
+<p>After working through this chapter and its two companion Colabs, you should be able to:</p>
+<ul>
+<li>Explain the difference between gradient descent and stochastic gradient descent, and compute the number of batches per epoch for a given training-set size and batch size.</li>
+<li>Recognize overfitting and underfitting from training/validation loss and accuracy curves, and apply <strong>early stopping</strong> as a regularization strategy.</li>
+<li>Define a tensor, state its rank, and give real-world examples of tensors of rank 0 through 5.</li>
+<li>Describe what TensorFlow provides (automatic gradients, optimizers, parallel/distributed execution) and what conveniences Keras adds on top.</li>
+<li>Build a neural network with the <strong>Keras functional API</strong>, and use <code>model.compile</code>, <code>model.fit</code>, and <code>model.evaluate</code> to train and assess it.</li>
+<li>Preprocess tabular data for a neural network: one-hot encode categorical variables, standardize numeric variables, and split data into train/validation/test sets <em>in the right order</em>.</li>
+<li>Explain how grayscale and color images are represented digitally, and name the key computer-vision task types (classification, localization, detection, segmentation).</li>
+<li>Choose the correct output layer (sigmoid vs. <strong>softmax</strong>) and the matching cross-entropy loss (<code>binary_crossentropy</code>, <code>sparse_categorical_crossentropy</code>, <code>categorical_crossentropy</code>) for a given prediction problem.</li>
+</ul>
+<h2 id="31-recap-how-a-deep-learning-model-is-trained">3.1 Recap: how a deep learning model is trained</h2>
+<p>Training a neural network is, at its heart, no different from training any other statistical model. The network has a collection of parameters — weights and biases — and we must use data to find <em>good</em> values for them. "Good" means that we define some measure of discrepancy between what the model predicts and what the ground truth says, and we search for weights that minimize that discrepancy. The discrepancy measure is the <strong>loss function</strong>.</p>
+<p>The overall training flow is a loop:</p>
+<ol>
+<li>Feed inputs through the network's layers to produce predictions.</li>
+<li>Compare the predictions $\hat{y}$ against the true targets $y$ using the loss function to obtain a loss score.</li>
+<li>Hand the loss score to the <strong>optimizer</strong>, which computes the gradient of the loss with respect to every parameter.</li>
+<li>Update every weight a small step in the direction that decreases the loss:</li>
+</ol>
+<p>$$w \leftarrow w - \alpha \, \frac{d\,Loss(w)}{dw}$$</p>
+<p>where $\alpha$ is the learning rate. Then repeat.</p>
+<p>We also saw two flavors of this loop. In plain <strong>gradient descent (GD)</strong>, <em>every</em> data point is used at each iteration to compute the gradient. In <strong>stochastic gradient descent (SGD)</strong>, we instead randomly choose a small subset of the data points, pretend for a moment that those are the only points we have, compute predictions, loss, and gradient from just that subset, update the weights, and move on. SGD is both cheaper computationally <em>and</em> tends to find better solutions — a rare case where you get to have your cake and eat it too.</p>
+<h2 id="32-epochs-and-batches">3.2 Epochs and batches</h2>
+<figure id="fig-epochs-batches"><img src="figures/generated/epochs-batches.png" alt="A training set divided into mini-batches with one parameter update per batch and shuffling between epochs" loading="lazy"><figcaption>One epoch processes every training example once, producing one update per mini-batch.</figcaption></figure>
+
+<p>Because SGD only looks at a few points at a time, we need some careful bookkeeping vocabulary before we start training in Keras.</p>
+<p>An <strong>epoch</strong> is one full pass through the training set. But an epoch plays out very differently under GD and SGD:</p>
+<ul>
+<li><strong>Gradient descent:</strong> every training sample flows through the network; we compute predictions for all of them, calculate the gradient of the loss once, and update the parameters <strong>once per epoch</strong>.</li>
+<li><strong>Stochastic gradient descent:</strong> we divide the training data into <strong>minibatches</strong> — which, following convention (and to save breath), we will simply call <strong>batches</strong> from now on. For <em>each</em> batch we run its samples through the network, compute the gradient, and update the weights. By the time we get to batch 2, the weights have already changed from processing batch 1.</li>
+</ul>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "Within that epoch, we update the weights many times. Basically, we update the weights as many times as we have batches."</p>
+</blockquote>
+<p>So how many batches are in one epoch?</p>
+<p>$$#\text{batches per epoch} = \left\lceil \frac{\text{training set size}}{\text{batch size}} \right\rceil$$</p>
+<p>For the neural heart-disease model we will train shortly, the effective training set has 194 patients and we choose a batch size of 32, so:</p>
+<p>$$\lceil 194 / 32 \rceil = 7$$</p>
+<p>The first six batches have 32 samples each and the seventh batch has the last 2 samples — and that's fine; nothing says every batch must be the same size. Batch sizes like 32, 64, and 128 are conventional because they align well with the parallel hardware (GPUs) we run on. As Ramakrishnan notes in lecture, Keras handles all of this bookkeeping automatically — but you should know the details anyway: <em>"If you don't know the details... you will not actually be able to think new and creative thoughts for a new problem, because the concepts are not manipulable in your head yet."</em></p>
+<p>Two practical clarifications that came up repeatedly in class:</p>
+<ul>
+<li>A batch consists of <em>rows</em> (data points — patients, images), not variables. Each batch is run through the <strong>entire</strong> network, because you cannot compute a prediction, and hence a loss, and hence a gradient, without going through every layer.</li>
+<li>The advantage of batching is that after batch 1's update, batch 2 is processed with slightly better weights. Rather than waiting for a full pass to make one update, we improve as we go.</li>
+</ul>
+<h2 id="33-overfitting-and-regularization">3.3 Overfitting and regularization</h2>
+<figure id="fig-dropout"><img src="figures/generated/dropout.png" alt="Dropout behavior during training compared with inference" loading="lazy"><figcaption>Inverted dropout randomly masks and rescales activations during training; inference uses every unit.</figcaption></figure>
+
+<p>Recall from your machine-learning background what happens as a model becomes more complex: error on the <em>training</em> data steadily decreases, but error on held-out <em>validation</em> data decreases, bottoms out, and then starts climbing again. The climbing region is <strong>overfitting</strong> — the model is memorizing idiosyncrasies of the training data rather than learning generalizable patterns. The left side of the curve is <strong>underfitting</strong> — the model cannot yet capture the richness of the data. We are hunting for the sweet spot in between.</p>
+<p>This matters enormously for neural networks. To learn smart representations of complex, unstructured data, the network needs large <em>capacity</em> — many layers, many neurons per layer (GPT-3, for example, has 96 layers). But more layers means more parameters, more complexity, and more risk of overfitting. So regularization is not optional; it is part of the standard workflow. The course uses two regularization strategies:</p>
+<p><strong>Early stopping.</strong> Split off a validation set from the training data, keep training, and monitor the validation loss. Training loss will keep falling, but at some point validation loss flattens out and begins to rise — and <em>that</em> is where you stop. Geoffrey Hinton, one of the "godfathers" of deep learning, famously called early stopping a <em>"beautiful free lunch."</em> Crucially, the validation set is never used to compute gradients — it is used only to evaluate loss and accuracy at the end of each epoch. That is what keeps you honest.</p>
+<p><strong>Dropout.</strong> Randomly zero out the outputs of some fraction (typically 50%) of the nodes in a hidden layer during training, implemented in Keras as a "dropout layer." We will meet dropout properly in Chapter 4, the first time we actually use it.</p>
+<p>Putting it all together, here is the checklist for creating and training a deep neural network from scratch:</p>
+<ol>
+<li><strong>Get the data ready.</strong></li>
+<li><strong>Design ("lay out") the network</strong> — number of hidden layers, neurons per layer, and the right output layer for the type of output.</li>
+<li><strong>Pick a loss function</strong> matched to the output type, and <strong>an optimizer</strong> from the many SGD flavors (we default to <strong>Adam</strong>, just as we default to ReLU for hidden activations — both are empirically excellent).</li>
+<li><strong>Decide on a regularization strategy</strong> (early stopping and/or dropout).</li>
+<li><strong>Set it all up in Keras/TensorFlow and start training.</strong></li>
+</ol>
+<h2 id="34-whats-a-tensor">3.4 What's a tensor?</h2>
+<figure id="fig-tensor-ranks"><img src="figures/generated/tensor-ranks.png" alt="Scalar, vector, matrix, and image tensor examples with ranks and shapes" loading="lazy"><figcaption>Tensor rank counts axes, while shape records the length of each axis.</figcaption></figure>
+
+<p>Before firing up TensorFlow, we should know what a <em>tensor</em> is. A tensor is a generalization of numbers, vectors, and matrices to arbitrarily many dimensions. Every tensor has a <strong>rank</strong> — the number of axes it has:</p>
+<table>
+<thead>
+<tr>
+<th>Rank</th>
+<th>Name</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Scalar</td>
+<td><code>42</code></td>
+</tr>
+<tr>
+<td>1</td>
+<td>Vector</td>
+<td><code>(42, 23.4, 11.2)</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Matrix (table)</td>
+<td>a grayscale image</td>
+</tr>
+<tr>
+<td>3</td>
+<td>"Cube"</td>
+<td>a color image (three stacked tables: R, G, B)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>—</td>
+<td>a color video (a stream of color images)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>—</td>
+<td>a <em>list</em> of videos</td>
+</tr>
+</tbody>
+</table>
+<p>The last two rows illustrate the most important mental model: <strong>a tensor of rank $n$ is just a list of rank $n{-}1$ tensors.</strong> A video is a list of color images (rank 3 + 1 = 4); a list of videos is rank 5. Whenever you see a tensor of any complexity, you can iterate through its first axis and get back a collection of one-rank-lower tensors. As Ramakrishnan admits, the concept — which traces back to Einstein — is <em>"simultaneously kind of easy to understand and also slippery,"</em> so read Chapter 2.2 of the Chollet textbook and practice until it becomes second nature.</p>
+<h2 id="35-tensorflow-and-keras">3.5 TensorFlow and Keras</h2>
+<p>Neural networks are literally tensors flowing from input to output — hence the name <strong>TensorFlow</strong>. TensorFlow (TF) is a library that provides four things that would be painful to build yourself:</p>
+<ol>
+<li><strong>Automatic gradient calculation</strong> of arbitrarily complicated loss functions, $\nabla Loss(w)$ — no hand-derived chain rule required. This is the single best part.</li>
+<li><strong>A library of state-of-the-art optimizers</strong>, including SGD and all its variants (Adam among them).</li>
+<li><strong>Automatic distribution of computational load across servers</strong> — parallelizing computation is a genuinely hard CS problem, and TF solves it for you.</li>
+<li><strong>Automatic adaptation of your code to parallel hardware</strong> — GPUs, and Google's own TPUs ("Tensor Processing Units").</li>
+</ol>
+<p><strong>Keras sits on top of TensorFlow</strong> and supplies the convenience layer: pre-defined layers (we've already seen <code>Dense</code>), flexible ways to specify architectures, easy data preprocessing, easy training with metric reporting, and a library of pre-trained models you can download and customize. (The course uses TensorFlow/Keras rather than PyTorch deliberately: PyTorch is a fantastic framework but demands more object-oriented programming background, and Keras is just as powerful for our purposes while being easier to get going with.)</p>
+<p>There are three broad ways to build models in Keras — the <strong>Sequential</strong> API, the <strong>Functional API</strong>, and <strong>subclassing</strong>. This course uses the Functional API almost exclusively; Ramakrishnan describes it as <em>"a beautifully designed LEGO-block environment"</em> in which very complicated models can be composed easily. Section 7.2.2 of the textbook covers it in detail. Here is our heart-disease network from Chapter 2, expressed in the functional API — the whole model in four lines:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">input</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="mi">29</span><span class="p">)</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">)(</span><span class="nb">input</span><span class="p">)</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;sigmoid&quot;</span><span class="p">)(</span><span class="n">h</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Notice the pattern that defines the functional API: each layer is a <em>callable</em> that you apply to the output of the previous layer, and at the end you tell Keras which <code>(input, output)</code> pair constitutes your model.</p>
+<p>Filling in the training checklist for this model: one hidden layer with 16 ReLU neurons; a sigmoid output (binary classification); <strong>binary cross-entropy</strong> loss (we're predicting a probability to be compared against a 0/1 label); the <strong>Adam</strong> optimizer; and <strong>early stopping</strong> for regularization. Let's train it.</p>
+<h2 id="36-hands-on-predicting-heart-disease-from-tabular-data">3.6 Hands-on: predicting heart disease from tabular data</h2>
+<p>The dataset (<a href="https://archive.ics.uci.edu/ml/datasets/heart+Disease">UCI Heart Disease</a>) has 303 patients, one per row, with 13 features — demographics like <code>age</code> and <code>sex</code>, plus biomarkers such as resting blood pressure (<code>trestbps</code>), cholesterol (<code>chol</code>), maximum heart rate (<code>thalach</code>), and so on — and a binary <code>target</code> column: heart disease, yes or no.</p>
+<h3 id="361-technical-preliminaries">3.6.1 Technical preliminaries</h3>
+<p>Every notebook in this course begins the same way — importing TensorFlow, Keras, and the three workhorse Python packages:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">keras</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+</code></pre></div>
+
+<p>NumPy for manipulating arrays and tensors, Pandas for wrangling raw data into a shape Keras can consume, and Matplotlib for plotting the loss and accuracy curves that tell us whether early stopping is needed.</p>
+<p>Randomness enters deep learning training in several places: the random initialization of the weights, the shuffling of data into batches for SGD, the random train/validation/test split, and (later) dropout. To make results reproducible for anyone re-running the notebook, we set a single seed for all of these random number generators:</p>
+<div class="highlight"><pre><span></span><code><span class="n">keras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+</code></pre></div>
+
+<p>(42, of course, being the answer to life, the universe, and everything — a <em>Hitchhiker's Guide to the Galaxy</em> reference the course returns to often.) A caveat from lecture: even with a fixed seed, <em>bitwise</em> reproducibility is not guaranteed across hardware and device drivers — hence the notebook's fingers-crossed 🤞.</p>
+<h3 id="362-reading-and-inspecting-the-data">3.6.2 Reading and inspecting the data</h3>
+<p>François Chollet has made the dataset available as a CSV, which loads into a Pandas dataframe in one line:</p>
+<div class="highlight"><pre><span></span><code><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;http://storage.googleapis.com/download.tensorflow.org/data/heart.csv&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">shape</span>        <span class="c1"># (303, 14)</span>
+</code></pre></div>
+
+<p>The first thing to check in any binary classification problem is class balance:</p>
+<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dropna</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="c1"># 0    0.726073</span>
+<span class="c1"># 1    0.273927</span>
+</code></pre></div>
+
+<p>72.6% of patients do not have heart disease. This immediately gives us a <strong>baseline model</strong>: predict 0 (no disease) for everyone, and you will be right 72.6% of the time. As Ramakrishnan puts it, any fancy model we build has got to beat this — <em>"otherwise, it's not worth its weight in layers."</em></p>
+<h3 id="363-preprocessing-one-hot-encoding-and-standardization">3.6.3 Preprocessing: one-hot encoding and standardization</h3>
+<p>The data mixes categorical and numeric variables, so we group them:</p>
+<div class="highlight"><pre><span></span><code><span class="n">categorical_variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">,</span> <span class="s1">&#39;cp&#39;</span><span class="p">,</span> <span class="s1">&#39;fbs&#39;</span><span class="p">,</span> <span class="s1">&#39;restecg&#39;</span><span class="p">,</span> <span class="s1">&#39;exang&#39;</span><span class="p">,</span> <span class="s1">&#39;ca&#39;</span><span class="p">,</span> <span class="s1">&#39;thal&#39;</span><span class="p">]</span>
+<span class="n">numerics</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;trestbps&#39;</span><span class="p">,</span> <span class="s1">&#39;chol&#39;</span><span class="p">,</span> <span class="s1">&#39;thalach&#39;</span><span class="p">,</span> <span class="s1">&#39;oldpeak&#39;</span><span class="p">,</span> <span class="s1">&#39;slope&#39;</span><span class="p">]</span>
+</code></pre></div>
+
+<p>Unlike, say, a decision tree, a neural network cannot handle categorical inputs directly — everything must be numeric. The standard fix is <strong>one-hot encoding</strong>, which Pandas does in one line:</p>
+<div class="highlight"><pre><span></span><code><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">categorical_variables</span><span class="p">)</span>
+</code></pre></div>
+
+<p>The <code>thal</code> column, for instance, had three values (fixed, normal, reversible); after encoding it becomes three 0/1 columns: <code>thal_fixed</code>, <code>thal_normal</code>, <code>thal_reversible</code>.</p>
+<p>Neural networks also work best when numeric inputs are all in a relatively small, similar range, so we <strong>standardize</strong> the numeric variables — subtract the mean, divide by the standard deviation. But <em>before</em> standardizing, we must split off the test set:</p>
+<div class="highlight"><pre><span></span><code><span class="n">test_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">train_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">test_df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+<span class="c1"># train_df.shape -&gt; (242, 30);  test_df.shape -&gt; (61, 30)</span>
+</code></pre></div>
+
+<p>Why split <em>before</em> normalizing? Because if the means and standard deviations were computed on the full dataset, information about the test set would leak into the modeling process — and the test set wouldn't really be locked away anymore. The test set's job is to give an honest, one-time estimate of how the final model will perform in the wild, so it must not influence anything, including preprocessing statistics. Accordingly, we compute the statistics <strong>from the training set only</strong> and apply them to both:</p>
+<div class="highlight"><pre><span></span><code><span class="n">means</span> <span class="o">=</span> <span class="n">train_df</span><span class="p">[</span><span class="n">numerics</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">sd</span> <span class="o">=</span> <span class="n">train_df</span><span class="p">[</span><span class="n">numerics</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+
+<span class="n">train_df</span><span class="p">[</span><span class="n">numerics</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">train_df</span><span class="p">[</span><span class="n">numerics</span><span class="p">]</span> <span class="o">-</span> <span class="n">means</span><span class="p">)</span> <span class="o">/</span> <span class="n">sd</span>
+<span class="n">test_df</span><span class="p">[</span><span class="n">numerics</span><span class="p">]</span>  <span class="o">=</span> <span class="p">(</span><span class="n">test_df</span><span class="p">[</span><span class="n">numerics</span><span class="p">]</span> <span class="o">-</span> <span class="n">means</span><span class="p">)</span> <span class="o">/</span> <span class="n">sd</span>
+</code></pre></div>
+
+<p>Finally, Keras is happiest receiving NumPy arrays, and it needs $X$ and $y$ separated. The <code>target</code> column is column #6 (counting from 0), so <code>np.delete</code> carves out the features and slicing extracts the label:</p>
+<div class="highlight"><pre><span></span><code><span class="n">train</span> <span class="o">=</span> <span class="n">train_df</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">test_df</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+
+<span class="n">train_X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>   <span class="c1"># (242, 29)</span>
+<span class="n">test_X</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>    <span class="c1"># (61, 29)</span>
+
+<span class="n">train_y</span> <span class="o">=</span> <span class="n">train</span><span class="p">[:,</span> <span class="mi">6</span><span class="p">]</span>                   <span class="c1"># (242,)</span>
+<span class="n">test_y</span>  <span class="o">=</span> <span class="n">test</span><span class="p">[:,</span> <span class="mi">6</span><span class="p">]</span>                    <span class="c1"># (61,)</span>
+</code></pre></div>
+
+<p>The 29 features here are exactly the 29 input nodes in the network we designed — that's where the <code>shape=29</code> comes from.</p>
+<h3 id="364-define-the-model">3.6.4 Define the model</h3>
+<p>Everything so far, in Ramakrishnan's words, has been "boring preprocessing." Now the action:</p>
+<div class="highlight"><pre><span></span><code><span class="n">num_columns</span> <span class="o">=</span> <span class="n">train_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># define the input layer</span>
+<span class="nb">input</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">num_columns</span><span class="p">)</span>
+
+<span class="c1"># feed the input vector to the hidden layer</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Hidden&quot;</span><span class="p">)(</span><span class="nb">input</span><span class="p">)</span>
+
+<span class="c1"># feed the output of the hidden layer to the output layer</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;sigmoid&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Output&quot;</span><span class="p">)(</span><span class="n">h</span><span class="p">)</span>
+
+<span class="c1"># tell Keras that this (input, output) pair is your model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+</code></pre></div>
+
+<p>The <code>name=</code> arguments are purely cosmetic — they just make the model summary easier to read. Speaking of which, always run <code>model.summary()</code> immediately after building: it lists each layer, the shape of the tensors flowing in and out, and the parameter count — here, <strong>497 parameters</strong>. And as the course insists for your first few models, hand-verify that number:</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="mi">29</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">16</span> <span class="o">+</span> <span class="p">(</span><span class="mi">16</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1</span>    <span class="c1"># 497</span>
+</code></pre></div>
+
+<p>That's 29 inputs × 16 hidden neurons plus 16 biases, then 16 × 1 output weight plus 1 bias. You can also render the network graphically with <code>keras.utils.plot_model(model, show_shapes=True)</code> — handy once networks get large.</p>
+<h3 id="365-compile-loss-optimizer-metrics">3.6.5 Compile: loss, optimizer, metrics</h3>
+<p><code>model.compile</code> tells Keras three things: which loss function, which optimizer, and which metrics to report.</p>
+<div class="highlight"><pre><span></span><code><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;adam&quot;</span><span class="p">,</span>
+              <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;binary_crossentropy&quot;</span><span class="p">,</span>
+              <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">])</span>
+</code></pre></div>
+
+<ul>
+<li><strong>Loss:</strong> <code>binary_crossentropy</code>, because the output is a single probability compared against a 0/1 label.</li>
+<li><strong>Optimizer:</strong> <strong>Adam</strong>, the empirically excellent "set-and-forget" default flavor of SGD.</li>
+<li><strong>Metrics:</strong> accuracy. Important nuance from lecture: metrics are <em>reported only</em> — they play no role in optimization. You can ask Keras for error rates, F1, or anything from its long list of metrics, with no mathematical consequence for training.</li>
+</ul>
+<p>The compile step is not mere ceremony: Keras takes the model you defined and reorganizes it so the computation becomes amenable to parallelization and distribution across hardware.</p>
+<h3 id="366-fit-training-the-model">3.6.6 Fit: training the model</h3>
+<p>Three final decisions: the <strong>batch size</strong> (32 is the standard starting default — or, as researchers half-joke, "the biggest batch size that doesn't make your machine die"), the <strong>number of epochs</strong> (20–30 is a good starting point; since this dataset is tiny we'll run 300 just to watch overfitting happen), and whether to hold out a <strong>validation set</strong> (yes — 20% of the training data, for overfitting detection and early stopping).</p>
+<div class="highlight"><pre><span></span><code><span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_X</span><span class="p">,</span>              <span class="c1"># the array with the input X columns</span>
+                    <span class="n">train_y</span><span class="p">,</span>              <span class="c1"># the array with the output y column</span>
+                    <span class="n">epochs</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>           <span class="c1"># number of epochs to run</span>
+                    <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>        <span class="c1"># number of samples per batch</span>
+                    <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>            <span class="c1"># verbosity during training</span>
+                    <span class="n">validation_split</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span> <span class="c1"># use 20% of the data for validation</span>
+</code></pre></div>
+
+<p><code>validation_split=0.2</code> takes 20% of the training data out <em>once, at the very beginning</em>, and sets it aside; the remaining 194 samples get divided into the 7 batches we computed in Section 3.2. At the end of every epoch, Keras evaluates loss and accuracy on that same fixed validation set. Reading one line of the training log: <code>7/7</code> means 7 batches were processed this epoch; <code>loss</code> and <code>accuracy</code> are computed on the training data; <code>val_loss</code> and <code>val_accuracy</code> are computed on the held-out validation set.</p>
+<p>Keep the distinction between the three datasets straight — it came up several times in class discussion. The <strong>validation set</strong> is used during modeling: to detect overfitting, to decide when to stop, and later to choose among hyperparameter settings. The <strong>test set</strong> is opened from the safe exactly once, at the very end, with your final-final model — not to improve the model but to get a realistic estimate of deployed performance.</p>
+<h3 id="367-diagnose-with-loss-and-accuracy-curves">3.6.7 Diagnose with loss and accuracy curves</h3>
+<p>Staring at 300 epochs' worth of numbers is painful, so we plot. The <code>history</code> object returned by <code>model.fit</code> contains a dictionary, <code>history.history</code>, with keys <code>['loss', 'accuracy', 'val_loss', 'val_accuracy']</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">history_dict</span> <span class="o">=</span> <span class="n">history</span><span class="o">.</span><span class="n">history</span>
+<span class="n">loss_values</span> <span class="o">=</span> <span class="n">history_dict</span><span class="p">[</span><span class="s2">&quot;loss&quot;</span><span class="p">]</span>
+<span class="n">val_loss_values</span> <span class="o">=</span> <span class="n">history_dict</span><span class="p">[</span><span class="s2">&quot;val_loss&quot;</span><span class="p">]</span>
+<span class="n">epochs</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">loss_values</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">epochs</span><span class="p">,</span> <span class="n">loss_values</span><span class="p">,</span> <span class="s2">&quot;bo&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Training loss&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">epochs</span><span class="p">,</span> <span class="n">val_loss_values</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Validation loss&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Training and validation loss&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Epochs&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Loss&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+
+<p>The training loss falls steadily; the validation loss falls, flattens around epoch 50, and then gently rises — some overfitting. A purist response would be to re-initialize and retrain for only ~50 epochs (manual early stopping). But the analogous <em>accuracy</em> plot complicates the story: validation accuracy flattens and then, strangely, climbs a bit at the very end.</p>
+<p>Why can accuracy improve while loss worsens? Because they are related but not the same thing. Accuracy is discrete and jumpy: if a patient's predicted probability moves from 0.49 to 0.51, the cross-entropy loss changes only slightly, but the accuracy for that patient jumps from 0 to 1.</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "Binary cross-entropy is a beautiful proxy, but an imperfect proxy for the thing we actually care about in the real world, which is error rate and accuracy. That's why I tend to want both — and if accuracy is telling me one thing, I kind of tend to believe that."</p>
+</blockquote>
+<p>A workflow tip from class: if at the end of your chosen epochs the validation loss is still dropping, you can call <code>model.fit</code> again and Keras <strong>continues where it left off</strong> — run 10 more epochs, check, run 10 more, back off when validation performance turns. And all this manual monitoring can be automated with Keras <strong>callbacks</strong>, which can stop training when validation loss stops improving or save the best model as you go — covered later in the course.</p>
+<h3 id="368-evaluate-on-the-test-set">3.6.8 Evaluate on the test set</h3>
+<p>Finally, the moment of truth — evaluate once on the untouched test set:</p>
+<div class="highlight"><pre><span></span><code><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">test_X</span><span class="p">,</span> <span class="n">test_y</span><span class="p">)</span>
+<span class="c1"># 2/2 [====] - loss: 0.3866 - accuracy: 0.8361</span>
+</code></pre></div>
+
+<p><strong>83.6% accuracy</strong>, versus the 72.6% baseline. The little neural network earns its keep.</p>
+<p>One shortcoming to note: we did the one-hot encoding and normalization <em>outside</em> the model, which means anyone deploying this model must remember and carry along the preprocessing details (e.g., each variable's mean and standard deviation). The elegant fix is <a href="https://keras.io/guides/preprocessing_layers/">Keras preprocessing layers</a>, which fold the preprocessing <em>into</em> the model itself; we'll use that idea (via a <code>Rescaling</code> layer) in Chapter 4.</p>
+<h2 id="37-computer-vision-representing-images-digitally">3.7 Computer vision: representing images digitally</h2>
+<figure id="fig-image-tensors"><img src="figures/generated/image-tensors.png" alt="Grayscale intensity matrix and stacked red, green, and blue channel matrices" loading="lazy"><figcaption>A grayscale image has one intensity plane; a color image stacks aligned red, green, and blue planes.</figcaption></figure>
+
+<p>The second half of the lecture pivots to images. A <strong>grayscale image</strong> is a rectangular array of <strong>pixels</strong>, each holding a light intensity between 0 (black) and 255 (blinding white); the image is literally a table — a rank-2 tensor — of these numbers. In the classic MNIST "5" example from fast.ai, the black background is all zeros, the pen strokes are large numbers, and if you step back and squint at the number grid you can actually see the 5. (What do the units mean? Think of it as a normalized relative scale from 0 to 255 that the digitization process maps light levels onto.)</p>
+<p>A <strong>color image</strong> represents each pixel with <em>three</em> intensities — its "redness," "greenness," and "blueness" (RGB) — each still 0–255. So a color image is three tables of numbers, one per color <strong>channel</strong> (the standard deep-learning lingo): a rank-3 tensor.</p>
+<h3 id="key-tasks-in-computer-vision">Key tasks in computer vision</h3>
+<ul>
+<li><strong>Image classification:</strong> given an image and a list of possible categories, decide which category the image contains (the canonical dog-vs-cat problem).</li>
+<li><strong>Classification and localization:</strong> also output <em>where</em> the object is, as bounding-box coordinates (top-left and bottom-right corners).</li>
+<li><strong>Object detection:</strong> find and localize <em>every</em> object in a scene — this is what a self-driving car's vision system does many times a second: pedestrian box, zebra-crossing box, stroller box.</li>
+<li><strong>Semantic segmentation:</strong> classify <em>every pixel</em> into one of N categories — these pixels are road, these are sheep, these are grass.</li>
+<li><strong>Instance segmentation:</strong> classify every pixel <em>and</em> distinguish instances — sheep 1 versus sheep 2 versus sheep 3.</li>
+</ul>
+<p>This chapter (and the next) focuses on classification, the foundational task.</p>
+<h2 id="38-multi-class-classification-flattening-softmax-and-cross-entropy">3.8 Multi-class classification: flattening, softmax, and cross-entropy</h2>
+<figure id="fig-output-loss-guide"><img src="figures/generated/output-loss-guide.png" alt="Decision guide matching target encoding to output activation and loss function" loading="lazy"><figcaption>The target encoding, output activation, and loss function must be selected as a compatible set.</figcaption></figure>
+
+<p>Our motivating application is <strong>Fashion MNIST</strong>: 70,000 grayscale images of clothing items across 10 categories (T-shirts, trousers, boots, ...). The dataset is perfectly balanced — 10% per class — so the naive baseline model achieves only <strong>10% accuracy</strong>. We will beat that handily with a simple network built from scratch.</p>
+<p>Two new design problems arise.</p>
+<p><strong>Problem 1: the input is a table, not a vector.</strong> Each image is a 28×28 matrix (rank-2 tensor), but so far our networks consume vectors. The fix is <strong>flattening</strong>: take each of the 28 rows, rotate it, and string the rows end-to-end into one long vector of $28 \times 28 = 784$ numbers. Nothing clever has happened — we've merely reorganized the same numbers — but now we are back in familiar territory and can feed the vector to a dense hidden layer (256 ReLU neurons works well here).</p>
+<p><strong>Problem 2: the output is 10-way, not binary.</strong> We know how to output 10 arbitrary numbers (10 linear-activation units) and we know how to output 10 independent probabilities (10 sigmoids). But 10 sigmoids won't do here — the probabilities wouldn't sum to 1, and exactly one category is the right answer. We need 10 probabilities that sum to 1. Enter the <strong>softmax layer</strong>: take the 10 numbers $a_1, \dots, a_{10}$ emerging from the final linear layer, exponentiate each, and divide by the total:</p>
+<p>$$\text{softmax}(a_i) = \frac{e^{a_i}}{\sum_{j=1}^{n} e^{a_j}}$$</p>
+<p>Exponentiation makes every value positive, and dividing by the sum forces the results to add to exactly 1 — a valid probability distribution, guaranteed.</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "Pay attention to this, because this is actually how GPT-4 works. Every word it's emitting — it's doing a 52,000-way softmax. Think of it as every word in the language is a possible output, and it just picks the most probable word and emits that."</p>
+</blockquote>
+<p>The full output-layer/loss-function pairing table, which you should internalize:</p>
+<table>
+<thead>
+<tr>
+<th>Output variable</th>
+<th>Output layer</th>
+<th>Loss function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Single number (regression)</td>
+<td>Single linear unit</td>
+<td>Mean squared error</td>
+</tr>
+<tr>
+<td>Single probability (binary classification)</td>
+<td>Sigmoid</td>
+<td>Binary cross-entropy</td>
+</tr>
+<tr>
+<td>Vector of $n$ numbers (multi-output regression)</td>
+<td>Stack of linear units</td>
+<td>Mean squared error</td>
+</tr>
+<tr>
+<td>Vector of $n$ probabilities summing to 1 (multi-class)</td>
+<td>Softmax</td>
+<td>Categorical cross-entropy</td>
+</tr>
+</tbody>
+</table>
+<p>One last wrinkle: for multi-class problems, Keras offers <strong>two</strong> cross-entropy losses, and you must pick the one matching how your labels are <em>encoded</em>:</p>
+<ul>
+<li>Labels as integers <code>0..9</code> (the <em>sparse</em> encoding) → <code>sparse_categorical_crossentropy</code></li>
+<li>Labels one-hot encoded (a length-10 vector with a single 1) → <code>categorical_crossentropy</code></li>
+<li>Binary 0/1 labels → <code>binary_crossentropy</code></li>
+</ul>
+<p>These are mathematically equivalent formulations; the choice depends purely on how the data arrives in your notebook. Fashion MNIST's labels come as integers, so we use <code>sparse_categorical_crossentropy</code>.</p>
+<h2 id="39-hands-on-fashion-mnist-from-scratch">3.9 Hands-on: Fashion MNIST from scratch</h2>
+<figure id="fig-fashion-softmax"><img src="figures/generated/fashion-softmax.png" alt="Fashion-MNIST image classification pipeline from pixels through flattening, dense layers, softmax, and argmax" loading="lazy"><figcaption>The Fashion-MNIST baseline converts a 28 by 28 image into ten class probabilities.</figcaption></figure>
+
+<p>The Fashion MNIST data ships with Keras (one of its standard datasets), pre-split into train and test sets — deliberately, so that everyone benchmarking on this dataset evaluates against the <em>same</em> test set:</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">),</span> <span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">fashion_mnist</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">x_train</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>   <span class="c1"># (60000, 28, 28) (60000,)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">x_test</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">y_test</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>     <span class="c1"># (10000, 28, 28) (10000,)</span>
+</code></pre></div>
+
+<p>The training input is a rank-3 tensor — which, per Section 3.4, you should read as <em>a list of 60,000 rank-2 tensors</em>, each a 28×28 table of pixel intensities. The labels are integers 0–9; a small lookup list makes them human-readable:</p>
+<div class="highlight"><pre><span></span><code><span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;T-shirt/top&quot;</span><span class="p">,</span> <span class="s2">&quot;Trouser&quot;</span><span class="p">,</span> <span class="s2">&quot;Pullover&quot;</span><span class="p">,</span> <span class="s2">&quot;Dress&quot;</span><span class="p">,</span> <span class="s2">&quot;Coat&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;Sandal&quot;</span><span class="p">,</span> <span class="s2">&quot;Shirt&quot;</span><span class="p">,</span> <span class="s2">&quot;Sneaker&quot;</span><span class="p">,</span> <span class="s2">&quot;Bag&quot;</span><span class="p">,</span> <span class="s2">&quot;Ankle boot&quot;</span><span class="p">]</span>
+
+<span class="n">labels</span><span class="p">[</span><span class="n">y_train</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>    <span class="c1"># &#39;Ankle boot&#39;</span>
+</code></pre></div>
+
+<p><strong>Data prep.</strong> The tip from the notebook: NNs learn best when each input is in a small range. Since pixels are guaranteed to lie in 0–255, we can skip mean/sd standardization and simply divide by the max:</p>
+<div class="highlight"><pre><span></span><code><span class="n">x_train</span> <span class="o">=</span> <span class="n">x_train</span> <span class="o">/</span> <span class="mf">255.0</span>
+<span class="n">x_test</span> <span class="o">=</span> <span class="n">x_test</span> <span class="o">/</span> <span class="mf">255.0</span>
+</code></pre></div>
+
+<p><strong>Model.</strong> Translating the design of Section 3.8 into the functional API:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># define the input layer</span>
+<span class="nb">input</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">))</span>
+
+<span class="c1"># convert the 28 x 28 matrix of numbers into a loooooooong vector</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Flatten</span><span class="p">()(</span><span class="nb">input</span><span class="p">)</span>
+
+<span class="c1"># feed the long vector to the hidden layer</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Hidden&quot;</span><span class="p">)(</span><span class="n">h</span><span class="p">)</span>
+
+<span class="c1"># feed the output of the hidden layer to the output layer</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;softmax&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Output&quot;</span><span class="p">)(</span><span class="n">h</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Note the new <code>Flatten</code> layer — it has no parameters; it just reshapes. Hand-verifying the parameter count reported by <code>model.summary()</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="mi">784</span> <span class="o">*</span> <span class="mi">256</span> <span class="o">+</span> <span class="mi">256</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">256</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span>    <span class="c1"># 203530</span>
+</code></pre></div>
+
+<p><strong>Compile and fit.</strong> Sparse labels → sparse categorical cross-entropy; Adam as always; accuracy as the reported metric:</p>
+<div class="highlight"><pre><span></span><code><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s2">&quot;sparse_categorical_crossentropy&quot;</span><span class="p">,</span>
+              <span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;adam&quot;</span><span class="p">,</span>
+              <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">])</span>
+
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">epochs</span> <span class="o">=</span> <span class="mi">20</span>
+
+<span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span>
+                    <span class="n">y_train</span><span class="p">,</span>
+                    <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+                    <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span>
+                    <span class="n">validation_split</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+</code></pre></div>
+
+<p>The notebook wraps the loss- and accuracy-curve plotting code from the heart-disease Colab into reusable functions <code>plot_loss_curves(history)</code> and <code>plot_acc_curves(history)</code>, and asks the same diagnostic questions: is validation loss rising while training loss falls? Would early stopping at epoch N help?</p>
+<p><strong>Evaluate.</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+<span class="c1"># 313/313 [====] - loss: 0.3604 - accuracy: 0.8845</span>
+</code></pre></div>
+
+<p><strong>88.5% accuracy</strong> on the test set, from a model that has <em>no idea it is looking at images</em> — it just consumed 784 numbers per example. Against the 10% naive baseline, that's impressive. And extending the network is trivially easy in the functional API: adding a second 256-neuron hidden layer is literally one more line (<code>h = keras.layers.Dense(256, activation="relu", name="Hidden_2")(h)</code>) sandwiched between the first hidden layer and the output.</p>
+<p>Can we do even better by <em>telling</em> the network that its input is an image — exploiting the spatial structure we destroyed when we flattened? That is exactly the subject of Chapter 4: convolutional neural networks.</p>
+<h2 id="hands-on-lab">Hands-On Lab</h2>
+<p>Two Colab notebooks accompany this chapter. For each: make your own copy first (<strong>File → Save a copy in Drive</strong>), and for vision/NLP notebooks request a GPU runtime (<strong>Runtime → Change runtime type</strong>). The instructor's advice: don't cut-and-paste — <em>retype</em> the code; you will learn far more.</p>
+<h3 id="lab-3a-predicting-heart-disease-tabular-binary-classification">Lab 3A — <a href="https://colab.research.google.com/drive/1flLafeFpy8JjLN4H_ertcs5wJE3--TdQ">Predicting Heart Disease</a> (tabular binary classification)</h3>
+<p>The full CSV-to-trained-model workflow:</p>
+<ol>
+<li><strong>Setup:</strong> import <code>tensorflow</code>, <code>keras</code>, <code>numpy</code>, <code>pandas</code>, <code>matplotlib</code>; call <code>keras.utils.set_random_seed(42)</code> for reproducibility.</li>
+<li><strong>Load &amp; explore:</strong> <code>pd.read_csv(...)</code> → 303×14 dataframe; check class balance with <code>df.target.value_counts(normalize=True)</code> → 72.6%/27.4%, establishing the 72.6% predict-all-zeros baseline.</li>
+<li><strong>Preprocess:</strong> one-hot encode 7 categorical variables with <code>pd.get_dummies</code>; split 80/20 into train/test <strong>before</strong> standardizing; standardize numerics using training-set means/sds; convert to NumPy with <code>.to_numpy()</code>; separate features (<code>np.delete(train, 6, axis=1)</code>) from the target column.</li>
+<li><strong>Build:</strong> functional-API model — <code>Input(shape=29)</code> → <code>Dense(16, relu)</code> → <code>Dense(1, sigmoid)</code>; verify 497 parameters via <code>model.summary()</code> and by hand; visualize with <code>plot_model</code>.</li>
+<li><strong>Compile:</strong> <code>optimizer="adam"</code>, <code>loss="binary_crossentropy"</code>, <code>metrics=["accuracy"]</code>.</li>
+<li><strong>Train:</strong> <code>model.fit(..., epochs=300, batch_size=32, validation_split=0.2)</code>, storing the result in <code>history</code>.</li>
+<li><strong>Diagnose:</strong> plot training vs. validation loss and accuracy from <code>history.history</code>; identify the overfitting point (~epoch 50) and discuss early stopping.</li>
+<li><strong>Evaluate:</strong> <code>model.evaluate(test_X, test_y)</code> → <strong>83.6%</strong> test accuracy vs. 72.6% baseline. Closing pointer: Keras preprocessing layers let you fold the encoding/normalization into the model itself for cleaner deployment.</li>
+</ol>
+<h3 id="lab-3b-fashion-mnist-from-scratch-multi-class-image-classification">Lab 3B — <a href="https://colab.research.google.com/drive/1IDS6F8nkfszgqm54EvvnCPaUBXGgsZzf">Fashion MNIST from Scratch</a> (multi-class image classification)</h3>
+<ol>
+<li><strong>Load:</strong> <code>keras.datasets.fashion_mnist.load_data()</code> → 60,000 training + 10,000 test images, each 28×28; labels are integers 0–9, decoded via a <code>labels</code> list.</li>
+<li><strong>Explore:</strong> print the raw pixel matrix of the first image (an ankle boot); render the first 25 images with Matplotlib's <code>imshow</code>.</li>
+<li><strong>Data prep:</strong> normalize pixels to [0, 1] by dividing by 255.</li>
+<li><strong>Build:</strong> <code>Input((28,28))</code> → <code>Flatten</code> → <code>Dense(256, relu)</code> → <code>Dense(10, softmax)</code>; verify 203,530 parameters by hand.</li>
+<li><strong>Compile &amp; train:</strong> <code>sparse_categorical_crossentropy</code> + Adam; <code>fit</code> with <code>batch_size=64</code>, <code>epochs=20</code>, <code>validation_split=0.2</code>; plot loss/accuracy curves with the reusable helper functions.</li>
+<li><strong>Evaluate:</strong> <code>model.evaluate(x_test, y_test)</code> → <strong>88.5%</strong> test accuracy vs. 10% baseline.</li>
+<li><strong>Extend (exercise):</strong> add a second hidden layer (one extra line), then compile/fit/evaluate the deeper model yourself.</li>
+</ol>
+<h2 id="key-takeaways">Key Takeaways</h2>
+<ul>
+<li>An <strong>epoch</strong> is one full pass through the training data. Under SGD, each epoch contains $\lceil \text{training size} / \text{batch size} \rceil$ batches, and the weights are updated once <em>per batch</em> — not once per epoch.</li>
+<li>Big networks overfit; <strong>regularization</strong> is a standard part of the workflow. Early stopping — monitoring validation loss and halting when it turns upward — is a "beautiful free lunch." The validation set is never used for gradient computation, only evaluation.</li>
+<li>A <strong>tensor</strong> is the generalization of scalar → vector → matrix to any rank; a rank-$n$ tensor is a list of rank-$(n{-}1)$ tensors. Grayscale image = rank 2, color image = rank 3, video = rank 4.</li>
+<li><strong>TensorFlow</strong> gives you automatic gradients, optimizers, and automatic parallel/distributed execution; <strong>Keras</strong> adds layers, preprocessing, training conveniences, and pre-trained models on top. The <strong>functional API</strong> — layers as callables chained from <code>Input</code> to output — is the course's tool of choice.</li>
+<li>The core Keras workflow is always: prepare data → define model → <code>model.compile(optimizer, loss, metrics)</code> → <code>model.fit(...)</code> → plot curves from <code>history</code> → <code>model.evaluate(test)</code>.</li>
+<li>For tabular data: <strong>one-hot encode</strong> categoricals, <strong>standardize</strong> numerics, and split train/test <strong>before</strong> computing normalization statistics to avoid leakage. Always compare against a naive <strong>baseline</strong> (majority class: 72.6% for heart disease, 10% for Fashion MNIST).</li>
+<li>Match the output layer and loss to the problem: sigmoid + <code>binary_crossentropy</code> for binary; <strong>softmax</strong> + <code>sparse_categorical_crossentropy</code> (integer labels) or <code>categorical_crossentropy</code> (one-hot labels) for multi-class. Softmax converts $n$ arbitrary numbers into $n$ probabilities that sum to 1 via $e^{a_i} / \sum_j e^{a_j}$.</li>
+<li>Loss is a mathematically convenient <em>proxy</em>; accuracy (or the metric closest to real-world deployment) is what you actually care about — plot and judge both.</li>
+</ul>
+<h2 id="check-your-understanding">Check Your Understanding</h2>
+<p><strong>1. A training set has 1,000 samples and you train with a batch size of 64. How many batches are there per epoch, and how many weight updates occur in 5 epochs of SGD?</strong></p>
+<details><summary>Answer</summary>
+
+Batches per epoch = ⌈1000/64⌉ = **16** (15 full batches of 64 plus one final batch of 40). SGD updates the weights once per batch, so 5 epochs produce 16 × 5 = **80 weight updates**. (Plain gradient descent, by contrast, would make only 5 updates — one per epoch.)
+
+</details>
+
+<p><strong>2. Why must you split off the test set <em>before</em> standardizing the numeric variables?</strong></p>
+<details><summary>Answer</summary>
+
+Standardization is part of the modeling process. If the means and standard deviations are computed on the full dataset, information from the test set leaks into training, and the test set is no longer truly held out. The correct procedure: split first, compute means/sds on the training set only, then apply those *training* statistics to both the training and test sets. This preserves the test set's role as a one-time, honest estimate of deployed performance.
+
+</details>
+
+<p><strong>3. What is the rank of the tensor representing (a) a grayscale image, (b) a color image, (c) a color video, (d) a batch of color videos?</strong></p>
+<details><summary>Answer</summary>
+
+(a) Rank 2 (a table of pixel intensities). (b) Rank 3 (three tables — R, G, B channels). (c) Rank 4 (a list of color images, one per frame). (d) Rank 5 (a list of videos). The general rule: a rank-$n$ tensor is a list of rank-$(n{-}1)$ tensors, so wrapping anything in a list adds one to the rank.
+
+</details>
+
+<p><strong>4. For Fashion MNIST, why can't we use 10 sigmoid units as the output layer? What do we use instead, and how does it work?</strong></p>
+<details><summary>Answer</summary>
+
+Ten independent sigmoids would each output a probability in (0, 1), but the ten probabilities would not sum to 1 — and since exactly one clothing category is correct, we need a proper probability distribution over the classes. We use a **softmax** layer: exponentiate each of the 10 raw outputs and divide by the sum, $\text{softmax}(a_i) = e^{a_i}/\sum_j e^{a_j}$. Exponentiation guarantees positivity and the division guarantees the outputs sum to exactly 1.
+
+</details>
+
+<p><strong>5. Your labels arrive as integers 0–9 in one project and as one-hot vectors in another. Which Keras loss function do you use in each case?</strong></p>
+<details><summary>Answer</summary>
+
+Integer ("sparse") labels → `sparse_categorical_crossentropy`. One-hot encoded labels → `categorical_crossentropy`. (And a single 0/1 binary label → `binary_crossentropy`.) The losses are mathematically equivalent formulations of cross-entropy; the choice depends purely on how the labels are encoded in your data.
+
+</details>
+
+<p><strong>6. During training you observe validation <em>loss</em> slowly rising after epoch 50, but validation <em>accuracy</em> continues to improve through epoch 300. How can both be true, and what would you do?</strong></p>
+<details><summary>Answer</summary>
+
+Loss and accuracy are related but not identical. Accuracy is discrete: a prediction moving from 0.49 to 0.51 barely changes the cross-entropy loss but flips the accuracy for that example from 0 to 1. So loss can degrade slightly (predictions becoming less confident/calibrated) while the fraction of correct classifications still improves. As Ramakrishnan advises, favor the measure closest to real-world deployment — usually accuracy — so here you might reasonably accept the mild loss-overfitting and keep the later model.
+
+</details>
+
+<p><strong>7. In <code>model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"])</code>, what role does the <code>metrics</code> argument play in optimization?</strong></p>
+<details><summary>Answer</summary>
+
+None. Metrics are purely for *reporting* — Keras computes and displays them per epoch (on training and validation data), but they are never used to compute gradients or update weights. Only the loss function drives optimization. That's why you can freely request accuracy, F1, error rates, etc., without any mathematical effect on training.
+
+</details>
+
+<p><strong>8. What accuracy does the naive baseline achieve on (a) the heart-disease dataset and (b) Fashion MNIST, and why do we bother computing baselines at all?</strong></p>
+<details><summary>Answer</summary>
+
+(a) 72.6% — predict "no heart disease" for every patient, since 72.6% of patients are in that class. (b) 10% — the dataset is balanced across 10 classes, so always predicting one class is right 10% of the time. Baselines set the bar any real model must clear: the trained heart-disease network reached 83.6% (beating 72.6%) and the Fashion MNIST network reached 88.5% (crushing 10%). A "fancy" model that can't beat the naive baseline isn't worth its weight in layers.
+
+</details>
+      <nav class="chapter-footer" aria-label="Chapter navigation"><a class="previous" href="ch02-training-deep-networks.html">← 2 · Training Deep Networks</a><a class="next" href="ch04-cnns-transfer-learning.html">4 · CNNs and Transfer Learning →</a></nav>
+    </article>
+  </main>
+</body>
+</html>

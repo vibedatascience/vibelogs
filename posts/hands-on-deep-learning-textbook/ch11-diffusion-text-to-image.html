@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A hands-on deep learning textbook companion to MIT 15.773">
+  <title>Chapter 11: Diffusion Models and Text-to-Image Generation · Hands-On Deep Learning</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
+  </script>
+  <script defer src="mathjax/tex-svg.js"></script>
+  <script defer src="search-index.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"></div>
+  <aside class="sidebar">
+    <a class="brand" href="index.html">Hands-On Deep Learning</a>
+    <div class="brand-subtitle">MIT 15.773 · Spring 2024 companion</div>
+    <input class="search" type="search" placeholder="Search the full book…" data-search aria-label="Search">
+    <div class="search-results hidden" data-search-results></div>
+    <nav><div class="nav-part">Front Matter</div>
+<a class="nav-link" href="index.html">Start Here</a>
+<div class="nav-part">Part I · Foundations</div>
+<a class="nav-link" href="ch01-intro-to-neural-networks.html">1 · Neural Networks</a>
+<a class="nav-link" href="ch02-training-deep-networks.html">2 · Training Deep Networks</a>
+<a class="nav-link" href="ch03-keras-and-cnns-from-scratch.html">3 · Keras and Vision Basics</a>
+<div class="nav-part">Part II · Computer Vision</div>
+<a class="nav-link" href="ch04-cnns-transfer-learning.html">4 · CNNs and Transfer Learning</a>
+<div class="nav-part">Part III · Natural Language</div>
+<a class="nav-link" href="ch05-nlp-basics.html">5 · Text Vectorization</a>
+<a class="nav-link" href="ch06-embeddings.html">6 · Embeddings</a>
+<a class="nav-link" href="ch07-transformers.html">7 · Transformers</a>
+<a class="nav-link" href="ch08-transformers-ii-self-supervised.html">8 · Self-Supervised Learning</a>
+<div class="nav-part">Part IV · Generative AI</div>
+<a class="nav-link" href="ch09-llms-and-rag.html">9 · LLMs and RAG</a>
+<a class="nav-link" href="ch10-peft-lora.html">10 · PEFT and LoRA</a>
+<a class="nav-link active" href="ch11-diffusion-text-to-image.html">11 · Diffusion Models</a>
+<div class="nav-part">Appendices</div>
+<a class="nav-link" href="appendix-a-homework.html">A · Homework and Solutions</a>
+<a class="nav-link" href="appendix-b-resources.html">B · Resource Index</a></nav>
+    <div class="sidebar-actions">
+      <button data-theme-toggle type="button">Light / dark</button>
+      <button data-print type="button">Print</button>
+    </div>
+    <div class="sidebar-actions">
+      <a class="button" href="complete-book.html">Complete book</a>
+      <a class="button" href="notebooks.html">Notebooks</a>
+    </div>
+  </aside>
+  <main class="page">
+    <article class="article">
+      <div class="eyebrow">Part IV · Generative AI</div>
+      <h1 id="chapter-11-diffusion-models-and-text-to-image-generation">Chapter 11: Diffusion Models and Text-to-Image Generation</h1>
+<blockquote>
+<p><strong>Lecture video:</strong> <a href="https://www.youtube.com/watch?v=NQBhhRG-Pe4">https://www.youtube.com/watch?v=NQBhhRG-Pe4</a>
+<strong>Slides:</strong> <a href="https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/mit15_773_s24_lec11.pdf">https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/mit15_773_s24_lec11.pdf</a>
+<strong>Colab notebooks:</strong>
+- <a href="https://colab.research.google.com/drive/1fPP8Prm4wvKCWqUB5u9l1mJIglJ27Lrm">Creating noisy images</a>
+- <a href="https://colab.research.google.com/drive/1iU-30eX64XqL5Gx6bbp0kJR9_MHjqG4g">Stable Diffusion with 🤗 Diffusers</a>
+- <a href="https://colab.research.google.com/drive/1z7dL039KLJvCdclMCFHxS-2CVPF7LBrW">Computer-vision models on the HuggingFace Hub</a></p>
+</blockquote>
+<h2 id="learning-objectives">Learning objectives</h2>
+<p>After working through this chapter, you should be able to:</p>
+<ul>
+<li>Explain why image <em>generation</em> is framed as the reverse of a simple, well-understood process — adding noise to images.</li>
+<li>Describe the scheduled Gaussian forward process and the scheduler-controlled iterative reverse process, and construct a DDPM training example from $(x_0,t,\epsilon)$.</li>
+<li>Explain why modern diffusion models commonly predict the sampled <em>noise</em> and how a scheduler uses that prediction to compute the next sample.</li>
+<li>Sketch the U-Net architecture and explain the role of up-convolutions and cross-connections in image-to-image models.</li>
+<li>Explain how CLIP learns a shared "concept space" for text and images via a contrastive loss on cosine similarities, and how CLIP enables zero-shot image classification.</li>
+<li>Describe how a CLIP text embedding is used to condition ("steer") the denoising process, and how latent diffusion (Stable Diffusion) speeds generation by operating in embedding space.</li>
+<li>Generate images from text prompts with the HuggingFace Diffusers library, including the use of seeds and negative prompts.</li>
+<li>Apply off-the-shelf HuggingFace pipelines to standard computer-vision tasks: image classification, object detection, and image segmentation.</li>
+</ul>
+<h2 id="111-generative-ai-for-images">11.1 Generative AI for Images</h2>
+<p>Every previous chapter of this book has been about models that <em>analyze</em> inputs — classify an image, label a sentiment, predict the next word. This final lecture of the course turns to models that <em>create</em>: text-to-image systems like DALL-E and Midjourney, and text-to-video systems like OpenAI's Sora.</p>
+<p>The lecture opens with a few motivating examples. A ChatGPT (DALL-E 3) rendering of "graduate students in a deep learning class" — plausible, if missing an instructor. A Midjourney image generated from the prompt <em>"A quaint Italian seaside village with colorful buildings, boats, and the reflection of the setting sun on the water, in the impressionist style of Claude Monet, with visible brush strokes and dappled light."</em> And Sora, released in February 2024, which produces minute-long videos from prompts such as <em>"In an ornate, historical hall, a massive tidal wave peaks and begins to crash. Two surfers, seizing the moment, skillfully navigate the face of the wave."</em> As Ramakrishnan points out in lecture, we can all agree that such a scene has never happened in history — so it certainly wasn't in the training data. Whatever these models are doing, they are not just retrieving memorized images.</p>
+<p>The clue to <em>what</em> they are doing sits in the first paragraph of OpenAI's Sora technical report: "we train <strong>text-conditional diffusion models</strong> jointly on videos and images … We leverage a <strong>transformer architecture</strong> that operates on spacetime patches of video and image latent codes." By this point in the course you know transformers thoroughly. This chapter supplies the other building block: the text-conditional diffusion model.</p>
+<p>The lecture — and this chapter — divides the journey into two questions:</p>
+<ol>
+<li><strong>How can a model generate a good image at all?</strong></li>
+<li><strong>How can we "control" or "steer" the generation process with a text prompt?</strong> (The literature uses <em>condition</em>, <em>control</em>, <em>steer</em>, and <em>guide</em> interchangeably — they all mean the same thing.)</li>
+</ol>
+<h2 id="112-generating-images-from-noise">11.2 Generating Images from Noise</h2>
+<p>Suppose we want a model that generates images of <em>stately college buildings</em> (Killian Court at MIT being, of course, the finest example of the genre). As with any machine-learning project, we start by collecting training data — say, millions of images returned by an image search for "stately college buildings."</p>
+<p>Now consider what we want from a trained generator. Every time we ask it for an image, it should give us a <em>different</em> one — perhaps the MIT dome this time, the Rotunda at the University of Virginia the next — but always something recognizably in the category. How do we guarantee variety? The answer is to make the model's <em>input</em> random: we feed it a <strong>noise image</strong>, one in which every pixel value is a random number. Since noise images differ each time we sample them, the outputs will differ too. But because the model was trained only on stately college buildings, its outputs will stay in that category — it will not suddenly produce a Labrador retriever.</p>
+<p>That leaves the central puzzle: how could we possibly <em>train</em> a model to turn pure noise into a coherent image? On its face the task sounds ridiculous — hand a network a grid of random numbers and demand Killian Court.</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "There's this really amazing book … called <em>How to Solve It</em>, by George Polya … perhaps the most commonly used heuristic is just <em>reverse the question</em>. Most of the time, nothing will come out of it. But maybe some other times, something amazing comes out. This is a great example of that heuristic at work."</p>
+</blockquote>
+<p>We don't know how to go from noise to an image. But the <em>reverse</em> — going from an image to noise — is trivial. Given any image, we can create a noisy version of it simply by adding random numbers to every pixel.</p>
+<h2 id="113-the-forward-process-adding-noise-is-easy">11.3 The Forward Process: Adding Noise Is Easy</h2>
+<p>Let's make "adding noise" precise, exactly as the first Colab notebook does. An RGB image is a tensor of shape $H \times W \times 3$, with each pixel value normalized to $[0, 1]$. To noise the image, we sample — <em>independently for every pixel</em> — a random draw from a zero-mean normal distribution with standard deviation $\sigma$, and add it to the pixel value:</p>
+<p>$$
+\tilde{x} = \operatorname{clip}\big(x + \epsilon,\; 0,\; 1\big), \qquad \epsilon \sim \mathcal{N}(0, \sigma^2 I).
+$$</p>
+<p>The clipping simply squashes any resulting values below 0 back to 0 and any above 1 back to 1, so the image stays well-behaved. In code, the whole operation is a few lines of NumPy. First we load and normalize the image of Killian Court:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Read in the image</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;killian.png&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s2">&quot;RGB&quot;</span><span class="p">)</span>
+
+<span class="c1"># Convert the image to a NumPy array and normalize it</span>
+<span class="n">img_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">img</span><span class="p">)</span> <span class="o">/</span> <span class="mf">255.0</span>
+<span class="n">img_arr</span><span class="o">.</span><span class="n">shape</span>          <span class="c1"># (411, 583, 3): three channels, as we&#39;ve seen before</span>
+</code></pre></div>
+
+<p>Then we add the noise — one line — and clip:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># &#39;scale&#39; is the standard deviation</span>
+<span class="n">noisy_img</span> <span class="o">=</span> <span class="n">img_arr</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">img_arr</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="c1"># Values may fall below 0.0 or above 1.0, so we &quot;clip&quot;</span>
+<span class="n">noisy_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">noisy_img</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">noisy_img</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Inspecting the arrays before and after shows exactly what happened: a pixel value of 0.23 becomes 0.18, another of 0.15 becomes −0.17 (then clipped to 0), and so on — a small random number has been added to everything. By increasing $\sigma$, we make the image progressively noisier. The notebook wraps the operation in a loop to produce a sequence running from the pristine photograph to something in which Killian Court is no longer recognizable:</p>
+<div class="highlight"><pre><span></span><code><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="c1"># Add increasing amounts of Gaussian noise</span>
+<span class="c1"># i.e. increase the standard deviation of the normal RV</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sigma</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)):</span>
+    <span class="c1"># sigma (i.e. the standard dev) takes on 0, 0.1, 0.2, ..., 1.0</span>
+    <span class="n">noisy_img</span> <span class="o">=</span> <span class="n">img_arr</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">img_arr</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">noisy_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">noisy_img</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">noisy_img</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([]);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+
+<p>This notebook is a useful <strong>visual intuition</strong> for diffusion, but independent clipped perturbations
+at different values of $\sigma$ are not the formal DDPM forward process. A denoising diffusion
+probabilistic model defines a noise schedule $\beta_1,\ldots,\beta_T$, with
+$\alpha_t=1-\beta_t$ and $\bar\alpha_t=\prod_{s=1}^t\alpha_s$. It can sample any timestep directly:</p>
+<p>$$
+x_t = \sqrt{\bar\alpha_t}\,x_0
+      + \sqrt{1-\bar\alpha_t}\,\epsilon,
+\qquad \epsilon\sim\mathcal N(0,I).
+$$</p>
+<p>The schedule gradually reduces the clean-image signal while increasing Gaussian noise. This
+<strong>forward process</strong> requires no learned model and manufactures supervised targets for the reverse
+process. The clipped NumPy demo shows the visual effect; the equation defines the mechanism used
+for DDPM training.</p>
+<h2 id="114-the-reverse-process-learning-to-denoise">11.4 The Reverse Process: Learning to Denoise</h2>
+<p>Here is the intuition the lecture develops. Imagine a sequence of increasingly noisy versions of
+each training image and learn to move a small step toward a cleaner version. That adjacent-pair
+story is a helpful conceptual bridge, but modern DDPM implementations train more directly:</p>
+<ol>
+<li>sample a clean image $x_0$;</li>
+<li>sample a timestep $t$ and Gaussian noise $\epsilon$;</li>
+<li>construct $x_t$ with the closed-form equation above;</li>
+<li>train a time-conditioned network $\epsilon_\theta(x_t,t)$ to predict the sampled noise.</li>
+</ol>
+<p>The word <em>slightly</em> is doing enormous work here. When a student asked in lecture why we don't train the network to jump directly from heavy noise to the clean image, Ramakrishnan reached for a proverb:</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "There is an old adage: you can't cross a ditch in two jumps. It's too big, so you can't do it. So what you do is you create a bridge to go from here to there. If you can <em>slightly</em> denoise something really well, well, I can actually denoise anything you want really well using that fundamental capability."</p>
+</blockquote>
+<p>Each training example asks the network to solve a bounded denoising problem at a known noise level.
+The common simplified objective is</p>
+<p>$$
+\mathbb E_{x_0,t,\epsilon}
+\left[\left|\epsilon-\epsilon_\theta(x_t,t)\right|_2^2\right].
+$$</p>
+<p>The rest is familiar: optimize the time-conditioned U-Net with SGD or Adam. As Ramakrishnan frames
+it, this is the grand pattern of deep learning — <em>if you can find interesting input–output pairs,
+you can learn a function from input to output</em> — and diffusion is one of its most non-obvious
+applications. (His analogy: Google Sheets learned to suggest formulas by treating millions of
+users' selected number-ranges as inputs and the formulas they typed as outputs.)</p>
+<p><strong>Generation, then, is iterative denoising controlled by a scheduler.</strong> After training:</p>
+<ol>
+<li>Sample an image of pure noise.</li>
+<li>At timestep $t$, predict $\epsilon_\theta(x_t,t)$.</li>
+<li>Use the sampler or scheduler equation to compute $x_{t-1}$, including the correct
+   schedule-dependent scaling and, for stochastic samplers, fresh noise.</li>
+<li>Repeat to $t=0$.</li>
+</ol>
+<p>The model emits a sequence of progressively cleaner images; the final one is the answer — "Killian Court emerges from the fog." This architecture is called a <strong>diffusion model</strong>, introduced by Sohl-Dickstein et al. (2015, <a href="https://arxiv.org/pdf/1503.03585.pdf">arXiv:1503.03585</a>); creating the noisy training data is the <em>forward process</em>, and generation is the <em>reverse process</em>. Originally the loop needed on the order of 1,000 baby steps; active research has brought this down to roughly 50–100 — which is also why Midjourney takes noticeably longer to answer than a language model. It is running an iterative denoising loop, not a single forward pass.</p>
+<p>A useful mental model from the lecture: the trained network is a machine for <strong>transforming one probability distribution into another</strong>. Noise images live in a simple, easy-to-sample distribution; stately college buildings live in some wildly complicated one. Training used matched pairs (image, noised image) to learn the mapping; at inference time, every fresh sample from the noise distribution lands at a new point in the image distribution. We are <em>not</em> trying to reconstruct training images — that would be pointless — we are sampling new members of the category.</p>
+<p>Two lecture Q&amp;A exchanges are worth preserving because they answer questions everyone has:</p>
+<ul>
+<li><strong>Why do generated humans sometimes have four (or six) fingers?</strong> The model has no concept of fingers, anatomy, or physics. We inject zero domain knowledge — it sees only pixel values and produces statistically plausible samples. Macro-level structure tends to come out right because <em>many</em> configurations count as correct (any of countless roofs reads as "a roof"); hands go wrong because very few configurations count as a correct hand, so errors are conspicuous.</li>
+<li><strong>Does the same noise input always give the same image?</strong> No — there is randomness in the generation process itself: the model samples <em>around</em> the point it maps to, so even identical starting noise can yield different published outputs. (And if you changed the noise from Gaussian to, say, Poisson, results would change fundamentally: the underlying math leans heavily on the Gaussian assumption.)</li>
+</ul>
+<h3 id="predicting-the-noise">Predicting the noise</h3>
+<p>Ho et al. (2020, <a href="https://arxiv.org/abs/2006.11239">arXiv:2006.11239</a>) popularized training the
+network to predict the exact noise $\epsilon$ used to construct $x_t$. Because training injected
+that noise, the target is available for free. At inference time, however, the next sample is <strong>not</strong>
+generally $x_t-\hat\epsilon$. The scheduler combines $x_t$, the predicted noise, the schedule
+coefficients, and sometimes a fresh random term to obtain $x_{t-1}$. Libraries expose this as a
+scheduler step, which is why the denoiser must receive the timestep $t$ as well as the noisy image.</p>
+<h2 id="115-the-u-net-an-image-to-image-architecture">11.5 The U-Net: An Image-to-Image Architecture</h2>
+<p><img alt="U-Net for diffusion with contracting and expanding paths joined by skip connections" src="figures/generated/unet-diffusion.png"></p>
+<p><em>Figure: An original U-Net reconstruction for diffusion models, showing resolution, channel depth, and skip connections. It avoids reproducing the third-party U-Net figure embedded in the lecture deck.</em></p>
+<p>Everything so far in the course has mapped images to labels or text to text. A denoising model must map an <strong>image to an image</strong> — the output must have the same shape as the input. The dominant architecture for this is the <strong>U-Net</strong> (Ronneberger et al., originally invented for medical image segmentation).</p>
+<p>The U-Net has two halves, arranged — as the name suggests — in a U:</p>
+<ul>
+<li><strong>The left half (contracting path)</strong> is a good, old convolutional network of the kind we know and love: convolutional blocks interleaved with max-pooling. The spatial dimensions shrink while the number of channels grows — the image becomes smaller but deeper, a compact 3-D volume of features.</li>
+<li><strong>The right half (expanding path)</strong> reverses the process, enlarging the representation step by step until the output matches the original input size. Since ordinary convolutions and pooling only shrink, this requires an "inverse" of the convolution layer, called an <strong>up-convolution</strong> (or de-convolution) — implemented in Keras as <code>Conv2DTranspose</code> (see §9.2 of the Chollet textbook).</li>
+</ul>
+<p>The third ingredient is the U-Net's <strong>cross-connections</strong> (skip connections). At every step on the way back up, the network attaches the feature maps from the <em>mirror-image</em> stage of the contracting path. This is the same philosophy as the residual connections we met in ResNet and inside every transformer block: why force a layer to work only with the output of its immediate predecessor when giving it earlier, higher-resolution information is cheap and helpful? As Ramakrishnan notes, giving a layer as much information as possible is generally a good idea — but you can't go nuts, because parameters balloon; the U-Net's mirror-image connections are the balance its designers struck after much experimentation.</p>
+<p>When do you reach for a U-Net? As the lecture puts it: any time the output should have the same spatial shape as the input — colorizing a black-and-white photo, super-resolution, per-pixel classification (segmentation), and, of course, denoising.</p>
+<h2 id="116-steering-generation-with-text-the-clip-idea">11.6 Steering Generation with Text: The CLIP Idea</h2>
+<p>We can now generate a good image. The remaining — and commercially crucial — question is how to make the model generate the image <em>we asked for</em>.</p>
+<p>The intuition builds in three steps (slides 43–45):</p>
+<ol>
+<li>We want to take the text prompt into account when generating the image.</li>
+<li>If we happened to have a <em>rough (noisy) image</em> corresponding to the prompt, we'd be done — just feed it to the denoiser. But of course we don't have one; producing such an image is the whole problem.</li>
+<li>But what if we had an <strong>embedding</strong> of the prompt that is <em>close</em> to the embeddings of all the images that correspond to that prompt? If we feed this embedding to the denoising model, maybe it can use it to <em>steer</em> the generation — after all, the embedding is already "close" to the image we want to generate.</li>
+</ol>
+<p>So the problem reduces to: compute embeddings for text and for images that live in the same <strong>concept space</strong>, such that a caption's embedding sits right in the middle of the embeddings of the images it describes.</p>
+<p>Computing the embeddings separately is easy with building blocks we already have: run the text through a transformer encoder (like BERT) and the image through a CNN (like ResNet, taking a penultimate layer). But if the two encoders are trained independently, there is no earthly reason their outputs should be related. We need to <em>train them together</em> so that the embeddings satisfy two requirements:</p>
+<ul>
+<li>Given an image and a caption <strong>that describes it</strong>, their embeddings should be <strong>close</strong>.</li>
+<li>Given an image and an <strong>unrelated</strong> caption, their embeddings should be <strong>far apart</strong>.</li>
+</ul>
+<p>How do we measure "close"? Cosine similarity — the same measure we have used throughout the course:</p>
+<p>$$
+\text{sim}(u, v) \;=\; \frac{u \cdot v}{\lVert u\rVert\, \lVert v\rVert}.
+$$</p>
+<h3 id="how-clip-works">How CLIP works</h3>
+<p>OpenAI's <strong>CLIP</strong> (Contrastive Language–Image Pretraining, <a href="https://arxiv.org/pdf/2103.00020.pdf">arXiv:2103.00020</a>) solves exactly this problem, and it forms the basis for a whole family of successors (BLIP, BLIP-2, …) as well as modern multimodal LLMs. The recipe:</p>
+<ol>
+<li>Set a 12-layer, 8-head transformer causal-encoder stack as the <strong>text encoder</strong>; set ResNet-50 (with small tweaks, top chopped off) as the <strong>image encoder</strong>.</li>
+<li>Initialize both with random weights.</li>
+<li>Grab a batch of $n$ ⟨image, caption⟩ pairs.</li>
+<li>Run the images through the image encoder and the captions through the text encoder to get embeddings.</li>
+<li>Compute the cosine similarity of <strong>every</strong> image–caption combination in the batch — an $n \times n$ matrix of "closeness scores."</li>
+</ol>
+<p>On the <strong>diagonal</strong> of this matrix sit the matched pairs (the Labrador photo with "A yellow Labrador retriever on a cushion"); we want these scores as high as possible. A first attempt at a loss function would be: <em>minimize the negative sum of the diagonal (green) cells</em>. Will that do the trick?</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "No. The optimizer can simply ignore the input, make all the embeddings the same, and achieve a perfect cosine similarity of 1.0 for all pairs of embeddings! … This, by the way, is called <em>model collapse</em>."</p>
+</blockquote>
+<p>The fix is the <em>contrastive</em> part: every other caption and image in the batch acts as a negative.
+Let $s_{ij}$ be the raw cosine similarity between image $i$ and text $j$, and let $\tau$ be a
+learned temperature. CLIP applies cross-entropy in <strong>both directions</strong>:</p>
+<p>$$
+\mathcal L =
+\frac{1}{2n}\sum_{i=1}^{n}
+\left[
+-\log\frac{\exp(s_{ii}/\tau)}{\sum_j\exp(s_{ij}/\tau)}
+-\log\frac{\exp(s_{ii}/\tau)}{\sum_j\exp(s_{ji}/\tau)}
+\right].
+$$</p>
+<p>The first term asks each image to identify its matching text; the second asks each text to identify
+its matching image. This raises diagonal logits relative to all off-diagonal logits without the
+collapse allowed by a diagonal-only similarity objective. Batch after batch, backpropagate,
+repeat. OpenAI trained CLIP this way on <strong>400 million ⟨image, caption⟩ pairs scraped from the
+Internet</strong> — with the captions coming largely from web alt text.</p>
+<p>Once trained, CLIP's text encoder can be used <strong>by itself</strong>: send in any text and get an embedding that is close to the embedding of any image described by that text.</p>
+<h3 id="a-bonus-zero-shot-image-classification">A bonus: zero-shot image classification</h3>
+<p>CLIP also enables something delightfully flexible and entirely separate from diffusion: <strong>zero-shot image classification</strong>. A conventional classifier is welded to its label set — add a sixth class and you retrain from scratch. With CLIP, each candidate label is just a piece of text. Embed the image once ($I$), embed each of the $n$ labels ($T_1, \dots, T_n$), compute the cosine similarities, and pick the label with the highest score. You can hand it a <em>different</em> set of labels every time you call it — an "insanely flexible" classifier requiring no training whatsoever.</p>
+<h2 id="117-text-conditioned-diffusion-and-stable-diffusion">11.7 Text-Conditioned Diffusion and Stable Diffusion</h2>
+<p>Now we assemble the pieces. In an unconditioned DDPM, the denoiser receives $(x_t,t)$ and commonly
+predicts the sampled noise $\epsilon$. Text conditioning adds an embedding $c$ of the prompt:</p>
+<p>$$
+\text{input} = (x_t,t,c), \qquad
+\text{target} = \epsilon,
+$$</p>
+<p>and train with the same noise-prediction objective. In latent diffusion, the conditioning is not
+usually a literal channel-wise concatenation with the image. The U-Net consumes the text
+representation through mechanisms such as cross-attention, allowing the prompt to steer denoising.</p>
+<p>At inference time, we start with pure noise <em>plus</em> the prompt — say, <em>"Killian Court at MIT during springtime"</em> — and run the same denoising loop, feeding the prompt's CLIP embedding in at every step. Keep going, and at some point Killian Court in springtime materializes. That, at heart, is how DALL-E, Midjourney, and Stable Diffusion steer images.</p>
+<h3 id="inside-the-denoising-dnn-latent-diffusion">Inside the denoising DNN: latent diffusion</h3>
+<p>The <strong>latent diffusion</strong> paper behind Stable Diffusion (Rombach et al., <a href="https://arxiv.org/abs/2112.10752">arXiv:2112.10752</a>) adds three points worth noticing:</p>
+<ol>
+<li><strong>It's a U-Net.</strong> The denoising DNN at the core of Stable Diffusion uses the U-Net architecture from §11.5.</li>
+<li><strong>The text is woven in via attention.</strong> The CLIP embedding of the prompt is incorporated into the U-Net through a cross-attention mechanism — the familiar $Q$, $K$, $V$ machinery from the transformer chapters appears right in the architecture diagram.</li>
+<li><strong>Diffusion runs in latent space, not pixel space.</strong> Instead of denoising full-resolution images at every step, the image is first run through an encoder to obtain a compact embedding; the entire iterative denoising loop then operates on these small latent vectors, which are far cheaper to process than pixel arrays; and only at the very end does a decoder map the final, essentially noise-free latent back to a full image. This is where Stable Diffusion's dramatic speedup comes from — and why it is called a <strong>latent</strong> diffusion model.</li>
+</ol>
+<p>As Ramakrishnan emphasizes, the reach of these models extends far beyond art. Because the objects being generated don't have to be images — anything you can meaningfully "noise" and for which you have training data qualifies — diffusion models are being used for <strong>protein design</strong>: give a rough outline of what you want a protein to do, and a diffusion model generates a plausible three-dimensional shape. Diffusion approaches to language modeling are an active research area too.</p>
+<h2 id="118-stable-diffusion-in-practice-with-diffusers">11.8 Stable Diffusion in Practice with 🤗 Diffusers</h2>
+<p>HuggingFace's <strong>Diffusers</strong> library does for diffusion models what the Transformers library (Chapter 8) did for NLP: a <code>pipeline</code>-style interface over a hub of pretrained models. The second Colab uses <code>StableDiffusionPipeline</code>, an end-to-end <em>inference</em> pipeline (inference = using an existing model to generate samples, as opposed to training or fine-tuning one).</p>
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">Uq</span> <span class="n">diffusers</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffusers</span><span class="w"> </span><span class="kn">import</span> <span class="n">StableDiffusionPipeline</span>
+
+<span class="c1"># You must accept the CreativeML OpenRAIL-M license on the model card and</span>
+<span class="c1"># log in with a HuggingFace access token:</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">huggingface_hub</span><span class="w"> </span><span class="kn">import</span> <span class="n">notebook_login</span>
+<span class="n">notebook_login</span><span class="p">()</span>
+
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">StableDiffusionPipeline</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;CompVis/stable-diffusion-v1-4&quot;</span><span class="p">,</span>
+                                               <span class="n">revision</span><span class="o">=</span><span class="s2">&quot;fp16&quot;</span><span class="p">,</span>
+                                               <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>A few things to note. The repo id <code>CompVis/stable-diffusion-v1-4</code> names a pretrained pipeline on the Hub — exactly the pattern from the NLP lightning tour in Lecture 8. The <code>fp16</code> (half-precision) weights download faster and run much faster with almost no discernible quality difference. And this is <strong>PyTorch</strong>, not the TensorFlow/Keras we have used all semester — many state-of-the-art models ship only in PyTorch, so a little PyTorch literacy pays off.</p>
+<p>Generating an image is one line:</p>
+<div class="highlight"><pre><span></span><code><span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;a photograph of an astronaut riding a horse&quot;</span>
+
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>      <span class="c1"># set the seed for reproducibility</span>
+<span class="n">pipe</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div>
+
+<p>Two details connect directly to the theory. First, the progress bar counts <strong>50 steps</strong> — you are watching the gradual denoising loop of §11.4 run before your eyes. Second, the <strong>seed</strong> fixes the random noise image that starts the process; change the seed and the same prompt yields a different astronaut on a different horse:</p>
+<div class="highlight"><pre><span></span><code><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>   <span class="c1"># a different seed → a different image for the same prompt</span>
+<span class="n">pipe</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div>
+
+<p>(Why astronauts on horses? Because the combination is guaranteed not to be in the training data — whatever the model produces, it isn't regurgitating something it has seen. In lecture, a student's suggested prompt "MIT professor riding a horse" produced two professors, neither flattering.)</p>
+<h3 id="negative-prompts">Negative prompts</h3>
+<p>The core prompt-to-image capability can be manipulated in many ways; the notebook demonstrates one: <strong>negative prompting</strong>, which uses two prompts and (roughly speaking) <em>subtracts</em> one from the other. Generate <em>"Labrador in the style of Vermeer"</em> and you get a lovely dog — wearing a blue scarf you may not care for. Subtract "blue":</p>
+<div class="highlight"><pre><span></span><code><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;Labrador in the style of Vermeer&quot;</span>
+<span class="n">pipe</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>                          <span class="c1"># Labrador, Vermeer style... with blue scarf</span>
+
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">pipe</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">negative_prompt</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># the blue is gone</span>
+</code></pre></div>
+
+<p>One more practical note from lecture Q&amp;A: raising the number of denoising steps (say from 50 toward 1,000) generally <em>improves</em> quality rather than over-iterating — each step removes only a sliver of noise, so errors don't accumulate. The Diffusers library exposes controls for all of this; its <a href="https://huggingface.co/docs/diffusers/en/tutorials/tutorial_overview">tutorials</a> are the recommended next stop.</p>
+<h2 id="119-a-lightning-tour-of-computer-vision-models-on-huggingface">11.9 A Lightning Tour of Computer-Vision Models on HuggingFace</h2>
+<p>The chapter closes with the CV counterpart of Lecture 8's NLP tour. The practical advice: <strong>if your computer-vision problem maps neatly onto a standard CV task — image classification, object detection, image segmentation — look for a task-relevant pretrained model on the HuggingFace Hub and use it immediately.</strong> No training, no heavy lifting.</p>
+<h3 id="image-classification">Image classification</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">pipeline</span>
+
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;image-classification&quot;</span><span class="p">)</span>   <span class="c1"># defaults to google/vit-base-patch16-224</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;http://images.cocodataset.org/val2017/000000039769.jpg&#39;</span>  <span class="c1"># famous COCO image: two cats on a couch</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">raw</span><span class="p">)</span>
+
+<span class="n">pipe</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code>[{&#39;label&#39;: &#39;Egyptian cat&#39;, &#39;score&#39;: 0.937}, {&#39;label&#39;: &#39;tabby, tabby cat&#39;, &#39;score&#39;: 0.038}, ...]
+</code></pre></div>
+
+<p>The default model calls it an Egyptian cat with 93.7% probability — reasonable for a busy picture with multiple objects. And you are not stuck with the default: browse the Hub's 10,000+ image-classification models and pass any repo id:</p>
+<div class="highlight"><pre><span></span><code><span class="n">pipe</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;image-classification&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;microsoft/resnet-50&quot;</span><span class="p">)</span>
+<span class="n">pipe</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>      <span class="c1"># ResNet-50 says &#39;tiger cat&#39; with 94.2% probability</span>
+</code></pre></div>
+
+<p>The pipeline handles all the preprocessing, resizing, "tokenization, this, that and whatnot" for you.</p>
+<h3 id="object-detection">Object detection</h3>
+<p>To find <em>all</em> the objects in the image, with bounding boxes (requires <code>pip install timm</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="n">object_detection_pipe</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;object-detection&quot;</span><span class="p">)</span>   <span class="c1"># defaults to facebook/detr-resnet-50</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">object_detection_pipe</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code>[{&#39;score&#39;: 0.998, &#39;label&#39;: &#39;remote&#39;, &#39;box&#39;: {&#39;xmin&#39;: 40, &#39;ymin&#39;: 70, ...}},
+ {&#39;score&#39;: 0.996, &#39;label&#39;: &#39;remote&#39;, ...},
+ {&#39;score&#39;: 0.995, &#39;label&#39;: &#39;couch&#39;,  ...},
+ {&#39;score&#39;: 0.999, &#39;label&#39;: &#39;cat&#39;,    ...},
+ {&#39;score&#39;: 0.999, &#39;label&#39;: &#39;cat&#39;,    ...}]
+</code></pre></div>
+
+<p>Both cats, both remotes, and the couch — off the shelf, ready to go. The notebook borrows a small <code>plot_results</code> helper (a matplotlib loop drawing a <code>plt.Rectangle</code> and label text for each detection) to overlay the boxes on the image.</p>
+<h3 id="image-segmentation">Image segmentation</h3>
+<p>What if a bounding box isn't enough and you want the exact <em>contour</em> of each object, at the pixel level?</p>
+<div class="highlight"><pre><span></span><code><span class="n">segmentation_pipe</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;image-segmentation&quot;</span><span class="p">)</span>  <span class="c1"># defaults to facebook/detr-resnet-50-panoptic</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">segmentation_pipe</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Each detected object comes back with a <strong>mask</strong> — a per-pixel image that is "on" where the object is and "off" everywhere else. Overlaying a mask on the original shows a near-perfect delineation of each cat and remote:</p>
+<div class="highlight"><pre><span></span><code><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;mask&#39;</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>   <span class="c1"># the first cat, perfectly outlined</span>
+</code></pre></div>
+
+<p>It is not flawless — the couch mask misses the center portion between the two cats — but as an out-of-the-box capability requiring zero training, it is remarkable.</p>
+<h2 id="hands-on-lab">Hands-On Lab</h2>
+<p>Three Colab notebooks accompany this chapter.</p>
+<p><strong>Lab 1 — Creating noisy images</strong> (<a href="https://colab.research.google.com/drive/1fPP8Prm4wvKCWqUB5u9l1mJIglJ27Lrm">Colab</a>). A visual intuition for forward diffusion—not a complete DDPM scheduler. Load a photo of Killian Court with PIL, convert it to a normalized NumPy array of shape <code>(411, 583, 3)</code>, and add per-pixel Gaussian noise with <code>np.random.normal(scale=sigma, size=img_arr.shape)</code>, followed by <code>np.clip(..., 0.0, 1.0)</code>. A loop over <code>sigma = 0, 0.1, ..., 1.0</code> produces the signature strip of images going from clean photograph to unrecognizable static. Try your own image, then compare this independent-noise demo with the $\bar\alpha_t$ formulation used by DDPMs.</p>
+<p><strong>Lab 2 — Stable Diffusion with Diffusers</strong> (<a href="https://colab.research.google.com/drive/1iU-30eX64XqL5Gx6bbp0kJR9_MHjqG4g">Colab</a>). Requires a GPU runtime and a (free) HuggingFace account/token, since the Stable Diffusion v1-4 model is gated behind the CreativeML OpenRAIL-M license. Build the <code>StableDiffusionPipeline</code> with fp16 weights, generate the classic "astronaut riding a horse," verify that changing <code>torch.manual_seed</code> changes the image, watch the 50-step denoising progress bar, and finish with negative prompting ("Labrador in the style of Vermeer" minus "blue"). Extension: explore the Diffusers tutorials for image-to-image, inpainting, and scheduler controls.</p>
+<p><strong>Lab 3 — CV models on the HuggingFace Hub</strong> (<a href="https://colab.research.google.com/drive/1z7dL039KLJvCdclMCFHxS-2CVPF7LBrW">Colab</a>). Install <code>timm</code>, then run the COCO cats-on-a-couch image through three pipelines: <code>image-classification</code> (default ViT and then <code>microsoft/resnet-50</code>), <code>object-detection</code> (DETR, with bounding-box visualization), and <code>image-segmentation</code> (panoptic DETR, with mask overlays via <code>plt.imshow(mask, alpha=0.7)</code>). Note the tip about doing all <code>pip install</code>s at the top of a notebook — installing mid-notebook forces a runtime restart.</p>
+<h2 id="key-takeaways">Key Takeaways</h2>
+<ul>
+<li><strong>Reverse the question.</strong> A known Gaussian forward process constructs $x_t$ directly from a clean image $x_0$, a timestep, and sampled noise. This provides unlimited supervised noise targets without learning the forward process.</li>
+<li><strong>"Slightly" is the sampling intuition.</strong> Generation chains many scheduler-controlled denoising steps (originally ~1,000, often far fewer with modern samplers), which is why diffusion models are slower than a single forward pass.</li>
+<li><strong>Modern diffusion models commonly predict the noise</strong> $\epsilon_\theta(x_t,t)$. A scheduler—not simple subtraction—uses that prediction and the noise schedule to compute the next sample.</li>
+<li><strong>The U-Net</strong> is the workhorse image-to-image architecture: a convolutional contracting path, an expanding path built from up-convolutions (<code>Conv2DTranspose</code>), and residual-style cross-connections between mirror-image stages.</li>
+<li><strong>CLIP</strong> trains a text encoder and an image encoder jointly with a contrastive loss — maximize cosine similarity of matched ⟨image, caption⟩ pairs, minimize it for mismatched ones — on 400M pairs scraped from the web (captions largely from alt text). The result is a shared concept space; the diagonal-only loss fails via model collapse. CLIP also gives free zero-shot image classification.</li>
+<li><strong>Text conditioning supplies prompt representations to the denoiser</strong>, commonly through Q/K/V cross-attention rather than literal image-channel concatenation. <strong>Latent diffusion</strong> (Stable Diffusion) runs the denoising loop on compact image latents rather than pixels, giving a dramatic speedup, with a decoder producing the final picture.</li>
+<li><strong>The model knows nothing you didn't show it.</strong> No physics, no anatomy — just pixels. Statistically plausible samples get macro structure right (many correct roofs) and fine constraints wrong (exactly five fingers). The same explanation covers Sora's physics glitches.</li>
+<li><strong>For standard CV tasks, don't train — download.</strong> HuggingFace pipelines give classification, detection, and segmentation in a few lines, with swappable models from the Hub; Diffusers does the same for image generation.</li>
+</ul>
+<h2 id="check-your-understanding">Check Your Understanding</h2>
+<p><strong>1. Why is a diffusion model given random noise as its input at generation time, rather than some fixed input?</strong></p>
+<details><summary>Answer</summary>
+So that every generation is different. A noise image — every pixel an independent random draw — differs each time it is sampled, so the model's output differs too. But because the model was trained on a particular category of images (e.g., stately college buildings), its outputs remain within that category. Conceptually, the model transforms the simple noise distribution into the complicated distribution of training-category images; each fresh noise sample maps to a fresh image sample.
+</details>
+
+<p><strong>2. How is a DDPM training example constructed from a clean image, and what role does the timestep play?</strong></p>
+<details><summary>Answer</summary>
+Sample a clean image $x_0$, timestep $t$, and Gaussian noise $\epsilon$, then construct $x_t=\sqrt{\bar\alpha_t}x_0+\sqrt{1-\bar\alpha_t}\epsilon$. Train the time-conditioned network on $(x_t,t)$, commonly with $\epsilon$ as the target. The timestep identifies the noise level, so one network can denoise across the entire schedule. Small reverse transitions are an inference-time sampling idea; training need not materialize every adjacent pair.
+</details>
+
+<p><strong>3. What is the "key improvement" that later diffusion papers (e.g., Ho et al. 2020) made to the training target, and why is it feasible?</strong></p>
+<details><summary>Answer</summary>
+Instead of predicting a less-noisy image directly, the network predicts the sampled noise $\epsilon$ from $(x_t,t)$. This is feasible because training created $x_t$, so the exact target noise is known. At inference time a scheduler combines $x_t$, the predicted noise, schedule coefficients, and sometimes fresh random noise to obtain $x_{t-1}$; it is not generally plain subtraction.
+</details>
+
+<p><strong>4. In the U-Net, what problem do up-convolution layers solve, and what role do the cross-connections play?</strong></p>
+<details><summary>Answer</summary>
+The contracting (left) half uses convolution + pooling, which shrinks spatial dimensions — but an image-to-image model must output the input's original size. Up-convolutions (de-convolutions; `Conv2DTranspose` in Keras) perform an inverse-of-convolution operation that gradually enlarges the representation back to full resolution. The cross-connections attach each contracting stage's feature maps to the mirror-image expanding stage — like residual connections, they give later layers access to earlier, higher-resolution information instead of forcing them to work only from the previous layer's output, and they are a major reason U-Nets work as well as they do.
+</details>
+
+<p><strong>5. Why does CLIP's loss function need the off-diagonal (mismatched pair) terms? What goes wrong with a loss that only maximizes similarity of matched pairs?</strong></p>
+<details><summary>Answer</summary>
+With only the "maximize the diagonal" objective, the encoders can map every input to the same normalized vector, producing similarity 1.0 for every pair—a collapsed representation. CLIP instead uses temperature-scaled, symmetric cross-entropy: each image must classify its matching text among all batch texts, and each text must classify its matching image among all batch images. Off-diagonal pairs therefore serve as negatives rather than appearing in a linear red-minus-green sum.
+</details>
+
+<p><strong>6. Explain how CLIP enables zero-shot image classification, and why this is more flexible than a conventionally trained classifier.</strong></p>
+<details><summary>Answer</summary>
+Each candidate label is just text, so embed each label with CLIP's text encoder (T₁ … Tₙ), embed the image with the image encoder (I), compute the cosine similarity of I with each Tᵢ, and choose the label with the highest score. A conventional classifier is fixed to its trained label set — adding a class means retraining — whereas with CLIP you can supply a completely different set of labels on every call, with no training at all.
+</details>
+
+<p><strong>7. What are the three notable design features of the Stable Diffusion (latent diffusion) denoiser highlighted in lecture, and which one is responsible for its speed?</strong></p>
+<details><summary>Answer</summary>
+(1) The denoising network is a U-Net. (2) The CLIP embedding of the text prompt is woven into the U-Net through an attention mechanism (the familiar Q, K, V). (3) The diffusion process operates in *latent space* rather than pixel space: images are encoded to compact embeddings, the entire iterative denoising loop runs on those small embeddings, and only the final result is decoded back to an image. Feature (3) is the source of the dramatic speedup — embeddings are much smaller than images and thus much faster to process — and it gives the "latent diffusion model" its name.
+</details>
+
+<p><strong>8. Why do diffusion models sometimes generate hands with the wrong number of fingers, and why do larger structures usually come out fine?</strong></p>
+<details><summary>Answer</summary>
+The model has no injected domain knowledge — no notion of fingers, anatomy, or physical constraints; it learns purely from pixel values and produces statistically plausible samples from the learned distribution. Macro-level details usually look right because many different configurations are all acceptable (many possible roofs still read as "a roof"). A hand, by contrast, has very few correct configurations (exactly five fingers), so any deviation is immediately noticeable. The same reasoning explains physics violations in text-to-video models like Sora, which mimic physics as a side effect of training rather than obeying built-in physical laws.
+</details>
+      <nav class="chapter-footer" aria-label="Chapter navigation"><a class="previous" href="ch10-peft-lora.html">← 10 · PEFT and LoRA</a><a class="next" href="appendix-a-homework.html">A · Homework and Solutions →</a></nav>
+    </article>
+  </main>
+</body>
+</html>

@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A hands-on deep learning textbook companion to MIT 15.773">
+  <title>Chapter 8: Transformers II — Tunable Attention, Self-Supervised Learning, and Pre-Trained Models · Hands-On Deep Learning</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
+  </script>
+  <script defer src="mathjax/tex-svg.js"></script>
+  <script defer src="search-index.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"></div>
+  <aside class="sidebar">
+    <a class="brand" href="index.html">Hands-On Deep Learning</a>
+    <div class="brand-subtitle">MIT 15.773 · Spring 2024 companion</div>
+    <input class="search" type="search" placeholder="Search the full book…" data-search aria-label="Search">
+    <div class="search-results hidden" data-search-results></div>
+    <nav><div class="nav-part">Front Matter</div>
+<a class="nav-link" href="index.html">Start Here</a>
+<div class="nav-part">Part I · Foundations</div>
+<a class="nav-link" href="ch01-intro-to-neural-networks.html">1 · Neural Networks</a>
+<a class="nav-link" href="ch02-training-deep-networks.html">2 · Training Deep Networks</a>
+<a class="nav-link" href="ch03-keras-and-cnns-from-scratch.html">3 · Keras and Vision Basics</a>
+<div class="nav-part">Part II · Computer Vision</div>
+<a class="nav-link" href="ch04-cnns-transfer-learning.html">4 · CNNs and Transfer Learning</a>
+<div class="nav-part">Part III · Natural Language</div>
+<a class="nav-link" href="ch05-nlp-basics.html">5 · Text Vectorization</a>
+<a class="nav-link" href="ch06-embeddings.html">6 · Embeddings</a>
+<a class="nav-link" href="ch07-transformers.html">7 · Transformers</a>
+<a class="nav-link active" href="ch08-transformers-ii-self-supervised.html">8 · Self-Supervised Learning</a>
+<div class="nav-part">Part IV · Generative AI</div>
+<a class="nav-link" href="ch09-llms-and-rag.html">9 · LLMs and RAG</a>
+<a class="nav-link" href="ch10-peft-lora.html">10 · PEFT and LoRA</a>
+<a class="nav-link" href="ch11-diffusion-text-to-image.html">11 · Diffusion Models</a>
+<div class="nav-part">Appendices</div>
+<a class="nav-link" href="appendix-a-homework.html">A · Homework and Solutions</a>
+<a class="nav-link" href="appendix-b-resources.html">B · Resource Index</a></nav>
+    <div class="sidebar-actions">
+      <button data-theme-toggle type="button">Light / dark</button>
+      <button data-print type="button">Print</button>
+    </div>
+    <div class="sidebar-actions">
+      <a class="button" href="complete-book.html">Complete book</a>
+      <a class="button" href="notebooks.html">Notebooks</a>
+    </div>
+  </aside>
+  <main class="page">
+    <article class="article">
+      <div class="eyebrow">Part III · Natural Language</div>
+      <h1 id="chapter-8-transformers-ii-tunable-attention-self-supervised-learning-and-pre-trained-models">Chapter 8: Transformers II — Tunable Attention, Self-Supervised Learning, and Pre-Trained Models</h1>
+<blockquote>
+<p><strong>Lecture video:</strong> <a href="https://www.youtube.com/watch?v=v-lHsawHyaI">https://www.youtube.com/watch?v=v-lHsawHyaI</a>
+<strong>Slides:</strong> <a href="https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/mit15_773_s24_lec08.pdf">mit15_773_s24_lec08.pdf</a>
+<strong>Companion Colab notebook:</strong> <a href="https://colab.research.google.com/drive/19uhvnLxPnPX6P4HRnajOQOUsOPWsqXlw">https://colab.research.google.com/drive/19uhvnLxPnPX6P4HRnajOQOUsOPWsqXlw</a></p>
+</blockquote>
+<h2 id="learning-objectives">Learning Objectives</h2>
+<p>After completing this chapter, you should be able to:</p>
+<ul>
+<li>Express self-attention as a compact matrix computation and explain why this matters for GPU efficiency.</li>
+<li>Explain how the learnable query, key, and value matrices ($A_Q$, $A_K$, $A_V$) make self-attention "tunable," and why they are what allow different attention heads to learn different patterns.</li>
+<li>Describe the roles of residual connections and layer normalization in the transformer encoder.</li>
+<li>Distinguish the three canonical transformer use cases — sequence classification, sequence labeling, and sequence generation — and explain the <code>&lt;CLS&gt;</code> token trick for classification.</li>
+<li>Explain the idea of self-supervised learning, and how masked language modeling (BERT-style) and next-token prediction (GPT-style) create "free" labels from raw text.</li>
+<li>Describe why pre-trained encoders capture general knowledge that transfers to new tasks with little labeled data.</li>
+<li>Use HuggingFace <code>pipeline</code>s to solve standard NLP tasks — classification, named entity recognition, question answering, summarization, generation — without any fine-tuning.</li>
+<li>Sketch how the unchanged transformer block extends to images (Vision Transformer), tabular data (Tab Transformer), and multi-modal inputs.</li>
+</ul>
+<h2 id="81-review-the-story-so-far">8.1 Review: The Story So Far</h2>
+<p>Chapter 7 left us with a working transformer encoder, built to satisfy three requirements: an output the same length as the input, sensitivity to each word's context, and sensitivity to word order. The flow: stand-alone embeddings (pretrained or random) are summed element-wise with learned positional embeddings to form <em>positional input embeddings</em>; these pass through multi-head self-attention and a feed-forward layer; contextual embeddings of identical shape emerge. Applied to the ATIS problem — a ReLU layer and a per-token 125-way softmax on top — a single encoder block reached about 99% raw accuracy, and a still-impressive 93% on the non-<code>O</code> slots that actually matter.</p>
+<p>But we ended on a cliffhanger. The self-attention layer as described contains <em>no parameters at all</em> — no weights, no biases, nothing for backpropagation to adjust. If nothing inside it is learned, what is the point of having several attention heads? Two heads receiving the same input would produce identical outputs. This chapter resolves that puzzle, adding the three refinements that turn our sketch into the actual architecture from the 2017 paper: <strong>tunable self-attention</strong>, <strong>residual connections</strong>, and <strong>layer normalization</strong>. As Ramakrishnan warns at the start of lecture, this first part is "potentially the most demanding 30 minutes of the entire course" — but the payoff is that by the end you can read the famous attention formula, and the BERT paper itself, and understand them.</p>
+<p>The second half of the chapter changes altitude entirely: instead of training transformers from scratch, we learn how the field <em>pre-trains</em> them on all the text on the internet using <strong>self-supervised learning</strong>, and how you can grab those pre-trained models off the shelf from <strong>HuggingFace</strong>.</p>
+<h2 id="82-self-attention-as-matrix-multiplication">8.2 Self-Attention as Matrix Multiplication</h2>
+<p>Recall the self-attention recipe for one word: compute dot products between its embedding and every embedding in the sentence, softmax them into weights,</p>
+<p>$$s_{i,j} = \frac{\exp\langle w_i, w_j\rangle}{\sum_{k} \exp\langle w_k, w_j\rangle},$$</p>
+<p>and take the weighted average $\hat{w}<em i_j="i,j">j = \sum_i s</em>\, w_i$. The same operation must be repeated for <em>every</em> word — a lot of similar-looking computation. Is there a way to organize it efficiently? As Ramakrishnan notes, the answer had better be yes: "if you could not do that, there wouldn't be any transformer revolution," because it is precisely the ability to package attention into a few dense matrix operations that lets the whole thing scream on GPUs.</p>
+<p>Take a short sentence — the lecture uses "I love HODL" — and stack its (already positionally encoded) embeddings $w_1, w_2, w_3$ as the rows of a matrix $X$. Now make three copies of $X$:</p>
+<ol>
+<li><strong>All pairwise dot products in one shot.</strong> Multiply the first copy by the transpose of the second: $XX^\top$. Entry $(i,j)$ of this grid is exactly $\langle w_i, w_j \rangle$ — every pair of words' relatedness, computed in a single matrix multiplication. (With three words that is 9 products; with a million words, on the order of a trillion — which is why doing it as one GPU-friendly matmul matters.)</li>
+<li><strong>Row-wise softmax.</strong> Apply softmax to each row of the grid, exponentiating each entry and dividing by its row sum. Row $i$ now reads like a recipe: "for word $i$, take 0.1 of word 1, 0.7 of word 2, 0.2 of word 3."</li>
+<li><strong>Weighted averaging as another matmul.</strong> Multiply this table by the third copy of $X$. Each output row is the weighted average of the original embeddings — the contextual embeddings.</li>
+</ol>
+<p>The entire self-attention layer is therefore the compact formula</p>
+<p>$$\text{SelfAttention}(X) = \mathrm{softmax}!\left(XX^\top\right) X.$$</p>
+<p>Three matrix operations, no loops. That is the warm-up. Now we crank it up a notch.</p>
+<h2 id="83-making-self-attention-tunable-queries-keys-and-values">8.3 Making Self-Attention Tunable: Queries, Keys, and Values</h2>
+<p>Here is the fix for the no-parameters problem. Instead of sending three identical copies of $X$ into the attention computation, we first transform each copy by multiplying it with its own <strong>matrix of learnable weights</strong>:</p>
+<ul>
+<li>The first copy is multiplied by a <strong>key matrix</strong> $A_K$, producing $K = XA_K$.</li>
+<li>The second copy is multiplied by a <strong>query matrix</strong> $A_Q$, producing $Q = XA_Q$.</li>
+<li>The third copy is multiplied by a <strong>value matrix</strong> $A_V$, producing $V = XA_V$.</li>
+</ul>
+<p>Multiplying by a matrix is nothing exotic — it is exactly a dense layer with linear activation. The attention weights become</p>
+<p>$$s_{i,j} = \frac{\exp\langle A_K w_i,\; A_Q w_j\rangle}{\sum_{k} \exp\langle A_K w_k,\; A_Q w_j\rangle},$$</p>
+<p>and the contextual embedding becomes a weighted average of <em>transformed</em> values:</p>
+<p>$$\hat{w}<em 1_j="1,j">j = s</em>\,A_V w_n.$$}\,A_V w_1 + s_{2,j}\,A_V w_2 + \cdots + s_{n,j</p>
+<p>In matrix form, the whole layer is</p>
+<p>$$\text{Attention}(Q, K, V) = \mathrm{softmax}!\left(QK^\top\right)V, \qquad Q = XA_Q,\; K = XA_K,\; V = XA_V.$$</p>
+<p><strong>The key point:</strong> the numbers in $A_Q$, $A_K$, and $A_V$ are learnable weights, initialized randomly and optimized by backpropagation (SGD) along with everything else. This is what "tunable" means. We are not told what these matrices will learn — we are giving the layer <em>capacity</em>, the expressive freedom to transform incoming embeddings into whatever representations help the task. If transforming $X$ turns out not to help at all, the network can effectively learn identity-like matrices and fall back to plain dot products. But in practice, it helps massively.</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "Whenever you want to increase the modeling capacity of a model, you take a small piece and inject a little matrix multiplication into it. ... That's how you inject modeling capacity into the middle of these networks, and that's what these people are doing here."</p>
+</blockquote>
+<p>A few clarifications from the lecture Q&amp;A worth recording:</p>
+<ul>
+<li>$A_K$, $A_Q$, and $A_V$ are three completely <strong>independent</strong> matrices; the shared "A" is just notation.</li>
+<li><strong>Sizes:</strong> implementations typically preserve dimension for keys and queries — an incoming embedding of length 100 is transformed by a $100\times100$ matrix into another length-100 vector. The value matrix is often smaller: with 5 heads, each head might map $100 \to 20$, so that when the 5 heads' values are concatenated the result is length 100 again.</li>
+<li><strong>Why heads now differ:</strong> each attention head gets its <strong>own</strong> $A_Q$, $A_K$, $A_V$ — ten heads means thirty learned matrices. Since each triple is initialized with different random values, backpropagation drives them to different solutions, and the heads genuinely learn different patterns (word meaning in one head; grammar, tense, or tone in others). This resolves last chapter's puzzle: tunability is precisely what makes <em>multi</em>-head attention useful.</li>
+<li><strong>Parameter count is independent of sentence length.</strong> The matrices act on individual embeddings, so they need to know only the embedding dimension, not how many words arrive. Sentence length affects only the positional embedding table. This is why a model like Gemini 1.5 Pro can accept a million-token context window without changing its parameter count (though the compute cost certainly grows).</li>
+</ul>
+<p>The nomenclature <em>query/key/value</em> comes from information retrieval, but Ramakrishnan deliberately downplays that interpretation — transformers are used far beyond retrieval, and "make each copy tunable" is the interpretation that generalizes.</p>
+<p>One last detail. If you open <em>Attention Is All You Need</em>, the famous formula reads</p>
+<p>$$\text{Attention}(Q, K, V) = \mathrm{softmax}!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V.$$</p>
+<p>The only piece we have not derived is the $\sqrt{d_k}$ in the denominator. It is a technical safeguard: when some dot products get very large, softmax squashes all the other entries toward zero and gradients stop flowing; scaling by $\sqrt{d_k}$ (the key dimension) keeps the numbers in a healthy range. Important in practice, but conceptually minor. Congratulations — you now understand the transformer formula.</p>
+<h2 id="84-residual-connections-and-layer-normalization">8.4 Residual Connections and Layer Normalization</h2>
+<p>Two more tweaks complete the industrial-strength encoder.</p>
+<h3 id="residual-connections">Residual connections</h3>
+<p>The multi-head attention layer takes in embeddings and emits transformed embeddings. Everything downstream can then see only the transformed version — the original input is gone. But what if the transformation is not great? As insurance, we <strong>add the layer's input to its output</strong>, element by element:</p>
+<p>$$\text{output} = \text{Layer}(x) + x.$$</p>
+<p>Because we engineered inputs and outputs to have identical shape, this addition is always legal, and it keeps sizes constant (unlike concatenating the original input at every layer, which would grow without bound). This is called a <strong>residual connection</strong>, and the same trick is applied around the feed-forward layer too. Beyond the "don't lose the input" intuition, residual connections dramatically improve gradient flow during backpropagation — they are why very deep networks are trainable at all. The idea is not transformer-specific: <strong>ResNet</strong>, the computer-vision workhorse from earlier in the course, literally stands for <em>Residual Network</em>.</p>
+<h3 id="layer-normalization">Layer normalization</h3>
+<p>A theme since the first week of the course: neural networks train well only when the numbers flowing through them stay in a small, well-behaved range. That is why we divided pixel values by 255 and standardized the heart-disease features. Deep in a transformer stack, though, intermediate values can drift — risking exploding or vanishing gradients.</p>
+<p><strong>Layer normalization</strong> re-imposes discipline after each sublayer. For each embedding vector (each token, individually), it:</p>
+<ol>
+<li>computes the mean and standard deviation <em>across the embedding's dimensions</em> and standardizes (subtract the mean, divide by the standard deviation), and</li>
+<li>applies a learned rescale-and-shift — two small parameter vectors that let the network undo or adjust the normalization where useful (adding a few more learnable weights rarely hurts).</li>
+</ol>
+<p>The result: whatever comes out of attention or feed-forward layers is squashed back into a narrow range, and backpropagation keeps working through dozens of stacked blocks.</p>
+<h3 id="the-complete-transformer-encoder">The complete transformer encoder</h3>
+<p>Putting it all together, one <strong>transformer encoder block</strong> is:</p>
+<ol>
+<li>Multi-head attention, where each head has its own tunable $A_Q, A_K, A_V$;</li>
+<li>residual connection ("add") and layer normalization ("norm");</li>
+<li>position-wise feed-forward network (ReLU layer + linear layer);</li>
+<li>another residual connection and layer normalization.</li>
+</ol>
+<p>This maps exactly onto the "Add &amp; Norm" boxes in the iconic diagram from the original paper. And because input and output shapes still match perfectly, blocks remain <strong>stackable</strong> — $N\times$ in the diagram — vertically as deep as your data can support. GPT-3 stacks 96 of them.</p>
+<h3 id="what-gets-optimized">What gets optimized?</h3>
+<p>Step back and look at the whole slot-filling model. It is just a mathematical function with a lot of parameters, trained end to end by (stochastic) gradient descent — all weights updated simultaneously from one gradient. The complete inventory of what backpropagation learns:</p>
+<ol>
+<li>the positional embeddings,</li>
+<li>the stand-alone token embeddings (unless pretrained and frozen with <code>trainable=False</code>),</li>
+<li>the $A_Q, A_K, A_V$ matrices for every attention head inside the encoder,</li>
+<li>the layer-norm scale and bias parameters,</li>
+<li>the weights of the feed-forward layers inside the encoder,</li>
+<li>the weights of any dense layers outside the encoder, and</li>
+<li>the weights of the final softmax layer.</li>
+</ol>
+<h2 id="85-three-ways-to-use-a-transformer">8.5 Three Ways to Use a Transformer</h2>
+<p>With the architecture settled, how do we deploy it? Three canonical use cases cover most of NLP:</p>
+<ul>
+<li><strong>Sequence labeling:</strong> every token gets a label. "fly from Boston to Denver" → <code>O O B-fromloc.city_name O B-toloc.city_name</code>. This is our ATIS problem — solved in Chapter 7.</li>
+<li><strong>Sequence classification:</strong> the whole sequence gets one label. "I loved the movie" → <em>Positive</em>. Sentiment analysis is the canonical example, but the same pattern covers routing incoming customer emails to the right department, and countless other tasks.</li>
+<li><strong>Sequence generation:</strong> given a sequence, continue it — "I loved the movie" → "I loved the movie, especially the cinematography and the background score." This requires a variant called the <em>causal</em> transformer encoder, the engine of large language models, covered in the next chapter.</li>
+</ul>
+<h3 id="the-cls-trick-for-sequence-classification">The <code>&lt;CLS&gt;</code> trick for sequence classification</h3>
+<p>Sequence labeling falls straight out of the architecture: one contextual embedding per token, one softmax per token. Classification poses a puzzle: the encoder emits <em>many</em> contextual embeddings, but we need <em>one</em> decision. If only we could summarize them into a single vector representing the whole sentence, we could feed it to a dense ReLU layer and a sigmoid (or softmax) and be done.</p>
+<p>The obvious move is to <strong>average</strong> the contextual embeddings. It works, but averaging mushes rich, distinct vectors into one — information is lost, and larger-magnitude embeddings dominate.</p>
+<p>The elegant alternative: prepend an artificial <strong>classification token</strong>, written <code>&lt;CLS&gt;</code>, to every input sentence during training. This token participates in attention like any other token, so its output embedding is contextual — it "sees" every other word in the sentence. Over the course of training, the network learns to concentrate whatever the classification task needs into that one embedding. At prediction time, we simply grab the <code>&lt;CLS&gt;</code> output embedding, run it through ReLU + sigmoid, and classify.</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "A meta-principle in deep learning: whenever you think you're making an ad hoc decision about something — like averaging a bunch of stuff — stop and ask, is there a better way where the right answer is learnable from the data directly using backpropagation?"</p>
+</blockquote>
+<p>(Why put <code>&lt;CLS&gt;</code> at the <em>beginning</em> rather than the end? Sentences are padded to a fixed length, so the last real token lands at a different position in every sentence; position 0 is always position 0. Pure bookkeeping convenience.)</p>
+<h2 id="86-self-supervised-learning-learning-from-all-the-text-out-there">8.6 Self-Supervised Learning: Learning from All the Text Out There</h2>
+<p>Everything so far assumed we train from scratch on our own labeled data. But if the input is natural language, why restrict ourselves to the text we happen to have labeled? A call-center router shouldn't have to <em>learn English</em> from ten thousand routed emails — it should learn English once, from everything, and spend our precious labels only on the routing.</p>
+<h3 id="why-transfer-learning-works-representations">Why transfer learning works: representations</h3>
+<p>Recall the transfer-learning episode from the computer-vision unit. We took <strong>ResNet-34</strong>, pre-trained on ImageNet; chopped off its output head; fed the output of this "headless ResNet" into a tiny neural network; and built an accurate handbags-vs-shoes classifier from only <strong>100 labeled examples</strong>. Why was that so effective?</p>
+<p>Because neural networks are <strong>representation learners</strong>. The output of every layer in a deep network is a transformed version of the raw input — a <em>representation</em>. From this perspective, a supervised deep network really learns two things: a cascade of increasingly abstract representations of its input, plus a final regression (or logistic-regression) model sitting on the last representation. Any prefix of the network — everything up to some layer — can be viewed as an <strong>encoder</strong> that converts raw input into a useful encoding; a deep network "contains" many encoders.</p>
+<p>The crucial empirical fact is that these representations capture <strong>general</strong> knowledge about the input, not just knowledge specific to the training task. In networks trained to classify everyday objects, the early layers learn lines, then edges, then more complex shapes; a face-detection network learns lines → edges → circles → nose-like parts → faces. Such general-purpose features are reusable: the face-detector's representations could plausibly power an emotion detector.</p>
+<p>This suggests a playbook. Find a deep network trained on <em>similar inputs</em> (even with <em>different outputs</em>); chop off its output head; use the headless model as an encoder; attach a new output layer for your task; then either train just the new layer (keeping the encoder frozen) or <strong>fine-tune</strong> all the layers. Because you no longer spend precious labeled data learning good representations — the pre-training already did that on millions of examples — you need very little labeled data of your own. In effect, your training set is <em>everything the pre-trained model saw, plus your few hundred examples</em>.</p>
+<h3 id="the-label-problem-and-the-self-supervised-solution">The label problem, and the self-supervised solution</h3>
+<p>ResNet's pre-training relied on ImageNet: a million images, each <em>hand-labeled</em> into one of 1,000 categories. To pull the same trick for text we need (1) lots of text — no problem, the internet and Wikipedia overflow with it — and (2) <strong>output labels for every piece of text we feed in</strong>. What should the label for an arbitrary Wikipedia sentence be? Nobody is going to hand-label the internet.</p>
+<p>The beautiful answer is <strong>self-supervised learning</strong>:</p>
+<blockquote>
+<p><strong>Key idea:</strong> predict a subset of the input data using the rest of the input.</p>
+</blockquote>
+<p>The labels come <em>from the data itself</em> — no human annotation required.</p>
+<h3 id="masking-bert-style-pre-training">Masking: BERT-style pre-training</h3>
+<p>The most common self-supervised technique for text is <strong>masking</strong>. Take an original sentence, randomly knock out some words (replacing each with a special <code>&lt;MASK&gt;</code> token), and treat the removed words as "fake" labels the network must recover:</p>
+<div class="highlight"><pre><span></span><code>Original:  &quot;The mission of the MIT Sloan School of Management is to develop
+            principled, innovative leaders who improve the world...&quot;
+
+Input:     &quot;The &lt;MASK&gt; of the MIT Sloan School of &lt;MASK&gt; is to develop
+            principled, innovative &lt;MASK&gt; who improve the world...&quot;
+
+Labels:     mission, Management, leaders, ...
+</code></pre></div>
+
+<p>Ramakrishnan's memorable image: you bake a donut and punch a hole in the middle. The donut with the hole is your new input; the munchkin is the label.</p>
+<p>Now for the amazing part. <strong>In the process of learning to fill in the blanks, the network learns a good representation of the input data.</strong> This makes intuitive sense: to fill blanks successfully, the model must learn how words relate to each other — grammar, semantics, and a good deal of world knowledge. If you can complete "The capital of France is ____," you evidently know something about the world.</p>
+<p>And notice the punchline: masked self-supervised learning <strong>is just a sequence labeling problem</strong> — exactly the shape of problem the transformer encoder already solves. The masked sentence goes in as positional input embeddings; contextual embeddings come out; at every <code>&lt;MASK&gt;</code> position we attach a softmax over the vocabulary and score it against the true missing word; backpropagate the loss; done. We simply ignore the outputs at the non-masked positions.</p>
+<p>Pre-train a transformer encoder this way on massive amounts of English text and you get... <strong>BERT</strong>, the famous model Google used to upgrade its search in 2019 (the "Brazil visa" example from Chapter 7 runs on it). Reading the BERT paper is now within reach: "BERT's model architecture is a multi-layer bidirectional Transformer encoder" — you know exactly what that means. BERT-Base stacks $L = 12$ transformer blocks with hidden size $H = 768$ (the embedding dimension) and $A = 12$ attention heads; BERT-Large stacks 24 blocks. <em>Bidirectional</em> means every word can attend to every other word in the sentence — in contrast to the <strong>causal</strong> transformer we meet in the next chapter, where each position may attend only to the words <em>before</em> it. That causal variant, trained to predict the <em>next</em> token from everything so far, is the GPT-style flavor of self-supervision that powers sequence generation and large language models.</p>
+<p>Two more conveniences. First, BERT was trained <em>with</em> the <code>&lt;CLS&gt;</code> token, so it supports sequence classification out of the box — no surgery required; grab the <code>&lt;CLS&gt;</code> embedding and attach your classifier head. Second, BERT is an equally good pre-trained starting point for sequence <em>labeling</em>. Numerous refined variants have appeared over the years; the <strong>Sentence Transformers</strong> library (sbert.net) is a good gateway to them.</p>
+<p>The practical recipe, then, for any sequence classification or labeling problem over natural language text: take a model like BERT as a pre-trained encoder, label "a few hundred" examples, attach the right final layers, and fine-tune. And often you can do even less — which brings us to HuggingFace.</p>
+<h2 id="87-using-pre-trained-models-from-huggingface">8.7 Using Pre-Trained Models from HuggingFace</h2>
+<p>If your problem is a <em>standard</em> NLP problem — sentiment classification, named entity recognition, question answering, summarization — you may not need to fine-tune anything at all. Others have already pre-trained (and task-fine-tuned) models for these tasks and published them on model hubs. The most popular is the <strong>HuggingFace Hub</strong>, which hosted over 500,000 pre-trained models as of February 2024 (up roughly tenfold from the year before), organized by task, along with datasets, demos (Spaces), and documentation.</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "If you have a problem where the input is natural language text, the first question to ask is: is it a standard task or not? If it's a standard task, do not reinvent the wheel."</p>
+</blockquote>
+<p>The gateway is the <code>transformers</code> library's <strong><code>pipeline</code></strong> function: name a task, get back a ready-to-use model wrapped as a callable. The Hands-On Lab below works through the examples in detail.</p>
+<h2 id="88-beyond-text-one-block-many-modalities">8.8 Beyond Text: One Block, Many Modalities</h2>
+<p>Transformers now dominate speech, vision, and more — yet here is the remarkable fact emphasized in lecture: <strong>the transformer block itself is used as-is, with no changes</strong>. No surgery, no clever architectural rethinking per domain. All the application-specific cleverness lives in one place: <em>how you tokenize and embed the input</em> so it can be fed to the block. Once the input is cast into the "common language" of embeddings, the transformer doesn't care where they came from.</p>
+<h3 id="the-vision-transformer-vit">The Vision Transformer (ViT)</h3>
+<p>How do you tokenize a <em>picture</em>? "I love HODL" splits into three obvious tokens; an image does not. The Vision Transformer's answer: <strong>chop the image into small square patches</strong> (say, a 3×3 grid of 9 patches). Each patch is just three tables of RGB numbers; <strong>flatten</strong> it into one long vector, then run it through a dense layer (a <strong>linear projection</strong> — the same synonym as before) to get a compact embedding. Now the image is nine embeddings. Add <strong>positional embeddings</strong> — nine positions, top-left through bottom-right, because patch order obviously matters — prepend a <code>&lt;CLS&gt;</code> token, run the whole thing through a standard transformer encoder stack, and attach a softmax to the <code>&lt;CLS&gt;</code> output: bird, ball, car. This simple approach, amazingly, works — and note there is no "vocabulary" of patches; <em>any</em> image yields nine embeddings through the learned projection.</p>
+<h3 id="the-tab-transformer">The Tab Transformer</h3>
+<p>For tabular data, honesty first: gradient-boosted trees (XGBoost) remain excellent, and deep learning holds no decisive edge — try both. But transformers do work. The Tab Transformer embeds each <strong>categorical</strong> feature (a categorical value is just text, and text can be embedded), runs those embeddings through a standard transformer block, then concatenates the contextualized outputs with the <strong>continuous</strong> features and finishes with dense layers.</p>
+<h3 id="multi-modal-models">Multi-modal models</h3>
+<p>Because the block is input-agnostic, mixing modalities is natural. Given a product image, a text description, and tabular attributes: embed the text as usual, embed the image ViT-style, embed the tabular categoricals Tab-Transformer-style, prepend <code>&lt;CLS&gt;</code>, and feed everything into one transformer encoder stack — then classify from the contextual <code>&lt;CLS&gt;</code> embedding. This is exactly why systems like GPT-4 Vision and Gemini can accept an image plus a question: every modality is "embedding-ized," after which attention happily discovers that a word in your question relates to a patch in the picture.</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "You give me embeddings, I give you great contextual embeddings out, and nobody gets hurt. That is the deal with the transformer stack."</p>
+</blockquote>
+<h3 id="contrastive-learning-a-brief-look">Contrastive learning (a brief look)</h3>
+<p>Masking gave us self-supervision for text. What about pre-training on <em>unlabeled images</em>? A highly effective technique is <strong>contrastive learning</strong> (e.g., SimCLR): for every original image, construct a pair of "augmented" versions (crops, color shifts, and so on), and train the network to <strong>maximize agreement</strong> — making the learned representations of each augmented pair close to each other while far from the representations of other images' pairs. Once trained, you extract an encoder from the model and fine-tune it, exactly as with masked-language pre-training.</p>
+<h2 id="hands-on-lab">Hands-On Lab</h2>
+<p>The companion Colab (adapted from the <em>NLP with Transformers</em> book's introduction notebook) demonstrates solving standard NLP problems <strong>without any fine-tuning</strong>, using HuggingFace's <code>pipeline</code> function. The library is preinstalled in Colab, so you can import and go.</p>
+<p>All examples use one running text — a customer complaint with a Transformers-franchise wink:</p>
+<div class="highlight"><pre><span></span><code><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Dear Amazon, last week I ordered an Optimus Prime action figure </span><span class="se">\</span>
+<span class="s2">from your online store in Germany. Unfortunately, when I opened the package, </span><span class="se">\</span>
+<span class="s2">I discovered to my horror that I had been sent an action figure of Megatron </span><span class="se">\</span>
+<span class="s2">instead! As a lifelong enemy of the Decepticons, I hope you can understand my </span><span class="se">\</span>
+<span class="s2">dilemma. To resolve the issue, I demand an exchange of Megatron for the </span><span class="se">\</span>
+<span class="s2">Optimus Prime figure I ordered. Enclosed are copies of my records concerning </span><span class="se">\</span>
+<span class="s2">this purchase. I expect to hear from you soon. Sincerely, Bumblebee.&quot;&quot;&quot;</span>
+</code></pre></div>
+
+<h3 id="step-1-text-classification-sentiment">Step 1: Text classification (sentiment)</h3>
+<p>Creating a classifier is one line — name the task and <code>pipeline</code> downloads a sensible default model (here, a DistilBERT fine-tuned on the SST-2 sentiment dataset):</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">pipeline</span>
+
+<span class="n">classifier</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;text-classification&quot;</span><span class="p">)</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">classifier</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="c1"># [{&#39;label&#39;: &#39;NEGATIVE&#39;, &#39;score&#39;: 0.9015467166900635}]</span>
+</code></pre></div>
+
+<p>The complaint is judged negative with ~90% confidence. Note the warning the library prints — in production you should pin a specific model and revision rather than rely on the default.</p>
+<p>Probing with trickier inputs shows both strength and brittleness:</p>
+<div class="highlight"><pre><span></span><code><span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;i hated the movie&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;if i said i loved the movie, i would be lying&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;the movie left me speechless&#39;</span><span class="p">,</span>
+          <span class="s1">&#39; incredible!&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;almost but not quite entirely unlike anything good i have ever seen&#39;</span><span class="p">]</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">classifier</span><span class="p">(</span><span class="n">inputs</span><span class="p">))</span>
+</code></pre></div>
+
+<table>
+<thead>
+<tr>
+<th>input</th>
+<th>label</th>
+<th>score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>i hated the movie</td>
+<td>NEGATIVE</td>
+<td>0.9997</td>
+</tr>
+<tr>
+<td>if i said i loved the movie, i would be lying</td>
+<td>NEGATIVE</td>
+<td>0.9921</td>
+</tr>
+<tr>
+<td>the movie left me speechless</td>
+<td>NEGATIVE</td>
+<td>0.9916</td>
+</tr>
+<tr>
+<td>incredible!</td>
+<td>POSITIVE</td>
+<td>0.9999</td>
+</tr>
+<tr>
+<td>almost but not quite entirely unlike anything good...</td>
+<td>POSITIVE</td>
+<td>0.9946</td>
+</tr>
+</tbody>
+</table>
+<p>It handles the indirect negation ("...I would be lying") correctly. But "left me speechless" is genuinely ambiguous — as Ramakrishnan observes, a well-calibrated classifier should sit near 50% there, not 99% negative. And the Douglas Adams–inspired quadruple negation ("almost but not quite entirely unlike anything good") fools it completely.</p>
+<h3 id="step-2-named-entity-recognition">Step 2: Named entity recognition</h3>
+<p>Extracting entities — once the domain of painstakingly hand-built systems — is "just a pipeline away." The <code>aggregation_strategy="simple"</code> option merges sub-word pieces into whole entities where possible:</p>
+<div class="highlight"><pre><span></span><code><span class="n">ner_tagger</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;ner&quot;</span><span class="p">,</span> <span class="n">aggregation_strategy</span><span class="o">=</span><span class="s2">&quot;simple&quot;</span><span class="p">)</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">ner_tagger</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
+</code></pre></div>
+
+<table>
+<thead>
+<tr>
+<th>entity_group</th>
+<th>score</th>
+<th>word</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ORG</td>
+<td>0.88</td>
+<td>Amazon</td>
+</tr>
+<tr>
+<td>MISC</td>
+<td>0.99</td>
+<td>Optimus Prime</td>
+</tr>
+<tr>
+<td>LOC</td>
+<td>0.9998</td>
+<td>Germany</td>
+</tr>
+<tr>
+<td>MISC / PER</td>
+<td>0.56 / 0.59</td>
+<td>Mega / ##tron</td>
+</tr>
+<tr>
+<td>ORG / MISC</td>
+<td>0.67 / 0.50</td>
+<td>Decept / ##icons</td>
+</tr>
+<tr>
+<td>PER</td>
+<td>0.81</td>
+<td>Bumblebee</td>
+</tr>
+</tbody>
+</table>
+<p>Amazon is correctly an organization (ORG), Germany a location (LOC), Bumblebee a person (PER). The fictional robots confuse it — "Megatron" and "Decepticons" get split into sub-word fragments (the <code>##</code> prefix marks a continuation piece) with low-confidence, inconsistent tags. Still, for standard text like news stories, this works well out of the box — and once entities are extracted into a structured table, traditional machine learning can take over.</p>
+<h3 id="step-3-question-answering">Step 3: Question answering</h3>
+<p>An <em>extractive</em> QA pipeline finds the answer span within a supplied context:</p>
+<div class="highlight"><pre><span></span><code><span class="n">reader</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;question-answering&quot;</span><span class="p">)</span>
+<span class="n">question</span> <span class="o">=</span> <span class="s2">&quot;What does the customer want?&quot;</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">reader</span><span class="p">(</span><span class="n">question</span><span class="o">=</span><span class="n">question</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">text</span><span class="p">)</span>
+<span class="c1"># score ≈ 0.63, start=335, end=358, answer=&#39;an exchange of Megatron&#39;</span>
+</code></pre></div>
+
+<p>Note that the model reports <em>where</em> in the input the answer lives (character offsets 335–358). Ramakrishnan highlights why that matters: when large language models answer questions, they can hallucinate; grounding an answer in a specific input span gives you a way to audit — a form of QA on LLM output.</p>
+<h3 id="step-4-summarization-and-swapping-models">Step 4: Summarization — and swapping models</h3>
+<div class="highlight"><pre><span></span><code><span class="n">summarizer</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;summarization&quot;</span><span class="p">)</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">summarizer</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">56</span><span class="p">,</span> <span class="n">clean_up_tokenization_spaces</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;summary_text&#39;</span><span class="p">])</span>
+<span class="c1"># &quot;Bumblebee ordered an Optimus Prime action figure from your online store</span>
+<span class="c1">#  in Germany. Unfortunately, when I opened the package, I discovered...&quot;</span>
+</code></pre></div>
+
+<p>The default model's "summary" mostly parrots the opening sentences and awkwardly mixes third and first person. The fix demonstrates a key Hub skill — <strong>specify a different model</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">summarizer</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;summarization&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;philschmid/bart-large-cnn-samsum&quot;</span><span class="p">)</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">summarizer</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">56</span><span class="p">,</span> <span class="n">clean_up_tokenization_spaces</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;summary_text&#39;</span><span class="p">])</span>
+<span class="c1"># &quot;Bumblebee ordered an Optimus Prime action figure from Amazon&#39;s online</span>
+<span class="c1">#  store in Germany, but was sent an action figure of Megatron instead.</span>
+<span class="c1">#  Bumblebee wants an exchange...&quot;</span>
+</code></pre></div>
+
+<p>Much better: a genuine third-person abstractive summary. Lesson: the default is a starting point; browse the Hub (filtering by task, downloads, and likes) for a model suited to your data.</p>
+<h3 id="step-5-text-generation">Step 5: Text generation</h3>
+<p>Finally, a taste of sequence generation — the GPT-style, next-token-prediction use case developed fully in the next chapter. We prompt a generator with the complaint plus the start of a customer-service reply:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_seed</span>
+<span class="n">set_seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>  <span class="c1"># reproducible sampling</span>
+
+<span class="n">generator</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;text-generation&quot;</span><span class="p">)</span>   <span class="c1"># defaults to GPT-2</span>
+<span class="n">response</span> <span class="o">=</span> <span class="s2">&quot;Dear Bumblebee, I am sorry to hear that your order was mixed up.&quot;</span>
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">text</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Customer service response:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">response</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">generator</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;generated_text&#39;</span><span class="p">])</span>
+</code></pre></div>
+
+<p>GPT-2's continuation is, in the notebook's word, "Yikes!!" — small models generate poor text. The notebook points to a much larger model (<code>bigscience/bloom</code>) as an optional follow-up, foreshadowing the scale story of the LLM lectures.</p>
+<h3 id="recap">Recap</h3>
+<p>The lab's workflow generalizes: (1) ask whether your problem is a standard NLP task; (2) if so, find it in the Hub's task taxonomy; (3) instantiate a <code>pipeline</code>, optionally pinning a specific model; (4) evaluate on your own examples, including adversarial ones; (5) escalate — swap models, or fine-tune a pre-trained encoder like BERT on a few hundred labeled examples — only if the out-of-the-box behavior falls short.</p>
+<h2 id="key-takeaways">Key Takeaways</h2>
+<ul>
+<li>Self-attention is compactly $\mathrm{softmax}(XX^\top)X$: one matmul computes all pairwise dot products, a row-wise softmax turns them into weights, and a second matmul takes the weighted averages. This matrix formulation is what makes transformers fast on GPUs.</li>
+<li>Tunable attention multiplies the three copies of the input by learnable matrices — $Q = XA_Q$, $K = XA_K$, $V = XA_V$ — giving $\text{Attention}(Q,K,V) = \mathrm{softmax}(QK^\top/\sqrt{d_k})\,V$. These matrices are the parameters the attention layer learns, and separate per-head matrices are why different heads learn different patterns.</li>
+<li>Residual connections (add the input back to each sublayer's output) preserve the original signal and dramatically improve gradient flow; layer normalization keeps activations in a narrow range so backpropagation stays healthy across deep stacks.</li>
+<li>Transformer parameter count is independent of sequence length — only the positional table depends on maximum length — which is why context windows can grow without adding parameters.</li>
+<li>The three canonical uses are sequence labeling (per-token softmax), sequence classification (via the learned <code>&lt;CLS&gt;</code> token's contextual embedding), and sequence generation (causal transformers, next chapter).</li>
+<li>Deep networks are representation learners; their internal representations capture <em>general</em> knowledge about the input, which is why headless pre-trained models transfer to new tasks with tiny labeled datasets.</li>
+<li>Self-supervised learning manufactures labels from raw data by predicting part of the input from the rest. Masking (fill-in-the-blanks) pre-trains bidirectional encoders — BERT; next-token prediction pre-trains causal models — the GPT family.</li>
+<li>For standard NLP tasks, don't reinvent the wheel: HuggingFace hosts hundreds of thousands of pre-trained models, usable through one-line <code>pipeline</code>s, with fine-tuning as the fallback for non-standard problems.</li>
+<li>The transformer block is modality-agnostic: images (patch embeddings, ViT), tabular data (categorical embeddings, Tab Transformer), and multi-modal mixtures all reuse the identical block — only the tokenization/embedding step changes.</li>
+</ul>
+<h2 id="check-your-understanding">Check Your Understanding</h2>
+<p><strong>1. Before the tunability tweak, why would two attention heads in the same layer be useless?</strong></p>
+<details><summary>Answer</summary>
+Plain self-attention contains no learnable parameters — it just computes dot products of the incoming embeddings, softmaxes them, and averages. Two heads receiving the same input would therefore compute exactly the same thing and produce identical outputs, so the second head adds nothing. Once each head gets its own learnable $A_Q$, $A_K$, $A_V$ matrices — initialized with different random values and updated independently by backpropagation — the heads diverge and can learn different patterns (meaning, grammar, tense, tone).
+</details>
+
+<p><strong>2. In the formula $\text{Attention}(Q,K,V) = \mathrm{softmax}!\big(QK^\top/\sqrt{d_k}\big)V$, what are $Q$, $K$, and $V$, and what is the purpose of the $\sqrt{d_k}$?</strong></p>
+<details><summary>Answer</summary>
+$Q = XA_Q$, $K = XA_K$, and $V = XA_V$ are three learned linear transformations of the same input matrix $X$ (the positional input embeddings stacked as rows) — equivalent to passing $X$ through three dense layers with linear activation. $QK^\top$ computes all pairwise (transformed) dot products in one matrix multiplication; the row-wise softmax converts them to weights; multiplying by $V$ takes the weighted averages that become the contextual embeddings. The $\sqrt{d_k}$ scaling prevents very large dot products from saturating the softmax (squashing all other weights toward zero), which would stall gradient flow.
+</details>
+
+<p><strong>3. What does a residual connection do, and why is simple addition used rather than concatenation?</strong></p>
+<details><summary>Answer</summary>
+A residual connection adds a sublayer's input to its output element-wise: $\text{output} = \text{Layer}(x) + x$. It acts as insurance — downstream layers retain access to the original signal even if the transformation is poor — and it substantially improves gradient flow during backpropagation, enabling very deep networks (it is the idea behind ResNet). Addition is used because concatenation would grow the representation at every layer, breaking the same-size-in, same-size-out property that makes transformer blocks stackable; since input and output have identical shape, element-wise addition preserves the dimension exactly.
+</details>
+
+<p><strong>4. Why is the number of parameters in a transformer independent of the input sentence length?</strong></p>
+<details><summary>Answer</summary>
+The attention matrices $A_Q, A_K, A_V$ (and the feed-forward weights) act on individual embeddings, so their sizes depend only on the embedding dimension, not on how many tokens arrive — a sentence with 3 tokens or 3,000 uses the same matrices. The only length-dependent component is the positional embedding table, which needs one row per supported position. This is why models can extend to very long context windows (e.g., a million tokens) without increasing parameter count, though the computation per input grows.
+</details>
+
+<p><strong>5. For sequence classification, why is the <code>&lt;CLS&gt;</code> token approach preferred over averaging the contextual embeddings, and why is <code>&lt;CLS&gt;</code> placed at the start of the sentence?</strong></p>
+<details><summary>Answer</summary>
+Averaging mushes all the contextual embeddings together, losing richness and letting large-magnitude vectors dominate. The `<CLS>` token participates in self-attention with every other token, so its output embedding is a *learned* summary of the whole sentence — the network is free to concentrate exactly the information the classification task needs into it, following the meta-principle of replacing ad hoc choices with backprop-learnable ones. It goes at the start because sentences are padded to a fixed length: the beginning is always position 0, whereas the last real token lands at a different position per sentence, which would require extra bookkeeping.
+</details>
+
+<p><strong>6. State the key idea of self-supervised learning and explain how masking implements it for text. Why does filling in blanks produce useful representations?</strong></p>
+<details><summary>Answer</summary>
+Self-supervised learning predicts a subset of the input data using the rest of the input, so labels come free from the data itself — no human annotation. Masking implements this by randomly replacing words in a sentence with `<MASK>` tokens; the masked sentence is the new input and the removed words are the "fake" labels, making pre-training just a sequence labeling problem a transformer encoder already solves. To fill blanks successfully across billions of sentences, the model must learn how words relate to each other — grammar, semantics, and world knowledge (completing "The capital of France is ____" requires knowing facts) — and those relationships are exactly what good general-purpose representations encode.
+</details>
+
+<p><strong>7. What is the difference between BERT-style and GPT-style pre-training?</strong></p>
+<details><summary>Answer</summary>
+BERT is a *bidirectional* transformer encoder pre-trained with masked language modeling: every token can attend to every other token in the sentence, and the model learns to recover randomly masked words. This makes it ideal as a pre-trained encoder for sequence classification (it even ships with a trained `<CLS>` token) and sequence labeling. GPT-style models use a *causal* transformer, in which each position may attend only to the tokens before it, and are pre-trained on next-token prediction — continuing the sequence. That objective directly supports sequence generation and underlies large language models (covered in the next chapter).
+</details>
+
+<p><strong>8. Describe how the Vision Transformer feeds an image to an unmodified transformer block.</strong></p>
+<details><summary>Answer</summary>
+The image is chopped into a grid of small square patches (e.g., nine). Each patch — three tables of RGB values — is flattened into one long vector and passed through a dense layer (a learned linear projection) to produce a compact patch embedding. Learned positional embeddings for the nine grid positions are added, because patch order matters. A `<CLS>` token is prepended, the sequence of embeddings goes through a standard transformer encoder stack unchanged, and a softmax on the contextual `<CLS>` embedding performs classification. All the domain-specific work is in the tokenize-and-embed step; the transformer block itself is untouched.
+</details>
+
+<p><strong>9. Your team needs to extract company names from news articles by next week. Based on this chapter, what should you try first, and what are your escalation paths?</strong></p>
+<details><summary>Answer</summary>
+Named entity recognition is a standard NLP task, so first try a HuggingFace pipeline: `ner_tagger = pipeline("ner", aggregation_strategy="simple")` — no training required, and it tags organizations (ORG), locations (LOC), and persons (PER) out of the box. Evaluate it on your own articles, including hard cases (the lab showed it fumbling unusual names like "Megatron"). If quality falls short, browse the Hub for a better NER model (filter by task, downloads, likes) and pin it in the pipeline. If the task is non-standard (say, domain-specific entity types), take a pre-trained encoder like BERT, label a few hundred examples, attach a per-token classification head, and fine-tune — the transfer-learning playbook.
+</details>
+      <nav class="chapter-footer" aria-label="Chapter navigation"><a class="previous" href="ch07-transformers.html">← 7 · Transformers</a><a class="next" href="ch09-llms-and-rag.html">9 · LLMs and RAG →</a></nav>
+    </article>
+  </main>
+</body>
+</html>

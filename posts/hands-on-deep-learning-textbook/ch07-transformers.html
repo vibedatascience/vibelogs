@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A hands-on deep learning textbook companion to MIT 15.773">
+  <title>Chapter 7: Transformers I — Attention and Contextual Embeddings · Hands-On Deep Learning</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
+  </script>
+  <script defer src="mathjax/tex-svg.js"></script>
+  <script defer src="search-index.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"></div>
+  <aside class="sidebar">
+    <a class="brand" href="index.html">Hands-On Deep Learning</a>
+    <div class="brand-subtitle">MIT 15.773 · Spring 2024 companion</div>
+    <input class="search" type="search" placeholder="Search the full book…" data-search aria-label="Search">
+    <div class="search-results hidden" data-search-results></div>
+    <nav><div class="nav-part">Front Matter</div>
+<a class="nav-link" href="index.html">Start Here</a>
+<div class="nav-part">Part I · Foundations</div>
+<a class="nav-link" href="ch01-intro-to-neural-networks.html">1 · Neural Networks</a>
+<a class="nav-link" href="ch02-training-deep-networks.html">2 · Training Deep Networks</a>
+<a class="nav-link" href="ch03-keras-and-cnns-from-scratch.html">3 · Keras and Vision Basics</a>
+<div class="nav-part">Part II · Computer Vision</div>
+<a class="nav-link" href="ch04-cnns-transfer-learning.html">4 · CNNs and Transfer Learning</a>
+<div class="nav-part">Part III · Natural Language</div>
+<a class="nav-link" href="ch05-nlp-basics.html">5 · Text Vectorization</a>
+<a class="nav-link" href="ch06-embeddings.html">6 · Embeddings</a>
+<a class="nav-link active" href="ch07-transformers.html">7 · Transformers</a>
+<a class="nav-link" href="ch08-transformers-ii-self-supervised.html">8 · Self-Supervised Learning</a>
+<div class="nav-part">Part IV · Generative AI</div>
+<a class="nav-link" href="ch09-llms-and-rag.html">9 · LLMs and RAG</a>
+<a class="nav-link" href="ch10-peft-lora.html">10 · PEFT and LoRA</a>
+<a class="nav-link" href="ch11-diffusion-text-to-image.html">11 · Diffusion Models</a>
+<div class="nav-part">Appendices</div>
+<a class="nav-link" href="appendix-a-homework.html">A · Homework and Solutions</a>
+<a class="nav-link" href="appendix-b-resources.html">B · Resource Index</a></nav>
+    <div class="sidebar-actions">
+      <button data-theme-toggle type="button">Light / dark</button>
+      <button data-print type="button">Print</button>
+    </div>
+    <div class="sidebar-actions">
+      <a class="button" href="complete-book.html">Complete book</a>
+      <a class="button" href="notebooks.html">Notebooks</a>
+    </div>
+  </aside>
+  <main class="page">
+    <article class="article">
+      <div class="eyebrow">Part III · Natural Language</div>
+      <h1 id="chapter-7-transformers-i-attention-and-contextual-embeddings">Chapter 7: Transformers I — Attention and Contextual Embeddings</h1>
+<blockquote>
+<p><strong>Lecture video:</strong> <a href="https://www.youtube.com/watch?v=IeF7aATDaw4">https://www.youtube.com/watch?v=IeF7aATDaw4</a>
+<strong>Slides:</strong> <a href="https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/mit15_773_s24_lec07.pdf">mit15_773_s24_lec07.pdf</a>
+<strong>Companion Colab notebook:</strong> <a href="https://colab.research.google.com/drive/1G3wNTJukKRtPBrfXQY84TuPfwkRwtv9h">https://colab.research.google.com/drive/1G3wNTJukKRtPBrfXQY84TuPfwkRwtv9h</a></p>
+</blockquote>
+<h2 id="learning-objectives">Learning Objectives</h2>
+<p>After completing this chapter, you should be able to:</p>
+<ul>
+<li>Explain why bag-of-words models and static word embeddings (such as GloVe) are inadequate for tasks where the meaning of a word depends on its context and on word order.</li>
+<li>Describe the <em>slot filling</em> (sequence labeling) problem and formulate it as a word-level multi-class classification task.</li>
+<li>State the three architectural requirements that motivated the transformer: same-length output, context sensitivity, and order sensitivity.</li>
+<li>Derive the self-attention operation as a weighted average of embeddings, where the weights come from softmax-normalized dot products.</li>
+<li>Explain why multiple attention heads are useful, and how their outputs are concatenated and projected back to the original embedding dimension.</li>
+<li>Describe how positional embeddings inject word-order information into an otherwise order-blind architecture.</li>
+<li>Assemble a complete transformer encoder in Keras and apply it to the ATIS slot-filling problem end to end.</li>
+</ul>
+<h2 id="71-why-transformers">7.1 Why Transformers?</h2>
+<p>Transformers were invented in 2017 for machine translation — turning English into German, German into French, and so on. But within a few years they escaped their original niche entirely. As Ramakrishnan explains in lecture, the situation today is that if you are working on almost any serious machine learning problem, "you almost reflexively will try a transformer first, because it's probably going to be pretty darn good." The list of domains they have transformed is remarkable:</p>
+<ul>
+<li>Information retrieval and search</li>
+<li>Machine translation and speech recognition</li>
+<li>Text-to-speech</li>
+<li>Computer vision (the very territory we conquered earlier with convolutional networks)</li>
+<li>Reinforcement learning</li>
+<li>Generative AI — large language models, text-to-image models, image captioning</li>
+<li>Special-purpose scientific systems such as AlphaFold, the protein-structure model</li>
+</ul>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "Everything — everything — runs on a transformer. ... It's an incredibly flexible architecture, and I think we are lucky to be alive during a time when such a thing was invented."</p>
+</blockquote>
+<p>This chapter and the next develop the transformer from first principles. Rather than dropping the famous architecture diagram on you all at once, we will follow the course's approach: start with a concrete business problem, identify what any architecture must do to solve it, and then invent each transformer ingredient as the need arises.</p>
+<h3 id="the-motivating-use-case-natural-language-search">The motivating use case: natural language search</h3>
+<p>Our running use case is search, or more broadly, <em>information retrieval</em>. Users increasingly type (or speak) requests in plain natural language:</p>
+<ul>
+<li>"Find me all flights from BOS to LGA tomorrow morning"</li>
+<li>"How many customers abandoned their shopping carts?"</li>
+<li>"Find all contracts that are up for renewal next month"</li>
+</ul>
+<p>A common architecture for such systems converts the natural language query into a <em>structured</em> query — SQL, say — which can then be run against a database. The upside is enormous: search friction goes down and productivity goes up. The downside is that the bar for accuracy is high. This is not "write me a limerick about deep learning," where many answers are acceptable. If a user asks for flights from Boston to LaGuardia tomorrow morning, you had better get it exactly right.</p>
+<p>To convert "Find me all flights from BOS to LGA tomorrow morning" into SQL, the system must first automatically <strong>extract the travel-related entities</strong> from the query: the origin (BOS), the destination (LGA), the date and time window (tomorrow morning). That entity-extraction step is the deep learning problem we will solve in this chapter.</p>
+<h2 id="72-the-slot-filling-problem">7.2 The Slot-Filling Problem</h2>
+<p>We will use the <strong>Airline Travel Information Systems (ATIS)</strong> dataset, a classic benchmark of several thousand real flight-related queries. Helpfully, the researchers who compiled ATIS manually labeled <em>every word</em> of every query with the kind of travel entity it represents — or with <code>O</code> ("other") if it is not an entity at all. These per-word labels are called <strong>slots</strong>.</p>
+<p>Consider the query:</p>
+<div class="highlight"><pre><span></span><code>Input:  i want to fly from boston at 7 am and arrive in denver at 11 in the morning
+Labels: O O O O O B-fromloc.city_name O B-depart_time.time I-depart_time.time
+        O O O B-toloc.city_name O B-arrive_time.time O O B-arrive_time.period_of_day
+</code></pre></div>
+
+<p>A few things to notice:</p>
+<ul>
+<li>Ordinary words ("i", "want", "to", "fly", "from") get the catch-all label <code>O</code>.</li>
+<li>"boston" is labeled <code>B-fromloc.city_name</code> — it is a departure city <em>in this sentence</em>. In another query where a traveler is flying <em>into</em> Boston, the same word would receive a different tag. The labels are inherently contextual.</li>
+<li>Some entities span multiple tokens. "7 am" is a departure time made up of two words, so the first word is tagged <code>B-depart_time.time</code> (<strong>B</strong> for <em>Beginning</em>) and the second <code>I-depart_time.time</code> (<strong>I</strong> for <em>Intermediate</em>, i.e., inside the entity). This B/I convention lets the model mark where a multi-word entity starts and continues.</li>
+</ul>
+<p>The ATIS annotators anticipated essentially every travel concept — airline codes, airport names, round trip vs. one way, relative dates ("tomorrow"), and so on — resulting in <strong>123 possible slot types</strong>.</p>
+<h3 id="formulating-the-task">Formulating the task</h3>
+<p>The task, then, is a <strong>word-to-slot multi-class classification problem</strong>: each of the 18 words in the example above must be assigned to one of 123 slot types. Crucially, we are not classifying the whole query into one of 123 categories — <em>every word</em> gets its own classification.</p>
+<p>If we could run the query through a deep neural network and generate 18 outputs — one per input word — we could attach a 123-way softmax to each of those 18 outputs and train the whole thing with cross-entropy loss.</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "Isn't it cool that we can just casually talk about sticking a 123-way softmax onto each one of 18 nodes? Folks, wake up — you're not easily impressed. I'm impressed by that."</p>
+</blockquote>
+<p>This formulation reveals exactly what we need from our architecture. Three requirements emerge:</p>
+<ol>
+<li><strong>Same-length output.</strong> The output must have the same length as the input, so that each output element can be classified into the right slot type. And inputs vary in length — some queries are short, some long — so the architecture must accommodate variable-length sequences while preserving their cardinality.</li>
+<li><strong>Context.</strong> When the model sees "boston," it cannot decide between departure city and arrival city without looking at the surrounding words — is there a "from"? A "to"?</li>
+<li><strong>Order.</strong> "Flights from Boston to LaGuardia" means something very different from "flights from LaGuardia to Boston."</li>
+</ol>
+<h3 id="why-static-embeddings-are-not-enough">Why static embeddings are not enough</h3>
+<p>Requirement 2 deserves emphasis, because it is precisely where the tools from the previous two chapters fall short. Bag-of-words representations discard both order and context by construction. And static embeddings such as GloVe assign <em>one</em> vector per word, for all contexts that word can ever appear in. If a word has several meanings, its GloVe vector is, in Ramakrishnan's words, "some mushy average of all those meanings." Consider:</p>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Example contexts</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>see</td>
+<td>"I will <strong>see</strong> you soon" / "I will <strong>see</strong> this project to its end" / "I <strong>see</strong> what you mean"</td>
+</tr>
+<tr>
+<td>bank</td>
+<td>"I went to the <strong>bank</strong> to apply for a loan" / "I am <strong>banking</strong> on the job offer" / "I am standing on the left <strong>bank</strong>"</td>
+</tr>
+<tr>
+<td>it</td>
+<td>"The animal didn't cross the street because <strong>it</strong> was too tired" / "... because <strong>it</strong> was too wide"</td>
+</tr>
+<tr>
+<td>station</td>
+<td>"The train left the <strong>station</strong> on time" / "The radio <strong>station</strong> was playing 60s hits" / "I was <strong>stationed</strong> on a remote island"</td>
+</tr>
+</tbody>
+</table>
+<p>The pronoun example is a famous one: in "the animal didn't cross the street because it was too tired," <em>it</em> refers to the animal; change "tired" to "wide" and <em>it</em> refers to the street. A single fixed vector for "it" cannot capture this.</p>
+<p>The <strong>transformer architecture</strong> meets all three requirements. It takes the surrounding context of each word into account, takes word order into account, and generates an output with the same length as the input. Indeed, the name itself comes from requirement 1: if ten things come in, ten things go out — but each of the ten that goes out is a <em>transformed</em>, context-aware version of the one that came in.</p>
+<p>The practical impact has been dramatic. When Google introduced the BERT model (a transformer, which we meet in Chapter 8) into its search engine in 2019, the quality jump was far larger than the marginal gains typical of such a heavily optimized system. A query like "brazil traveler to usa need a visa" had previously surfaced a page about <em>US citizens</em> traveling to Brazil — the order of "to" was being ignored. With the transformer-based model, the top result became the US Embassy in Brazil's page on visas for Brazilians. Order finally mattered.</p>
+<h2 id="73-from-embeddings-to-contextual-embeddings-the-attention-idea">7.3 From Embeddings to Contextual Embeddings: The Attention Idea</h2>
+<p>We tackle the requirements one at a time, starting with context. Take the sentence:</p>
+<blockquote>
+<p>The train slowly left the station</p>
+</blockquote>
+<p>Each word has a stand-alone (uncontextual) embedding — call them $w_1, w_2, \dots, w_6$. These could be pretrained GloVe vectors or randomly initialized vectors that will be learned during training. Getting these is easy; we did it in Chapter 6.</p>
+<p>Now focus on the last word, "station." Since "station" can mean many things, we want to modify its embedding $w_6$ so that it incorporates the other words in the sentence — so that it <em>knows</em> it is a <strong>train</strong> station. That is what "taking context into account" concretely means.</p>
+<h3 id="step-1-suppose-we-knew-the-weights">Step 1: Suppose we knew the weights</h3>
+<p>Imagine, just for a moment, that someone told us <strong>how much attention to pay</strong> to each of the other words — that is, how much <em>weight</em> to give each word when contextualizing "station." Intuitively, which words should get the most weight? "Train," clearly — it pins down the meaning. "Slowly" and "left" carry some relevant information. "The" carries almost none. And "station" itself should keep substantial weight, because we want to <em>nudge</em> its embedding, not replace it. So we might imagine weights like:</p>
+<table>
+<thead>
+<tr>
+<th>The</th>
+<th>train</th>
+<th>slowly</th>
+<th>left</th>
+<th>the</th>
+<th>station</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.05</td>
+<td>0.30</td>
+<td>0.12</td>
+<td>0.08</td>
+<td>0.05</td>
+<td>0.40</td>
+</tr>
+</tbody>
+</table>
+<p>(These particular numbers are made up for illustration; shortly we will compute real ones.)</p>
+<p>Given such weights, what is the simplest way to use them? <strong>Take a weighted average.</strong> We compute a new vector</p>
+<p>$$\hat{w}<em 1_6="1,6">6 = s</em>\, w_6$$}\, w_1 + s_{2,6}\, w_2 + s_{3,6}\, w_3 + s_{4,6}\, w_4 + s_{5,6}\, w_5 + s_{6,6</p>
+<p>where $s_{i,6}$ denotes the weight of word $i$ on word 6. The resulting vector $\hat{w}_6$ is just another vector of the same dimension — and that vector is the <strong>contextual embedding</strong> of "station." It replaces $w_6$ as the sentence flows onward. The same operation, with its own set of weights, is applied to every word in the sentence, so $w_1, \dots, w_6$ become $\hat{w}_1, \dots, \hat{w}_6$.</p>
+<h3 id="step-2-where-do-the-weights-come-from">Step 2: Where do the weights come from?</h3>
+<p>The intuition is elegant: <strong>the weight of a word should be proportional to how related it is to the target word.</strong> "Train" is highly related to "station," so it should get a large weight; "the" is not, so it should get a small one.</p>
+<p>How do we quantify "related"? With the <strong>dot product</strong> of the stand-alone embeddings. Recall that for two vectors,</p>
+<p>$$\langle a, b \rangle = \lVert a \rVert \, \lVert b \rVert \cos\theta,$$</p>
+<p>where $\theta$ is the angle between them. If the vectors have roughly unit length, the dot product is essentially the cosine of the angle: close to $1$ when the vectors point in nearly the same direction (highly related words), $0$ when they are orthogonal (unrelated), and $-1$ when they point in opposite directions. Since embedding training places related words near each other in embedding space (Chapter 6), the dot product is a natural relatedness score.</p>
+<p>There is one wrinkle: dot products can be negative, and proper weights for a weighted average must be <strong>non-negative and sum to 1</strong>. When was the last time you needed to turn an arbitrary collection of numbers into non-negative values summing to one? <em>Softmax.</em> We exponentiate each dot product and normalize:</p>
+<p>$$s_{i,6} = \frac{\exp\langle w_i, w_6\rangle}{\sum_{j=1}^{6} \exp\langle w_j, w_6\rangle}$$</p>
+<p>Putting the two steps together: compute all pairwise dot products with the target word, softmax them into weights, and take the weighted average of the stand-alone embeddings. The output is the contextual embedding. This whole operation is called a <strong>self-attention layer</strong>, and it is <em>the</em> key building block of the transformer. Stand-alone embeddings come in; contextual embeddings come out.</p>
+<h3 id="why-this-works-the-geometric-picture">Why this works: the geometric picture</h3>
+<p>By choosing weights this way, the embedding of a word moves closer to the embeddings of the other words in its current context, in proportion to how related they are. Picture "station" sitting in embedding space somewhere between "train" and "radio" — it is genuinely related to both. In the sentence "The train slowly left the station":</p>
+<ul>
+<li>"train" is present in the context and closely related, so it exerts a strong <strong>pull</strong> on "station."</li>
+<li>"radio" is also related to "station" in general — but it does not appear in this sentence, so it automatically receives zero weight and exerts no pull at all.</li>
+</ul>
+<p>By moving "station" toward "train" — equivalently, by <em>paying more attention</em> to "train" — we contextualize its embedding into the world of trains, platforms, departures, and tickets. As Ramakrishnan puts it in lecture, "it's like a portal into the whole train world. It's beautiful — this simple idea will get you there."</p>
+<p>A few common questions, answered as they were in lecture:</p>
+<ul>
+<li><em>Does a word's own weight dominate?</em> It is typically high (the dot product of a vector with itself is large), but it is not guaranteed to be the highest — the other words genuinely reshape the embedding.</li>
+<li><em>Does the old embedding survive?</em> No — $w_6$ is replaced by $\hat{w}_6$, and as the sentence flows through successive layers it becomes more and more contextualized.</li>
+<li><em>Is anything learned inside self-attention?</em> Look carefully: the operation as described contains <strong>no parameters at all</strong> — just dot products, softmax, and averaging. So what exactly is being <em>learned</em>? Hold that question; it is the central topic of the next chapter, where we make self-attention "tunable" with query, key, and value matrices.</li>
+</ul>
+<h2 id="74-multi-head-attention">7.4 Multi-Head Attention</h2>
+<p>Self-attention as described gives us one way of relating words to each other. But a single sentence can contain <strong>many simultaneous patterns</strong>: patterns of word meaning, of grammar and tense, of tone, of relationships between entities. There is not just one way to pay attention — there are many <em>needs</em> to pay attention.</p>
+<p>The fix is to run several self-attention layers in parallel. Each one is called an <strong>attention head</strong>, and the combination is <strong>multi-head attention</strong>. The analogy from the course's computer-vision unit is exact: just as a convolutional layer has many filters — one might learn to detect vertical lines, another curves — and we never dictate in advance what each filter should learn, we give the network multiple attention heads and let backpropagation decide what patterns each one picks up.</p>
+<p>The original "Attention Is All You Need" paper offers a nice illustration. In the sentence "The law will never be perfect, but its application should be just...", one attention head builds the contextual embedding of "perfect" by drawing heavily on "law," while a different head for the same word attends mostly to "perfect" itself. In practice, interpreting <em>why</em> a head attends the way it does is usually difficult — but empirically, adding heads improves performance on the tasks we care about, and that is what matters.</p>
+<h3 id="concatenate-and-project">Concatenate and project</h3>
+<p>Multiple heads create a bookkeeping problem. If a word's embedding is $D$-dimensional and we run $h$ heads, each head emits its own $D$-dimensional contextual embedding for that word, giving a concatenated vector of length $h \times D$. But we have taken inordinate care to keep sizes constant! So after concatenation, we run the long vector through a single dense layer with linear activation that <strong>projects</strong> it back down to $D$ dimensions. ("Linear projection," whenever you see it in the literature, is a synonym for "run it through a dense layer.") With 20 heads, the concatenation is 20 times longer — and one dense layer compresses it right back.</p>
+<h3 id="feed-forward-layers-injecting-non-linearity">Feed-forward layers: injecting non-linearity</h3>
+<p>One final tweak for this chapter. Everything so far — dot products aside — has been linear averaging; nothing in the pipeline yet gives the network the non-linear expressive power we know deep networks need. So after the multi-head attention and projection, each embedding is passed through a small <strong>feed-forward network</strong>: typically one hidden dense layer with ReLU activation (a common rule of thumb makes it about four times wider than the embedding, e.g., 400 units for 100-dimensional embeddings), followed by a linear dense layer that maps back to the embedding dimension $D$.</p>
+<p>Much of this design felt ad hoc when it was published — it came from strong intuitions rather than deep theory. Yet in the years since, researchers have tried to optimize every piece of it, and the original architecture has proven remarkably hard to beat.</p>
+<p><strong>The story so far:</strong> stand-alone embeddings (random or pretrained) come in; they pass through several self-attention heads; the heads' outputs are concatenated and projected back to size; the result passes through a ReLU feed-forward layer and a linear layer; contextual embeddings of exactly the same number and dimension come out. Six 100-dimensional vectors in, six 100-dimensional vectors out — but the numbers are now much smarter.</p>
+<h2 id="75-positional-encoding-making-order-matter">7.5 Positional Encoding: Making Order Matter</h2>
+<p>Check our three requirements. Context? ✓ — the self-attention dot products handle it. Same-length output? ✓ — by construction. Word order? <strong>✗.</strong></p>
+<p>Here is the uncomfortable fact: the architecture so far is completely blind to order. Dot products operate on <em>sets</em>, not sequences — every pair of words gets its dot product computed regardless of position. You could scramble "The train slowly left the station" into "The station slowly left the train" and get exactly the same contextual embeddings at the end. Convince yourself of this: nothing in the attention computation ever references <em>where</em> a word sits in the sentence.</p>
+<p>(A useful aside: if your problem genuinely has no order — say, tabular inputs like blood pressure and cholesterol level predicting heart disease — you can stop right here and use the transformer as is. Transformers work for both sets and sequences.)</p>
+<p>For language, though, order matters, and the fix is <strong>positional encoding</strong>. Many schemes exist; the course uses the simplest one, <strong>learned positional embeddings</strong>, which works well in practice:</p>
+<ul>
+<li>Treat each <em>position</em> in the input (0, 1, 2, ..., up to the maximum sentence length) as a categorical variable.</li>
+<li>Learn an embedding vector for each position, of the same dimension $D$ as the word embeddings — exactly the way we learn embeddings for words. These start random and are optimized by backpropagation along with everything else.</li>
+<li>The input to the transformer for each token is then the <strong>element-wise sum</strong>: stand-alone word embedding + position embedding.</li>
+</ul>
+<h3 id="a-worked-example">A worked example</h3>
+<p>Suppose our entire vocabulary has 2-dimensional embeddings and sentences can be at most 10 words long:</p>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Dim 1</th>
+<th>Dim 2</th>
+<th></th>
+<th>Position</th>
+<th>Dim 1</th>
+<th>Dim 2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cat</td>
+<td>0.5</td>
+<td>7.1</td>
+<td></td>
+<td>0</td>
+<td>1.3</td>
+<td>3.9</td>
+</tr>
+<tr>
+<td>sat</td>
+<td>1.2</td>
+<td>5.3</td>
+<td></td>
+<td>1</td>
+<td>6.3</td>
+<td>3.7</td>
+</tr>
+<tr>
+<td>mat</td>
+<td>−2.0</td>
+<td>−3.1</td>
+<td></td>
+<td>2</td>
+<td>0.6</td>
+<td>8.1</td>
+</tr>
+</tbody>
+</table>
+<p>For the sentence "cat sat mat":</p>
+<ul>
+<li>"cat" is in position 0: $(0.5, 7.1) + (1.3, 3.9) = (1.8, 11.0)$</li>
+<li>"sat" is in position 1: $(1.2, 5.3) + (6.3, 3.7) = (7.5, 9.0)$</li>
+<li>"mat" is in position 2: $(-2.0, -3.1) + (0.6, 8.1) = (-1.4, 5.0)$</li>
+</ul>
+<p>These sums — called <strong>positional input embeddings</strong> — are what enter the transformer. Notice the consequences. If the sentence were instead "mat sat cat," each word keeps its own word embedding but picks up a <em>different</em> position embedding, so the sums differ and the model can distinguish the two sentences. If the same word appears twice ("cat cat cat"), each occurrence shares the word embedding but gets a distinct positional addition, so the three inputs are all different. And the two tables are completely independent: the word table depends on the vocabulary, the position table only on the maximum sentence length you decide to support.</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "Where will these embeddings come from? What's the answer to the general question of where will these weights come from? We will learn it with backprop. We start with random numbers and make them better and better over the course of training."</p>
+</blockquote>
+<h2 id="76-the-transformer-encoder">7.6 The Transformer Encoder</h2>
+<p><img alt="Transformer encoder-decoder architecture with attention, feed-forward, residual, and normalization blocks" src="figures/generated/transformer-architecture.png"></p>
+<p><em>Figure: An original reconstruction of the encoder-decoder Transformer. It preserves the architectural relationships discussed in Lecture 7 without reproducing the third-party paper figure used in the slides.</em></p>
+<p>All three requirements are now satisfied, and the assembled machine has a name: the <strong>Transformer Encoder</strong>. To summarize the flow:</p>
+<ol>
+<li><strong>Input embeddings</strong> — random or pretrained stand-alone embeddings for each token.</li>
+<li><strong>Add positional embeddings</strong> — the element-wise sum injects order information (this is the "+" in the famous architecture diagram from <em>Attention Is All You Need</em>).</li>
+<li><strong>Multi-head attention</strong> — produces context-dependent representations; heads are concatenated and projected.</li>
+<li><strong>Feed-forward network</strong> — a simple ReLU layer plus linear layer, applied to each position, injecting non-linearity.</li>
+</ol>
+<p>The original paper's diagram also shows "Add &amp; Norm" boxes — <strong>residual connections</strong> and <strong>layer normalization</strong>. Those two refinements, along with the deeper question of what makes attention <em>learnable</em>, are covered in Chapter 8. (As the lecture slide says: see the textbook if you can't stand the suspense.)</p>
+<p>One property deserves special emphasis, because it explains the transformer's scalability. Because we took such care to make inputs and outputs identical in size — same number of tokens, same embedding dimension — transformer encoders can be <strong>stacked like pancakes</strong>, one feeding into the next. It is the perfect API: same thing in, same thing out. Each successive block operates at a higher level of abstraction, just as later convolutional layers combine edges into shapes into faces. GPT-3 stacks 96 transformer blocks. As with all things deep learning, more layers buy more modeling capacity — provided you have enough data to keep the model from overfitting.</p>
+<h2 id="77-slot-filling-with-a-transformer-encoder">7.7 Slot Filling with a Transformer Encoder</h2>
+<p>Back to ATIS. Here is the complete model design for the word-to-slot problem, for a query like "fly from Boston to Denver":</p>
+<ol>
+<li>Convert the tokens into <strong>positional input embeddings</strong> (word embedding + position embedding).</li>
+<li>Run them through a <strong>transformer encoder</strong>, obtaining one contextual embedding per input token.</li>
+<li>Pass each contextual embedding through a <strong>dense ReLU</strong> layer.</li>
+<li>Attach a <strong>softmax over the slot vocabulary</strong> to each position: each output token is classified into one of the ~123 slot types (<code>O</code>, <code>O</code>, <code>B-fromloc.city_name</code>, <code>O</code>, <code>B-toloc.city_name</code>).</li>
+</ol>
+<p>Every weight in this pipeline — the word embedding table, the position embedding table, everything inside the encoder, the dense layer, and the final softmax — is optimized jointly by backpropagation.</p>
+<h2 id="hands-on-lab">Hands-On Lab</h2>
+<p>The companion Colab builds and trains this exact model on ATIS. Here is a step-by-step walkthrough with the key code.</p>
+<h3 id="step-1-load-the-data">Step 1: Load the data</h3>
+<p>We load pre-packaged train and test CSVs. Each row has a <code>query</code>, an <code>intent</code> (which we ignore in this lab), and the <code>slot filling</code> label string.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">keras</span>
+
+<span class="n">keras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="n">df_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">train_url</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">df_test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">test_url</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">query_data_train</span> <span class="o">=</span> <span class="n">df_train</span><span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">slot_data_train</span> <span class="o">=</span> <span class="n">df_train</span><span class="p">[</span><span class="s1">&#39;slot filling&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">query_data_test</span> <span class="o">=</span> <span class="n">df_test</span><span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">slot_data_test</span> <span class="o">=</span> <span class="n">df_test</span><span class="p">[</span><span class="s1">&#39;slot filling&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+</code></pre></div>
+
+<p>A typical row pairs <code>"i want to fly from boston at 838 am and arrive..."</code> with <code>"O O O O O B-fromloc.city_name O B-depart_time..."</code>.</p>
+<h3 id="step-2-vectorize-the-queries-the-input-side">Step 2: Vectorize the queries (the input side)</h3>
+<p>We cap queries at 30 tokens. Longer queries are truncated; shorter ones are padded with the reserved pad token (the empty string, index 0). A <code>TextVectorization</code> layer adapted on the training corpus builds the vocabulary — 888 tokens, with <code>''</code> (padding) and <code>[UNK]</code> reserved, and frequent tokens like "to", "from", "flights", and "boston" near the top.</p>
+<div class="highlight"><pre><span></span><code><span class="n">max_query_length</span> <span class="o">=</span> <span class="mi">30</span>
+
+<span class="n">text_vectorization_query</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">TextVectorization</span><span class="p">(</span>
+    <span class="n">output_sequence_length</span><span class="o">=</span><span class="n">max_query_length</span>
+<span class="p">)</span>
+<span class="n">text_vectorization_query</span><span class="o">.</span><span class="n">adapt</span><span class="p">(</span><span class="n">query_data_train</span><span class="p">)</span>
+<span class="n">query_vocab_size</span> <span class="o">=</span> <span class="n">text_vectorization_query</span><span class="o">.</span><span class="n">vocabulary_size</span><span class="p">()</span>  <span class="c1"># 888</span>
+
+<span class="n">source_train</span> <span class="o">=</span> <span class="n">text_vectorization_query</span><span class="p">(</span><span class="n">query_data_train</span><span class="p">)</span>
+<span class="n">source_test</span> <span class="o">=</span> <span class="n">text_vectorization_query</span><span class="p">(</span><span class="n">query_data_test</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="step-3-vectorize-the-slots-the-output-side">Step 3: Vectorize the slots (the output side)</h3>
+<p>The labels are themselves token sequences, so they get the same treatment — with one crucial difference. Default standardization would lowercase the labels and strip out the <code>-</code>, <code>.</code>, and <code>_</code> characters that carry meaning in tags like <code>B-fromloc.city_name</code>. We must tell Keras <strong>not</strong> to standardize:</p>
+<div class="highlight"><pre><span></span><code><span class="n">text_vectorization_slots</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">TextVectorization</span><span class="p">(</span>
+    <span class="n">output_sequence_length</span><span class="o">=</span><span class="n">max_query_length</span><span class="p">,</span>
+    <span class="n">standardize</span><span class="o">=</span><span class="kc">None</span>          <span class="c1"># preserve &#39;-&#39;, &#39;.&#39;, &#39;_&#39; and case in slot names</span>
+<span class="p">)</span>
+<span class="n">text_vectorization_slots</span><span class="o">.</span><span class="n">adapt</span><span class="p">(</span><span class="n">slot_data_train</span><span class="p">)</span>
+<span class="n">slot_vocab_size</span> <span class="o">=</span> <span class="n">text_vectorization_slots</span><span class="o">.</span><span class="n">vocabulary_size</span><span class="p">()</span>   <span class="c1"># 125</span>
+
+<span class="n">target_train</span> <span class="o">=</span> <span class="n">text_vectorization_slots</span><span class="p">(</span><span class="n">slot_data_train</span><span class="p">)</span>
+<span class="n">target_test</span> <span class="o">=</span> <span class="n">text_vectorization_slots</span><span class="p">(</span><span class="n">slot_data_test</span><span class="p">)</span>
+</code></pre></div>
+
+<p>The slot vocabulary has 125 entries — the 123 slot types from lecture plus the reserved pad and <code>[UNK]</code> tokens.</p>
+<h3 id="step-4-define-the-transformer-building-blocks">Step 4: Define the transformer building blocks</h3>
+<p>The notebook defines two reusable Keras layers using the subclassing API (adapted from the Keras examples). You can treat them as Lego blocks even if you skip the class internals:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">keras</span><span class="w"> </span><span class="kn">import</span> <span class="n">ops</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras</span><span class="w"> </span><span class="kn">import</span> <span class="n">layers</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TransformerEncoder</span><span class="p">(</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">,</span> <span class="n">dense_dim</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">att</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">MultiHeadAttention</span><span class="p">(</span><span class="n">num_heads</span><span class="o">=</span><span class="n">num_heads</span><span class="p">,</span>
+                                             <span class="n">key_dim</span><span class="o">=</span><span class="n">embed_dim</span><span class="p">,</span>
+                                             <span class="n">output_shape</span><span class="o">=</span><span class="n">embed_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ffn</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">dense_dim</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">),</span>
+             <span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">embed_dim</span><span class="p">),]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layernorm1</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">LayerNormalization</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layernorm2</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">LayerNormalization</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="n">attn_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">att</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
+        <span class="n">out1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layernorm1</span><span class="p">(</span><span class="n">inputs</span> <span class="o">+</span> <span class="n">attn_output</span><span class="p">)</span>
+        <span class="n">ffn_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ffn</span><span class="p">(</span><span class="n">out1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">layernorm2</span><span class="p">(</span><span class="n">out1</span> <span class="o">+</span> <span class="n">ffn_output</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TokenAndPositionEmbedding</span><span class="p">(</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxlen</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token_emb</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">output_dim</span><span class="o">=</span><span class="n">embed_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos_emb</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="n">maxlen</span><span class="p">,</span> <span class="n">output_dim</span><span class="o">=</span><span class="n">embed_dim</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">maxlen</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">positions</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="n">maxlen</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">positions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_emb</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_emb</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">positions</span>
+</code></pre></div>
+
+<p>Notice how faithfully the code mirrors the chapter. <code>TokenAndPositionEmbedding</code> holds exactly the two independent tables from Section 7.5 — a token-embedding table (<code>vocab_size × embed_dim</code>) and a position-embedding table (<code>maxlen × embed_dim</code>) — and its <code>call</code> method literally computes <code>x + positions</code>. <code>TransformerEncoder</code> runs multi-head self-attention (<code>self.att(inputs, inputs)</code> — the input attending to itself), followed by the feed-forward ReLU network. The <code>inputs + attn_output</code> sums and <code>LayerNormalization</code> calls are the residual connections and layer norms previewed above and explained fully in Chapter 8.</p>
+<h3 id="step-5-assemble-and-inspect-the-model">Step 5: Assemble and inspect the model</h3>
+<p>We choose hyperparameters: 512-dimensional embeddings (learned from scratch here — no GloVe), a 64-unit feed-forward hidden layer inside the encoder, 5 attention heads, and a 128-unit dense ReLU classifier head.</p>
+<div class="highlight"><pre><span></span><code><span class="n">embed_dim</span> <span class="o">=</span> <span class="mi">512</span>
+<span class="n">dense_dim</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">num_heads</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="n">embedding</span> <span class="o">=</span> <span class="n">TokenAndPositionEmbedding</span><span class="p">(</span><span class="n">max_query_length</span><span class="p">,</span>
+                                      <span class="n">query_vocab_size</span><span class="p">,</span>
+                                      <span class="n">embed_dim</span><span class="p">)</span>
+<span class="n">te</span> <span class="o">=</span> <span class="n">TransformerEncoder</span><span class="p">(</span><span class="n">embed_dim</span><span class="p">,</span> <span class="n">dense_dim</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">)</span>
+
+<span class="n">inputs</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">max_query_length</span><span class="p">,))</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">embedding</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>          <span class="c1"># positional input embeddings</span>
+<span class="n">encoder_out</span> <span class="o">=</span> <span class="n">te</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>            <span class="c1"># contextual embeddings</span>
+
+<span class="c1"># Classifier at the end</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)(</span><span class="n">encoder_out</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">slot_vocab_size</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;softmax&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</code></pre></div>
+
+<p>The final <code>Dense(slot_vocab_size, activation="softmax")</code> implements the "attach a 125-way softmax to every output token" idea — Keras applies it independently at each of the 30 positions.</p>
+<p>As an optional exercise (attempted after Chapter 8's material on tunable attention), the notebook hand-calculates the encoder's parameter count and confirms it matches Keras's summary:</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="n">num_heads</span> <span class="o">*</span> <span class="p">((</span><span class="n">embed_dim</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">embed_dim</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span>   <span class="c1"># self-attention heads</span>
+<span class="p">(</span><span class="n">num_heads</span> <span class="o">*</span> <span class="n">embed_dim</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">embed_dim</span> <span class="o">+</span>          <span class="c1"># concatenate-and-project</span>
+<span class="n">embed_dim</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span>                                    <span class="c1"># first layer norm</span>
+<span class="p">(</span><span class="n">embed_dim</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">dense_dim</span> <span class="o">+</span>                      <span class="c1"># first feed-forward</span>
+<span class="p">(</span><span class="n">dense_dim</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">embed_dim</span><span class="p">)</span> <span class="o">+</span>                    <span class="c1"># final feed-forward</span>
+ <span class="n">embed_dim</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>                                    <span class="c1"># final layer norm</span>
+<span class="c1"># → 5319232</span>
+</code></pre></div>
+
+<p>You can also peek inside any layer via its <code>weights</code> attribute — <code>embedding.weights</code> shows the two tables: an 888 × 512 token table and a 30 × 512 position table.</p>
+<h3 id="step-6-train-and-evaluate">Step 6: Train and evaluate</h3>
+<div class="highlight"><pre><span></span><code><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;adam&quot;</span><span class="p">,</span>
+              <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;sparse_categorical_crossentropy&quot;</span><span class="p">,</span>
+              <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sparse_categorical_accuracy&quot;</span><span class="p">])</span>
+
+<span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">source_train</span><span class="p">,</span> <span class="n">target_train</span><span class="p">,</span>
+                    <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">source_test</span><span class="p">,</span> <span class="n">target_test</span><span class="p">)</span>
+<span class="c1"># loss ≈ 0.067, accuracy ≈ 0.987</span>
+</code></pre></div>
+
+<p>After 10 epochs, test accuracy is about <strong>98.7%</strong>. Impressive — but is it? There is a subtlety: <code>O</code> labels (and padding) dominate the data, so a naive model that predicts <code>O</code> for everything would already score well. The notebook therefore computes accuracy restricted to actual (non-pad) tokens, and to non-<code>O</code> slots — the entities we actually care about:</p>
+<div class="highlight"><pre><span></span><code><span class="n">predicted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">source_test</span><span class="p">),</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">actual</span> <span class="o">=</span> <span class="n">target_test</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">acc</span> <span class="o">=</span> <span class="n">slot_filling_accuracy</span><span class="p">(</span><span class="n">actual</span><span class="p">,</span> <span class="n">predicted</span><span class="p">,</span> <span class="n">only_slots</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>        <span class="c1"># 0.964</span>
+<span class="n">acc_slots</span> <span class="o">=</span> <span class="n">slot_filling_accuracy</span><span class="p">(</span><span class="n">actual</span><span class="p">,</span> <span class="n">predicted</span><span class="p">,</span> <span class="n">only_slots</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>   <span class="c1"># 0.913</span>
+</code></pre></div>
+
+<p>So the honest numbers are <strong>96.4%</strong> overall on real tokens and <strong>91.3%</strong> on the slots themselves — still remarkable for a single transformer block trained for a few minutes, and a good prompt for class discussion about whether 91% is good enough for production use.</p>
+<h3 id="step-7-probe-the-model">Step 7: Probe the model</h3>
+<p>A small helper decodes predictions back into slot names so we can play:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">predict_slots_query</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
+  <span class="n">sentence</span> <span class="o">=</span> <span class="n">text_vectorization_query</span><span class="p">([</span><span class="n">query</span><span class="p">])</span>
+  <span class="n">prediction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">sentence</span><span class="p">),</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+  <span class="n">inverse_vocab</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">text_vectorization_slots</span><span class="o">.</span><span class="n">get_vocabulary</span><span class="p">()))</span>
+  <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inverse_vocab</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">prediction</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Trying "from los angeles" vs. "to los angeles" shows the model using context ("from"/"to") to tag the same city differently. And an adversarial query reveals both a strength and a limitation:</p>
+<div class="highlight"><pre><span></span><code><span class="n">predict_slots_query</span><span class="p">(</span><span class="s2">&quot;cheapest flight to fly from MIT to Mars&quot;</span><span class="p">)</span>
+<span class="c1"># &#39;B-cost_relative O O O O B-fromloc.city_name O B-toloc.city_name ...&#39;</span>
+</code></pre></div>
+
+<p>The model confidently tags MIT as a departure city and Mars as an arrival city. Neither word appeared in training (they map to <code>[UNK]</code>), yet the <em>pattern</em> "from X to Y" is so strong that the model fills the slots anyway — pattern matching, not world knowledge.</p>
+<h2 id="key-takeaways">Key Takeaways</h2>
+<ul>
+<li>Slot filling (sequence labeling) requires an architecture that (1) produces an output of the same length as a variable-length input, (2) uses each word's surrounding context, and (3) respects word order. Static embeddings and bag-of-words satisfy none of these fully.</li>
+<li><strong>Self-attention</strong> contextualizes a word's embedding by taking a weighted average of all the embeddings in the sentence, with weights $s_{i,j} = \exp\langle w_i, w_j\rangle \big/ \sum_k \exp\langle w_k, w_j\rangle$ — softmax-normalized dot products that measure relatedness.</li>
+<li>Contextualization is a geometric "pull": words present in the context drag related embeddings toward themselves, while related-but-absent words (e.g., "radio" for a train-context "station") automatically get zero weight.</li>
+<li><strong>Multi-head attention</strong> runs several attention layers in parallel — like multiple convolutional filters — so different heads can capture different patterns (meaning, grammar, tense, tone); outputs are concatenated and linearly projected back to the embedding dimension.</li>
+<li>A position-wise <strong>feed-forward ReLU network</strong> after attention injects the non-linearity that pure attention lacks.</li>
+<li>Self-attention is order-blind (it operates on sets), so <strong>learned positional embeddings</strong> are added element-wise to token embeddings before the encoder.</li>
+<li>Because a transformer encoder's output matches its input in both count and dimension, encoders are <strong>stackable</strong>, enabling very deep models (GPT-3 stacks 96 blocks).</li>
+<li>A single transformer encoder block plus a per-token softmax achieves ~91% accuracy on ATIS entity slots — but headline accuracy is inflated by the dominant <code>O</code> class, a reminder to evaluate on the labels that matter.</li>
+</ul>
+<h2 id="check-your-understanding">Check Your Understanding</h2>
+<p><strong>1. Why can't a single GloVe-style embedding per word solve the ATIS slot-filling problem well?</strong></p>
+<details><summary>Answer</summary>
+A static embedding assigns one fixed vector to a word across all contexts. But slot labels are inherently contextual: "boston" must be tagged as a departure city in "fly from boston" and as an arrival city in "arrive in boston." A word with multiple senses ends up with a vector that is a "mushy average" of all its meanings, and the model has no way to disambiguate using surrounding words or word order. The transformer fixes this by producing contextual embeddings that depend on the whole sentence.
+</details>
+
+<p><strong>2. In the ATIS labeling scheme, what do the prefixes <code>B-</code> and <code>I-</code> mean, and why are they needed?</strong></p>
+<details><summary>Answer</summary>
+`B-` marks the token at which an entity *begins*; `I-` marks tokens *inside* (in the middle of) a multi-token entity. They are needed because entities can span multiple words — e.g., "7 am" is one departure time, tagged `B-depart_time.time I-depart_time.time` — and the model must indicate that the second token belongs to the same entity started by the first.
+</details>
+
+<p><strong>3. Write the formula for the attention weight $s_{1,6}$ of word 1 on word 6 in a six-word sentence, and explain the role of each part.</strong></p>
+<details><summary>Answer</summary>
+$$s_{1,6} = \frac{\exp\langle w_1, w_6\rangle}{\sum_{i=1}^{6} \exp\langle w_i, w_6\rangle}$$
+The dot product $\langle w_1, w_6\rangle$ measures how related word 1 is to word 6 (for roughly unit-length embeddings it approximates the cosine of the angle between them). Exponentiation makes every score non-negative, and dividing by the sum over all six words normalizes the weights to sum to 1 — exactly the softmax trick — so they can serve as proper weights in a weighted average.
+</details>
+
+<p><strong>4. The plain self-attention layer described in this chapter contains no trainable parameters. Why is that a problem, and where in this chapter's transformer do trainable weights actually live?</strong></p>
+<details><summary>Answer</summary>
+With no parameters inside self-attention, the layer can only ever compute fixed dot-product relatednesses of whatever embeddings arrive — there is nothing for backpropagation to adapt to the task, and multiple heads fed the same input would produce identical outputs. In this chapter's model, the learnable weights live in the token and position embedding tables, the concatenate-and-project dense layer, the feed-forward (ReLU + linear) layers, and the classifier head. Chapter 8 fixes the attention layer itself by introducing learnable query, key, and value matrices.
+</details>
+
+<p><strong>5. Why do transformers need positional embeddings, and what would happen without them?</strong></p>
+<details><summary>Answer</summary>
+Self-attention computes dot products between every pair of words regardless of where they occur — it operates on *sets*, not sequences. Without positional information, scrambling the words of a sentence ("the station slowly left the train") would yield exactly the same contextual embeddings as the original sentence. Learned positional embeddings — one vector per position, added element-wise to each token's embedding — make the model's input depend on where each word sits, so order can influence the output. (For genuinely orderless data, like tabular features, transformers can be used without them.)
+</details>
+
+<p><strong>6. In the "cat sat mat" example, the word embedding for "cat" is $(0.5, 7.1)$ and the position-0 embedding is $(1.3, 3.9)$. What input vector does the transformer receive for "cat," and what changes if the sentence were "mat sat cat"?</strong></p>
+<details><summary>Answer</summary>
+The transformer receives the element-wise sum $(0.5+1.3,\ 7.1+3.9) = (1.8, 11.0)$. In "mat sat cat," the word embedding for "cat" is unchanged, but "cat" now occupies position 2, so the position-2 embedding $(0.6, 8.1)$ is added instead, giving $(1.1, 15.2)$. Same word, different position, different input — which is exactly how order information enters the model.
+</details>
+
+<p><strong>7. Why does the transformer encoder's input/output size symmetry matter so much in practice?</strong></p>
+<details><summary>Answer</summary>
+Because the encoder emits the same number of tokens with the same embedding dimension it receives, encoders can be daisy-chained (stacked) without any glue logic — "the perfect API." Stacking blocks increases modeling capacity and lets higher blocks operate at higher levels of abstraction, analogous to deeper convolutional layers building faces from edges. GPT-3, for example, stacks 96 such blocks. The symmetry also preserves all per-token information until the very end, keeping options open for whatever task head you attach.
+</details>
+
+<p><strong>8. The ATIS model reports 98.7% test accuracy, but the lab computes two additional numbers: 96.4% and 91.3%. What do they measure, and why are they more honest?</strong></p>
+<details><summary>Answer</summary>
+The 98.7% figure counts padding positions and the dominant `O` ("other") labels, both of which are easy to predict — a naive model predicting `O` everywhere would already score well, like any classifier on a heavily imbalanced problem. The 96.4% figure excludes padding, and the 91.3% figure restricts evaluation to actual non-`O` entity slots — the departure cities, times, and destinations the application actually needs. Measuring performance on the minority labels you care about is the honest evaluation.
+</details>
+      <nav class="chapter-footer" aria-label="Chapter navigation"><a class="previous" href="ch06-embeddings.html">← 6 · Embeddings</a><a class="next" href="ch08-transformers-ii-self-supervised.html">8 · Self-Supervised Learning →</a></nav>
+    </article>
+  </main>
+</body>
+</html>

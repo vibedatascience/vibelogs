@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A hands-on deep learning textbook companion to MIT 15.773">
+  <title>Chapter 10: Adapting LLMs — Fine-Tuning, Parameter-Efficient Methods, and LoRA · Hands-On Deep Learning</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
+  </script>
+  <script defer src="mathjax/tex-svg.js"></script>
+  <script defer src="search-index.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"></div>
+  <aside class="sidebar">
+    <a class="brand" href="index.html">Hands-On Deep Learning</a>
+    <div class="brand-subtitle">MIT 15.773 · Spring 2024 companion</div>
+    <input class="search" type="search" placeholder="Search the full book…" data-search aria-label="Search">
+    <div class="search-results hidden" data-search-results></div>
+    <nav><div class="nav-part">Front Matter</div>
+<a class="nav-link" href="index.html">Start Here</a>
+<div class="nav-part">Part I · Foundations</div>
+<a class="nav-link" href="ch01-intro-to-neural-networks.html">1 · Neural Networks</a>
+<a class="nav-link" href="ch02-training-deep-networks.html">2 · Training Deep Networks</a>
+<a class="nav-link" href="ch03-keras-and-cnns-from-scratch.html">3 · Keras and Vision Basics</a>
+<div class="nav-part">Part II · Computer Vision</div>
+<a class="nav-link" href="ch04-cnns-transfer-learning.html">4 · CNNs and Transfer Learning</a>
+<div class="nav-part">Part III · Natural Language</div>
+<a class="nav-link" href="ch05-nlp-basics.html">5 · Text Vectorization</a>
+<a class="nav-link" href="ch06-embeddings.html">6 · Embeddings</a>
+<a class="nav-link" href="ch07-transformers.html">7 · Transformers</a>
+<a class="nav-link" href="ch08-transformers-ii-self-supervised.html">8 · Self-Supervised Learning</a>
+<div class="nav-part">Part IV · Generative AI</div>
+<a class="nav-link" href="ch09-llms-and-rag.html">9 · LLMs and RAG</a>
+<a class="nav-link active" href="ch10-peft-lora.html">10 · PEFT and LoRA</a>
+<a class="nav-link" href="ch11-diffusion-text-to-image.html">11 · Diffusion Models</a>
+<div class="nav-part">Appendices</div>
+<a class="nav-link" href="appendix-a-homework.html">A · Homework and Solutions</a>
+<a class="nav-link" href="appendix-b-resources.html">B · Resource Index</a></nav>
+    <div class="sidebar-actions">
+      <button data-theme-toggle type="button">Light / dark</button>
+      <button data-print type="button">Print</button>
+    </div>
+    <div class="sidebar-actions">
+      <a class="button" href="complete-book.html">Complete book</a>
+      <a class="button" href="notebooks.html">Notebooks</a>
+    </div>
+  </aside>
+  <main class="page">
+    <article class="article">
+      <div class="eyebrow">Part IV · Generative AI</div>
+      <h1 id="chapter-10-adapting-llms-fine-tuning-parameter-efficient-methods-and-lora">Chapter 10: Adapting LLMs — Fine-Tuning, Parameter-Efficient Methods, and LoRA</h1>
+<blockquote>
+<p><strong>Lecture video:</strong> <a href="https://www.youtube.com/watch?v=d-tngNnaG4U">https://www.youtube.com/watch?v=d-tngNnaG4U</a>
+<strong>Slides:</strong> <a href="https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/mit15_773_s24_lec10.pdf">mit15_773_s24_lec10.pdf</a> and <a href="https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/mit15_773_s24_lec105.pdf">mit15_773_s24_lec105.pdf</a>
+<strong>Hands-on Colab (LoRA fine-tuning of Gemma):</strong> <a href="https://colab.research.google.com/drive/1C8zygjNPjKQjcc-4u_MGeXF47TOF7Hn3">https://colab.research.google.com/drive/1C8zygjNPjKQjcc-4u_MGeXF47TOF7Hn3</a></p>
+</blockquote>
+<h2 id="learning-objectives">Learning Objectives</h2>
+<p>After completing this chapter, you should be able to:</p>
+<ul>
+<li>Place <strong>fine-tuning</strong> on the ladder of LLM adaptation and explain how it differs fundamentally from prompting and RAG: it changes the model's weights.</li>
+<li>Describe the <strong>mechanics of supervised fine-tuning</strong> a causal LLM — formatting instruction–response pairs and continuing next-word-prediction training — and identify which weight groups get updated in full fine-tuning.</li>
+<li>Give a concrete business example (synthetic product reviews) where prompting fails and a few hundred fine-tuning examples succeed.</li>
+<li>Do the <strong>back-of-the-envelope arithmetic</strong> for training and fine-tuning a 70-billion-parameter model: memory footprint, GPU count, throughput, wall-clock time, and dollar cost.</li>
+<li>Break down <strong>where GPU memory goes</strong> during training — parameters, gradients, optimizer state — and explain how gradient checkpointing and parameter freezing attack each component.</li>
+<li>Explain the <strong>LoRA (Low-Rank Adaptation)</strong> idea mathematically: representing the weight update as a low-rank product, $W + \Delta W \approx W + BA$, and computing the resulting parameter savings.</li>
+<li>Run <strong>LoRA fine-tuning in practice</strong> with Keras/KerasNLP on Gemma 2B, and reason about the effect of the rank hyperparameter.</li>
+<li>Decide <strong>when to prompt, when to use RAG, and when to fine-tune</strong> for a given business problem.</li>
+</ul>
+<h2 id="101-from-black-box-to-open-hood">10.1 From Black Box to Open Hood</h2>
+<p>Chapter 9 ended with the <em>ladder of LLM adaptation</em> — the menu of options for tailoring a base (foundation) LLM to a specific task:</p>
+<ol>
+<li><strong>Zero-shot prompting</strong> — prompt = a clear instruction</li>
+<li><strong>Few-shot prompting</strong> — prompt = a few examples</li>
+<li><strong>Retrieval Augmented Generation</strong> — prompt = question + relevant chunks of text</li>
+<li><strong>Fine-tuning</strong> — the LLM is further trained with examples</li>
+</ol>
+<p>The first three rungs share a defining property: they treat the LLM as a <strong>black box</strong>. However clever your prompt, however sophisticated your retrieval pipeline, not a single weight inside the network changes. As Ramakrishnan puts it in lecture:</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "Up to this point, all the things we have seen don't alter the internals of the LLM. You have not messed around with the weights or changed them at all. You're just using it as a black box. With fine-tuning, you actually will train it further — meaning the weights are going to change."</p>
+</blockquote>
+<p>This chapter climbs the fourth rung. We will see what fine-tuning is, why it is worth doing, why <em>full</em> fine-tuning of a modern LLM is computationally brutal, and how a beautifully simple idea — <strong>Low-Rank Adaptation (LoRA)</strong> — makes fine-tuning of billion-parameter models feasible on a single GPU, even the free one in Google Colab.</p>
+<p>There is also a conceptual through-line worth flagging. In Chapter 9 we saw that GPT-3 became useful only after being <em>adapted</em> with high-quality data — supervised fine-tuning (SFT) on instruction–answer pairs, followed by RLHF. Fine-tuning for your business use case is the <em>same operation</em> applied to a narrower goal: what SFT did for "following instructions in general," your fine-tune does for "writing in my domain, in my format, in my voice."</p>
+<h2 id="102-the-mechanics-of-fine-tuning-a-causal-llm">10.2 The Mechanics of Fine-Tuning a Causal LLM</h2>
+<p>Recall the architecture of a causal LLM from Chapter 9: positional input embeddings feed a stack of Transformer Causal Encoders (TCEs), producing contextual embeddings; these pass through a final dense layer (with <em>linear</em> activations — a correction Ramakrishnan emphasized — whose output dimension equals the vocabulary size) and a softmax over the vocabulary at each position.</p>
+<p><strong>Fine-tuning is simply: keep training this model, but on your own data.</strong> Take domain-specific input–output examples — say, the instruction "Explain the moon landing to a 6 year old in a few sentences" paired with the desired response "People went to the moon in a big rocket, walked around and came back to Earth…" — concatenate instruction and response into one token sequence, and apply exactly the next-word-prediction recipe from Chapter 9: the sequence is the input, and the same sequence shifted left by one token supplies the labels. When the model finishes reading "…sentences." it must predict "People"; given "People" it must predict "went"; and so on. Gradient descent updates the weights. This is precisely the Supervised Fine-Tuning step used to turn GPT-3 into GPT-3.5 — and structurally it is the same transfer-learning move we made with ResNet for images and BERT for classification.</p>
+<p>Which weights change? In <strong>full fine-tuning</strong>, all of them:</p>
+<ol>
+<li>Positional embeddings</li>
+<li>Token (stand-alone) embeddings (unless pretrained and frozen)</li>
+<li>The attention matrices $A_Q$, $A_K$, $A_V$ for every attention head, inside every TCE block</li>
+<li>Layer-norm scale and bias parameters (inside the TCE)</li>
+<li>Weights in the feed-forward layers (inside the TCE)</li>
+<li>Weights in the final dense/softmax layers</li>
+</ol>
+<p>Keep this list in mind. The entire story of parameter-efficient fine-tuning is about deciding which items on it we can afford <em>not</em> to update.</p>
+<p>One clarifying exchange from lecture is worth recording. A student asked whether fine-tuning always requires supervised (input–output) pairs, or whether a company's unstructured text could be used. The answer: it depends on the goal. If you just want the model to become <em>generally smarter about your company's domain</em>, you can run plain next-word prediction over a pile of company text — no labels needed. But if you want it to <em>follow instructions on your particular task</em>, you need supervision: instruction–response pairs.</p>
+<h2 id="103-why-fine-tune-the-fake-review-test">10.3 Why Fine-Tune? The Fake-Review Test</h2>
+<p>Before the mechanics of <em>how</em>, a motivating example of <em>why</em> — because it isn't obvious that a model as capable as an instruction-tuned LLM ever needs more than a good prompt.</p>
+<p>Suppose we are building a system that simulates customer behavior for e-commerce, and we need to generate <strong>synthetic product reviews</strong> from product descriptions. Writing thousands of reviews by hand is out of the question, so we prompt an LLM (in the course demo, Alpaca running on Llama 7B): <em>"Write a positive review of the following product,"</em> followed by the description of a slim-fitting jean.</p>
+<p>The model responds: <em>"Timeless. Authentic. Iconic. One of the building blocks of a perfect wardrobe. The Fit 2 — our most loved slim-fitting jean. For good reason. Mid-rise, tailored through the hip and thigh…"</em></p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "Seriously, do product reviewers actually write stuff like this? No. This looks like marketing copy — because there's a whole bunch of marketing copy on the internet."</p>
+</blockquote>
+<p>A second attempt, for a Champion tank top, is no better: <em>"The boxy and cropped silhouette is flattering on all body types…"</em> — "Come on!" No amount of prompt polish reliably fixes this. The model's prior, absorbed from the web, is that text describing products <em>sounds like advertising</em>. What we want is a change in the model's <em>behavior and voice</em>, not extra facts — and that is fine-tuning territory.</p>
+<p>So we assemble a small dataset of [instruction, product description, product review] triples — real reviews in the style we want, e.g., "Write a positive review for the following product" → description → <em>"The best! Carhartt is my husband's favorite. They fit well…"</em> — and fine-tune. Just a <strong>few hundred examples</strong> suffice. Afterward, the same jean-description prompt yields:</p>
+<p><em>"These are the best jeans I've ever owned. I'm 5'10" and 160 lbs. I bought a size 32 and they fit perfectly. I've been wearing them for a few months now and they still look brand new… I'll definitely be buying more of these in the future."</em></p>
+<p>And, for balance, "Write a horrible review" produces: <em>"These are the worst jeans I've ever owned… They're too tight in the thighs and too loose in the waist. I'm going to return them and try a 30, but I'm not optimistic… I'm going to stick with Levi's."</em> These read like real reviews — completely fabricated by the fine-tuned model.</p>
+<p>Ramakrishnan highlights what he considers the deepest point here, a striking hierarchy of data requirements:</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "It took billions of sentences to pretrain the original LLM, and tens of thousands of examples for supervised fine-tuning and RLHF. To make it work for your narrow business use case, you only had to spend a couple of hundred examples. That's it. It's amazing. Imagine if you had to collect 30,000 examples — nobody's going to do these things. But a couple of hundred, anybody can do."</p>
+</blockquote>
+<h2 id="104-the-cost-of-scale-a-llama-2-70b-reality-check">10.4 The Cost of Scale: A Llama-2-70b Reality Check</h2>
+<p>Fine-tuning small causal LLMs (GPT-2, or Google's 2-billion-parameter Gemma) is not difficult — such models fit on a single GPU. But businesses often want the quality of larger models, and there the arithmetic turns ugly. The course works through <strong>Llama-2-70b</strong>, the largest of Meta's widely used open Llama 2 family (open enough, "with some footnote considerations," to download and fine-tune freely), as a case study. First: how hard was it to <em>train</em> this model from scratch?</p>
+<p><strong>Problem 1 — the model is gigantic.</strong> 70 billion parameters at 2 bytes each (using fp16, 16-bit floating point) is 140 GB <em>just for the weights</em>. But training requires roughly a 3–6× multiplier per parameter — we must also store gradients and optimizer state, some of it at higher precision — giving <strong>420–840 GB</strong> of memory. An NVIDIA A100 (or H100) GPU has 80 GB of RAM, so merely <em>holding</em> the training state requires <strong>6–11 GPUs</strong>.</p>
+<p><strong>Problem 2 — the data is gigantic.</strong> Llama-2-70b was trained on <strong>2 trillion tokens</strong> ($2 \times 10^{12}$). An A100 can, optimistically, push about <strong>400 tokens per GPU per second</strong> through the model. With 11 GPUs:</p>
+<p>$$\frac{2 \times 10^{12} \text{ tokens}}{11 \times 400 \text{ tokens/s}} \approx 4.5 \times 10^8 \text{ s} \approx 5{,}261 \text{ days.}$$</p>
+<p>To finish in about a month instead, you need roughly <strong>2,048 GPUs running for ~28 days</strong>. At a rental price of \$2.50 per GPU-hour, that single training run costs about <strong>\$4 million</strong> — and the true cost is much higher, because nobody gets it right in one run.</p>
+<p>Clearly, <em>we</em> are not going to pretrain a 70B model. But can we at least <em>fine-tune</em> one with modest resources? Two things must shrink: the dataset and the memory.</p>
+<p><strong>The dataset shrinks for free.</strong> As Section 10.3 showed, fine-tuning datasets are tiny compared to pretraining corpora. The famous <strong>Alpaca</strong> instruction-tuning dataset has 50,000 instruction–answer pairs at up to 4,096 tokens each — roughly <strong>200 million tokens</strong>, vastly less than 2 trillion. At 400 tokens/GPU/s on 7 GPUs, that is</p>
+<p>$$\frac{2 \times 10^{8}}{7 \times 400} \approx 20 \text{ hours}$$</p>
+<p>of compute rather than 28 days on 2,048 GPUs. Data is not the bottleneck. ✅</p>
+<p><strong>Memory is the bottleneck.</strong> Even to fine-tune, the naive setup still needs those 420–840 GB — and 6+ data-center GPUs are exactly what a student, a startup, or a business unit does not have. Reducing memory is where the real ideas live.</p>
+<h2 id="105-where-the-memory-goes">10.5 Where the Memory Goes</h2>
+<p>Break training memory into its principal components (for a 70B model with fp16 base weights):</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Naive usage</th>
+<th>Optimized</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model parameters</td>
+<td>#params × 2 bytes = <strong>140 GB</strong></td>
+<td>140 GB before quantization or sharding</td>
+</tr>
+<tr>
+<td>Parameter gradients</td>
+<td>about <strong>140 GB</strong> when every base weight is trained</td>
+<td>Small but nonzero: gradients only for trainable LoRA parameters</td>
+</tr>
+<tr>
+<td>Optimizer state</td>
+<td>1–4× trainable-parameter memory = <strong>140–560 GB</strong> in full tuning</td>
+<td>Small but nonzero: state only for LoRA parameters</td>
+</tr>
+<tr>
+<td>Saved activations</td>
+<td>Depends on batch size, sequence length, layer count, and implementation</td>
+<td>Reduced by gradient checkpointing, which recomputes activations</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td>At least <strong>420–840 GB</strong>, plus activations</td>
+<td>More than base-weight memory; exact total is workload- and implementation-dependent</td>
+</tr>
+</tbody>
+</table>
+<p>Three observations:</p>
+<ul>
+<li><strong>Parameters.</strong> You must hold the model to run it; 140 GB is the floor. (<em>It can be pushed lower with </em><em>quantization</em>* — storing weights in fewer bits, even down to extreme 1-bit schemes, as a student asked about in lecture — but every such simplification "will cost you something in terms of accuracy," so there is always a trade-off. The course leaves quantization as a pointer for further study.)</li>
+<li><strong>Gradients and activations are different.</strong> Full fine-tuning stores a gradient for every trainable base parameter. Freezing the base model removes those base-weight gradients, but the LoRA parameters still have gradients. <strong>Gradient checkpointing</strong> addresses a different category: it stores only selected forward activations and recomputes the rest during backpropagation, trading compute for lower activation memory. It reduces activation memory; it does not eliminate parameter gradients.</li>
+<li><strong>Optimizer state.</strong> This is the surprise for many students: state-of-the-art optimizers like <strong>Adam</strong> store information about <em>past gradients</em> (running moment estimates) for every trainable parameter — approximately 1–4× the parameter memory, on top of parameters and gradients, and some of it at higher precision. This is often the <em>largest</em> single consumer of training memory.</li>
+</ul>
+<p>The optimizer-state line suggests the key strategic move: the optimizer only keeps state for parameters that are being <em>trained</em>. If we could get away with training only a tiny fraction of the parameters — freezing everything else — the optimizer state would shrink to almost nothing. The question is whether a tiny trainable fraction can still "get the job done."</p>
+<h2 id="106-lora-low-rank-adaptation">10.6 LoRA: Low-Rank Adaptation</h2>
+<p><img alt="LoRA low-rank matrices A and B forming a trainable update beside a frozen base matrix" src="figures/generated/lora-finetuning.png"></p>
+<p><em>Figure: LoRA represents a weight update as two trainable low-rank factors while keeping the base matrix frozen.</em></p>
+<p>The course's plan: <strong>fine-tune only the weight matrices inside the causal self-attention blocks — $A_Q$, $A_K$, $A_V$ — and freeze everything else</strong> on the list from Section 10.2 (embeddings, layer norms, feed-forward layers, the output head). That already helps, but the attention matrices themselves are still enormous. Consider $A_K$ in Llama-2-70b. Each self-attention layer has 64 heads, and each head's $A_K$ is $8192 \times 128$; stacking all 64 heads side by side gives one combined matrix of size</p>
+<p>$$8192 \times (128 \times 64) = 8192 \times 8192 \approx 6.7 \times 10^7 \text{ parameters}$$</p>
+<p>— roughly <strong>64 million parameters for $A_K$ alone, in every attention layer</strong>. Updating these directly still means optimizer state for tens of billions of parameters across the whole stack.</p>
+<p>Here is the reframing that unlocks everything. Whatever fine-tuning does to $A_K$, the result can be written as the original matrix plus a <strong>change matrix</strong>:</p>
+<p>$$A_K^{\text{new}} = A_K + \Delta A_K$$</p>
+<p>In general $\Delta A_K$ is just as big as $A_K$ — 64 million numbers. But now comes the insight:</p>
+<blockquote>
+<p>💡 <strong>The LoRA insight:</strong> A fine-tune will likely make only <em>small</em> changes to the original model weights — a few hundred examples are not going to rearrange everything the model knows. This suggests we can <strong>force the change matrix $\Delta A_K$ to be "simple," and it will still get the job done.</strong></p>
+</blockquote>
+<p>What does "simple" mean for a matrix? <strong>Low rank.</strong> A rank-$r$ matrix of size $d \times d$ can be written exactly as the product of two "skinny" matrices:</p>
+<p>$$\Delta A_K \;\approx\; B A, \qquad B \in \mathbb{R}^{d \times r},\; A \in \mathbb{R}^{r \times d}, \qquad r \ll d$$</p>
+<p>so that the adapted weight is</p>
+<p>$$A_K^{\text{new}} = A_K + BA.$$</p>
+<p>Multiply a tall, thin $d \times r$ matrix by a short, wide $r \times d$ matrix and you recover a full $d \times d$ matrix — but one whose "information content" is constrained. Instead of $d^2$ free parameters, the change is described by only $2rd$ parameters. For Llama-2-70b's $d = 8192$ with rank $r = 2$:</p>
+<p>$$2 \times 2 \times 8192 = 32{,}768 \text{ parameters} \;\; \approx\; 0.05\% \text{ of the original } 64\text{M}.$$</p>
+<p>A 2,000-fold reduction, per matrix, per layer. This idea — freeze the base model, learn only low-rank change matrices for selected weight matrices — is called <strong>Low-Rank Adaptation (LoRA)</strong>, from the paper <em>"LoRA: Low-Rank Adaptation of Large Language Models,"</em> and it is, in Ramakrishnan's words, "incredibly widely used in the industry."</p>
+<p><strong>The LoRA training procedure:</strong></p>
+<ol>
+<li><strong>Freeze</strong> all base-model parameters. They are read but never written.</li>
+<li><strong>Initialize</strong> the change matrices $\Delta A_K, \Delta A_Q, \Delta A_V$ to zero in every self-attention layer (so training starts from the unmodified base model).</li>
+<li><strong>Update</strong> $\Delta A_K, \Delta A_Q, \Delta A_V$ via SGD (or Adam/AdamW) as usual — but the only actual trainable variables are the two skinny matrices $B$ and $A$ behind each change matrix.</li>
+</ol>
+<p>Revisit the memory table with LoRA in place. The frozen base weights still occupy 140 GB in fp16,
+but gradients and optimizer state are needed only for the skinny trainable matrices. Gradient
+checkpointing can separately reduce saved activations. The result is dramatically smaller than
+full fine-tuning, but it is <strong>not exactly 140 GB</strong>: runtime buffers, activations, LoRA gradients,
+optimizer state, and framework overhead remain. Quantization, parameter sharding, sequence length,
+and batch size determine whether a particular model fits on one or several GPUs. The lecture
+summarizes the practical consequence this way:</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "When you do that, everything fits into memory. Llama-2-70b can be comfortably fine-tuned on 2 GPUs, and Llama-2-7b and Llama-2-13b can comfortably be fine-tuned on a single GPU — a single Colab GPU."</p>
+</blockquote>
+<p>Treat those counts as an order-of-magnitude illustration, not a hardware guarantee: precision,
+quantization, optimizer, sequence length, batch size, sharding strategy, and GPU capacity all matter.</p>
+<p>From \$4M and 2,048 GPUs to a free Colab notebook: that is the distance between pretraining a foundation model and LoRA-adapting one.</p>
+<p>The rank $r$ is LoRA's central hyperparameter — the width of the skinny matrices. A <strong>higher rank</strong> permits more detailed changes but means more trainable parameters; a <strong>lower rank</strong> is cheaper but potentially less precise adaptation. Practical guidance from the lab notebook: start small ($r$ = 4, 8, or 16), evaluate on your task, and increase the rank in later trials only if it measurably helps.</p>
+<h2 id="107-prompt-rag-or-fine-tune-choosing-an-adaptation-strategy">10.7 Prompt, RAG, or Fine-Tune? Choosing an Adaptation Strategy</h2>
+<p>We can now stand back and survey the whole ladder with a practitioner's eye. Each rung differs along three axes: <em>what goes into the prompt</em>, <em>whether the weights change</em>, and <em>what kind of problem it solves</em>.</p>
+<p><strong>Zero-shot / few-shot prompting</strong> costs almost nothing and should always be tried first. It works when the base model already <em>has</em> the capability and knowledge you need, and merely needs to be told (or shown, via a few examples) what you want. Prompt engineering — being prescriptive, breaking tasks into steps — extends its reach considerably. Its limits: it cannot inject knowledge the model lacks, and it can be unreliable for behaviors that fight the model's training prior.</p>
+<p><strong>Retrieval Augmented Generation</strong> is the right tool when the problem is <strong>missing or private knowledge</strong>: your service manuals, your FAQ database, events after the training cutoff. RAG supplies facts through the prompt at question-answering time; the model itself is untouched, so the same base model can serve many document collections, and updating knowledge means updating the document store — no retraining. As Chapter 9 noted, this is the most prevalent business application of LLMs today. Its limits: the context window bounds how much can be supplied per question, and RAG does not change <em>how the model writes</em> — a RAG-equipped model asked for a product review will still produce marketing copy.</p>
+<p><strong>Fine-tuning</strong> is the right tool when the problem is <strong>behavior, style, or format</strong> rather than facts: making outputs read like authentic reviews rather than ad copy, adhering to a house style, reliably following a domain-specific output format. It bakes the adaptation into the weights, so it pays off when the desired behavior is needed on every request. Its costs: you need training examples (though often only hundreds), you need compute (tamed by LoRA), and you now own a model artifact to host and maintain. Fine-tuning an open model on-premises is also the standard answer when data-privacy constraints forbid sending proprietary data to an external API — you download Llama 2 or Gemma and keep everything in-house.</p>
+<p>These strategies compose rather than compete: a production system might use a LoRA-fine-tuned model for voice and format, RAG for current knowledge, and careful prompt engineering on top.</p>
+<p>Finally, the course closes this arc with a graph (borrowed from Andrej Karpathy) making a subtler point: <strong>the effort-benefit curve of each adaptation strategy depends on the size of the base LLM.</strong> With a very large, very capable base model, prompting alone gets you remarkably far, and the marginal benefit of fine-tuning shrinks; with smaller base models, prompting plateaus quickly and fine-tuning delivers much more of the achievable quality. This is exactly what the hands-on lab demonstrates: Gemma 2B — a small <em>base</em> model with no instruction tuning at all — is nearly useless with prompting alone, and is transformed by a 22-minute LoRA fine-tune. (The lecture also notes the full landscape in a February 2024 survey paper, "Large Language Models: A Survey," which maps every topic covered in this NLP arc — tokenization, attention, pretraining, instruction tuning, prompting, RAG, and PEFT.)</p>
+<h2 id="hands-on-lab-lora-fine-tuning-of-gemma-2b">Hands-On Lab: LoRA Fine-Tuning of Gemma 2B</h2>
+<p>The companion Colab (adapted from Google's Gemma LoRA tutorial) performs instruction fine-tuning of <strong>Gemma 2B</strong> — a 2-billion-parameter open <em>base</em> LLM from Google that has <strong>not</strong> been instruction tuned — using LoRA and the <strong>Databricks Dolly 15k</strong> dataset, all on a single free-tier <strong>T4 GPU</strong>. It is, in miniature, the GPT-3 → InstructGPT story from Chapter 9, executed by you.</p>
+<p><strong>Step 1 — Access and setup.</strong> Create a Kaggle account, request access to the Gemma model card, and store <code>KAGGLE_USERNAME</code> and <code>KAGGLE_KEY</code> in Colab secrets. Select a T4 GPU runtime, install Keras 3 and KerasNLP, and choose the JAX backend:</p>
+<div class="highlight"><pre><span></span><code><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;KERAS_BACKEND&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;jax&quot;</span>  <span class="c1"># Or &quot;torch&quot; or &quot;tensorflow&quot;.</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;XLA_PYTHON_CLIENT_MEM_FRACTION&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;1.00&quot;</span>  <span class="c1"># avoid memory fragmentation</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">keras</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">keras_nlp</span>
+</code></pre></div>
+
+<p><strong>Step 2 — Prepare the instruction dataset.</strong> Dolly 15k contains 15,000 human-written prompt/response pairs designed for instruction tuning. The lab keeps only examples without a <code>context</code> field, formats each as a single string with an Instruction/Response template, and — to keep the run fast — uses just <strong>1,000 examples</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;databricks-dolly-15k.jsonl&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">features</span><span class="p">[</span><span class="s2">&quot;context&quot;</span><span class="p">]:</span>      <span class="c1"># filter out examples with context</span>
+            <span class="k">continue</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="s2">&quot;Instruction:</span><span class="se">\n</span><span class="si">{instruction}</span><span class="se">\n\n</span><span class="s2">Response:</span><span class="se">\n</span><span class="si">{response}</span><span class="s2">&quot;</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">features</span><span class="p">))</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:</span><span class="mi">1000</span><span class="p">]</span>   <span class="c1"># only 1000 training examples, to keep it fast</span>
+</code></pre></div>
+
+<p>Note the template: the <em>entire</em> example, instruction plus response, becomes one text sequence — exactly the SFT formatting of Section 10.2, ready for next-word-prediction training.</p>
+<p><strong>Step 3 — Load the base model.</strong> One line downloads the pretrained causal LM (vocabulary of 256,000 tokens; embedding size 2,048):</p>
+<div class="highlight"><pre><span></span><code><span class="n">gemma_lm</span> <span class="o">=</span> <span class="n">keras_nlp</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">GemmaCausalLM</span><span class="o">.</span><span class="n">from_preset</span><span class="p">(</span><span class="s2">&quot;gemma_2b_en&quot;</span><span class="p">)</span>
+<span class="n">gemma_lm</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</code></pre></div>
+
+<p><strong>Step 4 — Inference <em>before</em> fine-tuning.</strong> Prompt the base model in the Instruction/Response format (with an empty response) using top-K sampling — a Chapter 9 decoding strategy in the flesh:</p>
+<div class="highlight"><pre><span></span><code><span class="n">prompt</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;What should I do on a trip to Europe?&quot;</span><span class="p">,</span>
+    <span class="n">response</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">keras_nlp</span><span class="o">.</span><span class="n">samplers</span><span class="o">.</span><span class="n">TopKSampler</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">gemma_lm</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">sampler</span><span class="o">=</span><span class="n">sampler</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">gemma_lm</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">256</span><span class="p">))</span>
+</code></pre></div>
+
+<p>The result is incoherent: generic trip-planning fragments, plus <em>lists of additional made-up instruction–response pairs</em> — the untuned base model doesn't "understand" the format; it just autocompletes, exactly like raw GPT-3 in Chapter 9. An ELI5 photosynthesis prompt fares no better.</p>
+<p><strong>Step 5 — Enable LoRA.</strong> A single call converts the model to LoRA training:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Enable LoRA for the model and set the LoRA rank to 4.</span>
+<span class="n">gemma_lm</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">enable_lora</span><span class="p">(</span><span class="n">rank</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">gemma_lm</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</code></pre></div>
+
+<p>The summary shows the punchline of this whole chapter: trainable parameters drop <strong>from ~2.5 billion to ~1.3 million</strong> — about 0.05% of the model. The rank of 4 is the narrow dimension of the skinny $B$ and $A$ matrices from Section 10.6.</p>
+<p><strong>Step 6 — Train.</strong> Compile with the familiar Keras workflow — sparse categorical cross-entropy on the logits (the same next-word loss as always) and the <strong>AdamW</strong> optimizer, standard for Transformers (Adam plus decoupled weight decay; layer-norm scales and biases are excluded from decay):</p>
+<div class="highlight"><pre><span></span><code><span class="n">gemma_lm</span><span class="o">.</span><span class="n">preprocessor</span><span class="o">.</span><span class="n">sequence_length</span> <span class="o">=</span> <span class="mi">512</span>   <span class="c1"># limit input length to control memory</span>
+
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span>
+    <span class="n">learning_rate</span><span class="o">=</span><span class="mf">5e-5</span><span class="p">,</span>
+    <span class="n">weight_decay</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">optimizer</span><span class="o">.</span><span class="n">exclude_from_weight_decay</span><span class="p">(</span><span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;bias&quot;</span><span class="p">,</span> <span class="s2">&quot;scale&quot;</span><span class="p">])</span>
+
+<span class="n">gemma_lm</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+    <span class="n">loss</span><span class="o">=</span><span class="n">keras</span><span class="o">.</span><span class="n">losses</span><span class="o">.</span><span class="n">SparseCategoricalCrossentropy</span><span class="p">(</span><span class="n">from_logits</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+    <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
+    <span class="n">weighted_metrics</span><span class="o">=</span><span class="p">[</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">SparseCategoricalAccuracy</span><span class="p">()],</span>
+<span class="p">)</span>
+
+<span class="n">gemma_lm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>   <span class="c1"># one pass, one example per batch</span>
+</code></pre></div>
+
+<p>One epoch over 1,000 examples took about <strong>22 minutes</strong> on the T4 (final loss ≈ 0.46). Compare that to the \$4M pretraining estimate of Section 10.4.</p>
+<p><strong>Step 7 — Inference <em>after</em> fine-tuning.</strong> The same Europe prompt now yields a coherent, on-format answer: <em>"I think that there is a lot of fun to be had in Europe and the first thing I would do would be to visit the Eiffel Tower in Paris and then head to the Louvre… I would end the trip by visiting Berlin, Germany…"</em> The photosynthesis ELI5 prompt likewise gets a single, sensible explanatory paragraph instead of a runaway list. The model now adheres to the Instruction/Response format and produces genuinely responsive answers — after 1,000 examples and one epoch at rank 4.</p>
+<p><strong>Step 8 — Extensions.</strong> To push quality further, the notebook suggests three levers, in order: (1) more fine-tuning data (the full 15k), (2) more epochs, (3) a higher LoRA rank — or bring your own instruction–response dataset and adapt Gemma to <em>your</em> task.</p>
+<h2 id="key-takeaways">Key Takeaways</h2>
+<ul>
+<li>Prompting and RAG leave the model untouched; <strong>fine-tuning changes the weights</strong> by continuing next-word-prediction training on instruction–response pairs formatted as single sequences with shifted labels.</li>
+<li>Fine-tuning shines when the goal is <strong>behavior, style, or format</strong> — e.g., turning marketing-copy "reviews" into authentic-sounding ones — and typically needs only <strong>a few hundred examples</strong>, versus billions of sentences for pretraining and tens of thousands of pairs for general instruction tuning.</li>
+<li>Full training of Llama-2-70b requires <strong>420–840 GB</strong> of GPU memory (6–11 A100s just to fit) and roughly <strong>2,048 GPUs for ~28 days (~\$4M)</strong> over 2 trillion tokens. Fine-tuning data is small (Alpaca ≈ 200M tokens), so <strong>memory, not data, is the fine-tuning bottleneck</strong>.</li>
+<li>Training memory includes <strong>parameters, parameter gradients, optimizer state, saved activations, and runtime buffers</strong>. Freezing plus LoRA shrinks gradients and optimizer state to the trainable adapters; gradient checkpointing reduces saved activations by recomputation. None is literally zero.</li>
+<li><strong>LoRA</strong> writes the fine-tuning update as $W + \Delta W \approx W + BA$ with skinny matrices $B \in \mathbb{R}^{d\times r}$, $A \in \mathbb{R}^{r\times d}$: the base model is frozen, $\Delta$ matrices start at zero, and only $2rd$ parameters per matrix are trained — for $d = 8192$, $r = 2$, that is ~0.05% of the original 64M per attention matrix.</li>
+<li>LoRA can make adaptation practical on far less hardware, but fit depends on precision, quantization, sequence length, batch size, sharding, and GPU memory; the lab fine-tunes Gemma 2B (2.5B → 1.3M trainable parameters at rank 4) in ~22 minutes on a free T4.</li>
+<li>The <strong>rank $r$</strong> trades adaptation capacity against cost: start at 4–16 and increase only if evaluation improves.</li>
+<li>Strategy selection: <strong>prompt</strong> when the model already can do it; <strong>RAG</strong> when it lacks (or must not memorize) the knowledge; <strong>fine-tune</strong> when its behavior or voice must change. The bigger the base model, the further prompting alone goes — the smaller the base model, the more fine-tuning matters.</li>
+</ul>
+<h2 id="check-your-understanding">Check Your Understanding</h2>
+<p><strong>1. What is the single fundamental difference between fine-tuning and every other rung of the adaptation ladder (zero-shot, few-shot, RAG)?</strong></p>
+<details><summary>Answer</summary>
+Fine-tuning changes the model's weights. Zero-shot prompting, few-shot prompting, and RAG all operate purely through the prompt — the LLM remains a frozen black box — whereas fine-tuning continues gradient-descent training on new examples, permanently altering the network's parameters.
+</details>
+
+<p><strong>2. A retailer's LLM produces "reviews" that read like marketing copy. Would RAG fix this? Why or why not, and what would?</strong></p>
+<details><summary>Answer</summary>
+No. RAG addresses missing <em>knowledge</em> by packing relevant retrieved text into the prompt; the model would still generate in the same voice, because its writing style comes from its weights (trained heavily on web marketing copy). The problem is one of <em>behavior/style</em>, which calls for fine-tuning: a few hundred [instruction, product description, real review] examples used for supervised fine-tuning shift the model's outputs to read like authentic customer reviews.
+</details>
+
+<p><strong>3. Compute a lower-bound state-memory estimate for naively fine-tuning a 70B-parameter model in fp16. What additional category depends strongly on the workload?</strong></p>
+<details><summary>Answer</summary>
+(1) Model parameters: 70B × 2 bytes = 140 GB. (2) Gradients: another ~140 GB. (3) Optimizer state: Adam-style optimizers store moment information costing roughly 1–4× parameter memory, i.e., 140–560 GB in this simplified estimate. That gives 420–840 GB before saved activations, temporary buffers, and framework overhead. Activation memory varies strongly with sequence length, batch size, layer count, checkpointing, and implementation, so hardware counts cannot be inferred from the lower bound alone.
+</details>
+
+<p><strong>4. Gradient checkpointing and LoRA reduce different memory components. Which is which, and what remains?</strong></p>
+<details><summary>Answer</summary>
+Gradient checkpointing reduces <em>saved activation</em> memory by recomputing selected forward activations during backpropagation. It does not eliminate parameter gradients. LoRA freezes the base model, so gradients and optimizer state are maintained only for the small adapter matrices. Base weights, adapter gradients and optimizer state, remaining activations, temporary buffers, and framework overhead still consume memory; quantization and sharding can further reduce or distribute the base-weight cost.
+</details>
+
+<p><strong>5. State the LoRA decomposition mathematically and compute the parameter savings for a $8192 \times 8192$ attention matrix with rank $r = 2$.</strong></p>
+<details><summary>Answer</summary>
+The fine-tuned weight is written $A_K^{\text{new}} = A_K + \Delta A_K$ with $\Delta A_K \approx BA$, where $B$ is $8192 \times 2$ and $A$ is $2 \times 8192$; the base matrix $A_K$ is frozen and only $B$ and $A$ are trained. Trainable parameters: $2 \times 2 \times 8192 = 32{,}768$, versus $8192^2 \approx 67$ million for the full matrix — about 0.05% of the original.
+</details>
+
+<p><strong>6. Why are the LoRA change matrices initialized to zero before training?</strong></p>
+<details><summary>Answer</summary>
+So that at the start of fine-tuning, $A_K + \Delta A_K = A_K$ — the adapted model is exactly the pretrained base model. Training then moves the low-rank deltas away from zero only as much as the fine-tuning data demands, which matches the underlying assumption that a fine-tune should make small changes to the original weights.
+</details>
+
+<p><strong>7. What justifies the assumption that a low-rank $\Delta W$ can "get the job done" during fine-tuning?</strong></p>
+<details><summary>Answer</summary>
+Fine-tuning uses a tiny dataset (often a few hundred to a few thousand examples) relative to pretraining, so it plausibly makes only small, structured changes to the model's behavior rather than rearranging everything it knows. Forcing the change matrix to be "simple" (low rank) restricts it to such small, structured updates — and empirically (per the LoRA paper and wide industry adoption) this constraint barely hurts adaptation quality while slashing trainable parameters by orders of magnitude.
+</details>
+
+<p><strong>8. In the lab, the base Gemma 2B model answered the Europe-trip prompt with incoherent lists of fabricated instruction–response pairs. Connect this failure to something you learned in Chapter 9, and explain why the LoRA fine-tune fixed it.</strong></p>
+<details><summary>Answer</summary>
+It is the same failure mode as raw GPT-3: a base LLM trained only on next-word prediction is an autocomplete engine, not an instruction follower — shown an "Instruction:/Response:" pattern, it continues the <em>pattern</em> (generating more fake pairs) rather than answering the question, exactly as GPT-3 answered "Explain the moon landing…" with another question. The LoRA fine-tune performed supervised instruction tuning on 1,000 Dolly instruction–response pairs, teaching the model (through ~1.3M trainable low-rank parameters) to treat the format as a question to be answered — a miniature version of the SFT step that turned GPT-3 into InstructGPT.
+</details>
+      <nav class="chapter-footer" aria-label="Chapter navigation"><a class="previous" href="ch09-llms-and-rag.html">← 9 · LLMs and RAG</a><a class="next" href="ch11-diffusion-text-to-image.html">11 · Diffusion Models →</a></nav>
+    </article>
+  </main>
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A hands-on deep learning textbook companion to MIT 15.773">
+  <title>Chapter 9: Large Language Models and Retrieval Augmented Generation · Hands-On Deep Learning</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
+  </script>
+  <script defer src="mathjax/tex-svg.js"></script>
+  <script defer src="search-index.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"></div>
+  <aside class="sidebar">
+    <a class="brand" href="index.html">Hands-On Deep Learning</a>
+    <div class="brand-subtitle">MIT 15.773 · Spring 2024 companion</div>
+    <input class="search" type="search" placeholder="Search the full book…" data-search aria-label="Search">
+    <div class="search-results hidden" data-search-results></div>
+    <nav><div class="nav-part">Front Matter</div>
+<a class="nav-link" href="index.html">Start Here</a>
+<div class="nav-part">Part I · Foundations</div>
+<a class="nav-link" href="ch01-intro-to-neural-networks.html">1 · Neural Networks</a>
+<a class="nav-link" href="ch02-training-deep-networks.html">2 · Training Deep Networks</a>
+<a class="nav-link" href="ch03-keras-and-cnns-from-scratch.html">3 · Keras and Vision Basics</a>
+<div class="nav-part">Part II · Computer Vision</div>
+<a class="nav-link" href="ch04-cnns-transfer-learning.html">4 · CNNs and Transfer Learning</a>
+<div class="nav-part">Part III · Natural Language</div>
+<a class="nav-link" href="ch05-nlp-basics.html">5 · Text Vectorization</a>
+<a class="nav-link" href="ch06-embeddings.html">6 · Embeddings</a>
+<a class="nav-link" href="ch07-transformers.html">7 · Transformers</a>
+<a class="nav-link" href="ch08-transformers-ii-self-supervised.html">8 · Self-Supervised Learning</a>
+<div class="nav-part">Part IV · Generative AI</div>
+<a class="nav-link active" href="ch09-llms-and-rag.html">9 · LLMs and RAG</a>
+<a class="nav-link" href="ch10-peft-lora.html">10 · PEFT and LoRA</a>
+<a class="nav-link" href="ch11-diffusion-text-to-image.html">11 · Diffusion Models</a>
+<div class="nav-part">Appendices</div>
+<a class="nav-link" href="appendix-a-homework.html">A · Homework and Solutions</a>
+<a class="nav-link" href="appendix-b-resources.html">B · Resource Index</a></nav>
+    <div class="sidebar-actions">
+      <button data-theme-toggle type="button">Light / dark</button>
+      <button data-print type="button">Print</button>
+    </div>
+    <div class="sidebar-actions">
+      <a class="button" href="complete-book.html">Complete book</a>
+      <a class="button" href="notebooks.html">Notebooks</a>
+    </div>
+  </aside>
+  <main class="page">
+    <article class="article">
+      <div class="eyebrow">Part IV · Generative AI</div>
+      <h1 id="chapter-9-large-language-models-and-retrieval-augmented-generation">Chapter 9: Large Language Models and Retrieval Augmented Generation</h1>
+<blockquote>
+<p><strong>Lecture video:</strong> <a href="https://www.youtube.com/watch?v=KGDe1QvfKJ8">https://www.youtube.com/watch?v=KGDe1QvfKJ8</a>
+<strong>Slides:</strong> <a href="https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/mit15_773_s24_lec09.pdf">mit15_773_s24_lec09.pdf</a>
+<strong>Hands-on Colab (Retrieval Augmented Generation):</strong> <a href="https://colab.research.google.com/drive/1VwT3eQFxGJgIfaC8zMjOPohUfSqaPsEB">https://colab.research.google.com/drive/1VwT3eQFxGJgIfaC8zMjOPohUfSqaPsEB</a></p>
+</blockquote>
+<h2 id="learning-objectives">Learning Objectives</h2>
+<p>After completing this chapter, you should be able to:</p>
+<ul>
+<li>Explain <strong>next-word prediction</strong> as a self-supervised learning task and contrast it with the masking objective used to train BERT.</li>
+<li>Describe why plain self-attention "cheats" at next-word prediction, and how <strong>causal (masked) self-attention</strong> fixes the problem to yield the Transformer Causal Encoder (a.k.a. the Transformer decoder).</li>
+<li>Trace the <strong>autoregressive generation loop</strong>: softmax over the vocabulary, choose a token, append it to the input, repeat.</li>
+<li>Compare <strong>decoding strategies</strong> — greedy decoding, random sampling, top-k, top-p (nucleus) sampling, and temperature — and match each to appropriate use cases.</li>
+<li>Explain how <strong>Byte Pair Encoding (BPE)</strong> builds a vocabulary of characters, subwords, and frequent words, and why this lets an LLM handle words it has never seen.</li>
+<li>Summarize how <strong>instruction tuning</strong> — supervised fine-tuning plus Reinforcement Learning from Human Feedback (RLHF) — turned GPT-3 into InstructGPT and ChatGPT.</li>
+<li>Situate <strong>zero-shot and few-shot prompting</strong> on the "ladder of LLM adaptation" and explain the idea of in-context learning and prompt engineering.</li>
+<li>Build a <strong>Retrieval Augmented Generation (RAG)</strong> pipeline: chunk a document collection, embed the chunks, retrieve by cosine similarity, pack the prompt within a token budget, and query the LLM.</li>
+</ul>
+<h2 id="91-from-masking-to-next-word-prediction">9.1 From Masking to Next-Word Prediction</h2>
+<p>In the previous chapter we saw how BERT is created through <em>masking</em>, a self-supervised learning technique: take any sentence, replace some randomly chosen words with a <code>&lt;MASK&gt;</code> token, and train a network to fill in the blanks. Because the "labels" are manufactured from the text itself, no human annotation is needed, and a network trained this way on all of Wikipedia becomes remarkably good at a broad range of language tasks.</p>
+<p>This chapter turns to a <em>different</em> self-supervised objective — one that, as Ramakrishnan puts it in lecture, "turns out to be weirdly more interesting and powerful": <strong>next-word prediction</strong>, sometimes called <em>causal language modeling</em>. In a sense it is a special case of masking. Instead of blanking out random words in the middle of a sentence, we always blank out the <em>last</em> word and ask the model to predict it. And we don't need complete sentences: every sentence fragment becomes a training example. From the single sentence "The mission of the MIT Sloan School of Management is to develop principled, innovative leaders…" we can manufacture many input–output pairs:</p>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The</td>
+<td>mission</td>
+</tr>
+<tr>
+<td>The mission</td>
+<td>of</td>
+</tr>
+<tr>
+<td>The mission of</td>
+<td>the</td>
+</tr>
+<tr>
+<td>The mission of the</td>
+<td>MIT</td>
+</tr>
+<tr>
+<td>The mission of the MIT</td>
+<td>Sloan</td>
+</tr>
+<tr>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+<p>Rather than treating each fragment as a separate data point, there is a compact trick used in practice. Take the sentence <em>"the cat sat on the mat"</em>. Cut off the last word to form the <strong>input</strong> sequence <code>the cat sat on the</code>, and cut off the first word to form the <strong>output</strong> sequence <code>cat sat on the mat</code> — the same sentence shifted left by one position. Aligned position by position, the output at each step is exactly the <em>next word</em> given everything to its left. One sentence, one training example, many predictions.</p>
+<p>The architecture then looks almost identical to what we built for BERT: tokenize the input, convert tokens to embeddings, add positional information, run the sequence through a stack of Transformer blocks to produce <strong>contextual embeddings</strong>, and attach a softmax head to every position. Each softmax ranges over the entire vocabulary — say, 50,000 words — so each position is a 50,000-way classification problem. Training minimizes the familiar <strong>categorical cross-entropy</strong> loss, averaged across positions:</p>
+<p>$$\mathcal{L} = -\frac{1}{n}\sum_{i=1}^{n} \log\, p(\text{correct next word at position } i)$$</p>
+<p>For "the cat sat on the mat," that is $-\tfrac{1}{7}\left[\log p(\text{the}) + \log p(\text{cat}) + \dots + \log p(\langle E\rangle)\right]$ — one cross-entropy term per predicted token, summed and averaged. Conceptually nothing is new; there are just as many classification problems as there are words in the sequence.</p>
+<p><em>(A small correction Ramakrishnan issued at the start of the next lecture: in causal LLMs like GPT, the contextual embeddings actually flow into a single dense layer with </em><em>linear</em><em> activations — not ReLU — whose output dimension equals the vocabulary size, followed by the softmax.)</em></p>
+<h2 id="92-the-problem-with-peeking-causal-self-attention">9.2 The Problem with Peeking: Causal Self-Attention</h2>
+<p>Do you notice a problem with this setup? Recall how self-attention works: the contextual embedding of every word is a weighted average involving <strong>all</strong> the words in the sentence. The last word can see the first word, and — crucially — the first word can see the last word. For masked language modeling that bidirectionality is a feature. For next-word prediction, it is fatal.</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "If I tell you 'the cat sat on the mat,' and then I just give you 'the cat sat on the' — can you predict the next word for me? You'd be like, yeah, duh, it's <em>mat</em>. The whole thing becomes challenging only if I say 'the cat sat on the ___.'"</p>
+</blockquote>
+<p>Concretely: to predict <em>sat</em>, the network should only be allowed to use "the cat". But because self-attention can <em>see</em> the word <em>sat</em> sitting right there in the input, it will trivially learn to copy the next word from the input rather than genuinely predict it. There is no challenge for it, and it will learn nothing useful.</p>
+<p>The solution is elegantly simple: <strong>when calculating the contextual embedding of a word, give zero weight to "future" words.</strong> In the attention-weight matrix — where each row holds the weights a word assigns to every word in the sequence — we zero out all entries above the diagonal (the future words) and renormalize each row so the surviving weights still sum to 1.0. Now, when computing the contextual embedding for <em>sat</em>, only the embeddings for <em>the</em>, <em>cat</em>, and <em>sat</em> itself are averaged; everything to the right contributes nothing. The prediction at every position can depend only on the past.</p>
+<p>This modification is called <strong>causal self-attention</strong> (also <strong>masked self-attention</strong>, since future words are "masked" from the calculation — a different use of the word "mask" than in BERT-style masking). Ramakrishnan notes that the word "causal" here has no connection to causality in the statistical sense; it is just a label. Replace every self-attention head in the Transformer block with a causal attention head and you obtain a <strong>Transformer Causal Encoder (TCE)</strong>.</p>
+<p>A terminology note that trips up many readers. The original "Attention Is All You Need" paper introduced an <em>encoder–decoder</em> architecture for sequence-to-sequence problems like machine translation. Its decoder half uses masked (causal) multi-head attention. As a result, the Transformer Causal Encoder is very commonly called the <strong>Transformer decoder</strong> — GPT-style models are "decoder-only" models in the literature. In this course the two terms are interchangeable, since we are not covering translation.</p>
+<p>One student question from lecture is worth preserving: <em>does the causal mask only apply during training?</em> No change is needed at inference time. When we use the trained model, our objective is: given a string, produce the next word — and the prediction for the final position is, by construction, allowed to use everything that came before it. The model works for its intended purpose exactly as trained.</p>
+<h2 id="93-autoregressive-generation-how-llms-write">9.3 Autoregressive Generation: How LLMs Write</h2>
+<p>Once such a model is trained, generation works like this. Feed in a prompt, say <em>"It was a dark and"</em>. The model produces a softmax output at every position, but we ignore all of them except the <strong>last</strong> one — the prediction that conditions on the entire prompt. That final softmax is a probability distribution over the whole vocabulary:</p>
+<table>
+<thead>
+<tr>
+<th>Next word</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>aardvark</td>
+<td>0.0003</td>
+</tr>
+<tr>
+<td>…</td>
+<td></td>
+</tr>
+<tr>
+<td>rainy</td>
+<td>0.3</td>
+</tr>
+<tr>
+<td>…</td>
+<td></td>
+</tr>
+<tr>
+<td>stormy</td>
+<td>0.6</td>
+</tr>
+<tr>
+<td>…</td>
+<td></td>
+</tr>
+<tr>
+<td>zebra</td>
+<td>0.00009</td>
+</tr>
+</tbody>
+</table>
+<p>We <em>choose</em> a token from this table (how we choose is the subject of the next section), append it to the input — <em>"It was a dark and stormy"</em> — and run the whole thing through the model again. A new distribution comes out (perhaps <em>night</em> now has probability 0.95); we choose again, append again, and repeat until we hit a token budget or the model emits a stopping token such as punctuation. That's it. As Ramakrishnan says, "You keep on doing it, and then suddenly it's writing entire novels for you."</p>
+<p>Models trained this way are called <strong>autoregressive language models</strong> or <strong>causal language models</strong> — "autoregressive" because, as in econometrics, past predictions are fed back as inputs to the next prediction. (Incidentally, when ChatGPT appears to "type" its answer word by word, you are watching this loop; each streamed token is one pass through the model — though the display is sometimes deliberately slowed for effect.)</p>
+<p><strong>GPT-3 is exactly this</strong>, at enormous scale: 96 Transformer layers, each multi-head attention layer with 96 heads, trained on roughly 30 billion sentences scraped from the web, Wikipedia, and book collections — all with the single objective of predicting the next word. The "large" in <em>large language model</em> signifies nothing more profound than lots of parameters trained on lots of data.</p>
+<p>Why is next-word prediction such a big deal? Because <em>text in, text out</em> is astonishingly versatile. Sequence generation covers text completion, code generation, code documentation, summarization, question answering, and chatbots — the entire wave of excitement around generative AI rests on this one simple loop. Completing our taxonomy from earlier chapters: the Transformer <em>encoder</em> handles sequence classification ("I loved the movie" → Positive) and sequence labeling (tagging each token); the Transformer <em>causal encoder</em> handles sequence generation.</p>
+<p>One more intuition from lecture is worth internalizing. A student asked why longer prompts help. Every generated word both depends on and constrains what follows: "If I say 'the capital of,' you'll be like — I don't know, it's got to be a country, I guess. But if I say 'the capital of France is' — dramatic narrowing of the cone of uncertainty." Ramakrishnan relays a lovely phrase for this: LLM generation is <strong>subtractive sculpting</strong> — each word chips away at a block of marble until the statue inside is revealed.</p>
+<h2 id="94-decoding-strategies-choosing-the-next-token">9.4 Decoding Strategies: Choosing the Next Token</h2>
+<p>The process of choosing a token from the softmax's probability distribution is called <strong>decoding</strong>, and getting good behavior out of an LLM depends heavily on doing it thoughtfully. Two simple extremes:</p>
+<ul>
+<li><strong>Greedy decoding:</strong> always pick the highest-probability token. Deterministic — the same prompt always yields the same continuation.</li>
+<li><strong>Random sampling:</strong> sample a token in proportion to its probability. If <em>stormy</em> has probability 0.6, then across 100 draws you'd expect it about 60 times — but occasionally you'll draw <em>aardvark</em>.</li>
+</ul>
+<p>Which to use depends on the task. When <strong>factual accuracy</strong> matters, or when you need <strong>deterministic outputs</strong> — imagine a customer-support agent that should give two customers the same answer to the same question — greedy decoding is the right starting point; in Ramakrishnan's experience, math, logic, and reasoning questions should be kept "as greedy as possible." When <strong>diversity and creativity</strong> matter — poems, screenplays, varied chatbot phrasing — randomness is your friend, and the price you pay is stochastic outputs.</p>
+<p>Random sampling has a subtle failure mode. Our hope is that the model concentrates probability in a "short head" of good next words and leaves only a "long tail" of low-probability bad ones. The probability of picking any <em>individual</em> tail word is tiny — but the probability of picking <em>some</em> word from the tail can be large. In the example above, <em>stormy</em> + <em>night</em> might cover 0.9 of the mass, leaving a 10% chance of sampling something irrelevant. And here is the crucial point:</p>
+<blockquote>
+<p>💬 <strong>From the lecture:</strong> "If the LLM happens to sample a token from the tail, it may not be able to recover from its mistake — it may go off the rails."</p>
+</blockquote>
+<p>Ramakrishnan demonstrated this live with GPT-3.5. Prompted with "Students at the MIT Sloan School of Management are", the top continuation was <em>invited</em>, leading to a perfectly reasonable sentence about submitting white papers. Forcing the model instead to use the low-probability tokens <em>masters</em> (p ≈ 0.05%) or <em>spending</em> produced: <em>"Students at the MIT Sloan School of Management are masters of chaos. They routinely blow past deadlines…"</em> and <em>"…are spending the semester learning life skills through knitting socks."</em> Once a tail token is committed, every subsequent word must be consistent with it — remember, the generated text feeds back into the input. This also explains what LLM output fundamentally is: not guaranteed truth, but a <strong>probabilistically plausible</strong> continuation. (Ask GPT-3.5 to list Professor Ramakrishnan's awards and it will invent an impressive list — "to which a student said, <em>not yet</em>.")</p>
+<p>Three standard knobs tame random sampling by reshaping the distribution before sampling from it:</p>
+<p><strong>Top-K sampling.</strong> Keep only the $K$ most probable tokens, renormalize their probabilities to sum to 1, and sample from that set. With $K=2$ and the distribution above, {stormy: 0.6, rainy: 0.2} renormalizes to {0.75, 0.25}. Simple and widely used — but it assumes the "right" head size is the same $K$ for every prompt, which is clearly just an assumption.</p>
+<p><strong>Top-P (nucleus) sampling.</strong> Instead of fixing the <em>count</em>, fix the <em>cumulative probability</em>: keep the minimum set of tokens whose total probability exceeds $P$, renormalize, and sample. With $P=0.9$: stormy (0.6) + rainy (0.2) + foggy (0.1) just crosses 0.9, so those three are kept and renormalized to {0.67, 0.22, 0.11}. The head size now adapts per prompt — sometimes 2 words, sometimes 20. In practice, top-k and top-p can even be combined: grab words until you cross either threshold.</p>
+<p><strong>Temperature.</strong> Recall how the softmax converts raw scores $a_1, \dots, a_n$ into probabilities: $p_i = e^{a_i} / \sum_j e^{a_j}$. Temperature introduces a divisor $T$:</p>
+<p>$$p_i = \frac{e^{a_i/T}}{\sum_j e^{a_j/T}}$$</p>
+<p>As $T \to 0$, the largest $a_i$ dominates overwhelmingly: its probability goes to 1 and everything else goes to 0 — sampling degenerates to <strong>greedy decoding</strong>. As $T$ grows past 1, the distribution flattens toward uniform: every one of the 50,000 tokens becomes roughly equally likely, and the model produces garbage. Temperature is a <em>soft</em> way of emphasizing the head over the tail, without a hard cutoff.</p>
+<p>In the OpenAI Playground demo, Ramakrishnan set temperature to 0 and got the deterministic top word (<em>invited</em>) every time; then he set temperature to 2 and submitted the same prompt: "Ladies and gentlemen, I present to you — a modern large language model," as the screen filled with gibberish. The lesson for practitioners: when you build applications on top of an LLM, these decoding parameters are load-bearing. One twiddled parameter separates apparent intelligence from noise. (This is also exactly why ChatGPT gives different answers to the same prompt on different runs, and what interfaces like Bing's "creative / balanced / precise" modes manipulate under the hood.)</p>
+<h2 id="95-tokenization-for-llms-byte-pair-encoding">9.5 Tokenization for LLMs: Byte Pair Encoding</h2>
+<p>Everything above spoke of "words" for simplicity, but modern LLMs do not operate on words. The classical pipeline from earlier chapters — Standardize, Tokenize, Index, Encode — strips punctuation, lowercases, and works with a fixed word vocabulary. Yet anyone who uses GPT knows it preserves punctuation and case beautifully, and it can even handle words that don't exist. Ramakrishnan made up the word <em>reldoh</em> ("hodler backwards — a student who understands deep learning backwards"), gave GPT its definition, and asked for a sentence: <em>"During the advanced neural network seminar, it became evident that Jane was a true reldoh, effortlessly explaining even the most complex deep learning concepts in reverse order."</em> How can a model with a static vocabulary do that?</p>
+<p>The answer is subword tokenization. The GPT family uses <strong>Byte Pair Encoding (BPE)</strong>; BERT uses a similar scheme called WordPiece. The design goal is a middle ground between characters and whole words. Characters alone can compose any word (<em>reldoh</em> is just six character tokens) but carry no meaning individually; whole words carry meaning but can never cover neologisms, and rare words waste embedding slots. So the final vocabulary contains three kinds of tokens:</p>
+<ol>
+<li><strong>Individual characters</strong> (including punctuation and digits) — the universal fallback;</li>
+<li><strong>Full words</strong> frequent enough to be worth adding;</li>
+<li><strong>Subwords</strong> (word fragments like <em>ize</em>, which appears in standard<em>ize</em>, normal<em>ize</em>, …) frequent enough to be worth adding.</li>
+</ol>
+<p>BPE builds this vocabulary from a training corpus with a delightfully simple greedy procedure: <em>start with each character as a token, then repeatedly merge the pair of adjacent tokens that occurs most frequently (never merging across whitespace), until the vocabulary reaches a user-defined size limit.</em> The algorithm actually originated as a data-compression trick: if "ABC" shows up constantly in your messages, stop sending three symbols and send one.</p>
+<p>Worked example from lecture, with corpus "the cat sat on the mat" (standardized to lowercase for simplicity):</p>
+<ul>
+<li><strong>Start:</strong> corpus <code>[t,h,e,_,c,a,t,_,s,a,t,_,o,n,_,t,h,e,_,m,a,t]</code>; vocabulary <code>[t][h][e][c][a][s][o][n][m]</code>.</li>
+<li><strong>Count adjacent pairs:</strong> <code>(t,h)</code>: 2, <code>(h,e)</code>: 2, <code>(c,a)</code>: 1, <code>(a,t)</code>: 3 (in <em>cat</em>, <em>sat</em>, <em>mat</em>), <code>(s,a)</code>: 1, <code>(o,n)</code>: 1, <code>(m,a)</code>: 1.</li>
+<li><strong>Merge 1:</strong> most frequent is <code>(a,t)</code> → new token <code>at</code>. Corpus becomes <code>t,h,e,_,c,at,_,s,at,_,o,n,_,t,h,e,_,m,at</code>.</li>
+<li><strong>Merge 2:</strong> <code>(t,h)</code> now most frequent → token <code>th</code>.</li>
+<li><strong>Merge 3:</strong> <code>(th,e)</code> → token <code>the</code>. Corpus: <code>the,_,c,at,_,s,at,_,o,n,_,the,_,m,at</code>.</li>
+</ul>
+<p>Continue until the vocabulary limit is hit — GPT-2/3 used a vocabulary of roughly 50,000 tokens; GPT-4 roughly 100,000. Crucially, the <em>order of merges</em> is recorded. When new text arrives, tokenization replays the merges in the same order: the unseen word sequence "the rat" goes <code>[t,h,e,_,r,a,t]</code> → <code>[t,h,e,_,r,at]</code> → <code>[th,e,_,r,at]</code> → <code>[the,_,r,at]</code>, ending as the tokens <code>the</code>, <code>␣r</code>, <code>at</code>.</p>
+<p>Playing with a live tokenizer visualizer reveals quirks that matter in practice. <code>deep</code> and <code>␣deep</code> (with a leading space) are <em>different</em> tokens — since most words arrive after a space, attaching the space to the word saves compute. Case matters: <code>The</code> and <code>the</code> differ. And token coverage reflects the training data in amusing ways: "Jane" is a single token; "Rama" is not, though lowercase "rama" is. ("My name wasn't worthy enough to be its own token.")</p>
+<h2 id="96-from-gpt-3-to-chatgpt-instruction-tuning-and-rlhf">9.6 From GPT-3 to ChatGPT: Instruction Tuning and RLHF</h2>
+<p>GPT-1 (117M parameters), GPT-2 (1.5B), and GPT-3 (175B) were all trained the same way — next-word prediction on a Transformer causal stack. The difference was purely <strong>scale</strong> of network and data, and somewhere between GPT-2 and GPT-3, "more became different": GPT-3 could produce strikingly coherent long continuations (a prompt beginning a Jerome K. Jerome essay on Twitter yields text that genuinely sounds like Jerome K. Jerome), where GPT-2 would ramble within a few sentences. But GPT-3 was <strong>bad at following instructions</strong>. Ask it to "help me write a short note to introduce myself to my neighbor" and it responds with something like "What is a good introduction to a resume?" — because so much of its training data consists of lists, it assumes you want it to continue a list of questions. It's an autocomplete engine that doesn't know you're asking it to <em>do</em> something. It could also produce offensive or factually wrong output.</p>
+<p>The diagnosis is straightforward: GPT-3 was never explicitly trained to answer instructions — only to guess the next word. The fix, OpenAI's <strong>instruction tuning</strong> (described in the InstructGPT paper), is what put ChatGPT on the map. It proceeds in two phases. (Strictly, "instruction tuning" often refers only to the first phase; the course uses it as shorthand for the whole pipeline.)</p>
+<p><strong>Phase 1 — Supervised Fine-Tuning (SFT).</strong> Get humans to write high-quality answers to instructions; OpenAI created about 12,500 instruction–answer pairs. For "Explain the moon landing to a 6 year old in a few sentences" (to which GPT-3 had answered with <em>another question</em>: "Explain the theory of gravity to a 6 year old"), a human wrote: "People went to the moon in a big rocket, walked around and came back to Earth…" Then train GPT-3 <em>some more</em> with ordinary next-word prediction on these pairs: the instruction plus answer forms the input, the answer shifted by one position forms the labels — exactly the "cat sat on the mat" mechanics. This helped enormously. But writing thousands of high-quality answers is slow and expensive.</p>
+<p><strong>Phase 2 — Reinforcement Learning from Human Feedback (RLHF).</strong> What's easier than <em>writing</em> a good answer? <strong>Ranking</strong> answers someone else wrote — "everyone loves to be a critic." And who writes the candidate answers? GPT-3 itself: thanks to random sampling, the same prompt yields several different answers (stochasticity is now a feature, not a bug). OpenAI collected ~33,000 instructions, generated multiple answers to each, and had humans rank them from most to least helpful.</p>
+<p>From these rankings a <strong>reward model</strong> is trained. Each data point is <em>(instruction, preferred answer A, other answer B)</em>. The reward model — itself a language model — takes an (instruction, answer) pair and outputs a single number $r$ rating how good the answer is. Two copies of the model score the preferred and the other answer, producing $r_P$ and $r_O$, and the loss</p>
+<p>$$\mathcal{L} = -\log\big(\sigma(r_P - r_O)\big)$$</p>
+<p>(where $\sigma$ is the sigmoid) is minimized by SGD. You can verify that the loss falls when the preferred answer receives the higher rating — so training teaches the network to score answers the way humans rank them. In essence, <em>the reward model is a learned model of human judgment</em>: humans could only rank a finite set of answers, but the reward model can now rate any (instruction, answer) pair, automatically and at scale.</p>
+<p>Finally, the reward model improves GPT-3 itself. Feed an instruction to GPT-3, get an answer, have the reward model rate it, and use the rating to <strong>nudge GPT-3's weights in the right direction</strong> using a reinforcement learning algorithm (Proximal Policy Optimization). Repeat with ~31,000 instructions — "nudge, nudge, nudge" — and GPT-3 becomes <strong>GPT-3.5 / InstructGPT</strong>, which answers the neighbor-note prompt night-and-day better. Phases 2–3 together are what "RLHF" refers to.</p>
+<p>Getting from GPT-3.5 to <strong>ChatGPT</strong> required just one more idea: train on <strong>conversations</strong> — sequences of instruction–answer exchanges — instead of single pairs, running the same SFT → reward model → RL playbook on conversational data. That is why ChatGPT handles follow-up questions ("can you make it more formal?") gracefully.</p>
+<p>Two practical footnotes from lecture. First, every 👍/👎 you click in ChatGPT is training data for a reward model — "if you're not sure who the product is, you're the product" (you can opt out; API usage is opted out by default). Second, the human labor in SFT and ranking is now increasingly automated by <em>helper LLMs</em> that write and rank answers, and labelers work from lengthy guideline documents intended to reduce (though they cannot eliminate) bias — the reward model faithfully learns whatever biases its rankers exhibit.</p>
+<h2 id="97-the-ladder-of-llm-adaptation-prompting">9.7 The Ladder of LLM Adaptation: Prompting</h2>
+<p>Instruction tuning teaches a general lesson: to make a base LLM useful, you must <strong>adapt</strong> it with high-quality data. The same holds for making an LLM useful for <em>your</em> application — a medical, legal, or customer-support use case. <strong>Adaptation</strong> is the process of taking a base (foundation) LLM and tailoring it to a specific task, and the course organizes the options into a ladder of increasing effort:</p>
+<ol>
+<li><strong>Zero-shot prompting</strong> — prompt = a clear instruction</li>
+<li><strong>Few-shot prompting</strong> — prompt = a few examples</li>
+<li><strong>Retrieval Augmented Generation</strong> — prompt = question + relevant chunks of text</li>
+<li><strong>Fine-tuning</strong> — the LLM itself is further trained (Chapter 10)</li>
+</ol>
+<p>The first three never touch the model's weights; only fine-tuning does.</p>
+<p><strong>Zero-shot prompting.</strong> "Shot" is a synonym for "example," so zero-shot means asking for what you want with <em>no</em> examples. Suppose you want a product-review <em>defect detector</em> — not sentiment, but whether a review describes a potential product defect. A real Wayfair review reads "the curve of the back of the chair does not leave enough room to sit comfortably." Historically you'd build a special-purpose NLP classifier from labeled data; now you can simply instruct the LLM — "tell me if a product defect is being described in this review" — and it answers correctly. Bigger models are markedly better at zero-shot than smaller ones.</p>
+<p>Zero-shot success often requires careful <strong>prompt engineering</strong>. Ask ChatGPT "What is the fifth word of this sentence?" and it frequently errs; but rephrase as "First, list all the words in the sentence. Then tell me the fifth word." and it reliably succeeds — be prescriptive, break the task into steps, don't make it guess. Researchers keep "discovering" oddly effective incantations: "Let's think step by step," and more recently "Take a deep breath and work on this problem step by step." (Students volunteered others from the folklore: promising a tip, or claiming a rival model already solved it.) Many such tricks are now baked into hidden <em>system prompts</em> that are prepended to everything you type.</p>
+<p><strong>Few-shot prompting.</strong> Give the model a handful of examples of the pattern you want. To build a grammar corrector, the GPT-3 paper's prompt lists pairs — "Poor English: I eated the purple berries. Good English: I ate the purple berries." — ends with a new "Poor English" sentence, and the model completes the corrected version. The model has learned your intent <em>on the fly</em>, from the prompt alone.</p>
+<p>This ability to learn a task from instructions or examples in the prompt — with no weight updates whatsoever — is called <strong>in-context learning</strong>. It was an <em>emergent capability</em> of GPT-3, absent in GPT-2 and completely unanticipated by its builders.</p>
+<h2 id="98-retrieval-augmented-generation">9.8 Retrieval Augmented Generation</h2>
+<p>The third rung of the ladder addresses a different need: making the LLM answer questions using <strong>proprietary or custom data</strong> it never saw in training — a company's FAQ database, service manuals, internal documents. Ramakrishnan calls RAG "the most prevalent business application of LLMs" he has seen to date.</p>
+<p>Why not just paste your entire document collection into the prompt? Because of the <strong>context window</strong>: for any LLM, the prompt <em>plus</em> the output cannot exceed a predefined token limit. For <code>gpt-3.5-turbo</code> that limit is 16,385 tokens; GPT-4 variants range up to 128K (and Google's Gemini 1.5 Pro reached 1M). Worse, in a chat, the <em>entire conversation so far</em> is resent as part of every prompt — the model has no memory of its own — so the window is consumed as the conversation grows. And providers charge by the token. So we must be selective: <strong>retrieve</strong> only the content <em>relevant</em> to the question, and pack that into the prompt alongside the question. Retrieval-augmented generation.</p>
+<p>How do we measure relevance between a question and a chunk of text? With the tool we already know: <strong>contextual embeddings</strong> and <strong>cosine similarity</strong>. The full recipe:</p>
+<p><strong>One-time setup</strong>
+- Split the custom dataset into <em>sections</em> (chunks) — roughly paragraph-sized: large enough to answer a question, small enough that several fit in a prompt.
+- Compute an embedding vector for each chunk (the lab uses OpenAI's <code>text-embedding-ada-002</code>, which returns 1536-dimensional vectors) and store them.</p>
+<p><strong>Per question</strong>
+- Embed the question with the <em>same</em> model.
+- Compute cosine similarity between the question's embedding and every chunk's embedding; rank chunks from most to least similar.
+- Starting from the most similar chunk, pack as many chunks into the prompt as the token budget allows.
+- Send the assembled prompt to the LLM.</p>
+<p>Note what the LLM sees: just a prompt saying, in effect, "here is some reference text; answer this question truthfully using it." The chunking, embedding, and retrieval all happen <em>outside</em> the model — "the LLM doesn't even know you're doing it." (This is also what's happening under the hood when a chatbot announces it is "searching the web": a preprocessing program fetches results, chunks and embeds them, and packs them into the prompt.) Chunking involves judgment calls — by section, by paragraph — and, as Ramakrishnan observes, there is "a whole empirical cottage industry" of techniques; happily, the retrieved text can be fairly messy and still work, because the model was trained on plenty of messy web text.</p>
+<p>The lab (next section) makes all of this concrete — including a memorable cautionary tale about how a single phrase in the prompt changes whether the model admits ignorance or hallucinates. That fragility is why Ramakrishnan urges care in production: small wording changes can dramatically alter behavior, which makes enterprise QA genuinely hard. Air Canada's chatbot gave a customer wrong advice; the customer sued and won. "Without a human in the loop checking these answers, it's kind of dangerous, in my opinion, at this current state."</p>
+<h2 id="hands-on-lab-question-answering-with-rag">Hands-On Lab: Question Answering with RAG</h2>
+<p>The companion Colab (adapted from an OpenAI cookbook notebook) builds a question-answering system for the <strong>2022 Winter Olympics</strong> using <code>gpt-3.5-turbo</code> plus a library of Wikipedia articles. The 2022 Games postdate the model's September 2021 training cutoff — a perfect stress test.</p>
+<p><strong>Step 1 — Setup.</strong> Install <code>openai</code> and <code>tiktoken</code> (a BPE tokenizer compatible with OpenAI models), set your API key, and create a client:</p>
+<div class="highlight"><pre><span></span><code><span class="n">EMBEDDING_MODEL</span> <span class="o">=</span> <span class="s2">&quot;text-embedding-ada-002&quot;</span>
+<span class="n">GPT_MODEL</span> <span class="o">=</span> <span class="s2">&quot;gpt-3.5-turbo&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">))</span>
+</code></pre></div>
+
+<p><strong>Step 2 — Establish the baseline failure.</strong> Asked about the 2020 Summer Olympics high jump (within its training data), the model answers correctly. Asked "Which athletes won the gold medal in curling at the 2022 Winter Olympics?", it confidently replies that Sweden won the men's gold and <em>South Korea</em> the women's — but <strong>Great Britain won the women's gold</strong>. A confident, eloquent, wrong answer: a <strong>hallucination</strong> ("often in error, but never in doubt").</p>
+<p><strong>Step 3 — Prompt-engineer some honesty.</strong> Simply telling the model it may decline changes everything:</p>
+<div class="highlight"><pre><span></span><code><span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Answer the question as truthfully as possible, </span><span class="se">\</span>
+<span class="s2">and if you&#39;re unsure of the answer, say &quot;Sorry, I don&#39;t know&quot;.</span>
+
+<span class="s2">Question: Which athletes won the gold medal in curling at the 2022 Winter Olympics?&quot;&quot;&quot;</span>
+</code></pre></div>
+
+<p>The model now answers: <em>"Sorry, I don't know."</em> Telling LLMs explicitly what you want often helps.</p>
+<p><strong>Step 4 — Manually add context.</strong> Paste the entire (messily formatted) Wikipedia article on 2022 Olympic curling into the prompt and instruct the model to use it. It now answers all three golds correctly. A harder question — "Did any athlete win multiple medals in curling?" — requires abstraction over the article, and the model nails it: <em>"Yes, Oskar Eriksson from Sweden… a gold in the men's event and a bronze in the mixed doubles."</em> As the notebook remarks: Google cannot do this.</p>
+<p><strong>Step 5 — Automate retrieval.</strong> Manual pasting doesn't scale, so download OpenAI's pre-chunked, pre-embedded dataset of 2022 Winter Olympics Wikipedia sections, and define an embedding helper:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_embedding</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">EMBEDDING_MODEL</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">EMBEDDING_MODEL</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">embedding</span>
+</code></pre></div>
+
+<p>Sanity check: the embeddings of "HODL is amazing!!" and "HODL is incredible!!" have cosine similarity 0.993 — synonyms land close together, as they should.</p>
+<p><strong>Step 6 — Rank chunks by relatedness.</strong> Embed the query and sort every chunk by cosine similarity (<code>1 - spatial.distance.cosine</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">strings_ranked_by_relatedness</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span>
+        <span class="n">relatedness_fn</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">spatial</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">cosine</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span>
+        <span class="n">top_n</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">query_embedding</span> <span class="o">=</span> <span class="n">get_embedding</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="n">strings_and_relatednesses</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">],</span> <span class="n">relatedness_fn</span><span class="p">(</span><span class="n">query_embedding</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;embedding&quot;</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()</span>
+    <span class="p">]</span>
+    <span class="n">strings_and_relatednesses</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">strings</span><span class="p">,</span> <span class="n">relatednesses</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">strings_and_relatednesses</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">strings</span><span class="p">[:</span><span class="n">top_n</span><span class="p">],</span> <span class="n">relatednesses</span><span class="p">[:</span><span class="n">top_n</span><span class="p">]</span>
+</code></pre></div>
+
+<p>For "curling gold medal", the top hits (similarity ≈ 0.88) are precisely the medal-summary sections of the curling article.</p>
+<p><strong>Step 7 — Pack the prompt within a token budget.</strong> Use <code>tiktoken</code> to count tokens and add ranked chunks until the budget would be exceeded:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query_message</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">token_budget</span><span class="p">):</span>
+    <span class="n">strings</span><span class="p">,</span> <span class="n">relatednesses</span> <span class="o">=</span> <span class="n">strings_ranked_by_relatedness</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+    <span class="n">introduction</span> <span class="o">=</span> <span class="n">HEADER</span>
+    <span class="n">question</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Question: </span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">introduction</span>
+    <span class="k">for</span> <span class="n">string</span> <span class="ow">in</span> <span class="n">strings</span><span class="p">:</span>
+        <span class="n">next_article</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">Wikipedia article section:</span><span class="se">\n</span><span class="s1">&quot;&quot;&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">string</span><span class="si">}</span><span class="se">\n</span><span class="s1">&quot;&quot;&quot;&#39;</span>
+        <span class="k">if</span> <span class="n">num_tokens</span><span class="p">(</span><span class="n">message</span> <span class="o">+</span> <span class="n">next_article</span> <span class="o">+</span> <span class="n">question</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">token_budget</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="n">next_article</span>
+    <span class="k">return</span> <span class="n">message</span> <span class="o">+</span> <span class="n">question</span>
+</code></pre></div>
+
+<p><strong>Step 8 — Ask.</strong> An <code>ask()</code> function assembles the message and calls the chat API with <code>temperature=0</code> (greedy decoding — we want factual, deterministic answers). The fully automated pipeline correctly names all the gold-medal curlers. Asked about the <em>2016</em> Winter Olympics — which never happened — it answers "Sorry, I don't know."</p>
+<p><strong>Step 9 — The fragility experiment.</strong> Change the header from "Answer the question as truthfully as possible, and if you're unsure… say 'Sorry, I don't know'" to just "Answer the question using the provided context." Re-ask about 2016 — and the model happily answers with 2022 results for a nonexistent event. Removing the phrase <em>as truthfully as possible</em> flipped its behavior. The guardrail is real but <strong>not guaranteed</strong>.</p>
+<h2 id="key-takeaways">Key Takeaways</h2>
+<ul>
+<li><strong>Next-word prediction</strong> is self-supervised learning where every sentence, shifted left by one token, supplies its own labels; training uses per-position cross-entropy averaged over the sequence.</li>
+<li>Plain self-attention would let the model <strong>copy the answer from the future</strong>; <strong>causal self-attention</strong> zeroes out attention weights on future tokens (and renormalizes), producing the Transformer Causal Encoder — also called the Transformer decoder.</li>
+<li>Generation is <strong>autoregressive</strong>: take the last position's softmax over the vocabulary, choose a token, append, repeat. GPT-3 is this architecture at scale (96 layers × 96 heads, ~30B training sentences).</li>
+<li><strong>Decoding matters</strong>: greedy for factual/deterministic tasks; sampling for creative ones. Top-k and top-p restrict sampling to the "head" of the distribution; temperature $T$ in $p_i \propto e^{a_i/T}$ interpolates from greedy ($T \to 0$) to uniform garbage ($T \gg 1$). A single tail-token sample can send generation permanently off the rails.</li>
+<li><strong>BPE tokenization</strong> greedily merges frequent adjacent token pairs, yielding a vocabulary of characters + subwords + frequent words that preserves case and punctuation and composes unseen words.</li>
+<li><strong>Instruction tuning</strong> = SFT on human-written instruction–answer pairs, then <strong>RLHF</strong>: train a reward model on human rankings with loss $-\log \sigma(r_P - r_O)$ and use it to nudge the LLM via reinforcement learning. Training on conversations instead of single pairs yields ChatGPT.</li>
+<li>The <strong>ladder of adaptation</strong> runs zero-shot prompting → few-shot prompting → RAG → fine-tuning; the first three leave the weights untouched. Few-shot ability ("in-context learning") emerged unexpectedly at GPT-3 scale.</li>
+<li><strong>RAG</strong> = chunk, embed, retrieve by cosine similarity, pack the prompt within the context-window token budget, generate. It is the most prevalent enterprise LLM pattern — and prompt wording (e.g., "answer as truthfully as possible") materially changes hallucination behavior.</li>
+</ul>
+<h2 id="check-your-understanding">Check Your Understanding</h2>
+<p><strong>1. Why can't the standard (bidirectional) Transformer encoder be trained directly on next-word prediction?</strong></p>
+<details><summary>Answer</summary>
+Because self-attention computes each word's contextual embedding from <em>all</em> words in the sequence, including future ones. To predict "sat" after "the cat", the network can simply attend to the token "sat" already present in the input and copy it — the task becomes trivial and nothing useful is learned. Causal self-attention fixes this by zeroing the attention weights on future tokens and renormalizing each row, so every prediction depends only on past tokens.
+</details>
+
+<p><strong>2. During inference (generation), do we need to remove the causal mask so the model can see the whole prompt?</strong></p>
+<details><summary>Answer</summary>
+No. At inference we only care about the prediction at the <em>last</em> position, and that position is allowed — even under the causal mask — to attend to everything that came before it. The model works for its intended purpose without any modification.
+</details>
+
+<p><strong>3. A chatbot for airline customer support gives different answers to two customers asking the identical question. Which decoding settings would fix this, and what is the trade-off?</strong></p>
+<details><summary>Answer</summary>
+Use greedy decoding — e.g., set temperature to 0 (or pick the argmax token directly). For a fixed prompt the softmax table is fixed, so always choosing the highest-probability token guarantees deterministic, repeatable answers. The trade-off is a loss of diversity: responses can feel stilted and repetitive, which is why creative tasks prefer (tuned) random sampling via top-k, top-p, or moderate temperature.
+</details>
+
+<p><strong>4. Explain the difference between top-k and top-p sampling. Why did the course suggest top-p is often more effective?</strong></p>
+<details><summary>Answer</summary>
+Top-k keeps the K most probable tokens, renormalizes, and samples; top-p (nucleus) keeps the <em>minimum set</em> of tokens whose cumulative probability exceeds P, renormalizes, and samples. Top-k hardcodes the size of the "head" of the distribution, but the right head size varies by prompt — sometimes 2 good continuations, sometimes 20. Top-p adapts automatically: it includes however many tokens are needed to capture probability mass P, so it tracks the actual shape of the distribution.
+</details>
+
+<p><strong>5. In the softmax with temperature, $p_i = e^{a_i/T} / \sum_j e^{a_j/T}$, what happens as $T \to 0$ and as $T$ grows large?</strong></p>
+<details><summary>Answer</summary>
+As $T \to 0$, the scores $a_i/T$ are magnified, and the largest score dominates the exponentials: its probability approaches 1 while all others approach 0 — sampling becomes greedy decoding. As $T$ grows large, all $a_i/T$ shrink toward the same value, the distribution flattens toward uniform, and every vocabulary token becomes roughly equally likely — the model outputs incoherent text.
+</details>
+
+<p><strong>6. GPT models have a static token vocabulary, yet GPT can correctly use a made-up word like "reldoh" in a sentence. How?</strong></p>
+<details><summary>Answer</summary>
+Byte Pair Encoding builds a vocabulary containing individual characters as well as frequent subwords and words. Any string — including a word never seen in training — can be composed from smaller tokens (in the worst case, single characters). The learned merges are applied to new text in the same order they were learned, so "reldoh" is simply tokenized into a few subword/character tokens, and the model can process and reproduce it consistently.
+</details>
+
+<p><strong>7. In RLHF, why train a reward model at all instead of having humans directly rate every answer during reinforcement learning?</strong></p>
+<details><summary>Answer</summary>
+Human ranking is slow and expensive, so it can only be done for a finite set of instructions (~33,000 in InstructGPT). The reward model — trained on those rankings with the loss $-\log\sigma(r_P - r_O)$, which is minimized when preferred answers get higher scores — <em>learns how humans rank responses</em>. Once trained, it can rate any (instruction, answer) pair instantly and for free, allowing the RL nudging step to run over tens of thousands of instructions without further human labor.
+</details>
+
+<p><strong>8. In the RAG lab, the model answered "Sorry, I don't know" when asked about the (nonexistent) 2016 Winter Olympics — and then, after one change, confidently answered the question anyway. What changed, and what is the lesson?</strong></p>
+<details><summary>Answer</summary>
+The prompt header was changed from "Answer the question as truthfully as possible, and if you're unsure of the answer, say 'Sorry, I don't know'" to simply "Answer the question using the provided context." Without the explicit truthfulness instruction, the model answered the irrelevant question using 2022 data. The lesson: LLM behavior is highly sensitive to small wording changes in the prompt; guardrails against hallucination must be stated explicitly, and even then they are not guaranteed — which is why production RAG systems need careful QA and, at present, often a human in the loop.
+</details>
+      <nav class="chapter-footer" aria-label="Chapter navigation"><a class="previous" href="ch08-transformers-ii-self-supervised.html">← 8 · Self-Supervised Learning</a><a class="next" href="ch10-peft-lora.html">10 · PEFT and LoRA →</a></nav>
+    </article>
+  </main>
+</body>
+</html>
