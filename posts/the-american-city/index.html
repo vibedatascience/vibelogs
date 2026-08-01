@@ -280,6 +280,34 @@ figure.plate.plate-pair figcaption { grid-column: 1 / -1; margin-top: 0; }
   nav.toc .toc-week { display: none; }
   .tl-event { width: calc(100% - 4.8rem); }
 }
+/* ---------- Side TOC ---------- */
+nav.sidetoc {
+  display: none; position: fixed; top: 50%; transform: translateY(-50%);
+  left: 1.4rem; width: 13.5rem; max-height: 86vh; overflow-y: auto;
+  font-family: var(--sans); scrollbar-width: thin;
+}
+nav.sidetoc .st-label {
+  font-size: .68rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--muted); margin: 0 0 .8rem; padding-left: .8rem;
+}
+nav.sidetoc ol { list-style: none; margin: 0; padding: 0; }
+nav.sidetoc a {
+  display: flex; align-items: baseline; gap: .55rem;
+  padding: .34rem .8rem; text-decoration: none; color: var(--muted);
+  font-size: .8rem; line-height: 1.35; border-left: 2px solid var(--hairline);
+  transition: color .15s, border-color .15s, background .15s;
+}
+nav.sidetoc a:hover { color: var(--ink); }
+nav.sidetoc a .st-num {
+  font-size: .68rem; color: var(--muted); min-width: 1.1rem;
+  letter-spacing: .04em; transition: color .15s;
+}
+nav.sidetoc a.active {
+  color: var(--accent); border-left-color: var(--accent);
+  background: var(--accent-wash); font-weight: 600;
+}
+nav.sidetoc a.active .st-num { color: var(--accent); }
+@media (min-width: 1180px) { nav.sidetoc { display: block; } }
 /* ---------- Misc ---------- */
 cite { font-style: italic; }
 a { color: var(--accent-2); }
@@ -291,6 +319,25 @@ a { color: var(--accent-2); }
 </style>
 </head>
 <body>
+<nav class="sidetoc" aria-label="Chapters">
+  <p class="st-label">Contents</p>
+  <ol>
+    <li><a href="#preface"><span class="st-num">&sect;</span>Preface</a></li>
+    <li><a href="#ch-01"><span class="st-num">1</span>An Urbanizing World</a></li>
+    <li><a href="#ch-02"><span class="st-num">2</span>Urbanization &amp; Industrialization</a></li>
+    <li><a href="#ch-03"><span class="st-num">3</span>Immigration, Migration &amp; Race</a></li>
+    <li><a href="#ch-04"><span class="st-num">4</span>Urban Politics</a></li>
+    <li><a href="#ch-05"><span class="st-num">5</span>Progressive Era Reformers</a></li>
+    <li><a href="#ch-06"><span class="st-num">6</span>Downtown, Nightlife &amp; Leisure</a></li>
+    <li><a href="#ch-07"><span class="st-num">7</span>Riots, Vice &amp; the Police</a></li>
+    <li><a href="#ch-08"><span class="st-num">8</span>Health, Welfare &amp; Schools</a></li>
+    <li><a href="#ch-09"><span class="st-num">9</span>Mass Transit</a></li>
+    <li><a href="#ch-10"><span class="st-num">10</span>Parks &amp; Recreation</a></li>
+    <li><a href="#ch-11"><span class="st-num">11</span>Housing the City</a></li>
+    <li><a href="#course-companion"><span class="st-num">&sect;</span>Course Companion</a></li>
+    <li><a href="#bibliography"><span class="st-num">&sect;</span>Bibliography</a></li>
+  </ol>
+</nav>
 <div class="cover" id="cover">
   <p class="cover-kicker">Based on MIT OpenCourseWare · 11.013J · Spring 2025</p>
   <h1 class="cover-title">The American City</h1>
@@ -3634,5 +3681,38 @@ a { color: var(--accent-2); }
     <li>Young, Jay, and Robert M. Fogelson. &ldquo;Mass Transit in 19th- and 20th-Century America,&rdquo; drawing on Fogelson, <cite>Downtown: Its Rise and Fall, 1880&ndash;1950</cite>. Yale University Press, 2001.</li>
   </ul>
 </section>
+<script>
+(function () {
+  var links = document.querySelectorAll('nav.sidetoc a');
+  var map = {};
+  links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+  var sections = document.querySelectorAll('section.chapter');
+  var current = null;
+  function setActive(id) {
+    if (current === id) return;
+    current = id;
+    links.forEach(function (a) { a.classList.remove('active'); });
+    var a = map[id];
+    if (a) {
+      a.classList.add('active');
+      var nav = document.querySelector('nav.sidetoc');
+      var top = a.offsetTop - nav.clientHeight / 2;
+      nav.scrollTo({ top: top, behavior: 'smooth' });
+    }
+  }
+  function onScroll() {
+    var line = window.innerHeight * 0.3;
+    var best = null;
+    sections.forEach(function (s) {
+      var r = s.getBoundingClientRect();
+      if (r.top <= line) best = s.id;
+    });
+    if (best) setActive(best);
+    else { current = null; links.forEach(function (a) { a.classList.remove('active'); }); }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
 </body>
 </html>
