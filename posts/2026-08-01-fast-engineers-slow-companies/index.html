@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Rahul">
+<title>Fast engineers, slow companies | vibelogs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#FAFAF8;--ink:#17171C;--cobalt:#2545FF;--muted:#6E6E76;--rule:#E7E7E2;--chip:#EEF1FF}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:17px;line-height:1.7}
+.wrap{max-width:680px;margin:0 auto;padding:0 24px}
+.top{padding:40px 0 0;font-family:'IBM Plex Mono',monospace;font-size:0.8rem}
+.top a{color:var(--muted);text-decoration:none}
+.top a:hover{color:var(--cobalt)}
+header.post{padding:32px 0 24px;border-bottom:1px solid var(--rule)}
+.meta{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted);display:flex;gap:10px;align-items:center;margin-bottom:14px}
+.upd{color:var(--muted)}
+.tag{background:var(--chip);color:var(--cobalt);padding:1px 8px;border-radius:4px;font-weight:500}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.7rem,5vw,2.3rem);letter-spacing:-0.02em;line-height:1.2}
+article{padding:32px 0 60px}
+article h2{font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:1.3rem;margin:36px 0 12px}
+article p{margin:0 0 18px}
+article ol,article ul{margin:0 0 18px 22px}
+article li{margin-bottom:8px}
+article a{color:var(--cobalt)}
+pre{background:#111116;color:#E8E8EE;font-family:'IBM Plex Mono',monospace;font-size:0.82rem;line-height:1.55;padding:16px 18px;border-radius:8px;overflow-x:auto;margin:0 0 18px}
+code{font-family:'IBM Plex Mono',monospace;font-size:0.86em;background:var(--chip);padding:1px 5px;border-radius:4px}
+pre code{background:none;padding:0}
+.gotcha{border-left:3px solid var(--cobalt);padding:12px 16px;background:#fff;margin:0 0 18px}
+.gotcha strong{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;letter-spacing:0.08em;color:var(--cobalt)}
+footer{border-top:1px solid var(--rule);padding:24px 0 56px;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted)}
+footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><a href="../../">← vibelogs</a></div>
+
+<header class="post">
+  <div class="meta"><span>[2026-08-01]</span><span>Rahul</span><span class="upd">updated 2026-08-01</span><span class="tag">NOTES</span></div>
+  <h1>Fast engineers, slow companies</h1>
+</header>
+
+<article>
+<p>A thread on X asked why AI coding gains are not showing up in company results. Individual engineers are visibly faster. Company output looks about the same. The replies converged on a few explanations worth keeping, so I am writing them down.</p>
+
+<h2>Organizational drag</h2>
+<p>Faster workers inside slow systems still produce slow companies. Writing code was one step in a long cycle: planning, review, approvals, deploys, coordination. If writing code was 20% of cycle time, making that step five times faster barely moves the total. The bottleneck moved. It did not disappear.</p>
+
+<h2>The multiplicative problem</h2>
+<p>One reply framed value as multiplicative along a chain. Any zero along the path destroys the whole thing. Speeding up one link does nothing if a different link is the zero. The practical implication is to work as close to the outcome as possible, where fewer links sit between your work and the result.</p>
+
+<h2>Adoption is one guy</h2>
+<p>Even fifty-person orgs often have exactly one person on AI-powered hyper productivity while everyone else works as before. Non-technical folks mostly have not gone deep enough on the tools to get real leverage. And many orgs push adoption onto subject matter experts who are afraid their knowledge will get automated, so they never call the results good enough.</p>
+
+<h2>Review is the new bottleneck</h2>
+<p>The shortest reply was "drowning in PRs" and it may be the most accurate one. Generation got cheap. Verification did not. A team that can produce ten times the pull requests but review at the same rate has just moved the queue.</p>
+
+<h2>Measurement was already broken</h2>
+<p>Engineering productivity was hard to measure before AI, and estimation makes even less sense now. Sales cannot guesstimate promises, managers cannot build schedules, and developers are working in a haze. Code was always a means to an end. Tracking it as the end was the original error, and AI just made the error visible.</p>
+
+<h2>Competition eats the gains</h2>
+<p>Everyone has access to the same models. Some gains get competed away instead of showing up as margin. Others will take longer to land in results. And the outside world can only absorb so many new features at once.</p>
+
+<h2>My take</h2>
+<p>This matches what I see. The constraint moved from writing to deciding, reviewing, and coordinating. The interesting agent work right now is on those surfaces, review queues and shared workspaces, rather than on faster code generation. One person with one AI and a clear head can outrun a team that has to stop and coordinate, but a company is the team, not the person.</p>
+</article>
+
+<footer><a href="../../">← back to all logs</a></footer>
+</div>
+</body>
+</html>
