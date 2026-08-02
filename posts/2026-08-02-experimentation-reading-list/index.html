@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Rahul">
+<title>Experimentation reading list | vibelogs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#FAFAF8;--ink:#17171C;--cobalt:#2545FF;--muted:#6E6E76;--rule:#E7E7E2;--chip:#EEF1FF}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:17px;line-height:1.7}
+.wrap{max-width:680px;margin:0 auto;padding:0 24px}
+.top{padding:40px 0 0;font-family:'IBM Plex Mono',monospace;font-size:0.8rem}
+.top a{color:var(--muted);text-decoration:none}
+.top a:hover{color:var(--cobalt)}
+header.post{padding:32px 0 24px;border-bottom:1px solid var(--rule)}
+.meta{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted);display:flex;gap:10px;align-items:center;margin-bottom:14px}
+.upd{color:var(--muted)}
+.tag{background:var(--chip);color:var(--cobalt);padding:1px 8px;border-radius:4px;font-weight:500}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.7rem,5vw,2.3rem);letter-spacing:-0.02em;line-height:1.2}
+article{padding:32px 0 60px}
+article h2{font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:1.3rem;margin:36px 0 12px}
+article h3{font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:0.8rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin:20px 0 8px}
+article p{margin:0 0 18px}
+article ol,article ul{margin:0 0 18px 22px}
+article li{margin-bottom:8px}
+article a{color:var(--cobalt)}
+.author{font-family:'IBM Plex Mono',monospace;font-size:0.82rem;color:var(--muted);margin:-8px 0 14px}
+pre{background:#111116;color:#E8E8EE;font-family:'IBM Plex Mono',monospace;font-size:0.82rem;line-height:1.55;padding:16px 18px;border-radius:8px;overflow-x:auto;margin:0 0 18px}
+code{font-family:'IBM Plex Mono',monospace;font-size:0.86em;background:var(--chip);padding:1px 5px;border-radius:4px}
+pre code{background:none;padding:0}
+.gotcha{border-left:3px solid var(--cobalt);padding:12px 16px;background:#fff;margin:0 0 18px}
+.gotcha strong{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;letter-spacing:0.08em;color:var(--cobalt)}
+footer{border-top:1px solid var(--rule);padding:24px 0 56px;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted)}
+footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><a href="../../">← vibelogs</a></div>
+
+<header class="post">
+  <div class="meta"><span>[2026-08-02]</span><span>Rahul</span><span class="upd">updated 2026-08-02</span><span class="tag">NOTES</span></div>
+  <h1>Experimentation reading list</h1>
+</header>
+
+<article>
+<p>Nine books on experimentation and A/B testing, saved from a LinkedIn reading list. I looked up the table of contents for each so I can decide which ones to read and where to dip in.</p>
+
+<h2>1. Experimentation Works</h2>
+<p class="author">Stefan H. Thomke, 2020</p>
+<p>Experimentation as a management capability, not a testing technique. Written for leaders who want to scale learning instead of opinions.</p>
+<ol>
+  <li>Why Experimentation Works</li>
+  <li>What Makes a Good Business Experiment?</li>
+  <li>How to Experiment Online</li>
+  <li>Can Your Culture Handle Large-Scale Experimentation?</li>
+  <li>Inside an Experimentation Organization</li>
+  <li>Becoming an Experimentation Organization</li>
+</ol>
+
+<h2>2. Trustworthy Online Controlled Experiments</h2>
+<p class="author">Ron Kohavi, Diane Tang, Ya Xu, 2020</p>
+<p>The gold standard for running experiments correctly at scale. Five parts, 23 chapters. Companion site: <a href="https://experimentguide.com">experimentguide.com</a>.</p>
+<h3>Part I: Introductory topics for everyone</h3>
+<ol>
+  <li>Introduction and Motivation</li>
+  <li>Running and Analyzing Experiments: An End-to-End Example</li>
+  <li>Twyman's Law and Experimentation Trustworthiness</li>
+  <li>Experimentation Platform and Culture</li>
+</ol>
+<h3>Part II: Selected topics for everyone</h3>
+<ol start="5">
+  <li>Speed Matters: An End-to-End Case Study</li>
+  <li>Organizational Metrics</li>
+  <li>Metrics for Experimentation and the Overall Evaluation Criterion</li>
+  <li>Institutional Memory and Meta-Analysis</li>
+  <li>Ethics in Controlled Experiments</li>
+</ol>
+<h3>Part III: Complementary and alternative techniques</h3>
+<ol start="10">
+  <li>Complementary Techniques</li>
+  <li>Observational Causal Studies</li>
+</ol>
+<h3>Part IV: Advanced topics for building a platform</h3>
+<ol start="12">
+  <li>Client-Side Experiments</li>
+  <li>Instrumentation</li>
+  <li>Choosing a Randomization Unit</li>
+  <li>Ramping Experiment Exposure: Trading Off Speed, Quality, and Risk</li>
+  <li>Scaling Experiment Analyses</li>
+</ol>
+<h3>Part V: Advanced topics for analyzing experiments</h3>
+<ol start="17">
+  <li>The Statistics Behind Online Controlled Experiments</li>
+  <li>Variance Estimation and Improved Sensitivity: Pitfalls and Solutions</li>
+  <li>The A/A Test</li>
+  <li>Triggering for Improved Sensitivity</li>
+  <li>Sample Ratio Mismatch and Other Trust-Related Guardrail Metrics</li>
+  <li>Leakage and Interference Between Variants</li>
+  <li>Measuring Long-Term Treatment Effects</li>
+</ol>
+
+<h2>3. Design for Impact</h2>
+<p class="author">Erin Weigel, 2024</p>
+<p>Bridges UX design and experimentation through her Conversion Design process. The chapters follow the phases of that process.</p>
+<ol>
+  <li>Conversion Design Drives Impact</li>
+  <li>The Understand Phase: Uncovering Impactful Insights</li>
+  <li>The Hypothesize Phase: Think Clear, Logical Thoughts</li>
+  <li>The Prioritize Phase: The Work and the Workflow</li>
+  <li>The Create Phase: Set Your Idea Up for Success</li>
+  <li>The Test Phase: Test Like You're Wrong</li>
+  <li>The Analyze Phase: Learn from the Data</li>
+  <li>The Decide Phase: Make an Optimal Choice</li>
+  <li>Scale It: Drive Impact Across Your Organization</li>
+</ol>
+
+<h2>4. Statistical Methods in Online A/B Testing</h2>
+<p class="author">Georgi Z. Georgiev, 2019</p>
+<p>The statistics behind experiments, built from the ground up with CRO examples instead of dice and coins.</p>
+<ol>
+  <li>Using Statistics in Business</li>
+  <li>Estimating Uncertainty: Statistical Significance, P-Values, Other Estimates</li>
+  <li>Statistical Assumptions: Assessing Model Adequacy</li>
+  <li>Statistical Power and Sample Size Calculations</li>
+  <li>Types of Statistical Hypotheses</li>
+  <li>Tests with More Than One Variant</li>
+  <li>Segmentation and Multiple Performance Indicators</li>
+  <li>Working with Continuous Data</li>
+  <li>Percentage Change</li>
+  <li>Sequential Testing: Continuous Monitoring of Data</li>
+  <li>Optimal Significance Thresholds and Sample Sizes</li>
+  <li>External Validity, a.k.a. Generalizability of A/B Test Results</li>
+  <li>Miscellaneous Topics</li>
+  <li>Communicating Statistical Results</li>
+</ol>
+
+<h2>5. Tiny Experiments</h2>
+<p class="author">Anne-Laure Le Cunff, 2025</p>
+<p>A mindset book about learning through small, intentional experiments in your own life. Organized in four parts: Pact, Act, React, Impact.</p>
+<h3>Pact: commit to curiosity</h3>
+<ol>
+  <li>Why Goal Setting Is Broken</li>
+  <li>Escaping the Tyranny of Purpose</li>
+  <li>A Pact to Turn Doubts into Experiments</li>
+</ol>
+<h3>Act: practice mindful productivity</h3>
+<ol start="4">
+  <li>A Deeper Sense of Time</li>
+  <li>Procrastination Is Not the Enemy</li>
+  <li>The Power of Intentional Imperfection</li>
+</ol>
+<h3>React: collaborate with uncertainty</h3>
+<ol start="7">
+  <li>Creating Growth Loops</li>
+  <li>The Secret to Better Decisions</li>
+  <li>How to Dance with Disruption</li>
+</ol>
+<h3>Impact: grow with the world</h3>
+<ol start="10">
+  <li>How to Unlock Social Flow</li>
+  <li>Learning in Public</li>
+  <li>Life Beyond Legacy</li>
+</ol>
+
+<h2>6. Next-Level A/B Testing</h2>
+<p class="author">Leemay Nassery, 2025</p>
+<p>What breaks when experimentation matures: throughput, interaction effects, ML evaluation, long-term impact. From a Pragmatic Bookshelf engineering angle.</p>
+<ol>
+  <li>Why Experimentation Rate, Quality, and Cost Matter</li>
+  <li>Improving Experimentation Throughput</li>
+  <li>Designing Better Experiments</li>
+  <li>Improving Machine Learning Evaluation Practices</li>
+  <li>Verifying and Monitoring Experiments</li>
+  <li>Ensuring Trustworthy Insights</li>
+  <li>Practicing Adaptive Testing Strategies</li>
+  <li>Measuring Long-Term Impact</li>
+  <li>Tying It All Together</li>
+</ol>
+
+<h2>7. You Should Test That</h2>
+<p class="author">Chris Goward, 2013</p>
+<p>A classic on hypothesis-driven conversion optimization, built around his LIFT model.</p>
+<ol>
+  <li>Why You Should Test That</li>
+  <li>What Is Conversion Optimization?</li>
+  <li>Prioritize Testing Opportunities</li>
+  <li>Create Hypotheses with the LIFT Model</li>
+  <li>Optimize Your Value Proposition</li>
+  <li>Optimize for Relevance</li>
+  <li>Optimize for Clarity</li>
+  <li>Optimize for Anxiety</li>
+  <li>Optimize for Distraction</li>
+  <li>Optimize for Urgency</li>
+  <li>Test Your Hypotheses</li>
+  <li>Analyze Your Test Results</li>
+  <li>Strategic Marketing Optimization</li>
+</ol>
+
+<h2>8. Growth Data Analytics Playbook</h2>
+<p class="author">Mengying Li, Joe Kumar, Yuzheng Sun, 2025</p>
+<p>Connects experimentation, metrics, and decision-making for product growth. Published by Statsig.</p>
+<ol>
+  <li>Leverage Growth Analytics to Drive Product Success</li>
+  <li>Identify Early Signals of Product Value and Success</li>
+  <li>Build the Foundation with Growth Accounting Framework</li>
+  <li>Acquire and Foster High-Quality Users</li>
+  <li>Retain Existing Users and Keep Them Engaged</li>
+  <li>Resurrect Churned Customers: Strategies for Reengagement</li>
+  <li>Accelerate User Conversion for Increased Revenue Generation</li>
+  <li>Optimize Performance and Build Sustainable Growth Flywheels</li>
+  <li>Size Growth Opportunity and Set Achievable Growth Goals</li>
+  <li>Design and Implement Effective Experiments</li>
+</ol>
+
+<h2>9. Thinking in Bets</h2>
+<p class="author">Annie Duke, 2018</p>
+<p>Not about A/B testing directly. It is about decision-making under uncertainty, which every experiment ultimately is.</p>
+<ol>
+  <li>Life Is Poker, Not Chess</li>
+  <li>Wanna Bet?</li>
+  <li>Bet to Learn: Fielding the Unfolding Future</li>
+  <li>The Buddy System</li>
+  <li>Dissent to Win</li>
+  <li>Adventures in Mental Time Travel</li>
+</ol>
+</article>
+
+<footer><a href="../../">← back to all logs</a></footer>
+</div>
+</body>
+</html>
