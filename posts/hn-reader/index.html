@@ -35,6 +35,15 @@ nav button.on{background:var(--panel2);color:var(--amber)}
 .search{margin-left:auto}
 .tm input{background:var(--panel);border:1px solid var(--line);color:var(--ink-dim);font-family:var(--mono);font-size:12px;padding:5px 8px;border-radius:6px;outline:none}
 .tm input:focus{border-color:var(--amber-dim)}
+.tm input{color:var(--ink);font-weight:700;cursor:pointer}
+.tm input::-webkit-calendar-picker-indicator{cursor:pointer;opacity:.6}
+.leadwrap{display:grid;grid-template-columns:1.6fr 1fr;gap:22px;align-items:start}
+.shot{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;border:1px solid var(--line);background:var(--panel2);display:block}
+.shot.small{aspect-ratio:16/9;margin-bottom:10px}
+.pull{margin-top:12px;padding:10px 14px;border-left:3px solid var(--amber);font-family:var(--serif);font-style:italic;font-size:14px;line-height:1.5;color:var(--ink-dim)}
+.pull .who{display:block;margin-top:5px;font-family:var(--mono);font-style:normal;font-size:11px;color:var(--ink-faint)}
+.pull.small{font-size:13px;padding:7px 11px;margin-top:9px}
+@media (max-width:640px){.leadwrap{grid-template-columns:1fr}}
 .tmbanner{margin-bottom:16px;padding:10px 14px;background:var(--panel);border:1px solid var(--amber-dim);border-radius:8px;font-size:13px;color:var(--amber)}
 .tmbanner .x{float:right;cursor:pointer;color:var(--ink-dim)}
 .tmbanner .x:hover{color:var(--ink)}
@@ -179,6 +188,30 @@ async function more(){
   bindStoryLinks();
 }
 
+function shotHTML(it,small){
+  if(!it.url)return'';
+  const src='https://image.thum.io/get/width/500/crop/700/'+encodeURI(it.url);
+  const fb='https://www.google.com/s2/favicons?domain='+dom(it.url)+'&sz=64';
+  return `<img class="shot${small?' small':''}" loading="lazy" src="${src}" onerror="this.onerror=null;this.src='${fb}';this.style.objectFit='contain';this.style.padding='30px'" alt="">`;
+}
+function stripTags(html){const d=document.createElement('div');d.innerHTML=html;return d.textContent||''}
+async function fillPulls(items){
+  const targets=items.slice(0,5);
+  await Promise.all(targets.map(async it=>{
+    let kids=it.kids;
+    if(!kids){const full=await item(it.id);kids=full&&full.kids}
+    if(!kids||!kids.length)return;
+    const c=await item(kids[0]);
+    if(!c||c.deleted||c.dead||!c.text)return;
+    const el=document.querySelector(`.pull[data-for="${it.id}"]`);
+    if(!el)return;
+    let t=stripTags(c.text);
+    if(t.length>220)t=t.slice(0,220).replace(/\s+\S*$/,'')+'...';
+    el.innerHTML=`“${esc(t)}”<span class="who">— ${esc(c.by||'?')}, top comment</span>`;
+    el.style.display='block';
+  }));
+}
+
 function renderPaper(items,list){
   if(!items.length){list.innerHTML='<div class="dead">nothing here</div>';return}
   const lead=items[0],cards=items.slice(1,5),rest=items.slice(5);
@@ -192,11 +225,17 @@ function renderPaper(items,list){
   let h=`<div class="paper">
     <div class="lead">
       <div class="kick">${state.feed} story</div>
-      <h1>${tlink(lead)}</h1>
-      <div class="deck">${deck(lead)}</div>
+      <div class="leadwrap">
+        <div>
+          <h1>${tlink(lead)}</h1>
+          <div class="deck">${deck(lead)}</div>
+          <div class="pull" data-for="${lead.id}" style="display:none"></div>
+        </div>
+        ${shotHTML(lead)}
+      </div>
     </div>
     <div class="secrow">${cards.map(it=>`
-      <div class="seccard"><h2>${tlink(it)}</h2><div class="deck">${deck(it)}</div></div>`).join('')}
+      <div class="seccard">${shotHTML(it,true)}<h2>${tlink(it)}</h2><div class="deck">${deck(it)}</div><div class="pull small" data-for="${it.id}" style="display:none"></div></div>`).join('')}
     </div>`;
   if(rest.length){
     h+=`<div class="idxhead">index</div><div class="idx">${rest.map(it=>`
@@ -207,6 +246,7 @@ function renderPaper(items,list){
   }
   h+='</div>';
   list.innerHTML=h;
+  fillPulls(items);
 }
 
 function bindStoryLinks(){
@@ -299,14 +339,19 @@ async function timeMachine(dateStr){
   const j=await r.json();
   const nice=new Date(dateStr+'T00:00:00').toDateString();
   main.innerHTML=`<div class="tmbanner">front page of ${nice} — top stories submitted that day, ranked by points<span class="x">✕ exit</span></div><div id="list"></div>`;
-  main.querySelector('.x').onclick=()=>{$('#tmdate').value='';loadFeed(state.feed)};
+  main.querySelector('.x').onclick=()=>{$('#tmdate').value=$('#tmdate').max;loadFeed(state.feed)};
   renderPaper(j.hits.map(h=>({id:+h.objectID,title:h.title,url:h.url,score:h.points,by:h.author,time:h.created_at_i,descendants:h.num_comments})),$('#list'));
   bindStoryLinks();
 }
 const tmd=$('#tmdate');
 tmd.max=new Date().toISOString().slice(0,10);
 tmd.min='2007-02-19';
-tmd.addEventListener('change',()=>{if(tmd.value)timeMachine(tmd.value)});
+tmd.value=tmd.max;
+tmd.addEventListener('change',()=>{
+  if(!tmd.value)return;
+  if(tmd.value===tmd.max){loadFeed(state.feed);return}
+  timeMachine(tmd.value);
+});
 
 const initial=location.hash.slice(1);
 loadFeed(FEEDS.some(f=>f[0]===initial)?initial:'top');
