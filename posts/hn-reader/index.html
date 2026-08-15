@@ -54,6 +54,12 @@ main{max-width:860px;margin:0 auto;padding:18px 20px 80px}
 .paper{border-top:3px double var(--ink);padding-top:18px}
 .lead{padding-bottom:20px;border-bottom:1px solid var(--ink)}
 .kick{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--amber);margin-bottom:8px}
+.cat{display:inline-block;font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber);border:1px solid var(--amber);border-radius:3px;padding:1px 6px;margin-bottom:6px;font-weight:700}
+.cat.mini{font-size:8.5px;padding:0 4px;margin:0 6px 0 0;vertical-align:1px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 14px}
+.chips button{background:var(--panel);border:1px solid var(--line);color:var(--ink-dim);font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:14px;cursor:pointer}
+.chips button:hover{border-color:var(--amber-dim);color:var(--ink)}
+.chips button.on{background:var(--amber);border-color:var(--amber);color:#fff}
 .lead h1{font-family:var(--serif);font-size:34px;line-height:1.15;font-weight:700;letter-spacing:-.3px}
 .lead h1 a:hover{color:var(--amber)}
 .deck{margin-top:8px;font-size:13px;color:var(--ink-dim)}
@@ -169,7 +175,7 @@ async function loadFeed(f){
   main.innerHTML='<div class="loading">loading</div>';
   const r=await fetch(`${FB}/${FEEDS.find(x=>x[0]===f)[1]}.json`);
   state.ids=await r.json();
-  state.shown=0;state.page=[];
+  state.shown=0;state.page=[];state.filter=null;
   main.innerHTML='<div id="list"></div>';
   await more();
 }
@@ -179,6 +185,7 @@ async function more(){
   const items=await Promise.all(slice.map(item));
   state.page=(state.page||[]).concat(items.filter(Boolean));
   state.shown+=slice.length;
+  renderChips();
   renderPaper(state.page,$('#list'));
   const old=$('.morebtn');if(old)old.remove();
   if(state.shown<state.ids.length){
@@ -212,7 +219,37 @@ async function fillPulls(items){
   }));
 }
 
-function renderPaper(items,list){
+const CATS=['show hn','ask hn','code','paper','archive','blog','news','ai'];
+const NEWS_D=['bbc.com','reuters.com','theguardian.com','nytimes.com','wsj.com','ft.com','bloomberg.com','techcrunch.com','arstechnica.com','theverge.com','wired.com','economist.com','cnbc.com','theregister.com','404media.co','theatlantic.com','apnews.com','cnn.com','washingtonpost.com'];
+const BLOG_D=['substack.com','bearblog.dev','github.io','wordpress.com','blogspot.com','neocities.org','micro.blog','write.as'];
+function classify(it){
+  const t=it.title||'', d=it.url?dom(it.url):'';
+  if(/^Show HN[:\s]/i.test(t))return'show hn';
+  if(/^(Ask|Tell) HN[:\s]/i.test(t))return'ask hn';
+  if(/\((19\d\d|20[012]\d)\)\s*$/.test(t))return'archive';
+  if(d==='github.com'||d==='gitlab.com'||d==='codeberg.org')return'code';
+  if(d==='arxiv.org'||d==='nature.com'||d==='science.org'||/\[pdf\]\s*$/i.test(t))return'paper';
+  if(NEWS_D.includes(d))return'news';
+  if(BLOG_D.some(b=>d.endsWith(b))||/\.(dev|blog)$/.test(d))return'blog';
+  if(/\b(LLM|GPT|A\.?I\.?|Claude|Gemini|DeepSeek|transformer|diffusion)\b/i.test(t))return'ai';
+  return null;
+}
+state.filter=null;
+function renderChips(){
+  const present=new Set((state.page||[]).map(classify).filter(Boolean));
+  let host=$('#chips');
+  if(!host){main.insertAdjacentHTML('afterbegin','<div class="chips" id="chips"></div>');host=$('#chips')}
+  host.innerHTML=['all',...CATS.filter(c=>present.has(c))].map(c=>
+    `<button data-c="${c}" class="${(state.filter||'all')===c?'on':''}">${c}</button>`).join('');
+  host.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+    state.filter=b.dataset.c==='all'?null:b.dataset.c;
+    renderChips();
+    renderPaper(state.page,$('#list'));
+    bindStoryLinks();
+  });
+}
+function renderPaper(all,list){
+  const items=state.filter?all.filter(it=>classify(it)===state.filter):all;
   if(!items.length){list.innerHTML='<div class="dead">nothing here</div>';return}
   const lead=items[0],cards=items.slice(1,5),rest=items.slice(5);
   const deck=it=>{
@@ -224,7 +261,7 @@ function renderPaper(items,list){
     :`<a data-open="${it.id}">${esc(it.title||'')}</a>`;
   let h=`<div class="paper">
     <div class="lead">
-      <div class="kick">${state.feed} story</div>
+      <div class="kick">${classify(lead)||state.feed+" story"}</div>
       <div class="leadwrap">
         <div>
           <h1>${tlink(lead)}</h1>
@@ -235,12 +272,12 @@ function renderPaper(items,list){
       </div>
     </div>
     <div class="secrow">${cards.map(it=>`
-      <div class="seccard">${shotHTML(it,true)}<h2>${tlink(it)}</h2><div class="deck">${deck(it)}</div><div class="pull small" data-for="${it.id}" style="display:none"></div></div>`).join('')}
+      <div class="seccard">${shotHTML(it,true)}${classify(it)?`<span class="cat">${classify(it)}</span>`:``}<h2>${tlink(it)}</h2><div class="deck">${deck(it)}</div><div class="pull small" data-for="${it.id}" style="display:none"></div></div>`).join('')}
     </div>`;
   if(rest.length){
     h+=`<div class="idxhead">index</div><div class="idx">${rest.map(it=>`
       <div class="irow">
-        <span class="t">${tlink(it)}</span>
+        ${classify(it)?`<span class="cat mini">${classify(it)}</span>`:``}<span class="t">${tlink(it)}</span>
         <div class="m"><span class="pts">${it.score||0}</span> pts · ${ago(it.time)} · <a class="cbtn" data-open="${it.id}">${it.descendants||0}c</a></div>
       </div>`).join('')}</div>`;
   }
@@ -326,7 +363,9 @@ $('#q').addEventListener('keydown',async e=>{
   const j=await r.json();
   main.innerHTML=`<span class="back">← back to ${state.feed}</span><div id="list"></div>`;
   $('.back').onclick=()=>loadFeed(state.feed);
-  renderPaper(j.hits.map(h=>({id:+h.objectID,title:h.title,url:h.url,score:h.points,by:h.author,time:h.created_at_i,descendants:h.num_comments})),$('#list'));
+  state.page=j.hits.map(h=>({id:+h.objectID,title:h.title,url:h.url,score:h.points,by:h.author,time:h.created_at_i,descendants:h.num_comments}));
+  state.filter=null;renderChips();
+  renderPaper(state.page,$('#list'));
   bindStoryLinks();
 });
 
@@ -340,7 +379,9 @@ async function timeMachine(dateStr){
   const nice=new Date(dateStr+'T00:00:00').toDateString();
   main.innerHTML=`<div class="tmbanner">front page of ${nice} — top stories submitted that day, ranked by points<span class="x">✕ exit</span></div><div id="list"></div>`;
   main.querySelector('.x').onclick=()=>{$('#tmdate').value=$('#tmdate').max;loadFeed(state.feed)};
-  renderPaper(j.hits.map(h=>({id:+h.objectID,title:h.title,url:h.url,score:h.points,by:h.author,time:h.created_at_i,descendants:h.num_comments})),$('#list'));
+  state.page=j.hits.map(h=>({id:+h.objectID,title:h.title,url:h.url,score:h.points,by:h.author,time:h.created_at_i,descendants:h.num_comments}));
+  state.filter=null;renderChips();
+  renderPaper(state.page,$('#list'));
   bindStoryLinks();
 }
 const tmd=$('#tmdate');
@@ -358,4 +399,3 @@ loadFeed(FEEDS.some(f=>f[0]===initial)?initial:'top');
 </script>
 </body>
 </html>
-<!-- bump -->
