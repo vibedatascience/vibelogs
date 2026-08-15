@@ -3,8 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&display=swap" rel="stylesheet">
 <title>Wire — a Hacker News reader</title>
 <style>
 :root{
@@ -53,59 +51,72 @@ nav button.on{background:var(--panel2);color:var(--amber)}
 .search input:focus{border-color:var(--amber-dim)}
 
 main{max-width:860px;margin:0 auto;padding:18px 20px 80px}
-/* NYT-style front page */
-.paper{padding-top:6px}
-.masthead{text-align:center;position:relative;padding:6px 0 10px}
-.masthead .nameplate{font-family:'UnifrakturMaguntia',serif;font-size:56px;line-height:1;color:var(--ink)}
-.ear{position:absolute;top:4px;width:150px;font-size:10.5px;line-height:1.45}
-.ear.l{left:0;border:1px solid var(--ink);padding:8px;font-family:var(--serif);font-style:italic;text-align:center}
-.ear.r{right:0;text-align:left;font-family:var(--serif)}
-.ear.r b{font-family:var(--mono);font-size:9px;letter-spacing:1px}
-.dateline{display:flex;justify-content:space-between;align-items:center;border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);padding:4px 2px;font-size:11px;font-family:var(--serif);letter-spacing:.5px;margin-bottom:14px}
-.dateline .mid{text-transform:uppercase;letter-spacing:2px}
-.fp{display:grid;grid-template-columns:1fr 1.55fr 1fr;gap:0}
-.fpcol{padding:0 16px;border-right:1px solid var(--line)}
-.fpcol:first-child{padding-left:0}
-.fpcol:last-child{border-right:none;padding-right:0}
-.hl{font-family:'Playfair Display',var(--serif);font-weight:900;line-height:1.12;color:var(--ink)}
-.hl a:hover{color:var(--amber)}
-.hl.h1x{font-size:26px;text-align:left}
-.hl.h2x{font-size:21px;text-transform:uppercase;text-align:center;letter-spacing:.3px}
-.hl.h3x{font-size:19px}
-.subdeck{font-family:'Playfair Display',var(--serif);font-style:italic;font-weight:500;font-size:14.5px;text-align:center;margin:7px 0;line-height:1.3;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:6px 0}
-.byline{font-size:10.5px;letter-spacing:1px;text-transform:uppercase;font-family:var(--serif);font-weight:700;text-align:center;margin:8px 0 6px}
-.byline a:hover{color:var(--amber)}
-.bodytxt{font-family:var(--serif);font-size:13.5px;line-height:1.42;text-align:justify;hyphens:auto;color:var(--ink)}
-.bodytxt p{margin:0 0 7px;text-indent:14px}
-.bodytxt p:first-child{text-indent:0}
-.bodytxt p:first-child::first-letter{font-size:30px;float:left;line-height:.9;padding-right:4px;font-family:'Playfair Display',serif;font-weight:900}
-.centershot{width:100%;border:1px solid var(--line);display:block}
-.credit{text-align:right;font-size:8.5px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-faint);margin-top:2px;font-family:var(--serif)}
-.caption{font-family:var(--serif);font-size:11.5px;font-style:italic;color:var(--ink-dim);margin:3px 0 10px;line-height:1.4}
-.storylink{font-size:10px;font-family:var(--mono);color:var(--ink-faint);text-align:center;margin:6px 0 14px}
-.storylink a{color:var(--amber-dim)}
-.storylink a:hover{color:var(--amber)}
-.colrule{border-top:1.5px solid var(--ink);margin:12px 0 10px}
-.belowfold{margin-top:16px;border-top:3px double var(--ink);padding-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:0}
-.bf{padding:0 16px;border-right:1px solid var(--line)}
-.bf:first-child{padding-left:0}
-.bf:last-child{border-right:none;padding-right:0}
-.idxhead{margin:20px 0 6px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-faint);border-top:1.5px solid var(--ink);padding-top:8px}
-.idx{column-count:3;column-gap:26px;column-rule:1px solid var(--line)}
-.irow{break-inside:avoid;padding:6px 0;border-bottom:1px solid var(--line);font-size:12.5px;line-height:1.4;font-family:var(--serif)}
-.irow .t{font-weight:700}
+.paper{border-top:3px double var(--ink);padding-top:18px}
+.lead{padding-bottom:20px;border-bottom:1px solid var(--ink)}
+.kick{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--amber);margin-bottom:8px}
+.lead h1{font-family:var(--serif);font-size:34px;line-height:1.15;font-weight:700;letter-spacing:-.3px}
+.lead h1 a:hover{color:var(--amber)}
+.deck{margin-top:8px;font-size:13px;color:var(--ink-dim)}
+.deck b{color:var(--ink)}
+.secrow{display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid var(--ink)}
+.seccard{padding:16px 18px 16px 0;border-bottom:1px solid var(--line)}
+.seccard:nth-child(2n){border-left:1px solid var(--line);padding-left:18px;padding-right:0}
+.seccard:nth-last-child(-n+2){border-bottom:none}
+.seccard h2{font-family:var(--serif);font-size:19px;line-height:1.25;font-weight:700}
+.seccard h2 a:hover{color:var(--amber)}
+.seccard .deck{margin-top:5px;font-size:12px}
+.idxhead{margin:20px 0 6px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-faint)}
+.idx{column-count:2;column-gap:34px;column-rule:1px solid var(--line)}
+.irow{break-inside:avoid;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;line-height:1.45}
 .irow .t:hover{color:var(--amber)}
-.irow .m{color:var(--ink-faint);font-size:10.5px;margin-top:1px;font-family:var(--mono)}
+.irow .m{color:var(--ink-faint);font-size:11px;margin-top:2px}
 .irow .m a:hover{color:var(--amber)}
 .irow .pts{color:var(--amber);font-weight:700}
-@media (max-width:760px){
-  .masthead .nameplate{font-size:34px}
-  .ear{display:none}
-  .fp{grid-template-columns:1fr}
-  .fpcol{padding:0;border-right:none;border-bottom:1px solid var(--line);margin-bottom:12px;padding-bottom:8px}
-  .belowfold{grid-template-columns:1fr}
-  .bf{padding:0;border-right:none}
+@media (max-width:640px){
+  .lead h1{font-size:26px}
+  .secrow{grid-template-columns:1fr}
+  .seccard:nth-child(2n){border-left:none;padding-left:0}
   .idx{column-count:1}
+}
+.loading{padding:40px 0;text-align:center;color:var(--ink-faint)}
+.loading::after{content:'';display:inline-block;width:8px;animation:dots 1.2s steps(4) infinite}
+@keyframes dots{0%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}}
+
+.morebtn{display:block;margin:24px auto 0;background:var(--panel);border:1px solid var(--line);color:var(--ink-dim);font-family:var(--mono);font-size:13px;padding:9px 26px;border-radius:6px;cursor:pointer}
+.morebtn:hover{color:var(--amber);border-color:var(--amber-dim)}
+
+.back{display:inline-block;margin-bottom:18px;color:var(--ink-dim);font-size:13px;cursor:pointer}
+.back:hover{color:var(--amber)}
+.dtitle{font-family:var(--serif);font-size:24px;line-height:1.3;margin-bottom:6px}
+.dmeta{color:var(--ink-dim);font-size:12px;margin-bottom:8px}
+.dtext{font-family:var(--serif);font-size:16px;line-height:1.65;color:var(--ink);margin:16px 0;padding:16px;background:var(--panel);border-radius:8px;border-left:3px solid var(--amber-dim)}
+.dtext p{margin:0 0 12px}
+.dtext a{color:var(--amber);text-decoration:underline}
+.dtext pre{overflow-x:auto;background:var(--panel2);padding:10px;border-radius:6px;font-size:13px;margin:10px 0}
+.chead{margin:26px 0 8px;color:var(--ink-faint);font-size:12px;letter-spacing:1px;text-transform:uppercase}
+
+.cmt{margin-top:14px;padding-left:14px;border-left:2px solid var(--line)}
+.cmt.d0{padding-left:0;border-left:none}
+.cmeta{font-size:12px;color:var(--ink-dim);cursor:pointer;user-select:none}
+.cmeta .au{color:var(--amber-dim);font-weight:700}
+.cmeta .op{background:var(--amber-dim);color:var(--bg);border-radius:3px;padding:0 5px;margin-left:6px;font-size:10px}
+.cmeta .tog{color:var(--ink-faint);margin-left:8px}
+.ctext{font-family:var(--serif);font-size:15px;line-height:1.6;margin-top:5px;color:var(--ink);overflow-wrap:break-word}
+.ctext p{margin:0 0 10px}
+.ctext a{color:var(--amber);text-decoration:underline;word-break:break-all}
+.ctext pre{overflow-x:auto;background:var(--panel2);padding:10px;border-radius:6px;font-size:13px;margin:10px 0;font-family:var(--mono)}
+.ctext code{font-family:var(--mono);font-size:13px}
+.ctext i{color:var(--ink-dim)}
+.collapsed .ctext,.collapsed .kids{display:none}
+.dead{color:var(--ink-faint);font-style:italic}
+.loadkids{background:none;border:none;color:var(--green);font-family:var(--mono);font-size:12px;cursor:pointer;padding:6px 0}
+.loadkids:hover{text-decoration:underline}
+
+@media (max-width:600px){
+  .score{flex-basis:40px}
+  .search input{width:120px}
+  .hwrap{gap:10px;padding:12px 14px}
+  main{padding:14px 14px 60px}
 }
 </style>
 </head>
@@ -177,109 +188,65 @@ async function more(){
   bindStoryLinks();
 }
 
-function shotHTML(it){
+function shotHTML(it,small){
   if(!it.url)return'';
-  const src='https://image.thum.io/get/width/640/crop/800/'+encodeURI(it.url);
-  return `<img class="centershot" loading="lazy" src="${src}" onerror="this.style.display='none';this.nextElementSibling.style.display='none'" alt="">
-  <div class="credit">${dom(it.url)} via thum.io</div>`;
+  const src='https://image.thum.io/get/width/500/crop/700/'+encodeURI(it.url);
+  const fb='https://www.google.com/s2/favicons?domain='+dom(it.url)+'&sz=64';
+  return `<img class="shot${small?' small':''}" loading="lazy" src="${src}" onerror="this.onerror=null;this.src='${fb}';this.style.objectFit='contain';this.style.padding='30px'" alt="">`;
 }
 function stripTags(html){const d=document.createElement('div');d.innerHTML=html;return d.textContent||''}
-
-async function bodyFromComments(it,nWords){
-  let kids=it.kids;
-  if(!kids){const full=await item(it.id);kids=(full&&full.kids)||[]}
-  const cs=(await Promise.all(kids.slice(0,3).map(item))).filter(c=>c&&!c.deleted&&!c.dead&&c.text);
-  if(!cs.length)return'';
-  let out='',used=0;
-  for(const c of cs){
-    let t=stripTags(c.text).replace(/\s+/g,' ').trim();
-    const words=t.split(' ');
-    if(used+words.length>nWords){t=words.slice(0,nWords-used).join(' ')+' ...';used=nWords}
-    else used+=words.length;
-    out+=`<p><b>${esc(c.by||'?')}:</b> ${esc(t)}</p>`;
-    if(used>=nWords)break;
-  }
-  return out;
+async function fillPulls(items){
+  const targets=items.slice(0,5);
+  await Promise.all(targets.map(async it=>{
+    let kids=it.kids;
+    if(!kids){const full=await item(it.id);kids=full&&full.kids}
+    if(!kids||!kids.length)return;
+    const c=await item(kids[0]);
+    if(!c||c.deleted||c.dead||!c.text)return;
+    const el=document.querySelector(`.pull[data-for="${it.id}"]`);
+    if(!el)return;
+    let t=stripTags(c.text);
+    if(t.length>220)t=t.slice(0,220).replace(/\s+\S*$/,'')+'...';
+    el.innerHTML=`“${esc(t)}”<span class="who">— ${esc(c.by||'?')}, top comment</span>`;
+    el.style.display='block';
+  }));
 }
 
-function meta(it){
-  return `${it.score||0} points · ${ago(it.time)} ago · <a class="cbtn" data-open="${it.id}">${it.descendants||0} comments</a>${it.url?` · <a href="${esc(it.url)}" target="_blank" rel="noopener">${dom(it.url)} ↗</a>`:''}`;
-}
-function tl(it){
-  return it.url?`<a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.title||'')}</a>`
-               :`<a data-open="${it.id}">${esc(it.title||'')}</a>`;
-}
-
-function renderPaper(items,list,edition){
+function renderPaper(items,list){
   if(!items.length){list.innerHTML='<div class="dead">nothing here</div>';return}
-  const [a,b,c,d,e]=items;
-  const rest=items.slice(5);
-  const totPts=items.reduce((x,y)=>x+(y.score||0),0);
-  const totCmt=items.reduce((x,y)=>x+(y.descendants||0),0);
-  const dt=edition||new Date();
-  const dstr=dt.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase();
-  const vol=Math.floor((dt-new Date('2007-02-19'))/86400000);
-  const col=(it,hclass)=>it?`
-      <div class="hl ${hclass}">${tl(it)}</div>
-      <div class="byline">By <a data-open="${it.id}">${esc(it.by||'?')}</a></div>
-      <div class="bodytxt" data-body="${it.id}"><p>Loading the discussion...</p></div>
-      <div class="storylink">${meta(it)}</div>`:'';
+  const lead=items[0],cards=items.slice(1,5),rest=items.slice(5);
+  const deck=it=>{
+    const d=it.url?`<b>${dom(it.url)}</b> · `:'';
+    return `${d}${it.score||0} points · by ${esc(it.by||'?')} · ${ago(it.time)} ago · <a class="cbtn" data-open="${it.id}">${it.descendants||0} comments</a>`;
+  };
+  const tlink=it=>it.url
+    ?`<a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.title||'')}</a>`
+    :`<a data-open="${it.id}">${esc(it.title||'')}</a>`;
   let h=`<div class="paper">
-    <div class="masthead">
-      <div class="ear l">"All the links<br>fit to click"</div>
-      <div class="nameplate">The Hacker Times</div>
-      <div class="ear r"><b>THE NUMBERS</b><br>${items.length} stories on this page carrying ${totPts.toLocaleString()} points and ${totCmt.toLocaleString()} comments. Feed: ${state.feed}.</div>
-    </div>
-    <div class="dateline">
-      <span>VOL. XX .... No. ${vol.toLocaleString()}</span>
-      <span class="mid">${dstr}</span>
-      <span>FREE AS IN BEER</span>
-    </div>
-    <div class="fp">
-      <div class="fpcol">${col(b,'h3x')}<div class="colrule"></div>${col(d,'h3x')}</div>
-      <div class="fpcol">
-        ${a?`${shotHTML(a)}
-        <div class="caption">${esc(a.title||'')} — the day's most discussed submission, ${a.descendants||0} comments and counting.</div>
-        <div class="hl h1x">${tl(a)}</div>
-        <div class="byline">By <a data-open="${a.id}">${esc(a.by||'?')}</a></div>
-        <div class="bodytxt" data-body="${a.id}"><p>Loading the discussion...</p></div>
-        <div class="storylink">${meta(a)}</div>`:''}
-      </div>
-      <div class="fpcol">${c?`
-        <div class="hl h2x">${tl(c)}</div>
-        <div class="subdeck">${c.url?dom(c.url):'Discussion'} — ${c.score||0} points in ${ago(c.time)}</div>
-        <div class="byline">By <a data-open="${c.id}">${esc(c.by||'?')}</a></div>
-        <div class="bodytxt" data-body="${c.id}"><p>Loading the discussion...</p></div>
-        <div class="storylink">${meta(c)}</div>`:''}
+    <div class="lead">
+      <div class="kick">${state.feed} story</div>
+      <div class="leadwrap">
+        <div>
+          <h1>${tlink(lead)}</h1>
+          <div class="deck">${deck(lead)}</div>
+          <div class="pull" data-for="${lead.id}" style="display:none"></div>
+        </div>
+        ${shotHTML(lead)}
       </div>
     </div>
-    ${e?`<div class="belowfold">
-      <div class="bf">${col(e,'h3x')}</div>
-      <div class="bf">${rest[0]?col(rest[0],'h3x'):''}</div>
-    </div>`:''}`;
-  const idxItems=e?rest.slice(1):rest;
-  if(idxItems.length){
-    h+=`<div class="idxhead">Inside</div><div class="idx">${idxItems.map(it=>`
+    <div class="secrow">${cards.map(it=>`
+      <div class="seccard">${shotHTML(it,true)}<h2>${tlink(it)}</h2><div class="deck">${deck(it)}</div><div class="pull small" data-for="${it.id}" style="display:none"></div></div>`).join('')}
+    </div>`;
+  if(rest.length){
+    h+=`<div class="idxhead">index</div><div class="idx">${rest.map(it=>`
       <div class="irow">
-        <span class="t">${tl(it)}</span>
+        <span class="t">${tlink(it)}</span>
         <div class="m"><span class="pts">${it.score||0}</span> pts · ${ago(it.time)} · <a class="cbtn" data-open="${it.id}">${it.descendants||0}c</a></div>
       </div>`).join('')}</div>`;
   }
   h+='</div>';
   list.innerHTML=h;
-  fillBodies(items.slice(0,7));
-}
-
-async function fillBodies(items){
-  await Promise.all(items.map(async it=>{
-    const el=document.querySelector(`[data-body="${it.id}"]`);
-    if(!el)return;
-    const isLead=!!el.parentElement.querySelector('.h1x');
-    const n=isLead?170:90;
-    const html=await bodyFromComments(it,n);
-    el.innerHTML=html||'<p><i>No comments yet. Be the first voice on this story.</i></p>';
-    bindStoryLinks();
-  }));
+  fillPulls(items);
 }
 
 function bindStoryLinks(){
@@ -373,7 +340,7 @@ async function timeMachine(dateStr){
   const nice=new Date(dateStr+'T00:00:00').toDateString();
   main.innerHTML=`<div class="tmbanner">front page of ${nice} — top stories submitted that day, ranked by points<span class="x">✕ exit</span></div><div id="list"></div>`;
   main.querySelector('.x').onclick=()=>{$('#tmdate').value=$('#tmdate').max;loadFeed(state.feed)};
-  renderPaper(j.hits.map(h=>({id:+h.objectID,title:h.title,url:h.url,score:h.points,by:h.author,time:h.created_at_i,descendants:h.num_comments})),$('#list'),new Date(dateStr+'T12:00:00'));
+  renderPaper(j.hits.map(h=>({id:+h.objectID,title:h.title,url:h.url,score:h.points,by:h.author,time:h.created_at_i,descendants:h.num_comments})),$('#list'));
   bindStoryLinks();
 }
 const tmd=$('#tmdate');
