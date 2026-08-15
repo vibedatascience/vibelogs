@@ -132,6 +132,8 @@ footer a:hover{color:var(--cobalt);border-color:var(--cobalt)}
   font-size:0.8rem;
 }
 .topnav a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--rule)}
+.topnav a.iconlink{border-bottom:none;display:inline-flex;align-items:center}
+.topnav a.iconlink svg{display:block}
 .topnav a:hover{color:var(--cobalt);border-color:var(--cobalt)}
 .controls{
   display:flex;align-items:baseline;flex-wrap:wrap;gap:4px;
@@ -187,8 +189,12 @@ footer a:hover{color:var(--cobalt);border-color:var(--cobalt)}
   <nav class="topnav" aria-label="Site pages">
     <a href="posts/links/">links</a>
     <a href="posts/ai-glossary/">glossary</a>
-    <a href="https://www.linkedin.com/in/rahul-c-a83a3723" target="_blank" rel="noopener">linkedin</a>
-    <a href="https://buymeacoffee.com/rahulxc" target="_blank" rel="noopener">coffee</a>
+    <a href="https://www.linkedin.com/in/rahul-c-a83a3723" target="_blank" rel="noopener" aria-label="LinkedIn" class="iconlink">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
+    </a>
+    <a href="https://buymeacoffee.com/rahulxc" target="_blank" rel="noopener" aria-label="Buy me a coffee" class="iconlink">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v6a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
+    </a>
   </nav>
 </header>
 
