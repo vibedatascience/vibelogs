@@ -42,18 +42,33 @@ nav button.on{background:var(--panel2);color:var(--amber)}
 .search input:focus{border-color:var(--amber-dim)}
 
 main{max-width:860px;margin:0 auto;padding:18px 20px 80px}
-.story{display:flex;gap:14px;padding:13px 0;border-bottom:1px solid var(--line)}
-.score{flex:0 0 52px;text-align:right;color:var(--amber);font-size:13px;padding-top:2px}
-.score small{display:block;color:var(--ink-faint);font-size:10px;letter-spacing:.5px}
-.sbody{flex:1;min-width:0}
-.stitle{font-size:15px;line-height:1.4;color:var(--ink)}
-.stitle:hover{color:var(--amber)}
-.domain{color:var(--ink-faint);font-size:12px;margin-left:6px}
-.smeta{margin-top:4px;font-size:12px;color:var(--ink-dim)}
-.smeta a:hover{color:var(--amber)}
-.cbtn{color:var(--green)}
-.rank{color:var(--ink-faint);font-size:11px;margin-right:8px}
-
+.paper{border-top:3px double var(--ink);padding-top:18px}
+.lead{padding-bottom:20px;border-bottom:1px solid var(--ink)}
+.kick{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--amber);margin-bottom:8px}
+.lead h1{font-family:var(--serif);font-size:34px;line-height:1.15;font-weight:700;letter-spacing:-.3px}
+.lead h1 a:hover{color:var(--amber)}
+.deck{margin-top:8px;font-size:13px;color:var(--ink-dim)}
+.deck b{color:var(--ink)}
+.secrow{display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid var(--ink)}
+.seccard{padding:16px 18px 16px 0;border-bottom:1px solid var(--line)}
+.seccard:nth-child(2n){border-left:1px solid var(--line);padding-left:18px;padding-right:0}
+.seccard:nth-last-child(-n+2){border-bottom:none}
+.seccard h2{font-family:var(--serif);font-size:19px;line-height:1.25;font-weight:700}
+.seccard h2 a:hover{color:var(--amber)}
+.seccard .deck{margin-top:5px;font-size:12px}
+.idxhead{margin:20px 0 6px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-faint)}
+.idx{column-count:2;column-gap:34px;column-rule:1px solid var(--line)}
+.irow{break-inside:avoid;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;line-height:1.45}
+.irow .t:hover{color:var(--amber)}
+.irow .m{color:var(--ink-faint);font-size:11px;margin-top:2px}
+.irow .m a:hover{color:var(--amber)}
+.irow .pts{color:var(--amber);font-weight:700}
+@media (max-width:640px){
+  .lead h1{font-size:26px}
+  .secrow{grid-template-columns:1fr}
+  .seccard:nth-child(2n){border-left:none;padding-left:0}
+  .idx{column-count:1}
+}
 .loading{padding:40px 0;text-align:center;color:var(--ink-faint)}
 .loading::after{content:'';display:inline-block;width:8px;animation:dots 1.2s steps(4) infinite}
 @keyframes dots{0%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}}
@@ -145,7 +160,7 @@ async function loadFeed(f){
   main.innerHTML='<div class="loading">loading</div>';
   const r=await fetch(`${FB}/${FEEDS.find(x=>x[0]===f)[1]}.json`);
   state.ids=await r.json();
-  state.shown=0;
+  state.shown=0;state.page=[];
   main.innerHTML='<div id="list"></div>';
   await more();
 }
@@ -153,12 +168,9 @@ async function loadFeed(f){
 async function more(){
   const slice=state.ids.slice(state.shown,state.shown+PAGE);
   const items=await Promise.all(slice.map(item));
-  const list=$('#list');
-  items.forEach((it,i)=>{
-    if(!it)return;
-    list.insertAdjacentHTML('beforeend',storyHTML(it,state.shown+i+1));
-  });
+  state.page=(state.page||[]).concat(items.filter(Boolean));
   state.shown+=slice.length;
+  renderPaper(state.page,$('#list'));
   const old=$('.morebtn');if(old)old.remove();
   if(state.shown<state.ids.length){
     main.insertAdjacentHTML('beforeend','<button class="morebtn">more</button>');
@@ -167,17 +179,34 @@ async function more(){
   bindStoryLinks();
 }
 
-function storyHTML(it,rank){
-  const url=it.url||'#item-'+it.id;
-  const d=it.url?`<span class="domain">${dom(it.url)}</span>`:'';
-  const c=it.descendants!=null?it.descendants:0;
-  return `<div class="story">
-    <div class="score">${it.score||''}<small>pts</small></div>
-    <div class="sbody">
-      <span class="rank">${rank}.</span><a class="stitle" href="${it.url?esc(it.url):'javascript:void 0'}" ${it.url?'target="_blank" rel="noopener"':''} ${it.url?'':`data-open="${it.id}"`}>${esc(it.title||'(untitled)')}</a>${d}
-      <div class="smeta">by ${esc(it.by||'?')} · ${ago(it.time)} ago · <a class="cbtn" data-open="${it.id}">${c} comments</a></div>
+function renderPaper(items,list){
+  if(!items.length){list.innerHTML='<div class="dead">nothing here</div>';return}
+  const lead=items[0],cards=items.slice(1,5),rest=items.slice(5);
+  const deck=it=>{
+    const d=it.url?`<b>${dom(it.url)}</b> · `:'';
+    return `${d}${it.score||0} points · by ${esc(it.by||'?')} · ${ago(it.time)} ago · <a class="cbtn" data-open="${it.id}">${it.descendants||0} comments</a>`;
+  };
+  const tlink=it=>it.url
+    ?`<a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.title||'')}</a>`
+    :`<a data-open="${it.id}">${esc(it.title||'')}</a>`;
+  let h=`<div class="paper">
+    <div class="lead">
+      <div class="kick">${state.feed} story</div>
+      <h1>${tlink(lead)}</h1>
+      <div class="deck">${deck(lead)}</div>
     </div>
-  </div>`;
+    <div class="secrow">${cards.map(it=>`
+      <div class="seccard"><h2>${tlink(it)}</h2><div class="deck">${deck(it)}</div></div>`).join('')}
+    </div>`;
+  if(rest.length){
+    h+=`<div class="idxhead">index</div><div class="idx">${rest.map(it=>`
+      <div class="irow">
+        <span class="t">${tlink(it)}</span>
+        <div class="m"><span class="pts">${it.score||0}</span> pts · ${ago(it.time)} · <a class="cbtn" data-open="${it.id}">${it.descendants||0}c</a></div>
+      </div>`).join('')}</div>`;
+  }
+  h+='</div>';
+  list.innerHTML=h;
 }
 
 function bindStoryLinks(){
@@ -257,13 +286,7 @@ $('#q').addEventListener('keydown',async e=>{
   const j=await r.json();
   main.innerHTML=`<span class="back">← back to ${state.feed}</span><div id="list"></div>`;
   $('.back').onclick=()=>loadFeed(state.feed);
-  const list=$('#list');
-  j.hits.forEach((h,i)=>{
-    list.insertAdjacentHTML('beforeend',storyHTML({
-      id:+h.objectID,title:h.title,url:h.url,score:h.points,by:h.author,
-      time:h.created_at_i,descendants:h.num_comments
-    },i+1));
-  });
+  renderPaper(j.hits.map(h=>({id:+h.objectID,title:h.title,url:h.url,score:h.points,by:h.author,time:h.created_at_i,descendants:h.num_comments})),$('#list'));
   bindStoryLinks();
 });
 
@@ -277,14 +300,7 @@ async function timeMachine(dateStr){
   const nice=new Date(dateStr+'T00:00:00').toDateString();
   main.innerHTML=`<div class="tmbanner">front page of ${nice} — top stories submitted that day, ranked by points<span class="x">✕ exit</span></div><div id="list"></div>`;
   main.querySelector('.x').onclick=()=>{$('#tmdate').value='';loadFeed(state.feed)};
-  const list=$('#list');
-  if(!j.hits.length){list.innerHTML='<div class="dead">nothing found for that day</div>';return}
-  j.hits.forEach((h,i)=>{
-    list.insertAdjacentHTML('beforeend',storyHTML({
-      id:+h.objectID,title:h.title,url:h.url,score:h.points,by:h.author,
-      time:h.created_at_i,descendants:h.num_comments
-    },i+1));
-  });
+  renderPaper(j.hits.map(h=>({id:+h.objectID,title:h.title,url:h.url,score:h.points,by:h.author,time:h.created_at_i,descendants:h.num_comments})),$('#list'));
   bindStoryLinks();
 }
 const tmd=$('#tmdate');
