@@ -125,22 +125,27 @@ footer a:hover{color:var(--cobalt);border-color:var(--cobalt)}
 .topnav a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--rule)}
 .topnav a:hover{color:var(--cobalt);border-color:var(--cobalt)}
 .controls{
-  display:flex;align-items:center;flex-wrap:wrap;gap:8px;
-  padding:10px 0 4px;
+  display:flex;align-items:baseline;flex-wrap:wrap;gap:4px;
+  padding:12px 0 4px;
   font-family:'IBM Plex Mono',monospace;
+  font-size:0.78rem;
+  color:var(--muted);
 }
-.ctl-label{font-size:0.72rem;letter-spacing:0.08em;color:var(--muted);text-transform:uppercase}
-.ctl-sep{width:1px;height:16px;background:var(--rule);margin:0 6px}
+.ctl-label{margin-right:2px}
+.ctl-slash{color:var(--rule)}
+.ctl-dot{margin:0 10px;color:var(--rule)}
 .controls .ctl{
   font-family:'IBM Plex Mono',monospace;
-  font-size:0.72rem;letter-spacing:0.04em;
-  background:none;border:1px solid var(--rule);
+  font-size:0.78rem;
+  background:none;border:none;
   color:var(--muted);
-  padding:4px 10px;border-radius:6px;
-  cursor:pointer;transition:all .15s;
+  padding:0 2px;
+  cursor:pointer;
+  border-bottom:1px solid transparent;
+  transition:color .15s;
 }
-.controls .ctl:hover{border-color:var(--cobalt);color:var(--cobalt)}
-.controls .ctl.active{background:var(--cobalt);border-color:var(--cobalt);color:#fff}
+.controls .ctl:hover{color:var(--cobalt)}
+.controls .ctl.active{color:var(--cobalt);border-bottom:1px solid var(--cobalt)}
 .gallery-grid{
   display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
   gap:14px;margin-bottom:8px;
@@ -177,13 +182,9 @@ footer a:hover{color:var(--cobalt);border-color:var(--cobalt)}
 </nav>
 
 <div class="controls" aria-label="View and sort options">
-  <span class="ctl-label">view</span>
-  <button class="ctl active" data-view="list">LIST</button>
-  <button class="ctl" data-view="gallery">GALLERY</button>
-  <span class="ctl-sep"></span>
-  <span class="ctl-label">sort by</span>
-  <button class="ctl active" data-sort="date">DATE</button>
-  <button class="ctl" data-sort="theme">THEME</button>
+  <span class="ctl-label">view:</span><button class="ctl active" data-view="list">list</button><span class="ctl-slash">/</span><button class="ctl" data-view="gallery">gallery</button>
+  <span class="ctl-dot">·</span>
+  <span class="ctl-label">sort:</span><button class="ctl active" data-sort="date">date</button><span class="ctl-slash">/</span><button class="ctl" data-sort="theme">theme</button>
 </div>
 
 <main>
@@ -326,11 +327,8 @@ function render(){
   if(!items.length)return;
   let groups=[];
   if(state.sort==='date'){
-    const pinned=items.filter(e=>e.dataset.pin==='1');
-    const posts=items.filter(e=>e.dataset.pin!=='1');
-    if(pinned.length)groups.push(['reference',pinned]);
     const byMonth={};
-    posts.forEach(e=>{const k=e.dataset.date.slice(0,7);(byMonth[k]=byMonth[k]||[]).push(e)});
+    items.forEach(e=>{const k=e.dataset.date.slice(0,7);(byMonth[k]=byMonth[k]||[]).push(e)});
     Object.keys(byMonth).sort().reverse().forEach(k=>{
       byMonth[k].sort((a,b)=>b.dataset.date.localeCompare(a.dataset.date));
       groups.push([monthLabel(byMonth[k][0].dataset.date),byMonth[k]]);
