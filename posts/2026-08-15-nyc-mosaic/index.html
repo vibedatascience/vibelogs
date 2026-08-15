@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Rahul">
+<title>NYC Ancestry Mosaic | vibelogs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.css" rel="stylesheet">
+<style>
+:root{--paper:#FAFAF8;--ink:#17171C;--cobalt:#2545FF;--muted:#6E6E76;--rule:#E7E7E2;--chip:#EEF1FF}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:17px;line-height:1.7}
+.wrap{max-width:980px;margin:0 auto;padding:0 24px}
+.top{padding:40px 0 0;font-family:'IBM Plex Mono',monospace;font-size:0.8rem}
+.top a{color:var(--muted);text-decoration:none}
+.top a:hover{color:var(--cobalt)}
+header.post{padding:32px 0 24px;border-bottom:1px solid var(--rule)}
+.meta{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted);display:flex;gap:10px;align-items:center;margin-bottom:14px}
+.upd{color:var(--muted)}
+.tag{background:var(--chip);color:var(--cobalt);padding:1px 8px;border-radius:4px;font-weight:500}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.7rem,5vw,2.3rem);letter-spacing:-0.02em;line-height:1.2}
+article{padding:32px 0 60px}
+article p{margin:0 0 20px}
+article p.intro{color:var(--muted)}
+article a{color:var(--cobalt)}
+#map{width:100%;height:78vh;min-height:520px;border-radius:12px;background:#111114;position:relative;margin:0 0 22px}
+.maplibregl-canvas{border-radius:12px}
+#tip{position:absolute;pointer-events:none;background:rgba(17,17,20,0.94);color:#FAFAF8;border:1px solid #33333C;border-radius:8px;padding:10px 12px;font-size:12.5px;line-height:1.5;display:none;z-index:5;max-width:260px;font-family:'IBM Plex Mono',monospace}
+#tip .t{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;margin-bottom:4px}
+#tip .row{display:flex;justify-content:space-between;gap:16px}
+#tip .row span:last-child{color:#9A9AA2}
+.note{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:var(--muted);margin:-12px 0 26px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.25rem;margin:30px 0 12px}
+footer{border-top:1px solid var(--rule);padding:24px 0 56px;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted)}
+footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><a href="../../">&larr; vibelogs</a></div>
+
+<header class="post">
+  <div class="meta"><span>[2026-08-15]</span><span>Rahul</span><span class="upd">updated 2026-08-15</span><span class="tag">DATA-SCIENCE</span></div>
+  <h1>NYC Ancestry Mosaic</h1>
+</header>
+
+<article>
+<p class="intro">A rebuild of the NYT American Mosaic map for New York City, made from the map's own dataset after reverse engineering it from the browser console. Hover any tract for its top ancestry breakdown. Scroll to zoom.</p>
+
+<div id="map"><div id="tip"></div></div>
+<p class="note">2,243 census tracts. Colors are OKLAB-weighted blends of each tract's top five reported ancestries.</p>
+
+<h2>How this was made</h2>
+<p>The NYT map at <a href="https://www.nytimes.com/interactive/2026/07/01/us/america-ancestry-census-data-map.html">The American Mosaic</a> is a SvelteKit app rendering PMTiles through Mapbox GL. Poking at it from the DevTools console surfaced its asset manifest inside a chunk file, including a national tract summary CSV with each tract's top five ancestry codes and counts, a 205-entry ancestry dictionary, and precomputed label placements. The low zoom levels are pre-rendered PNG tiles whose metadata describes them as OKLAB-blended ancestry choropleth tiles, which is the trick behind the stained glass look. Blending colors in OKLAB, a perceptually uniform color space, keeps mixtures vivid where plain RGB averaging turns muddy.</p>
+
+<p>This page repeats that recipe on their data for the five boroughs. Each tract's color is the population-weighted OKLAB blend of its top five ancestry colors. Generic census buckets like "Other White, not specified" are skipped when picking the headline group, which matches an editorial choice visible in the original: those buckets top 671 of the 2,243 NYC tracts but never appear as labels on the NYT map. Tract boundaries come from the Census cartographic files, simplified to keep the whole page under 1.5 MB. Labels sit at the highest-population tract of each group's clusters, spaced at least five miles apart.</p>
+
+<p>The underlying source is ACS ancestry data at tract level, so anyone can rebuild this nationally from the Census API without touching the NYT files.</p>
+</article>
+
+<footer><a href="../../">vibelogs</a> &middot; Rahul</footer>
+</div>
+
+<script>
+const map = new maplibregl.Map({
+  container: 'map',
+  style: {version: 8, glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf', sources: {}, layers: [
+    {id: 'bg', type: 'background', paint: {'background-color': '#111114'}}
+  ]},
+  center: [-73.94, 40.70],
+  zoom: 9.6,
+  minZoom: 8.5,
+  maxZoom: 13,
+  attributionControl: false,
+  dragRotate: false
+});
+map.touchZoomRotate.disableRotation();
+map.addControl(new maplibregl.NavigationControl({showCompass: false}), 'top-right');
+map.addControl(new maplibregl.AttributionControl({compact: true, customAttribution: 'Data: US Census ACS via NYT'}));
+
+map.on('load', () => {
+  map.addSource('tracts', {type: 'geojson', data: 'nyc_ancestry.geojson'});
+  map.addSource('labels', {type: 'geojson', data: 'nyc_labels.geojson'});
+  map.addLayer({id: 'fill', type: 'fill', source: 'tracts',
+    paint: {'fill-color': ['get', 'col'], 'fill-opacity': 0.92}});
+  map.addLayer({id: 'line', type: 'line', source: 'tracts',
+    paint: {'line-color': '#111114', 'line-width': ['interpolate', ['linear'], ['zoom'], 9, 0.2, 12, 0.8]}});
+  map.addLayer({id: 'hover', type: 'line', source: 'tracts',
+    paint: {'line-color': '#FAFAF8', 'line-width': 1.6}, filter: ['==', 'id', '']});
+  map.addLayer({id: 'lab', type: 'symbol', source: 'labels',
+    layout: {'text-field': ['get', 'name'], 'text-font': ['Noto Sans Regular'],
+      'text-size': ['interpolate', ['linear'], ['zoom'], 9, 10.5, 12, 15],
+      'text-letter-spacing': 0.12, 'text-transform': 'uppercase'},
+    paint: {'text-color': '#FAFAF8', 'text-halo-color': 'rgba(17,17,20,0.75)', 'text-halo-width': 1.4}});
+
+  const tip = document.getElementById('tip');
+  map.on('mousemove', 'fill', e => {
+    const p = e.features[0].properties;
+    map.setFilter('hover', ['==', 'id', p.id]);
+    const bk = JSON.parse(p.bk);
+    tip.innerHTML = '<div class="t">' + p.top + '</div>' +
+      '<div class="row"><span>Tract ' + p.id.slice(5) + '</span><span>pop ' + Number(p.pop).toLocaleString() + '</span></div>' +
+      bk.map(x => '<div class="row"><span>' + x[0] + '</span><span>' + x[1] + '%</span></div>').join('');
+    tip.style.display = 'block';
+    const r = map.getContainer().getBoundingClientRect();
+    let x = e.point.x + 14, y = e.point.y + 14;
+    if (x + 270 > r.width) x = e.point.x - 274;
+    if (y + 180 > r.height) y = e.point.y - 160;
+    tip.style.left = x + 'px'; tip.style.top = y + 'px';
+    map.getCanvas().style.cursor = 'crosshair';
+  });
+  map.on('mouseleave', 'fill', () => {
+    tip.style.display = 'none';
+    map.setFilter('hover', ['==', 'id', '']);
+    map.getCanvas().style.cursor = '';
+  });
+});
+</script>
+</body>
+</html>
