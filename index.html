@@ -123,11 +123,54 @@ footer{
 }
 footer a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--rule)}
 footer a:hover{color:var(--cobalt);border-color:var(--cobalt)}
+
+.topnav{
+  display:flex;justify-content:flex-end;gap:18px;
+  padding-top:8px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.8rem;
+}
+.topnav a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--rule)}
+.topnav a:hover{color:var(--cobalt);border-color:var(--cobalt)}
+.controls{
+  display:flex;align-items:center;flex-wrap:wrap;gap:8px;
+  padding:10px 0 4px;
+  font-family:'IBM Plex Mono',monospace;
+}
+.ctl-label{font-size:0.72rem;letter-spacing:0.08em;color:var(--muted);text-transform:uppercase}
+.ctl-sep{width:1px;height:16px;background:var(--rule);margin:0 6px}
+.controls .ctl{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.72rem;letter-spacing:0.04em;
+  background:none;border:1px solid var(--rule);
+  color:var(--muted);
+  padding:4px 10px;border-radius:6px;
+  cursor:pointer;transition:all .15s;
+}
+.controls .ctl:hover{border-color:var(--cobalt);color:var(--cobalt)}
+.controls .ctl.active{background:var(--cobalt);border-color:var(--cobalt);color:#fff}
+.gallery-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+  gap:14px;margin-bottom:8px;
+}
+.gallery-grid .entry{
+  border:1px solid var(--rule);border-radius:10px;
+  padding:16px;border-bottom:1px solid var(--rule);
+  background:#fff;
+  transition:border-color .15s, box-shadow .15s;
+}
+.gallery-grid .entry:hover{border-color:var(--cobalt);box-shadow:0 2px 10px rgba(37,69,255,0.08)}
+.gallery-grid .entry h2{font-size:1.02rem}
+.gallery-grid .entry p{font-size:0.85rem}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
+  <nav class="topnav" aria-label="Site pages">
+    <a href="posts/links/">links</a>
+    <a href="posts/ai-glossary/">glossary</a>
+  </nav>
   <div class="wordmark">vibelogs<span class="cursor" aria-hidden="true"></span></div>
   <div class="boot" aria-label="site intro">
     <div>[boot] hands-on walkthroughs of AI tools, agents, and workflows</div>
@@ -146,139 +189,145 @@ footer a:hover{color:var(--cobalt);border-color:var(--cobalt)}
   <button data-tag="notes">NOTES</button>
 </nav>
 
-<main>
-  <div class="month">reference</div>
+<div class="controls" aria-label="View and sort options">
+  <span class="ctl-label">view</span>
+  <button class="ctl active" data-view="list">LIST</button>
+  <button class="ctl" data-view="gallery">GALLERY</button>
+  <span class="ctl-sep"></span>
+  <span class="ctl-label">sort by</span>
+  <button class="ctl active" data-sort="date">DATE</button>
+  <button class="ctl" data-sort="theme">THEME</button>
+</div>
 
-  <a class="entry" data-tags="reference" href="posts/india-biggest-news-by-year/">
+<main>
+  <div id="entries" hidden>
+  <a class="entry" data-date="2026-08-15" data-pin="1" data-tags="reference" href="posts/india-biggest-news-by-year/">
     <div class="meta"><span>[updated 2026-08-15]</span><span class="tag">REFERENCE</span></div>
     <h2>The biggest India news stories, every year since 1925</h2>
     <p>Three ranked stories per year, color coded by category, 1925 to 2026.</p>
   </a>
 
-  <a class="entry" data-tags="reference" href="posts/us-biggest-news-by-year/">
+  <a class="entry" data-date="2026-08-15" data-pin="1" data-tags="reference" href="posts/us-biggest-news-by-year/">
     <div class="meta"><span>[updated 2026-08-15]</span><span class="tag">REFERENCE</span></div>
     <h2>The biggest US news stories, every year since 1925</h2>
     <p>Three ranked stories per year, color coded by category, 1925 to 2026.</p>
   </a>
 
-  <a class="entry" data-tags="reference" href="posts/links/">
+  <a class="entry" data-date="2026-07-28" data-pin="1" data-tags="reference" href="posts/links/">
     <div class="meta"><span>[updated 2026-07-28]</span><span class="tag">REFERENCE</span></div>
     <h2>Links</h2>
     <p>Good AI links, saved as I find them.</p>
   </a>
 
-  <a class="entry" data-tags="reference" href="posts/ai-glossary/">
+  <a class="entry" data-date="2026-07-20" data-pin="1" data-tags="reference" href="posts/ai-glossary/">
     <div class="meta"><span>[updated 2026-07-20]</span><span class="tag">REFERENCE</span></div>
     <h2>AI glossary</h2>
     <p>Living reference. A curated list of AI terms, added one at a time.</p>
   </a>
 
-  <a class="entry" data-tags="reference" href="posts/ai-slop-detection/">
+  <a class="entry" data-date="2026-07-16" data-pin="1" data-tags="reference" href="posts/ai-slop-detection/">
     <div class="meta"><span>[updated 2026-07-16]</span><span class="tag">REFERENCE</span></div>
     <h2>Detecting AI slop writing</h2>
     <p>Living reference for me and my agents.</p>
   </a>
 
-  <div class="month">2026 · August</div>
-
-  <a class="entry" data-tags="notes" href="posts/2026-08-15-goodreads-100-years/">
+  <a class="entry" data-date="2026-08-15" data-pin="0" data-tags="notes" href="posts/2026-08-15-goodreads-100-years/">
     <div class="meta"><span>[2026-08-15]</span><span class="tag">NOTES</span></div>
     <h2>100 years, 100 books</h2>
     <p>The Goodreads best book of each year since 1925, organized by genre era, dystopia lineage, and grip.</p>
   </a>
 
-  <a class="entry" data-tags="notes" href="posts/2026-08-02-experimentation-reading-list/">
+  <a class="entry" data-date="2026-08-02" data-pin="0" data-tags="notes" href="posts/2026-08-02-experimentation-reading-list/">
     <div class="meta"><span>[2026-08-02]</span><span class="tag">NOTES</span></div>
     <h2>Experimentation reading list</h2>
     <p>Nine books on experimentation and A/B testing, with the table of contents for each.</p>
   </a>
 
-  <a class="entry" data-tags="notes" href="posts/van-gogh-in-paintings/">
+  <a class="entry" data-date="2026-08-01" data-pin="0" data-tags="notes" href="posts/van-gogh-in-paintings/">
     <div class="meta"><span>[2026-08-01]</span><span class="tag">NOTES</span></div>
     <h2>Van Gogh, in 33 paintings</h2>
     <p>His ten years of work told as one story through 33 paintings, sourced from three museum lectures.</p>
   </a>
 
-  <a class="entry" data-tags="notes" href="posts/2026-08-01-fast-engineers-slow-companies/">
+  <a class="entry" data-date="2026-08-01" data-pin="0" data-tags="notes" href="posts/2026-08-01-fast-engineers-slow-companies/">
     <div class="meta"><span>[2026-08-01]</span><span class="tag">NOTES</span></div>
     <h2>Fast engineers, slow companies</h2>
     <p>Why individual AI coding gains are not showing up in company results.</p>
   </a>
 
-  <div class="month">2026 · July</div>
-
-  <a class="entry" data-tags="data-science" href="posts/economic-crises-textbook/">
+  <a class="entry" data-date="2026-07-30" data-pin="0" data-tags="data-science" href="posts/economic-crises-textbook/">
     <div class="meta"><span>[2026-07-30]</span><span class="tag">DATA-SCIENCE</span></div>
     <h2>Economic Crises</h2>
     <p>A graduate textbook based on MIT 14.454. Chapter 1 covers leverage, liquidity, runs, and crisis amplification.</p>
   </a>
 
-  <a class="entry" data-tags="notes" href="posts/the-american-city/">
+  <a class="entry" data-date="2026-07-29" data-pin="0" data-tags="notes" href="posts/the-american-city/">
     <div class="meta"><span>[2026-07-29]</span><span class="tag">NOTES</span></div>
     <h2>The American City</h2>
     <p>An 11-chapter textbook companion to MIT 11.013J American Urban History.</p>
   </a>
 
-  <a class="entry" data-tags="data-science" href="posts/hands-on-deep-learning-textbook/">
+  <a class="entry" data-date="2026-07-29" data-pin="0" data-tags="data-science" href="posts/hands-on-deep-learning-textbook/">
     <div class="meta"><span>[2026-07-29]</span><span class="tag">DATA-SCIENCE</span></div>
     <h2>Hands-On Deep Learning textbook</h2>
     <p>A complete textbook companion to MIT 15.773, with 11 chapters, labs, homework, and full-text search.</p>
   </a>
 
-  <a class="entry" data-tags="data-science" href="posts/gutenberg-shelf/">
+  <a class="entry" data-date="2026-07-28" data-pin="0" data-tags="data-science" href="posts/gutenberg-shelf/">
     <div class="meta"><span>[2026-07-28]</span><span class="tag">DATA-SCIENCE</span></div>
     <h2>The Gutenberg Shelf</h2>
     <p>The 20 most downloaded Project Gutenberg books on a browsable 3D shelf.</p>
   </a>
 
-  <a class="entry" data-tags="notes" href="posts/2026-07-26-gym-week-card/">
+  <a class="entry" data-date="2026-07-26" data-pin="0" data-tags="notes" href="posts/2026-07-26-gym-week-card/">
     <div class="meta"><span>[2026-07-26]</span><span class="tag">NOTES</span></div>
     <h2>A training week as one card</h2>
     <p>A week of lifting and cardio as a single page you can hold in one hand at the gym, with tappable set counters.</p>
   </a>
 
-  <a class="entry" data-tags="data-science" href="posts/2026-07-25-british-museum-south-asia/">
+  <a class="entry" data-date="2026-07-25" data-pin="0" data-tags="data-science" href="posts/2026-07-25-british-museum-south-asia/">
     <div class="meta"><span>[2026-07-25]</span><span class="tag">DATA-SCIENCE</span></div>
     <h2>A scroll flight through the British Museum, South Asia</h2>
     <p>The scroll-flight engine pointed at Room 33: Great Court, Amaravati, Nataraja, Tara, one continuous camera.</p>
   </a>
 
-  <a class="entry" data-tags="notes" href="posts/2026-07-24-interpreting-world-history/">
+  <a class="entry" data-date="2026-07-24" data-pin="0" data-tags="notes" href="posts/2026-07-24-interpreting-world-history/">
     <div class="meta"><span>[2026-07-24]</span><span class="tag">NOTES</span></div>
     <h2>Interpreting World History: Industrial Revolution to the Present</h2>
     <p>Lecture index for Vinay Lal's 25-lecture UCLA course, Winter 2019.</p>
   </a>
 
-  <a class="entry" data-tags="data-science" href="posts/2026-07-22-scroll-world/">
+  <a class="entry" data-date="2026-07-22" data-pin="0" data-tags="data-science" href="posts/2026-07-22-scroll-world/">
     <div class="meta"><span>[2026-07-22]</span><span class="tag">DATA-SCIENCE</span></div>
     <h2>Scroll worlds: one engine, three flights</h2>
     <p>Scroll-scrubbed camera flights rebuilt in real time: a globe dive through the 10 biggest cities, the Khumbu valley on real terrain, and satellite city slabs. Shipped as a generic skill.</p>
   </a>
 
-  <a class="entry" data-tags="data-science" href="posts/2026-07-18-zoomable-treemap-canvas/">
+  <a class="entry" data-date="2026-07-18" data-pin="0" data-tags="data-science" href="posts/2026-07-18-zoomable-treemap-canvas/">
     <div class="meta"><span>[2026-07-18]</span><span class="tag">DATA-SCIENCE</span></div>
     <h2>Zoomable treemap canvases: population, GDP, cities</h2>
     <p>Population, GDP, and the 2,000 biggest cities as pannable, zoomable treemaps with counter-scaled labels.</p>
   </a>
 
-  <a class="entry" data-tags="data-science" href="posts/2026-07-16-mit-hands-on-deep-learning/">
+  <a class="entry" data-date="2026-07-16" data-pin="0" data-tags="data-science" href="posts/2026-07-16-mit-hands-on-deep-learning/">
     <div class="meta"><span>[2026-07-16]</span><span class="tag">DATA-SCIENCE</span></div>
     <h2>MIT 15.773 Hands-On Deep Learning: notes on all 11 lectures</h2>
     <p>Detailed notes on the full OCW course, from a single neuron to LoRA and Stable Diffusion, built from the lecture subtitles.</p>
   </a>
 
-  <a class="entry" data-tags="llm-apps" href="posts/2026-07-16-youtube-to-narrated-slideshow/">
+  <a class="entry" data-date="2026-07-16" data-pin="0" data-tags="llm-apps" href="posts/2026-07-16-youtube-to-narrated-slideshow/">
     <div class="meta"><span>[2026-07-16]</span><span class="tag">LLM-APPS</span></div>
     <h2>Turn long YouTube videos into narrated slideshows</h2>
     <p>Transcript → LLM distill → designed slides → edge-tts voiceover → ffmpeg render. 31 minutes in, 3.5 minutes out.</p>
   </a>
 
-  <a class="entry" data-tags="tooling" href="posts/2026-07-16-hello-vibelogs/">
+  <a class="entry" data-date="2026-07-16" data-pin="0" data-tags="tooling" href="posts/2026-07-16-hello-vibelogs/">
     <div class="meta"><span>[2026-07-16]</span><span class="tag">TOOLING</span></div>
     <h2>Hello, vibelogs: how this site is built</h2>
     <p>Zero-framework GitHub Pages setup, the log-entry format, and how new posts get added.</p>
   </a>
-
+  </div>
+  <div id="rendered"></div>
   <div class="empty">[warn] no entries match this filter</div>
 </main>
 
@@ -290,29 +339,68 @@ footer a:hover{color:var(--cobalt);border-color:var(--cobalt)}
 
 <script>
 const buttons=document.querySelectorAll('.filters button');
-const entries=document.querySelectorAll('.entry');
-const months=document.querySelectorAll('.month');
+const viewBtns=document.querySelectorAll('.controls [data-view]');
+const sortBtns=document.querySelectorAll('.controls [data-sort]');
+const pool=Array.from(document.querySelectorAll('#entries .entry'));
+const rendered=document.getElementById('rendered');
 const empty=document.querySelector('.empty');
+let state={tag:'all',view:'list',sort:'date'};
+
+function monthLabel(d){
+  const names=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  return d.slice(0,4)+' · '+names[parseInt(d.slice(5,7),10)-1];
+}
+function render(){
+  const items=pool.filter(e=>state.tag==='all'||e.dataset.tags.split(' ').includes(state.tag));
+  rendered.innerHTML='';
+  empty.style.display=items.length?'none':'block';
+  if(!items.length)return;
+  let groups=[];
+  if(state.sort==='date'){
+    const pinned=items.filter(e=>e.dataset.pin==='1');
+    const posts=items.filter(e=>e.dataset.pin!=='1');
+    if(pinned.length)groups.push(['reference',pinned]);
+    const byMonth={};
+    posts.forEach(e=>{const k=e.dataset.date.slice(0,7);(byMonth[k]=byMonth[k]||[]).push(e)});
+    Object.keys(byMonth).sort().reverse().forEach(k=>{
+      byMonth[k].sort((a,b)=>b.dataset.date.localeCompare(a.dataset.date));
+      groups.push([monthLabel(byMonth[k][0].dataset.date),byMonth[k]]);
+    });
+  }else{
+    const byTag={};
+    items.forEach(e=>{const k=e.querySelector('.tag').textContent;(byTag[k]=byTag[k]||[]).push(e)});
+    Object.keys(byTag).sort().forEach(k=>{
+      byTag[k].sort((a,b)=>b.dataset.date.localeCompare(a.dataset.date));
+      groups.push([k.toLowerCase(),byTag[k]]);
+    });
+  }
+  groups.forEach(([label,es])=>{
+    const h=document.createElement('div');h.className='month';h.textContent=label;
+    rendered.appendChild(h);
+    let holder=rendered;
+    if(state.view==='gallery'){
+      holder=document.createElement('div');holder.className='gallery-grid';
+      rendered.appendChild(holder);
+    }
+    es.forEach(e=>holder.appendChild(e.cloneNode(true)));
+  });
+}
 buttons.forEach(b=>b.addEventListener('click',()=>{
   buttons.forEach(x=>x.classList.remove('active'));
   b.classList.add('active');
-  const tag=b.dataset.tag;
-  let shown=0;
-  entries.forEach(e=>{
-    const show=tag==='all'||e.dataset.tags.split(' ').includes(tag);
-    e.style.display=show?'block':'none';
-    if(show)shown++;
-  });
-  months.forEach(m=>{
-    let el=m.nextElementSibling,any=false;
-    while(el&&!el.classList.contains('month')){
-      if(el.classList.contains('entry')&&el.style.display!=='none')any=true;
-      el=el.nextElementSibling;
-    }
-    m.style.display=any?'block':'none';
-  });
-  empty.style.display=shown?'none':'block';
+  state.tag=b.dataset.tag;render();
 }));
+viewBtns.forEach(b=>b.addEventListener('click',()=>{
+  viewBtns.forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  state.view=b.dataset.view;render();
+}));
+sortBtns.forEach(b=>b.addEventListener('click',()=>{
+  sortBtns.forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  state.sort=b.dataset.sort;render();
+}));
+render();
 </script>
 </body>
 </html>
