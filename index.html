@@ -157,6 +157,13 @@ footer a:hover{color:var(--cobalt);border-color:var(--cobalt)}
   transition:border-color .15s, box-shadow .15s;
 }
 .gallery-grid .entry:hover{border-color:var(--cobalt);box-shadow:0 2px 10px rgba(37,69,255,0.08)}
+.gallery-grid .entry{padding:0;overflow:hidden}
+.gallery-grid .entry .thumb{
+  width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;
+  display:block;border-bottom:1px solid var(--rule);
+  background:var(--chip);
+}
+.gallery-grid .entry .card-body{padding:12px 14px 14px}
 .gallery-grid .entry h2{font-size:1.02rem}
 .gallery-grid .entry p{font-size:0.85rem}
 </style>
@@ -349,7 +356,19 @@ function render(){
       holder=document.createElement('div');holder.className='gallery-grid';
       rendered.appendChild(holder);
     }
-    es.forEach(e=>holder.appendChild(e.cloneNode(true)));
+    es.forEach(e=>{
+      const c=e.cloneNode(true);
+      if(state.view==='gallery'){
+        const body=document.createElement('div');body.className='card-body';
+        while(c.firstChild)body.appendChild(c.firstChild);
+        const img=document.createElement('img');
+        img.className='thumb';img.loading='lazy';img.alt='';
+        img.src=c.getAttribute('href')+'thumb.jpg';
+        img.onerror=()=>img.remove();
+        c.appendChild(img);c.appendChild(body);
+      }
+      holder.appendChild(c);
+    });
   });
 }
 buttons.forEach(b=>b.addEventListener('click',()=>{
