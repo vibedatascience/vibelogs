@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wire — a Hacker News reader</title>
+<style>
+:root{
+  --bg:#faf9f7;
+  --panel:#ffffff;
+  --panel2:#f0eeea;
+  --ink:#1d1f24;
+  --ink-dim:#5c6270;
+  --ink-faint:#9aa0ad;
+  --amber:#d97a00;
+  --amber-dim:#b56600;
+  --green:#1a8f4a;
+  --line:#e4e1db;
+  --mono:'SF Mono',ui-monospace,'Cascadia Code','JetBrains Mono',Menlo,Consolas,monospace;
+  --serif:Georgia,'Times New Roman',serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--mono);font-size:14px;line-height:1.55}
+a{color:inherit;text-decoration:none}
+a:hover{color:var(--amber)}
+
+header{position:sticky;top:0;z-index:10;background:rgba(250,249,247,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.hwrap{max-width:860px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.logo{font-size:17px;font-weight:700;letter-spacing:.5px;color:var(--amber)}
+.logo span{color:var(--ink-faint);font-weight:400}
+nav{display:flex;gap:4px;flex-wrap:wrap}
+nav button{background:none;border:none;color:var(--ink-dim);font-family:var(--mono);font-size:13px;padding:5px 10px;cursor:pointer;border-radius:4px}
+nav button:hover{color:var(--ink)}
+nav button.on{background:var(--panel2);color:var(--amber)}
+.search{margin-left:auto}
+.tm input{background:var(--panel);border:1px solid var(--line);color:var(--ink-dim);font-family:var(--mono);font-size:12px;padding:5px 8px;border-radius:6px;outline:none}
+.tm input:focus{border-color:var(--amber-dim)}
+.tmbanner{margin-bottom:16px;padding:10px 14px;background:var(--panel);border:1px solid var(--amber-dim);border-radius:8px;font-size:13px;color:var(--amber)}
+.tmbanner .x{float:right;cursor:pointer;color:var(--ink-dim)}
+.tmbanner .x:hover{color:var(--ink)}
+.search input{background:var(--panel);border:1px solid var(--line);color:var(--ink);font-family:var(--mono);font-size:13px;padding:6px 10px;border-radius:6px;width:170px;outline:none}
+.search input:focus{border-color:var(--amber-dim)}
+
+main{max-width:860px;margin:0 auto;padding:18px 20px 80px}
+.story{display:flex;gap:14px;padding:13px 0;border-bottom:1px solid var(--line)}
+.score{flex:0 0 52px;text-align:right;color:var(--amber);font-size:13px;padding-top:2px}
+.score small{display:block;color:var(--ink-faint);font-size:10px;letter-spacing:.5px}
+.sbody{flex:1;min-width:0}
+.stitle{font-size:15px;line-height:1.4;color:var(--ink)}
+.stitle:hover{color:var(--amber)}
+.domain{color:var(--ink-faint);font-size:12px;margin-left:6px}
+.smeta{margin-top:4px;font-size:12px;color:var(--ink-dim)}
+.smeta a:hover{color:var(--amber)}
+.cbtn{color:var(--green)}
+.rank{color:var(--ink-faint);font-size:11px;margin-right:8px}
+
+.loading{padding:40px 0;text-align:center;color:var(--ink-faint)}
+.loading::after{content:'';display:inline-block;width:8px;animation:dots 1.2s steps(4) infinite}
+@keyframes dots{0%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}}
+
+.morebtn{display:block;margin:24px auto 0;background:var(--panel);border:1px solid var(--line);color:var(--ink-dim);font-family:var(--mono);font-size:13px;padding:9px 26px;border-radius:6px;cursor:pointer}
+.morebtn:hover{color:var(--amber);border-color:var(--amber-dim)}
+
+.back{display:inline-block;margin-bottom:18px;color:var(--ink-dim);font-size:13px;cursor:pointer}
+.back:hover{color:var(--amber)}
+.dtitle{font-family:var(--serif);font-size:24px;line-height:1.3;margin-bottom:6px}
+.dmeta{color:var(--ink-dim);font-size:12px;margin-bottom:8px}
+.dtext{font-family:var(--serif);font-size:16px;line-height:1.65;color:var(--ink);margin:16px 0;padding:16px;background:var(--panel);border-radius:8px;border-left:3px solid var(--amber-dim)}
+.dtext p{margin:0 0 12px}
+.dtext a{color:var(--amber);text-decoration:underline}
+.dtext pre{overflow-x:auto;background:var(--panel2);padding:10px;border-radius:6px;font-size:13px;margin:10px 0}
+.chead{margin:26px 0 8px;color:var(--ink-faint);font-size:12px;letter-spacing:1px;text-transform:uppercase}
+
+.cmt{margin-top:14px;padding-left:14px;border-left:2px solid var(--line)}
+.cmt.d0{padding-left:0;border-left:none}
+.cmeta{font-size:12px;color:var(--ink-dim);cursor:pointer;user-select:none}
+.cmeta .au{color:var(--amber-dim);font-weight:700}
+.cmeta .op{background:var(--amber-dim);color:var(--bg);border-radius:3px;padding:0 5px;margin-left:6px;font-size:10px}
+.cmeta .tog{color:var(--ink-faint);margin-left:8px}
+.ctext{font-family:var(--serif);font-size:15px;line-height:1.6;margin-top:5px;color:var(--ink);overflow-wrap:break-word}
+.ctext p{margin:0 0 10px}
+.ctext a{color:var(--amber);text-decoration:underline;word-break:break-all}
+.ctext pre{overflow-x:auto;background:var(--panel2);padding:10px;border-radius:6px;font-size:13px;margin:10px 0;font-family:var(--mono)}
+.ctext code{font-family:var(--mono);font-size:13px}
+.ctext i{color:var(--ink-dim)}
+.collapsed .ctext,.collapsed .kids{display:none}
+.dead{color:var(--ink-faint);font-style:italic}
+.loadkids{background:none;border:none;color:var(--green);font-family:var(--mono);font-size:12px;cursor:pointer;padding:6px 0}
+.loadkids:hover{text-decoration:underline}
+
+@media (max-width:600px){
+  .score{flex-basis:40px}
+  .search input{width:120px}
+  .hwrap{gap:10px;padding:12px 14px}
+  main{padding:14px 14px 60px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <div class="logo">wire<span>/hn</span></div>
+    <nav id="nav"></nav>
+    <div class="tm"><input id="tmdate" type="date"></div>
+    <div class="search"><input id="q" type="search" placeholder="search... (enter)"></div>
+  </div>
+</header>
+<main id="main"><div class="loading">loading</div></main>
+
+<script>
+const FB='https://hacker-news.firebaseio.com/v0';
+const ALG='https://hn.algolia.com/api/v1';
+const FEEDS=[['top','topstories'],['new','newstories'],['best','beststories'],['ask','askstories'],['show','showstories'],['jobs','jobstories']];
+const PAGE=30;
+let state={feed:'top',ids:[],shown:0,cache:{}};
+const $=s=>document.querySelector(s);
+const main=$('#main');
+
+function ago(t){
+  const s=Math.floor(Date.now()/1000-t);
+  if(s<3600)return Math.floor(s/60)+'m';
+  if(s<86400)return Math.floor(s/3600)+'h';
+  return Math.floor(s/86400)+'d';
+}
+function dom(u){try{return new URL(u).hostname.replace(/^www\./,'')}catch{return''}}
+function esc(x){const d=document.createElement('div');d.textContent=x;return d.innerHTML}
+
+function buildNav(){
+  const n=$('#nav');
+  n.innerHTML=FEEDS.map(([k])=>`<button data-f="${k}" class="${k===state.feed?'on':''}">${k}</button>`).join('');
+  n.querySelectorAll('button').forEach(b=>b.onclick=()=>loadFeed(b.dataset.f));
+}
+
+async function item(id){
+  if(state.cache[id])return state.cache[id];
+  const r=await fetch(`${FB}/item/${id}.json`);
+  const j=await r.json();
+  state.cache[id]=j;
+  return j;
+}
+
+async function loadFeed(f){
+  state.feed=f;buildNav();
+  history.replaceState(null,'','#'+f);
+  main.innerHTML='<div class="loading">loading</div>';
+  const r=await fetch(`${FB}/${FEEDS.find(x=>x[0]===f)[1]}.json`);
+  state.ids=await r.json();
+  state.shown=0;
+  main.innerHTML='<div id="list"></div>';
+  await more();
+}
+
+async function more(){
+  const slice=state.ids.slice(state.shown,state.shown+PAGE);
+  const items=await Promise.all(slice.map(item));
+  const list=$('#list');
+  items.forEach((it,i)=>{
+    if(!it)return;
+    list.insertAdjacentHTML('beforeend',storyHTML(it,state.shown+i+1));
+  });
+  state.shown+=slice.length;
+  const old=$('.morebtn');if(old)old.remove();
+  if(state.shown<state.ids.length){
+    main.insertAdjacentHTML('beforeend','<button class="morebtn">more</button>');
+    $('.morebtn').onclick=more;
+  }
+  bindStoryLinks();
+}
+
+function storyHTML(it,rank){
+  const url=it.url||'#item-'+it.id;
+  const d=it.url?`<span class="domain">${dom(it.url)}</span>`:'';
+  const c=it.descendants!=null?it.descendants:0;
+  return `<div class="story">
+    <div class="score">${it.score||''}<small>pts</small></div>
+    <div class="sbody">
+      <span class="rank">${rank}.</span><a class="stitle" href="${it.url?esc(it.url):'javascript:void 0'}" ${it.url?'target="_blank" rel="noopener"':''} ${it.url?'':`data-open="${it.id}"`}>${esc(it.title||'(untitled)')}</a>${d}
+      <div class="smeta">by ${esc(it.by||'?')} · ${ago(it.time)} ago · <a class="cbtn" data-open="${it.id}">${c} comments</a></div>
+    </div>
+  </div>`;
+}
+
+function bindStoryLinks(){
+  document.querySelectorAll('[data-open]').forEach(a=>{
+    a.onclick=e=>{e.preventDefault();openStory(a.dataset.open)};
+  });
+}
+
+async function openStory(id){
+  main.innerHTML='<div class="loading">loading thread</div>';
+  window.scrollTo(0,0);
+  const it=await item(id);
+  const d=it.url?` · <a href="${esc(it.url)}" target="_blank" rel="noopener" style="color:var(--amber)">${dom(it.url)} ↗</a>`:'';
+  main.innerHTML=`
+    <span class="back">← back to ${state.feed}</span>
+    <div class="dtitle">${esc(it.title||'')}</div>
+    <div class="dmeta">${it.score||0} pts · by ${esc(it.by||'?')} · ${ago(it.time)} ago · ${it.descendants||0} comments${d}</div>
+    ${it.text?`<div class="dtext">${it.text}</div>`:''}
+    <div class="chead">— thread —</div>
+    <div id="cmts"><div class="loading">loading comments</div></div>`;
+  $('.back').onclick=()=>loadFeed(state.feed);
+  const box=$('#cmts');
+  box.innerHTML='';
+  if(it.kids&&it.kids.length){
+    await renderKids(it.kids,box,0,it.by);
+  }else{
+    box.innerHTML='<div class="dead">no comments yet</div>';
+  }
+}
+
+async function renderKids(ids,container,depth,op){
+  const CHUNK=depth===0?15:ids.length;
+  const first=ids.slice(0,CHUNK);
+  const rest=ids.slice(CHUNK);
+  const items=await Promise.all(first.map(item));
+  for(const c of items){
+    if(!c||c.deleted)continue;
+    const el=document.createElement('div');
+    el.className='cmt d'+Math.min(depth,1);
+    const kidCount=c.kids?c.kids.length:0;
+    el.innerHTML=`
+      <div class="cmeta"><span class="au">${esc(c.by||'?')}</span>${c.by===op?'<span class="op">OP</span>':''} ${ago(c.time)} ago <span class="tog">[–]</span></div>
+      <div class="ctext">${c.dead?'<span class="dead">[flagged]</span>':(c.text||'')}</div>
+      <div class="kids"></div>`;
+    const meta=el.querySelector('.cmeta');
+    meta.onclick=()=>{
+      el.classList.toggle('collapsed');
+      meta.querySelector('.tog').textContent=el.classList.contains('collapsed')?`[+${1+countDesc(c)}]`:'[–]';
+    };
+    container.appendChild(el);
+    if(c.kids&&c.kids.length){
+      await renderKids(c.kids,el.querySelector('.kids'),depth+1,op);
+    }
+  }
+  if(rest.length){
+    const b=document.createElement('button');
+    b.className='loadkids';
+    b.textContent=`load ${rest.length} more comments`;
+    b.onclick=async()=>{b.remove();await renderKids(rest,container,depth,op)};
+    container.appendChild(b);
+  }
+}
+
+function countDesc(c){
+  let n=0;
+  const walk=x=>{if(x&&x.kids)x.kids.forEach(k=>{n++;const kc=state.cache[k];if(kc)walk(kc)})};
+  walk(c);
+  return n;
+}
+
+$('#q').addEventListener('keydown',async e=>{
+  if(e.key!=='Enter')return;
+  const q=e.target.value.trim();
+  if(!q)return;
+  main.innerHTML='<div class="loading">searching</div>';
+  const r=await fetch(`${ALG}/search?query=${encodeURIComponent(q)}&tags=story&hitsPerPage=30`);
+  const j=await r.json();
+  main.innerHTML=`<span class="back">← back to ${state.feed}</span><div id="list"></div>`;
+  $('.back').onclick=()=>loadFeed(state.feed);
+  const list=$('#list');
+  j.hits.forEach((h,i)=>{
+    list.insertAdjacentHTML('beforeend',storyHTML({
+      id:+h.objectID,title:h.title,url:h.url,score:h.points,by:h.author,
+      time:h.created_at_i,descendants:h.num_comments
+    },i+1));
+  });
+  bindStoryLinks();
+});
+
+async function timeMachine(dateStr){
+  main.innerHTML='<div class="loading">rewinding</div>';
+  const d0=Math.floor(new Date(dateStr+'T00:00:00').getTime()/1000);
+  const d1=d0+86400;
+  const nf=encodeURIComponent(`created_at_i>${d0},created_at_i<${d1}`);
+  const r=await fetch(`${ALG}/search?tags=story&numericFilters=${nf}&hitsPerPage=30`);
+  const j=await r.json();
+  const nice=new Date(dateStr+'T00:00:00').toDateString();
+  main.innerHTML=`<div class="tmbanner">front page of ${nice} — top stories submitted that day, ranked by points<span class="x">✕ exit</span></div><div id="list"></div>`;
+  main.querySelector('.x').onclick=()=>{$('#tmdate').value='';loadFeed(state.feed)};
+  const list=$('#list');
+  if(!j.hits.length){list.innerHTML='<div class="dead">nothing found for that day</div>';return}
+  j.hits.forEach((h,i)=>{
+    list.insertAdjacentHTML('beforeend',storyHTML({
+      id:+h.objectID,title:h.title,url:h.url,score:h.points,by:h.author,
+      time:h.created_at_i,descendants:h.num_comments
+    },i+1));
+  });
+  bindStoryLinks();
+}
+const tmd=$('#tmdate');
+tmd.max=new Date().toISOString().slice(0,10);
+tmd.min='2007-02-19';
+tmd.addEventListener('change',()=>{if(tmd.value)timeMachine(tmd.value)});
+
+const initial=location.hash.slice(1);
+loadFeed(FEEDS.some(f=>f[0]===initial)?initial:'top');
+</script>
+</body>
+</html>
