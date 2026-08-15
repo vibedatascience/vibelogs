@@ -26,18 +26,21 @@ body{
   line-height:1.6;
 }
 .wrap{max-width:720px;margin:0 auto;padding:0 24px}
-header{padding:36px 0 24px}
+header{
+  padding:28px 0 20px;
+  display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+}
+.brand{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
 .byline{
   font-family:'IBM Plex Mono',monospace;
   font-size:0.8rem;
   letter-spacing:0.04em;
   color:var(--muted);
-  margin-top:6px;
 }
 .wordmark{
   font-family:'Space Grotesk',sans-serif;
   font-weight:700;
-  font-size:clamp(2.4rem,7vw,3.4rem);
+  font-size:clamp(1.6rem,4vw,2.1rem);
   letter-spacing:-0.03em;
 }
 .wordmark .cursor{
@@ -125,7 +128,6 @@ footer a:hover{color:var(--cobalt);border-color:var(--cobalt)}
 
 .topnav{
   display:flex;justify-content:flex-end;gap:18px;
-  padding-top:8px;
   font-family:'IBM Plex Mono',monospace;
   font-size:0.8rem;
 }
@@ -178,12 +180,14 @@ footer a:hover{color:var(--cobalt);border-color:var(--cobalt)}
 <body>
 <div class="wrap">
 <header>
+  <div class="brand">
+    <div class="wordmark">vibelogs<span class="cursor" aria-hidden="true"></span></div>
+    <div class="byline">by rahul</div>
+  </div>
   <nav class="topnav" aria-label="Site pages">
     <a href="posts/links/">links</a>
     <a href="posts/ai-glossary/">glossary</a>
   </nav>
-  <div class="wordmark">vibelogs<span class="cursor" aria-hidden="true"></span></div>
-  <div class="byline">by rahul</div>
 </header>
 
 <nav class="filters" aria-label="Filter posts by tag">
