@@ -37,6 +37,8 @@ nav button.on{background:var(--panel2);color:var(--amber)}
 .tm input:focus{border-color:var(--amber-dim)}
 .tm input{color:var(--ink);font-weight:700;cursor:pointer}
 .tm input::-webkit-calendar-picker-indicator{cursor:pointer;opacity:.6}
+.tm{display:flex;align-items:center;gap:4px}
+.tmsep{color:var(--ink-faint);font-size:12px}
 .leadwrap{display:grid;grid-template-columns:1.6fr 1fr;gap:22px;align-items:start}
 .shot{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;border:1px solid var(--line);background:var(--panel2);display:block}
 .shot.small{aspect-ratio:16/9;margin-bottom:10px}
@@ -131,7 +133,7 @@ main{max-width:860px;margin:0 auto;padding:18px 20px 80px}
   <div class="hwrap">
     <div class="logo">wire<span>/hn</span></div>
     <nav id="nav"></nav>
-    <div class="tm"><input id="tmdate" type="date"></div>
+    <div class="tm"><input id="tmfrom" type="date" title="from"><span class="tmsep">→</span><input id="tmto" type="date" title="to"></div>
     <div class="search"><input id="q" type="search" placeholder="search... (enter)"></div>
   </div>
 </header>
@@ -369,30 +371,59 @@ $('#q').addEventListener('keydown',async e=>{
   bindStoryLinks();
 });
 
-async function timeMachine(dateStr){
-  main.innerHTML='<div class="loading">rewinding</div>';
-  const d0=Math.floor(new Date(dateStr+'T00:00:00').getTime()/1000);
-  const d1=d0+86400;
-  const nf=encodeURIComponent(`created_at_i>${d0},created_at_i<${d1}`);
-  const r=await fetch(`${ALG}/search?tags=story&numericFilters=${nf}&hitsPerPage=30`);
+async function tmFetch(pageNum){
+  const nf=encodeURIComponent(`created_at_i>${state.tm.d0},created_at_i<${state.tm.d1}`);
+  const r=await fetch(`${ALG}/search?tags=story&numericFilters=${nf}&hitsPerPage=30&page=${pageNum}`);
   const j=await r.json();
-  const nice=new Date(dateStr+'T00:00:00').toDateString();
-  main.innerHTML=`<div class="tmbanner">front page of ${nice} — top stories submitted that day, ranked by points<span class="x">✕ exit</span></div><div id="list"></div>`;
-  main.querySelector('.x').onclick=()=>{$('#tmdate').value=$('#tmdate').max;loadFeed(state.feed)};
-  state.page=j.hits.map(h=>({id:+h.objectID,title:h.title,url:h.url,score:h.points,by:h.author,time:h.created_at_i,descendants:h.num_comments}));
+  state.tm.pages=j.nbPages;
+  return j.hits.map(h=>({id:+h.objectID,title:h.title,url:h.url,score:h.points,by:h.author,time:h.created_at_i,descendants:h.num_comments}));
+}
+async function timeMachine(fromStr,toStr){
+  main.innerHTML='<div class="loading">rewinding</div>';
+  const d0=Math.floor(new Date(fromStr+'T00:00:00').getTime()/1000);
+  const d1=Math.floor(new Date(toStr+'T00:00:00').getTime()/1000)+86400;
+  state.tm={d0,d1,pageNum:0,pages:1};
+  const n0=new Date(fromStr+'T00:00:00').toDateString();
+  const n1=new Date(toStr+'T00:00:00').toDateString();
+  const label=fromStr===toStr?`front page of ${n0}`:`top stories ${n0} → ${n1}`;
+  main.innerHTML=`<div class="tmbanner">${label} — ranked by points<span class="x">✕ exit</span></div><div id="list"></div>`;
+  main.querySelector('.x').onclick=exitTM;
+  state.page=await tmFetch(0);
   state.filter=null;renderChips();
   renderPaper(state.page,$('#list'));
   bindStoryLinks();
+  tmMoreBtn();
 }
-const tmd=$('#tmdate');
-tmd.max=new Date().toISOString().slice(0,10);
-tmd.min='2007-02-19';
-tmd.value=tmd.max;
-tmd.addEventListener('change',()=>{
-  if(!tmd.value)return;
-  if(tmd.value===tmd.max){loadFeed(state.feed);return}
-  timeMachine(tmd.value);
-});
+function tmMoreBtn(){
+  const old=$('.morebtn');if(old)old.remove();
+  if(state.tm.pageNum+1<state.tm.pages){
+    main.insertAdjacentHTML('beforeend','<button class="morebtn">more</button>');
+    $('.morebtn').onclick=async()=>{
+      state.tm.pageNum++;
+      state.page=state.page.concat(await tmFetch(state.tm.pageNum));
+      renderChips();
+      renderPaper(state.page,$('#list'));
+      bindStoryLinks();
+      tmMoreBtn();
+    };
+  }
+}
+function exitTM(){
+  state.tm=null;
+  tmf.value=tmf.max;tmt.value=tmt.max;
+  loadFeed(state.feed);
+}
+const tmf=$('#tmfrom'),tmt=$('#tmto');
+const today=new Date().toISOString().slice(0,10);
+[tmf,tmt].forEach(i=>{i.max=today;i.min='2007-02-19';i.value=today});
+function tmChange(){
+  if(!tmf.value||!tmt.value)return;
+  if(tmf.value>tmt.value){if(this===tmf)tmt.value=tmf.value;else tmf.value=tmt.value}
+  if(tmf.value===today&&tmt.value===today){if(state.tm)exitTM();return}
+  timeMachine(tmf.value,tmt.value);
+}
+tmf.addEventListener('change',tmChange);
+tmt.addEventListener('change',tmChange);
 
 const initial=location.hash.slice(1);
 loadFeed(FEEDS.some(f=>f[0]===initial)?initial:'top');
