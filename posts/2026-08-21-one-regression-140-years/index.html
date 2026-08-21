@@ -12,7 +12,7 @@
 :root{--paper:#FAFAF8;--ink:#17171C;--cobalt:#2545FF;--muted:#6E6E76;--rule:#E7E7E2;--chip:#EEF1FF}
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:17px;line-height:1.7}
-.wrap{max-width:680px;margin:0 auto;padding:0 24px}
+.wrap{max-width:720px;margin:0 auto;padding:0 24px}
 .top{padding:40px 0 0;font-family:'IBM Plex Mono',monospace;font-size:0.8rem}
 .top a{color:var(--muted);text-decoration:none}
 .top a:hover{color:var(--cobalt)}
@@ -21,46 +21,49 @@ header.post{padding:32px 0 24px;border-bottom:1px solid var(--rule)}
 .upd{color:var(--muted)}
 .tag{background:var(--chip);color:var(--cobalt);padding:1px 8px;border-radius:4px;font-weight:500}
 h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.7rem,5vw,2.3rem);letter-spacing:-0.02em;line-height:1.2}
-article{padding:32px 0 60px}
-article h2{font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:1.3rem;margin:36px 0 12px}
+article{padding:28px 0 60px}
 article p{margin:0 0 18px}
-article ol,article ul{margin:0 0 18px 22px}
-article li{margin-bottom:8px}
 article a{color:var(--cobalt)}
-pre{background:#111116;color:#E8E8EE;font-family:'IBM Plex Mono',monospace;font-size:0.82rem;line-height:1.55;padding:16px 18px;border-radius:8px;overflow-x:auto;margin:0 0 18px}
-code{font-family:'IBM Plex Mono',monospace;font-size:0.86em;background:var(--chip);padding:1px 5px;border-radius:4px}
-pre code{background:none;padding:0}
-table{border-collapse:collapse;width:100%;margin:0 0 18px;font-size:0.9rem}
-th,td{border:1px solid var(--rule);padding:8px 12px;text-align:left;vertical-align:top}
-th{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);background:#fff}
-.gotcha{border-left:3px solid var(--cobalt);padding:12px 16px;background:#fff;margin:0 0 18px}
-.gotcha strong{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;letter-spacing:0.08em;color:var(--cobalt)}
 footer{border-top:1px solid var(--rule);padding:24px 0 56px;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted)}
 footer a{color:var(--muted)}
-.fig{margin:0 0 18px;background:#fff;border:1px solid var(--rule);border-radius:8px;padding:10px}
+.mono{font-family:'IBM Plex Mono',monospace}
+.fig{margin:0 0 14px;background:#fff;border:1px solid var(--rule);border-radius:8px;padding:10px}
 .fig svg{width:100%;height:auto;display:block}
-.cap{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--muted);margin:8px 0 18px}
-.ctl{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;align-items:center}
+.cap{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--muted);margin:6px 0 18px}
+.ctl{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;align-items:center}
 .ctl button{font:inherit;border:1px solid var(--rule);background:#fff;color:var(--ink);padding:5px 12px;border-radius:6px;cursor:pointer}
 .ctl button.on{background:var(--cobalt);color:#fff;border-color:var(--cobalt)}
-.ctl .play{margin-left:auto;border-color:var(--ink)}
-.lane{padding:10px 0 8px;border-bottom:1px solid var(--rule);font-family:'IBM Plex Mono',monospace}
-.l1,.l2{display:flex;gap:12px;align-items:baseline;font-size:0.74rem;color:var(--muted)}
-.l1 .yr{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.25rem;color:var(--ink);letter-spacing:-0.02em;min-width:52px}
-.l1 .mach{flex:1;color:var(--ink)}
-.l1 .clock{font-variant-numeric:tabular-nums;color:var(--cobalt);font-weight:500;min-width:80px;text-align:right}
-.bar{height:10px;background:#EEF1FF;border-radius:5px;margin:6px 0 5px;overflow:hidden}
-.fill{height:100%;width:0;background:var(--cobalt);border-radius:5px}
-.lane.done .fill{background:var(--ink)}
-.l2 .eq{margin-left:auto;color:var(--ink);opacity:0;transition:opacity .3s}
-.lane.done .l2 .eq{opacity:1}
-.lane.dead .bar{background:#FBE9E7}.lane.dead .clock{color:#B3261E}
+.ex{background:#fff;border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.exh{display:flex;align-items:baseline;gap:14px;padding:14px 18px 0;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted)}
+.exh .yr{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:2rem;color:var(--cobalt);letter-spacing:-0.03em;line-height:1}
+.exh .who{flex:1;color:var(--ink)}
+.exh .idx{color:var(--muted)}
+#stage{width:100%;height:auto;display:block;background:#fff}
+.panel{display:grid;grid-template-columns:1.2fr 1fr;gap:0;border-top:1px solid var(--rule)}
+.sums{padding:12px 18px;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;border-right:1px solid var(--rule);color:var(--muted)}
+.sums div{display:flex;justify-content:space-between;gap:10px;padding:2px 0}
+.sums b{font-weight:500;color:var(--ink);font-variant-numeric:tabular-nums}
+.sums .res{border-top:1px solid var(--rule);margin-top:6px;padding-top:6px;color:var(--cobalt)}
+.sums .res b{color:var(--cobalt)}
+.clockbox{padding:12px 18px;font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--muted)}
+.clockbox .big{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.7rem;color:var(--ink);letter-spacing:-0.02em;line-height:1.1;font-variant-numeric:tabular-nums}
+.clockbox .big.dead{color:#B3261E;font-size:1.2rem}
+.clockbox div{margin-bottom:6px}
+.card{border-top:1px solid var(--rule);padding:12px 18px 14px;font-size:0.86rem;display:grid;grid-template-columns:92px 1fr;row-gap:4px;column-gap:12px}
+.card .k{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+.nav{display:flex;align-items:center;gap:10px;margin:12px 0 0;font-family:'IBM Plex Mono',monospace;font-size:0.78rem}
+.nav button{font:inherit;border:1px solid var(--rule);background:#fff;color:var(--ink);padding:6px 14px;border-radius:6px;cursor:pointer}
+.nav .dots{flex:1;display:flex;gap:6px;justify-content:center}
+.nav .dots span{width:9px;height:9px;border-radius:50%;background:var(--rule);cursor:pointer}
+.nav .dots span.on{background:var(--cobalt)}
+.nav .dots span.done{background:var(--ink)}
+.nav .dots span.dead{background:#B3261E}
+.nav .auto.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 details{margin-top:26px;font-size:0.88rem;color:var(--muted)}
 summary{cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted)}
 details p{margin-top:10px}
-@media (max-width:560px){.l1 .mach{display:none}.l2 span:nth-child(2){display:none}}
-</style>
-</head>
+@media (max-width:560px){.panel{grid-template-columns:1fr}.sums{border-right:0;border-bottom:1px solid var(--rule)}.exh .who{font-size:0.7rem}}
+</style></head>
 <body>
 <div class="wrap">
 <div class="top"><a href="../../">&larr; vibelogs</a></div>
@@ -74,23 +77,50 @@ details p{margin-top:10px}
 
 <p>Galton, 1886: predict a child's adult height from the parents'. Same 928 rows, same five sums, same line. Only the machine changes.</p>
 
-<div class="fig"><svg id="scatter" viewBox="0 0 640 360"></svg>
-<div class="cap">child = 23.94 + 0.646 &times; midparent. Galton 1886, 928 children.</div></div>
+<div class="fig"><svg id="scatter" viewBox="0 0 640 300"></svg></div>
+<div class="cap">child = 23.94 + 0.646 &times; midparent. Galton 1886, 928 children, circle size is count.</div>
 
-<div class="ctl">
-<span>rows</span>
+<div class="ctl"><span>rows</span>
 <button data-n="928" class="on">928</button>
 <button data-n="10000">10K</button>
 <button data-n="1000000">1M</button>
-<button data-n="1000000000">1B</button>
-<button id="play" class="play">&#9654; run</button>
+<button data-n="1000000000">1B</button></div>
+
+<div class="ex">
+ <div class="exh"><span class="yr" id="yr"></span><span class="who" id="who"></span><span class="idx" id="idx"></span></div>
+ <svg id="stage" viewBox="0 0 680 260"></svg>
+ <div class="panel">
+  <div class="sums">
+   <div><span>rows done</span><b id="s_n">0</b></div>
+   <div><span>&Sigma;x</span><b id="s_x">0</b></div>
+   <div><span>&Sigma;y</span><b id="s_y">0</b></div>
+   <div><span>&Sigma;x&sup2;</span><b id="s_xx">0</b></div>
+   <div><span>&Sigma;xy</span><b id="s_xy">0</b></div>
+   <div class="res"><span>slope b</span><b id="s_b">&middot;</b></div>
+   <div class="res" style="border:0;margin:0;padding:0"><span>intercept a</span><b id="s_a">&middot;</b></div>
+  </div>
+  <div class="clockbox">
+   <div>elapsed on this machine<br><span class="big" id="clock">0</span></div>
+   <div id="pace"></div>
+   <div id="cost"></div>
+  </div>
+ </div>
+ <div class="card">
+  <span class="k">machine</span><span id="c_mach"></span>
+  <span class="k">method</span><span id="c_how"></span>
+  <span class="k">limit</span><span id="c_lim"></span>
+ </div>
 </div>
 
-<div id="race"></div>
-<div class="cap">Bars run at their own pace on a log clock: a year of hand arithmetic and a millisecond on a phone both fit on screen. The counter is real elapsed time for that machine. Red means the machine could not hold the data.</div>
+<div class="nav">
+ <button id="prev">&larr;</button>
+ <div class="dots" id="dots"></div>
+ <button id="auto" class="auto on">auto</button>
+ <button id="next">&rarr;</button>
+</div>
 
 <details><summary>how the numbers are computed</summary>
-<p>Time = fixed setup + rows &times; seconds per row, capped by what the machine could physically hold. Per-row seconds come from: checked three-digit products by hand (Grier, When Computers Were Human), Brunsviga and Millionaire crank rates (Campbell-Kelly, History of Mathematical Tables), IBM 601 card throughput (Eckert 1940), IBM 533 card reader at 200 cpm, IBM 370/158 at 1 MIPS with 3420 tape, Intel 8087, Lotus 1-2-3 Release 2 and Excel 2007 row limits, numpy on an M3. Prices are period list or rental, CPI adjusted to 2024. Pre-1950 rates are estimates. Galton himself drew his line by eye from a 102-cell table; least squares on this data starts with Pearson, 1896.</p>
+<p>Time = fixed setup + rows &times; seconds per row, capped by what the machine could hold. Per-row seconds come from: checked three-digit products by hand (Grier, When Computers Were Human), Brunsviga and Millionaire crank rates (Campbell-Kelly, History of Mathematical Tables), IBM 601 card throughput (Eckert 1940), IBM 533 card reader at 200 cpm, IBM 370/158 at 1 MIPS with 3420 tape, Intel 8087, Lotus 1-2-3 Release 2 and Excel 2007 row limits, numpy on an M3. Prices are period list or rental, CPI adjusted to 2024. Pre-1950 rates are estimates. For row counts above 928 the Galton rows are repeated. Galton drew his own line by eye from a 102-cell table; least squares on this data starts with Pearson, 1896.</p>
 </details>
 
 </article>
@@ -100,36 +130,19 @@ details p{margin-top:10px}
 
 <script>
 const ERAS=[
-{y:1886,who:"Francis Galton, Anthropometric Laboratory, London",mach:"Pencil, paper, printed log tables",
- how:"A human computer squares and multiplies by hand or via logarithm tables, writing every partial product. Rates from period computing bureaus put a checked three-digit product at about one minute. Galton himself avoided all of this by working a 102-cell frequency table instead of 928 rows.",
- perRow:150,fixed:600,cap:null,cost:"one clerk at about $1 per day",costNow:"~$35/day",est:true},
-{y:1896,who:"Karl Pearson, Biometric Laboratory, University College London",mach:"Brunsviga pinwheel calculator",
- how:"Pearson's lab ran on Brunsvigas turned by hand, mostly by women computers. A product takes 15 to 20 seconds of cranking plus writing the result down. Pearson is the first person known to fit least squares to Galton-type height data.",
- perRow:45,fixed:300,cap:null,cost:"$150 per machine",costNow:"~$5,500",est:true},
-{y:1925,who:"R. A. Fisher, Rothamsted Experimental Station",mach:"Millionaire calculator",
- how:"The Millionaire did direct multiplication, one crank per digit of the multiplier, so a three-digit product took 6 to 10 seconds. Fisher's statistical methods for agriculture were computed on one of these.",
- perRow:25,fixed:300,cap:null,cost:"about $400",costNow:"~$7,000",est:true},
-{y:1931,who:"Statistical Bureau, Columbia University (Ben Wood, later Wallace Eckert)",mach:"IBM 601 multiplying punch + accumulating tabulator",
- how:"Heights are punched once. The 601 reads two fields, multiplies, and punches the product back onto the card, at roughly 1,000 cards per hour. Two passes give x&sup2; and xy, then a tabulator sums the five columns in minutes. First machine here that does arithmetic without a person per row.",
- perRow:7.2,fixed:1800,cap:null,cost:"rental about $100 per month",costNow:"~$2,000/month",est:true},
-{y:1954,who:"Any university computing center",mach:"IBM 650 with 533 card reader",
- how:"The 650 multiplies in about 10 milliseconds, so arithmetic is never the wait. The card reader is: 200 cards per minute. 928 rows is a five-minute job, one million rows is three and a half days of feeding cards.",
- perRow:0.3,fixed:120,cap:null,cost:"rental $3,200 per month",costNow:"~$37,000/month",est:false},
-{y:1975,who:"A social science department with an SPSS account",mach:"IBM System/370 Model 158, SPSS release 6",
- how:"About one million instructions per second. Rows come off 1600 bpi tape at roughly 300 KB/s. The fit itself finishes in well under a second for Galton's data and about four minutes of tape time for a million rows. You submit the deck and get the printout hours later, which is the number that matters.",
- perRow:0.00024,fixed:3*3600,cap:null,cost:"about $1.8 million purchase",costNow:"~$10.5 million",est:false},
-{y:1985,who:"Anyone with a desk",mach:"IBM PC/AT, Intel 8087, Lotus 1-2-3 Release 2",
- how:"First time a single person with no institution could run the fit, interactively, on a machine they owned. The 8087 does tens of thousands of multiplications per second. Lotus Release 2 stopped at 8,192 rows and 640 KB, so a million rows was not a slow job, it was not a job.",
- perRow:0.0005,fixed:1,cap:8192,capMsg:"8,192-row limit",cost:"about $5,800 configured",costNow:"~$17,000",est:false},
-{y:2007,who:"Anyone",mach:"Core 2 Duo PC, Excel 2007, LINEST()",
- how:"Excel 2007 raised the sheet to 1,048,576 rows. LINEST over a million rows takes a few seconds. This is where the million-row fit became a desk task.",
- perRow:0.000003,fixed:0.3,cap:1048576,capMsg:"1,048,576-row limit",cost:"about $1,000",costNow:"~$1,500",est:false},
-{y:2024,who:"Anyone, or a chatbot",mach:"iPhone, a laptop with numpy, or pasting the table into an LLM",
- how:"A phone does the five sums over a million rows in milliseconds. A billion rows is 16 GB of doubles, so a 16 GB laptop swaps; a 36 GB M3 finishes in about four seconds. For a few hundred rows you can paste the table into a chatbot and read the slope back in ten seconds, without knowing what a multiplication is.",
- perRow:0.000000004,fixed:0.05,cap:null,cost:"$0 marginal",costNow:"$0",est:false}
+{y:1886,who:"Francis Galton, London",mach:"Pencil, paper, log tables",how:"A human computer writes x\u00b2 and xy for every row and keeps five running totals. About a minute per checked product.",lim:"One person. A second computer to check doubles the time.",perRow:150,fixed:600,cap:null,cost:"a clerk, ~$1/day then, ~$35 now",scene:"ledger",tool:"pencil"},
+{y:1896,who:"Karl Pearson, Biometric Laboratory, UCL",mach:"Brunsviga pinwheel calculator",how:"Set the digits, crank once per multiplier digit, copy the product into the ledger. First least squares on Galton-type data.",lim:"Still one row at a time by hand. 15 to 20 s per product.",perRow:45,fixed:300,cap:null,cost:"$150 then, ~$5,500 now",scene:"ledger",tool:"crank"},
+{y:1925,who:"R. A. Fisher, Rothamsted",mach:"Millionaire calculator",how:"Direct multiplication, one crank per digit. Fisher's agricultural statistics ran on this machine.",lim:"6 to 10 s per product, a person still copies every result.",perRow:25,fixed:300,cap:null,cost:"~$400 then, ~$7,000 now",scene:"ledger",tool:"crank"},
+{y:1931,who:"Statistical Bureau, Columbia University",mach:"IBM 601 multiplying punch + tabulator",how:"Punch x and y once. Pass 1 punches x\u00b2 onto each card, pass 2 punches xy, a tabulator sums the columns.",lim:"About 1,000 cards per hour per pass. Two passes.",perRow:7.2,fixed:1800,cap:null,cost:"~$100/month then, ~$2,000 now",scene:"cards",cpm:17},
+{y:1954,who:"University computing center",mach:"IBM 650, 533 card reader",how:"Program on drum memory multiplies in 10 ms. The reader feeds 200 cards a minute and that is the whole wait.",lim:"Card reader speed. A million rows is three and a half days of feeding.",perRow:0.3,fixed:120,cap:null,cost:"$3,200/month then, ~$37,000 now",scene:"cards",cpm:200},
+{y:1975,who:"Social science department",mach:"IBM System/370 Model 158, SPSS",how:"Submit a deck. Job waits in the batch queue, data streams off tape at 300 KB/s, the fit takes under a second, printout arrives hours later.",lim:"The queue. Turnaround is measured in hours, not seconds.",perRow:0.00024,fixed:3*3600,cap:null,cost:"~$1.8M then, ~$10.5M now",scene:"batch"},
+{y:1985,who:"Anyone with a desk",mach:"IBM PC/AT, Intel 8087, Lotus 1-2-3 R2",how:"Type @SUM over columns, build x\u00b2 and xy columns, compute the slope in a cell. First personal, interactive fit.",lim:"8,192 rows and 640 KB. Beyond that the sheet is full.",perRow:0.0005,fixed:1,cap:8192,capMsg:"worksheet full at 8,192 rows",cost:"~$5,800 then, ~$17,000 now",scene:"grid",app:"Lotus 1-2-3"},
+{y:2007,who:"Anyone",mach:"Core 2 Duo PC, Excel 2007",how:"=LINEST(y, x) in one cell. The grid now holds 1,048,576 rows.",lim:"1,048,576 rows.",perRow:0.000003,fixed:0.3,cap:1048576,capMsg:"sheet full at 1,048,576 rows",cost:"~$1,000 then, ~$1,500 now",scene:"grid",app:"Excel 2007"},
+{y:2024,who:"Anyone, or a chatbot",mach:"Phone, laptop with numpy, or an LLM",how:"np.polyfit(x, y, 1), or paste the table into a chat and ask for the slope.",lim:"Memory. A billion rows is 16 GB of doubles, so a phone swaps and a laptop with enough RAM takes seconds.",perRow:0.000000004,fixed:0.05,cap:null,cost:"$0 marginal",scene:"chat"}
 ];
+const A=23.942,B=0.6463;
 function fmt(s){
- if(s<1)return (s*1000).toFixed(0)+" ms";
+ if(s<1)return (s*1000).toFixed(s<0.01?1:0)+" ms";
  if(s<60)return s.toFixed(1)+" s";
  if(s<3600)return (s/60).toFixed(1)+" min";
  if(s<86400)return (s/3600).toFixed(1)+" h";
@@ -138,53 +151,138 @@ function fmt(s){
  return (s/86400/365).toFixed(1)+" years";
 }
 function timeFor(e,n){ if(e.cap&&n>e.cap) return null; return e.fixed+e.perRow*n; }
-const LOGMIN=Math.log10(0.02),LOGMAX=Math.log10(86400*365*30);
-function dur(t){ const f=(Math.log10(Math.max(t,0.02))-LOGMIN)/(LOGMAX-LOGMIN); return 0.4+f*11; }
-let N=928,running=false;
-function build(){
- const el=document.getElementById('race'); el.innerHTML='';
- ERAS.forEach((e,i)=>{
-  const t=timeFor(e,N);
-  const d=document.createElement('div'); d.className='lane'+(t==null?' dead':''); d.id='lane'+i;
-  d.innerHTML=`<div class="l1"><span class="yr">${e.y}</span><span class="mach">${e.mach}</span><span class="clock">${t==null?e.capMsg:'0 ms'}</span></div>
-  <div class="bar"><div class="fill"></div></div>
-  <div class="l2"><span>${e.who.split(',')[0]}</span><span>${e.costNow}${e.y<1950?' / '+e.cost.replace('about ','').replace('one clerk at ',''):''}</span><span class="eq"></span></div>`;
-  el.appendChild(d);
- });
-}
-function run(){
- if(running)return; running=true; build();
+function big(v){ return v>=1e6? v.toExponential(3) : v.toLocaleString(undefined,{maximumFractionDigits:1}); }
+
+let ROWS=[],PRE=[];
+function prep(rows){ROWS=rows;let sx=0,sy=0,sxx=0,sxy=0;PRE=[[0,0,0,0]];rows.forEach(([x,y])=>{sx+=x;sy+=y;sxx+=x*x;sxy+=x*y;PRE.push([sx,sy,sxx,sxy]);});}
+function sums(k){const m=ROWS.length;if(!m)return [0,0,0,0];const c=Math.floor(k/m),r=k%m,F=PRE[m],P=PRE[r];return F.map((v,i)=>v*c+P[i]);}
+
+let N=928,cur=0,auto=true,raf=null,done=new Set();
+const DUR=9000;
+const $=id=>document.getElementById(id);
+
+function show(i){
+ cur=i;const e=ERAS[i];if(raf)cancelAnimationFrame(raf);
+ $('yr').textContent=e.y;$('who').textContent=e.who;$('idx').textContent=(i+1)+' / '+ERAS.length;
+ $('c_mach').textContent=e.mach;$('c_how').textContent=e.how;$('c_lim').textContent=e.lim;$('cost').textContent=e.cost;
+ document.querySelectorAll('#dots span').forEach((d,j)=>{d.className=(j===i?'on ':'')+(done.has(j)?'done':'')});
+ const T=timeFor(e,N);
+ const stage=d3.select('#stage');stage.selectAll('*').remove();
+ if(T==null){$('clock').textContent=e.capMsg;$('clock').className='big dead';$('pace').textContent='';setSums(0,false);drawDead(stage,e);document.querySelectorAll('#dots span')[i].classList.add('dead');if(auto)setTimeout(()=>{if(cur===i)step(1)},2500);return;}
+ $('clock').className='big';
+ $('pace').textContent='1 s on screen = '+fmt(T/(DUR/1000));
+ const scene=SCENES[e.scene](stage,e);
  const t0=performance.now();
- ERAS.forEach((e,i)=>{
-  const t=timeFor(e,N); if(t==null)return;
-  const D=dur(t)*1000, lane=document.getElementById('lane'+i), fill=lane.querySelector('.fill'), clk=lane.querySelector('.clock'), eq=lane.querySelector('.eq');
-  function step(now){
-   const p=Math.min(1,(now-t0)/D);
-   fill.style.width=(p*100)+'%';
-   clk.textContent=fmt(t*p);
-   if(p<1)requestAnimationFrame(step); else {lane.classList.add('done');eq.textContent='y = 23.94 + 0.646x';clk.textContent=fmt(t);}
-  }
-  requestAnimationFrame(step);
- });
- setTimeout(()=>running=false,12000);
+ function frame(now){
+  const p=Math.min(1,(now-t0)/DUR);
+  const k=Math.floor(p*N);
+  $('clock').textContent=fmt(T*p);
+  setSums(k,p>=1);
+  scene(p,k);
+  if(p<1)raf=requestAnimationFrame(frame);else{done.add(i);document.querySelectorAll('#dots span')[i].classList.add('done');if(auto)setTimeout(()=>{if(cur===i)step(1)},1800);}
+ }
+ raf=requestAnimationFrame(frame);
 }
-document.querySelectorAll('.ctl button[data-n]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.ctl button[data-n]').forEach(x=>x.classList.remove('on'));b.classList.add('on');N=+b.dataset.n;running=false;run();});
-document.getElementById('play').onclick=()=>{running=false;run();};
+function setSums(k,fin){const [sx,sy,sxx,sxy]=sums(k);$('s_n').textContent=k.toLocaleString();$('s_x').textContent=big(sx);$('s_y').textContent=big(sy);$('s_xx').textContent=big(sxx);$('s_xy').textContent=big(sxy);
+ if(fin&&k>1){const b=(k*sxy-sx*sy)/(k*sxx-sx*sx),a=(sy-b*sx)/k;$('s_b').textContent=b.toFixed(4);$('s_a').textContent=a.toFixed(2);}else{$('s_b').textContent='\u00b7';$('s_a').textContent='\u00b7';}}
+function step(d){show((cur+d+ERAS.length)%ERAS.length);}
+$('prev').onclick=()=>{auto=false;$('auto').classList.remove('on');step(-1)};
+$('next').onclick=()=>{auto=false;$('auto').classList.remove('on');step(1)};
+$('auto').onclick=()=>{auto=!auto;$('auto').classList.toggle('on',auto);if(auto)show(cur)};
+document.querySelectorAll('.ctl button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.ctl button').forEach(x=>x.classList.remove('on'));b.classList.add('on');N=+b.dataset.n;done.clear();show(cur)});
+ERAS.forEach((e,i)=>{const s=document.createElement('span');s.onclick=()=>{auto=false;$('auto').classList.remove('on');show(i)};$('dots').appendChild(s)});
+
+const F='10px IBM Plex Mono',INK='#17171C',MU='#6E6E76',CO='#2545FF',RU='#E7E7E2',CH='#EEF1FF';
+function txt(g,x,y,s,c=MU,f=F,an='start'){return g.append('text').attr('x',x).attr('y',y).text(s).attr('fill',c).style('font',f).attr('text-anchor',an);}
+function drawDead(g,e){g.append('rect').attr('x',0).attr('y',0).attr('width',680).attr('height',260).attr('fill','#fff');
+ const cols=Math.min(24,Math.ceil(680/28)),rowsv=9;for(let r=0;r<rowsv;r++)for(let c=0;c<cols;c++)g.append('rect').attr('x',20+c*27).attr('y',20+r*22).attr('width',25).attr('height',20).attr('fill',r<rowsv-1?'#fff':'#FBE9E7').attr('stroke',RU);
+ txt(g,340,236,e.capMsg,'#B3261E','12px IBM Plex Mono','middle');txt(g,340,250,N.toLocaleString()+' rows requested','#B3261E',F,'middle');}
+
+const SCENES={
+ledger(g,e){
+ const X=[40,150,260,390,520],hdr=['parent x','child y','x\u00b2','xy','sum'];
+ hdr.forEach((h,i)=>txt(g,X[i],24,h,MU));g.append('line').attr('x1',30).attr('x2',650).attr('y1',30).attr('y2',30).attr('stroke',INK);
+ const NR=9,rows=[];for(let r=0;r<NR;r++){const y=52+r*22;g.append('line').attr('x1',30).attr('x2',650).attr('y1',y+6).attr('y2',y+6).attr('stroke',RU);rows.push([0,1,2,3].map(c=>txt(g,X[c],y,'',INK,'11px IBM Plex Mono')));}
+ const tool=g.append('g');
+ if(e.tool==='pencil'){tool.append('line').attr('x1',0).attr('y1',0).attr('x2',18).attr('y2',-40).attr('stroke',INK).attr('stroke-width',4).attr('stroke-linecap','round');tool.append('line').attr('x1',0).attr('y1',0).attr('x2',5).attr('y2',-10).attr('stroke','#E3B23C').attr('stroke-width',4);}
+ else{tool.append('rect').attr('x',-30).attr('y',-22).attr('width',60).attr('height',30).attr('rx',4).attr('fill',CH).attr('stroke',INK);for(let i=0;i<6;i++)tool.append('rect').attr('x',-24+i*9).attr('y',-16).attr('width',6).attr('height',12).attr('fill','#fff').attr('stroke',MU);tool.append('g').attr('class','crank').append('line').attr('x1',34).attr('y1',-8).attr('x2',48).attr('y2',-22).attr('stroke',INK).attr('stroke-width',3);tool.append('circle').attr('cx',34).attr('cy',-8).attr('r',3).attr('fill',INK);}
+ const tick=txt(g,600,250,'',MU,F,'end');
+ let lastK=-1;
+ return (p,k)=>{const m=ROWS.length;const start=Math.max(0,k-NR+1);
+  for(let r=0;r<NR;r++){const idx=start+r;const on=idx<k;const row=ROWS[idx%m];rows[r][0].text(on?row[0].toFixed(1):'');rows[r][1].text(on?row[1].toFixed(1):'');rows[r][2].text(on&&(idx<k-1||p>=1)?(row[0]*row[0]).toFixed(1):'');rows[r][3].text(on&&(idx<k-1||p>=1)?(row[0]*row[1]).toFixed(1):'');}
+  const ry=52+Math.min(k,NR-1)*22;const sub=(p*N)%1;
+  tool.attr('transform',`translate(${e.tool==='pencil'?260+sub*180:600},${ry+(e.tool==='pencil'?4:-4)})`);
+  if(e.tool!=='pencil')tool.select('.crank').attr('transform',`rotate(${(p*N*360*3)%360},34,-8)`);
+  tick.text('row '+Math.min(k,N).toLocaleString()+' of '+N.toLocaleString());};
+},
+cards(g,e){
+ txt(g,40,24,'input deck',MU);txt(g,580,24,'done',MU,F,'end');
+ g.append('rect').attr('x',290).attr('y',80).attr('width',110).attr('height',90).attr('rx',6).attr('fill',CH).attr('stroke',INK);
+ txt(g,345,128,e.y===1931?'601':'650',INK,'bold 16px Space Grotesk','middle');txt(g,345,146,e.y===1931?'multiply + punch':'read 200/min',MU,F,'middle');
+ const inS=g.append('g'),outS=g.append('g');const card=(gg,x,y,f)=>{const c=gg.append('g').attr('transform',`translate(${x},${y})`);c.append('rect').attr('width',70).attr('height',30).attr('rx',2).attr('fill',f).attr('stroke',INK);for(let i=0;i<8;i++)c.append('rect').attr('x',6+i*8).attr('y',6+(i*7)%16).attr('width',3).attr('height',5).attr('fill',INK);return c;};
+ const mover=card(g,0,0,'#fff').attr('opacity',0);
+ const pass=txt(g,345,230,'',CO,'11px IBM Plex Mono','middle');const cnt=txt(g,345,248,'',MU,F,'middle');
+ let built=-1;
+ return (p,k)=>{const remain=1-p;const nin=Math.round(remain*12),nout=12-nin;
+  if(nin!==built){inS.selectAll('*').remove();outS.selectAll('*').remove();for(let i=0;i<nin;i++)card(inS,60,150-i*8,'#FFF8DC');for(let i=0;i<nout;i++)card(outS,550,150-i*8,'#FFF8DC');built=nin;}
+  const sub=(p*N*0.25)%1;mover.attr('opacity',1).attr('transform',`translate(${140+sub*410},${sub<0.5?110:110})`);
+  if(e.y===1931){const ph=p<0.5?'pass 1: punch x\u00b2':'pass 2: punch xy';pass.text(ph);}else pass.text('reading cards');
+  cnt.text(Math.min(k,N).toLocaleString()+' / '+N.toLocaleString()+' cards');};
+},
+batch(g,e){
+ const T=timeFor(e,N),io=e.perRow*N,q=e.fixed,tot=T;
+ const stops=[['submit deck',0],['batch queue',q/tot],['tape + fit',1]];
+ const phases=[{n:'deck in',a:0,b:0.04},{n:'queue',a:0.04,b:q/tot},{n:'tape',a:q/tot,b:1-0.02},{n:'printout',a:0.98,b:1}];
+ const lab=txt(g,340,40,'',INK,'bold 14px Space Grotesk','middle');
+ g.append('rect').attr('x',60).attr('y',60).attr('width',560).attr('height',10).attr('rx',5).attr('fill',CH);const bar=g.append('rect').attr('x',60).attr('y',60).attr('width',0).attr('height',10).attr('rx',5).attr('fill',CO);
+ txt(g,60,88,'0',MU);txt(g,620,88,fmt(tot),MU,F,'end');txt(g,60+560*q/tot,88,'queue '+fmt(q),MU,F,'middle');
+ const reelA=g.append('g').attr('transform','translate(250,170)'),reelB=g.append('g').attr('transform','translate(430,170)');
+ [reelA,reelB].forEach(r=>{r.append('circle').attr('r',42).attr('fill','#fff').attr('stroke',INK).attr('stroke-width',2);r.append('circle').attr('r',12).attr('fill',CH).attr('stroke',INK);for(let i=0;i<3;i++)r.append('line').attr('x1',0).attr('y1',0).attr('x2',40*Math.cos(i*2.09)).attr('y2',40*Math.sin(i*2.09)).attr('stroke',MU);});
+ g.append('line').attr('x1',250).attr('y1',128).attr('x2',430).attr('y2',128).attr('stroke',INK).attr('stroke-width',2);
+ const print=g.append('g');const sub=txt(g,340,245,'',MU,F,'middle');
+ return (p,k)=>{bar.attr('width',560*p);const ph=phases.find(f=>p>=f.a&&p<=f.b)||phases[3];lab.text(ph.n);
+  const spin=ph.n==='tape'?(p*4000)%360:0;reelA.attr('transform',`translate(250,170) rotate(${spin})`);reelB.attr('transform',`translate(430,170) rotate(${spin})`);
+  [reelA,reelB].forEach(r=>r.select('circle').attr('stroke',ph.n==='tape'?CO:INK));
+  sub.text(ph.n==='queue'?'waiting, '+Math.round(((p-ph.a)/(ph.b-ph.a))*100)+'% of the wait is the queue':ph.n==='tape'?Math.min(k,N).toLocaleString()+' rows off tape':ph.n==='printout'?'y = '+A.toFixed(2)+' + '+B.toFixed(4)+' x':'');};
+},
+grid(g,e){
+ const cols=['','A','B','C','D'],cw=[28,90,90,100,100];let x=20;const X=[];cols.forEach((c,i)=>{X.push(x);g.append('rect').attr('x',x).attr('y',20).attr('width',cw[i]).attr('height',18).attr('fill',CH).attr('stroke',RU);txt(g,x+cw[i]/2,33,c,MU,F,'middle');x+=cw[i];});
+ const hdr=['parent','child','x^2','xy'];hdr.forEach((h,i)=>txt(g,X[i+1]+4,53,h,MU));
+ const NR=7,cells=[];for(let r=0;r<NR;r++){const y=62+r*18;g.append('rect').attr('x',20).attr('y',y).attr('width',28).attr('height',18).attr('fill',CH).attr('stroke',RU);const rl=txt(g,34,y+13,'',MU,F,'middle');const row=[rl];for(let c=1;c<5;c++){g.append('rect').attr('x',X[c]).attr('y',y).attr('width',cw[c]).attr('height',18).attr('fill','#fff').attr('stroke',RU);row.push(txt(g,X[c]+4,y+13,'',INK,'11px IBM Plex Mono'));}cells.push(row);}
+ const fb=g.append('rect').attr('x',440).attr('y',62).attr('width',220).attr('height',22).attr('fill','#fff').attr('stroke',INK);const fx=txt(g,446,77,'',INK,'11px IBM Plex Mono');
+ const res=txt(g,446,112,'',CO,'bold 13px IBM Plex Mono');txt(g,446,140,e.app,MU);
+ const formula=e.y===2007?'=LINEST(B2:B'+(N+1)+',A2:A'+(N+1)+')':'(@COUNT(A)*@SUM(D)-@SUM(A)*@SUM(B))/...';
+ return (p,k)=>{const m=ROWS.length;const start=Math.max(0,k-NR+1);
+  for(let r=0;r<NR;r++){const idx=start+r;const on=idx<k;const row=ROWS[idx%m];cells[r][0].text(on?idx+2:'');cells[r][1].text(on?row[0].toFixed(1):'');cells[r][2].text(on?row[1].toFixed(1):'');cells[r][3].text(on?(row[0]*row[0]).toFixed(1):'');cells[r][4].text(on?(row[0]*row[1]).toFixed(1):'');}
+  const tp=Math.min(1,Math.max(0,(p-0.55)/0.35));fx.text(formula.slice(0,Math.floor(tp*formula.length)));
+  res.text(p>=1?B.toFixed(4)+'  '+A.toFixed(2):'');};
+},
+chat(g,e){
+ const bub=(y,w,f,al)=>{g.append('rect').attr('x',al==='r'?660-w:20).attr('y',y).attr('width',w).attr('height',62).attr('rx',12).attr('fill',f);};
+ bub(20,420,CH,'r');const u1=txt(g,250,44,'',INK,'12px Inter');const u2=txt(g,250,62,'',INK,'12px Inter');const u3=txt(g,250,78,'',MU,'11px IBM Plex Mono');
+ bub(110,460,'#F3F3F1','l');const a1=txt(g,34,134,'',INK,'12px Inter');const a2=txt(g,34,152,'',CO,'bold 13px IBM Plex Mono');const a3=txt(g,34,168,'',MU,'11px IBM Plex Mono');
+ const sys=txt(g,340,240,'',MU,F,'middle');
+ const q='Fit a line predicting child height from parent height.';const rows='parent,child  70.5,61.7  68.5,61.7  65.5,61.7 ... ('+N.toLocaleString()+' rows)';const ans='child = 23.94 + 0.646 x parent';
+ return (p,k)=>{const t1=Math.min(1,p/0.3);u1.text(q.slice(0,Math.floor(t1*q.length)));if(p>0.3)u2.text(rows);if(p>0.32)u3.text(N>20000?'too long for a prompt, ran np.polyfit(x, y, 1) instead':'pasted as text');
+  const t2=Math.max(0,Math.min(1,(p-0.55)/0.3));a1.text(p>0.5?'Least squares on '+N.toLocaleString()+' rows:':'');a2.text(ans.slice(0,Math.floor(t2*ans.length)));if(p>=1)a3.text('slope under 1: regression to the mean');
+  sys.text(p<0.5?'':Math.min(k,N).toLocaleString()+' rows processed');};
+}
+};
 
 fetch('galton.json').then(r=>r.json()).then(pts=>{
- const svg=d3.select('#scatter');const W=640,H=360,m={t:12,r:16,b:36,l:44};
+ const rows=[];pts.forEach(([x,y,c])=>{for(let i=0;i<c;i++)rows.push([x,y]);});
+ for(let i=rows.length-1;i>0;i--){const j=(i*7919)%(i+1);[rows[i],rows[j]]=[rows[j],rows[i]];}
+ prep(rows);
+ const svg=d3.select('#scatter');const W=640,H=300,m={t:12,r:16,b:32,l:44};
  const x=d3.scaleLinear().domain([63,74]).range([m.l,W-m.r]),y=d3.scaleLinear().domain([61,75]).range([H-m.b,m.t]);
- svg.append('g').attr('transform',`translate(0,${H-m.b})`).call(d3.axisBottom(x).ticks(11)).call(g=>{g.select('.domain').attr('stroke','#E7E7E2');g.selectAll('text').attr('fill','#6E6E76').style('font','10px IBM Plex Mono');});
- svg.append('g').attr('transform',`translate(${m.l},0)`).call(d3.axisLeft(y).ticks(7).tickSize(-(W-m.l-m.r))).call(g=>{g.selectAll('line').attr('stroke','#E7E7E2');g.select('.domain').remove();g.selectAll('text').attr('fill','#6E6E76').style('font','10px IBM Plex Mono');});
- svg.append('text').attr('x',W-m.r).attr('y',H-6).attr('text-anchor','end').text('parents, in').attr('fill','#6E6E76').style('font','10px IBM Plex Mono');
- svg.append('text').attr('x',m.l+4).attr('y',m.t+10).text('child, in').attr('fill','#6E6E76').style('font','10px IBM Plex Mono');
- const r=d3.scaleSqrt().domain([1,d3.max(pts,p=>p[2])]).range([2,13]);
- svg.selectAll('circle').data(pts).enter().append('circle').attr('cx',p=>x(p[0])).attr('cy',p=>y(p[1])).attr('r',0).attr('fill','#2545FF').attr('fill-opacity',0.35).attr('stroke','#2545FF').attr('stroke-width',0.8)
-  .transition().delay((p,i)=>i*12).duration(400).attr('r',p=>r(p[2]));
- const ln=svg.append('line').attr('x1',x(63)).attr('y1',y(23.942+0.6463*63)).attr('x2',x(63)).attr('y2',y(23.942+0.6463*63)).attr('stroke','#17171C').attr('stroke-width',2);
- ln.transition().delay(1400).duration(900).attr('x2',x(74)).attr('y2',y(23.942+0.6463*74)).on('end',run);
+ svg.append('g').attr('transform',`translate(0,${H-m.b})`).call(d3.axisBottom(x).ticks(11)).call(gg=>{gg.select('.domain').attr('stroke',RU);gg.selectAll('text').attr('fill',MU).style('font',F);});
+ svg.append('g').attr('transform',`translate(${m.l},0)`).call(d3.axisLeft(y).ticks(7).tickSize(-(W-m.l-m.r))).call(gg=>{gg.selectAll('line').attr('stroke',RU);gg.select('.domain').remove();gg.selectAll('text').attr('fill',MU).style('font',F);});
+ txt(svg,W-m.r,H-6,'parents, in',MU,F,'end');txt(svg,m.l+4,m.t+10,'child, in',MU,F);
+ const r=d3.scaleSqrt().domain([1,d3.max(pts,p=>p[2])]).range([2,12]);
+ svg.selectAll('circle').data(pts).enter().append('circle').attr('cx',p=>x(p[0])).attr('cy',p=>y(p[1])).attr('r',0).attr('fill',CO).attr('fill-opacity',0.35).attr('stroke',CO).attr('stroke-width',0.8).transition().delay((p,i)=>i*10).duration(400).attr('r',p=>r(p[2]));
+ svg.append('line').attr('x1',x(63)).attr('y1',y(A+B*63)).attr('x2',x(63)).attr('y2',y(A+B*63)).attr('stroke',INK).attr('stroke-width',2).transition().delay(1200).duration(800).attr('x2',x(74)).attr('y2',y(A+B*74));
+ show(0);
 });
-build();
 </script>
 </body>
 </html>
