@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Rahul">
+<title>One regression, 140 years of machines | vibelogs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<style>
+:root{--paper:#FAFAF8;--ink:#17171C;--cobalt:#2545FF;--muted:#6E6E76;--rule:#E7E7E2;--chip:#EEF1FF}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:17px;line-height:1.7}
+.wrap{max-width:680px;margin:0 auto;padding:0 24px}
+.top{padding:40px 0 0;font-family:'IBM Plex Mono',monospace;font-size:0.8rem}
+.top a{color:var(--muted);text-decoration:none}
+.top a:hover{color:var(--cobalt)}
+header.post{padding:32px 0 24px;border-bottom:1px solid var(--rule)}
+.meta{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted);display:flex;gap:10px;align-items:center;margin-bottom:14px}
+.upd{color:var(--muted)}
+.tag{background:var(--chip);color:var(--cobalt);padding:1px 8px;border-radius:4px;font-weight:500}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.7rem,5vw,2.3rem);letter-spacing:-0.02em;line-height:1.2}
+article{padding:32px 0 60px}
+article h2{font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:1.3rem;margin:36px 0 12px}
+article p{margin:0 0 18px}
+article ol,article ul{margin:0 0 18px 22px}
+article li{margin-bottom:8px}
+article a{color:var(--cobalt)}
+pre{background:#111116;color:#E8E8EE;font-family:'IBM Plex Mono',monospace;font-size:0.82rem;line-height:1.55;padding:16px 18px;border-radius:8px;overflow-x:auto;margin:0 0 18px}
+code{font-family:'IBM Plex Mono',monospace;font-size:0.86em;background:var(--chip);padding:1px 5px;border-radius:4px}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;margin:0 0 18px;font-size:0.9rem}
+th,td{border:1px solid var(--rule);padding:8px 12px;text-align:left;vertical-align:top}
+th{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);background:#fff}
+.gotcha{border-left:3px solid var(--cobalt);padding:12px 16px;background:#fff;margin:0 0 18px}
+.gotcha strong{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;letter-spacing:0.08em;color:var(--cobalt)}
+footer{border-top:1px solid var(--rule);padding:24px 0 56px;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted)}
+footer a{color:var(--muted)}
+.fig{margin:0 0 24px;background:#fff;border:1px solid var(--rule);border-radius:8px;padding:12px}
+.fig svg{width:100%;height:auto;display:block}
+.cap{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:var(--muted);margin-top:8px}
+.era{border:1px solid var(--rule);border-radius:8px;background:#fff;padding:18px 20px;margin:0 0 16px}
+.era .yr{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.6rem;letter-spacing:-0.02em;color:var(--cobalt);line-height:1}
+.era .who{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted);margin:6px 0 10px}
+.era p{margin:0 0 10px;font-size:0.95rem}
+.era .stat{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;font-family:'IBM Plex Mono',monospace;font-size:0.74rem;color:var(--muted);border-top:1px solid var(--rule);padding-top:10px;margin-top:6px}
+.era .stat b{display:block;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:1rem;color:var(--ink)}
+.era .stat .no b{color:#B3261E}
+.nsel{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;align-items:center}
+.nsel button{font:inherit;border:1px solid var(--rule);background:#fff;color:var(--ink);padding:5px 12px;border-radius:6px;cursor:pointer}
+.nsel button.on{background:var(--cobalt);color:#fff;border-color:var(--cobalt)}
+.src{font-size:0.85rem;color:var(--muted)}
+@media (max-width:560px){.era .stat{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><a href="../../">&larr; vibelogs</a></div>
+
+<header class="post">
+  <div class="meta"><span>[2026-08-21]</span><span>Rahul</span><span class="upd">updated 2026-08-21</span><span class="tag">DATA-SCIENCE</span></div>
+  <h1>One regression, 140 years of machines</h1>
+</header>
+
+<article>
+
+<p>The problem never changes on this page. In 1886 Francis Galton measured 928 adult children and their parents and asked a plain question: given the parents' height, how tall will the child be? Pediatricians still ask it. The mid-parental height formula on a growth chart today is this regression with the numbers rounded.</p>
+
+<p>So hold the problem fixed and change only the machine. Each era below shows who would have fit the line, on what hardware, and how long it would have taken at two dataset sizes: Galton's 928 rows, and a million rows. Every number is either sourced or marked as an estimate.</p>
+
+<h2>The data and the answer</h2>
+
+<div class="fig"><svg id="scatter" viewBox="0 0 640 420"></svg>
+<div class="cap">Galton 1886, 928 children. x is mid-parent height (father, plus mother scaled by 1.08, averaged). Circle area is count. Line is least squares: child = 23.94 + 0.646 &times; midparent. Slope under 1 is the "regression to the mean" that gave the method its name.</div></div>
+
+<p>The fit needs five running sums over the rows: count, &Sigma;x, &Sigma;y, &Sigma;x&sup2;, &Sigma;xy. Per row that is two multiplications and four additions. Then one division for the slope and one for the intercept. That is the whole job, in 1886 and now.</p>
+
+<pre><code>n   = 928
+Sx  = 63390.0     Sy  = 63186.1
+Sxx = 4333017.5   Sxy = 4318042.0
+b   = (n*Sxy - Sx*Sy) / (n*Sxx - Sx*Sx) = 0.6463
+a   = (Sy - b*Sx) / n                   = 23.94</code></pre>
+
+<div class="gotcha"><strong>GOTCHA &middot; GALTON DID NOT RUN THIS</strong><br>Galton never computed least squares. He binned the 928 children into a two-way table of heights, which has only 102 occupied cells, smoothed the counts, and drew the line through the column medians by eye. Legendre (1805) and Gauss (1809) had the least squares math; Karl Pearson (1896) first applied it to Galton's kind of data. The 1886 card below estimates what the arithmetic would have cost had he done it the modern way.</div>
+
+<h2>Pick a dataset size</h2>
+
+<div class="nsel"><span>rows:</span>
+<button data-n="928" class="on">928 (Galton)</button>
+<button data-n="10000">10,000</button>
+<button data-n="1000000">1,000,000</button>
+<button data-n="1000000000">1,000,000,000</button></div>
+
+<div id="eras"></div>
+
+<h2>Time to fit, by year</h2>
+
+<div class="fig"><svg id="chart" viewBox="0 0 640 400"></svg>
+<div class="cap">Wall-clock time for one least squares fit, log scale. Eras that could not hold the data at all are left off the line. Solid is 928 rows, dashed is 1,000,000 rows.</div></div>
+
+<p>Two things stand out. The first is that the arithmetic stopped being the bottleneck around 1954. From the IBM 650 onward the line itself takes well under a second of compute, and what you wait for is the card reader, the tape drive, the batch queue, or a row cap in a spreadsheet. The second is that the last fifty years of the chart are a story about access, not speed. In 1975 a million-row fit required a department, a mainframe, and an overnight queue. In 1985 it was not possible on a desk at any price, because the spreadsheet stopped at 8,192 rows. In 2007 it took three seconds in Excel. In 2024 it runs on a phone, and for small tables you can paste the numbers into a chatbot and get the slope without owning a computer you can name.</p>
+
+<h2>How the times are computed</h2>
+
+<p>For human and desk calculator eras, time per row is the time for two multiplications of three-digit numbers plus the additions, taken from period accounts of computing bureaus. For punched-card eras, time is set by card throughput, since a 928-row job is read-bound. For mainframes and later, time is max(compute, I/O, queue), using published instruction rates and media speeds. Costs are list price or monthly rental at the time, with today's dollars from the BLS CPI (2024 base). Where a machine physically could not hold the data the card says so instead of inventing a number.</p>
+
+<h2>Sources</h2>
+<ul class="src">
+<li>Galton, F. (1886). "Regression towards mediocrity in hereditary stature." Journal of the Anthropological Institute 15. Data via R package HistData (Galton, 928 rows).</li>
+<li>Stigler, S. (1986). The History of Statistics. Harvard. Legendre, Gauss, Galton, Pearson chapters.</li>
+<li>Grier, D. A. (2005). When Computers Were Human. Princeton. Hand and desk-calculator rates, computing bureaus.</li>
+<li>Campbell-Kelly, M. et al. (2003). The History of Mathematical Tables. Oxford. Brunsviga and Millionaire throughput.</li>
+<li>Box, J. F. (1978). R. A. Fisher: The Life of a Scientist. Wiley. The Millionaire at Rothamsted.</li>
+<li>Eckert, W. J. (1940). Punched Card Methods in Scientific Computation. Columbia. IBM 601 use for sums of squares and products.</li>
+<li>IBM 650 Manual of Operation (1955), IBM 533 card read punch specifications. Rental from IBM 650 announcement, 1953.</li>
+<li>IBM System/370 Model 158 functional characteristics (GA22-7011). SPSS release 6 manual (1975). 3420 tape drive specifications.</li>
+<li>IBM PC/AT announcement (1984). Lotus 1-2-3 Release 2 reference manual (1985), worksheet limits. Intel 8087 datasheet.</li>
+<li>Microsoft, "Excel specifications and limits" (2007 onward). Intel Core 2 Duo E6600 specifications.</li>
+<li>Apple A18 and M3 published figures; numpy polyfit timings measured on an M3 MacBook Pro, 36 GB.</li>
+<li>US BLS CPI-U, annual averages, for inflation adjustment.</li>
+</ul>
+
+</article>
+
+<footer><a href="../../">&larr; back to all logs</a></footer>
+</div>
+
+<script>
+const ERAS=[
+{y:1886,who:"Francis Galton, Anthropometric Laboratory, London",mach:"Pencil, paper, printed log tables",
+ how:"A human computer squares and multiplies by hand or via logarithm tables, writing every partial product. Rates from period computing bureaus put a checked three-digit product at about one minute. Galton himself avoided all of this by working a 102-cell frequency table instead of 928 rows.",
+ perRow:150,fixed:600,cap:null,cost:"one clerk at about $1 per day",costNow:"~$35/day",est:true},
+{y:1896,who:"Karl Pearson, Biometric Laboratory, University College London",mach:"Brunsviga pinwheel calculator",
+ how:"Pearson's lab ran on Brunsvigas turned by hand, mostly by women computers. A product takes 15 to 20 seconds of cranking plus writing the result down. Pearson is the first person known to fit least squares to Galton-type height data.",
+ perRow:45,fixed:300,cap:null,cost:"$150 per machine",costNow:"~$5,500",est:true},
+{y:1925,who:"R. A. Fisher, Rothamsted Experimental Station",mach:"Millionaire calculator",
+ how:"The Millionaire did direct multiplication, one crank per digit of the multiplier, so a three-digit product took 6 to 10 seconds. Fisher's statistical methods for agriculture were computed on one of these.",
+ perRow:25,fixed:300,cap:null,cost:"about $400",costNow:"~$7,000",est:true},
+{y:1931,who:"Statistical Bureau, Columbia University (Ben Wood, later Wallace Eckert)",mach:"IBM 601 multiplying punch + accumulating tabulator",
+ how:"Heights are punched once. The 601 reads two fields, multiplies, and punches the product back onto the card, at roughly 1,000 cards per hour. Two passes give x&sup2; and xy, then a tabulator sums the five columns in minutes. First machine here that does arithmetic without a person per row.",
+ perRow:7.2,fixed:1800,cap:null,cost:"rental about $100 per month",costNow:"~$2,000/month",est:true},
+{y:1954,who:"Any university computing center",mach:"IBM 650 with 533 card reader",
+ how:"The 650 multiplies in about 10 milliseconds, so arithmetic is never the wait. The card reader is: 200 cards per minute. 928 rows is a five-minute job, one million rows is three and a half days of feeding cards.",
+ perRow:0.3,fixed:120,cap:null,cost:"rental $3,200 per month",costNow:"~$37,000/month",est:false},
+{y:1975,who:"A social science department with an SPSS account",mach:"IBM System/370 Model 158, SPSS release 6",
+ how:"About one million instructions per second. Rows come off 1600 bpi tape at roughly 300 KB/s. The fit itself finishes in well under a second for Galton's data and about four minutes of tape time for a million rows. You submit the deck and get the printout hours later, which is the number that matters.",
+ perRow:0.00024,fixed:3*3600,cap:null,cost:"about $1.8 million purchase",costNow:"~$10.5 million",est:false},
+{y:1985,who:"Anyone with a desk",mach:"IBM PC/AT, Intel 8087, Lotus 1-2-3 Release 2",
+ how:"First time a single person with no institution could run the fit, interactively, on a machine they owned. The 8087 does tens of thousands of multiplications per second. Lotus Release 2 stopped at 8,192 rows and 640 KB, so a million rows was not a slow job, it was not a job.",
+ perRow:0.0005,fixed:1,cap:8192,capMsg:"8,192-row limit",cost:"about $5,800 configured",costNow:"~$17,000",est:false},
+{y:2007,who:"Anyone",mach:"Core 2 Duo PC, Excel 2007, LINEST()",
+ how:"Excel 2007 raised the sheet to 1,048,576 rows. LINEST over a million rows takes a few seconds. This is where the million-row fit became a desk task.",
+ perRow:0.000003,fixed:0.3,cap:1048576,capMsg:"1,048,576-row limit",cost:"about $1,000",costNow:"~$1,500",est:false},
+{y:2024,who:"Anyone, or a chatbot",mach:"iPhone, a laptop with numpy, or pasting the table into an LLM",
+ how:"A phone does the five sums over a million rows in milliseconds. A billion rows is 16 GB of doubles, so a 16 GB laptop swaps; a 36 GB M3 finishes in about four seconds. For a few hundred rows you can paste the table into a chatbot and read the slope back in ten seconds, without knowing what a multiplication is.",
+ perRow:0.000000004,fixed:0.05,cap:null,cost:"$0 marginal",costNow:"$0",est:false}
+];
+
+function fmt(s){
+ if(s==null)return "";
+ if(s<60)return (s<1?s.toFixed(2):Math.round(s))+" s";
+ if(s<3600)return (s/60).toFixed(s<600?1:0)+" min";
+ if(s<86400)return (s/3600).toFixed(1)+" h";
+ if(s<86400*30)return (s/86400).toFixed(1)+" days";
+ if(s<86400*365)return (s/86400/30).toFixed(1)+" months";
+ return (s/86400/365).toFixed(1)+" years";
+}
+function workdays(s){ if(s<3600*8) return fmt(s); return fmt(s)+" ("+(s/(3600*8)).toFixed(s/(3600*8)<10?1:0)+" work days at 8 h)"; }
+function timeFor(e,n){ if(e.cap&&n>e.cap) return null; return e.fixed+e.perRow*n; }
+
+let N=928;
+function render(){
+ const el=document.getElementById('eras'); el.innerHTML='';
+ ERAS.forEach(e=>{
+  const t=timeFor(e,N);
+  const d=document.createElement('div'); d.className='era';
+  const tcell=t==null?`<div class="no">time for ${N.toLocaleString()} rows<b>not possible</b><span>${e.capMsg}</span></div>`:`<div>time for ${N.toLocaleString()} rows<b>${fmt(t)}</b><span>${e.y<1950?'~'+(t/(3600*8)).toFixed(t/(3600*8)<10?1:0)+' work days':''}</span></div>`;
+  d.innerHTML=`<div class="yr">${e.y}</div><div class="who">${e.who}</div><p><b>${e.mach}.</b> ${e.how}</p>
+  <div class="stat">${tcell}<div>cost then<b>${e.cost}</b></div><div>today's dollars<b>${e.costNow}</b>${e.est?'<span>rates estimated</span>':''}</div></div>`;
+  el.appendChild(d);
+ });
+ drawChart();
+}
+document.querySelectorAll('.nsel button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nsel button').forEach(x=>x.classList.remove('on'));b.classList.add('on');N=+b.dataset.n;render();});
+
+function drawChart(){
+ const svg=d3.select('#chart'); svg.selectAll('*').remove();
+ const W=640,H=400,m={t:20,r:90,b:40,l:60};
+ const x=d3.scaleLinear().domain([1880,2030]).range([m.l,W-m.r]);
+ const y=d3.scaleLog().domain([0.01,86400*365*20]).range([H-m.b,m.t]);
+ const ticks=[0.01,1,60,3600,86400,86400*30,86400*365,86400*365*10];
+ const tl={0.01:"10 ms",1:"1 s",60:"1 min",3600:"1 h",86400:"1 day",[86400*30]:"1 month",[86400*365]:"1 year",[86400*365*10]:"10 years"};
+ svg.append('g').attr('transform',`translate(${m.l},0)`).call(d3.axisLeft(y).tickValues(ticks).tickFormat(d=>tl[d]).tickSize(-(W-m.l-m.r))).call(g=>{g.selectAll('line').attr('stroke','#E7E7E2');g.select('.domain').remove();g.selectAll('text').attr('fill','#6E6E76').style('font','10px IBM Plex Mono');});
+ svg.append('g').attr('transform',`translate(0,${H-m.b})`).call(d3.axisBottom(x).tickValues([1886,1925,1954,1975,2007,2024]).tickFormat(d3.format('d'))).call(g=>{g.select('.domain').attr('stroke','#E7E7E2');g.selectAll('text').attr('fill','#6E6E76').style('font','10px IBM Plex Mono');});
+ const series=[{n:928,dash:null,lab:"928 rows"},{n:1e6,dash:"4 3",lab:"1M rows"}];
+ series.forEach(s=>{
+  const pts=ERAS.map(e=>({y:e.y,t:timeFor(e,s.n)})).filter(p=>p.t!=null);
+  const segs=[];let cur=[];
+  ERAS.forEach(e=>{const t=timeFor(e,s.n);if(t==null){if(cur.length)segs.push(cur);cur=[];}else cur.push({y:e.y,t});});
+  if(cur.length)segs.push(cur);
+  const line=d3.line().x(d=>x(d.y)).y(d=>y(Math.max(d.t,0.01)));
+  segs.forEach(sg=>svg.append('path').datum(sg).attr('d',line).attr('fill','none').attr('stroke','#2545FF').attr('stroke-width',2).attr('stroke-dasharray',s.dash));
+  svg.selectAll(null).data(pts).enter().append('circle').attr('cx',d=>x(d.y)).attr('cy',d=>y(Math.max(d.t,0.01))).attr('r',3.5).attr('fill','#2545FF');
+  const last=pts[pts.length-1];
+  svg.append('text').attr('x',x(last.y)+8).attr('y',y(Math.max(last.t,0.01))+(s.n===928?12:-4)).text(`${s.lab}: ${fmt(last.t)}`).attr('fill','#17171C').style('font','10px IBM Plex Mono');
+  const first=pts[0];
+  svg.append('text').attr('x',x(first.y)-4).attr('y',y(first.t)-8).attr('text-anchor','start').text(fmt(first.t)).attr('fill','#6E6E76').style('font','10px IBM Plex Mono');
+ });
+ ERAS.filter(e=>timeFor(e,1e6)==null).forEach(e=>{svg.append('text').attr('x',x(e.y)).attr('y',y(0.02)).attr('text-anchor','middle').text('x').attr('fill','#B3261E').style('font','11px IBM Plex Mono').append('title').text(e.capMsg);});
+ svg.append('text').attr('x',x(1985)).attr('y',y(0.02)-10).attr('text-anchor','middle').text('1M rows: row cap').attr('fill','#B3261E').style('font','9px IBM Plex Mono');
+}
+
+fetch('galton.json').then(r=>r.json()).then(pts=>{
+ const svg=d3.select('#scatter');const W=640,H=420,m={t:16,r:20,b:44,l:52};
+ const x=d3.scaleLinear().domain([63,74]).range([m.l,W-m.r]),y=d3.scaleLinear().domain([61,75]).range([H-m.b,m.t]);
+ svg.append('g').attr('transform',`translate(0,${H-m.b})`).call(d3.axisBottom(x).ticks(11)).call(g=>{g.select('.domain').attr('stroke','#E7E7E2');g.selectAll('text').attr('fill','#6E6E76').style('font','10px IBM Plex Mono');});
+ svg.append('g').attr('transform',`translate(${m.l},0)`).call(d3.axisLeft(y).ticks(7).tickSize(-(W-m.l-m.r))).call(g=>{g.selectAll('line').attr('stroke','#E7E7E2');g.select('.domain').remove();g.selectAll('text').attr('fill','#6E6E76').style('font','10px IBM Plex Mono');});
+ svg.append('text').attr('x',(m.l+W-m.r)/2).attr('y',H-8).attr('text-anchor','middle').text('mid-parent height, inches').attr('fill','#6E6E76').style('font','10px IBM Plex Mono');
+ svg.append('text').attr('transform',`translate(14,${(m.t+H-m.b)/2}) rotate(-90)`).attr('text-anchor','middle').text('child height, inches').attr('fill','#6E6E76').style('font','10px IBM Plex Mono');
+ const r=d3.scaleSqrt().domain([1,d3.max(pts,p=>p[2])]).range([2,14]);
+ svg.selectAll('circle').data(pts).enter().append('circle').attr('cx',p=>x(p[0])).attr('cy',p=>y(p[1])).attr('r',p=>r(p[2])).attr('fill','#2545FF').attr('fill-opacity',0.35).attr('stroke','#2545FF').attr('stroke-width',0.8);
+ svg.append('line').attr('x1',x(63)).attr('y1',y(23.942+0.6463*63)).attr('x2',x(74)).attr('y2',y(23.942+0.6463*74)).attr('stroke','#17171C').attr('stroke-width',2);
+ svg.append('line').attr('x1',x(63)).attr('y1',y(63)).attr('x2',x(74)).attr('y2',y(74)).attr('stroke','#6E6E76').attr('stroke-dasharray','3 3');
+ svg.append('text').attr('x',x(73.9)).attr('y',y(23.942+0.6463*73.9)+14).attr('text-anchor','end').text('child = 23.94 + 0.646 x parent').attr('fill','#17171C').style('font','10px IBM Plex Mono');
+ svg.append('text').attr('x',x(73.9)).attr('y',y(73.9)-6).attr('text-anchor','end').text('child = parent').attr('fill','#6E6E76').style('font','10px IBM Plex Mono');
+});
+render();
+</script>
+</body>
+</html>
