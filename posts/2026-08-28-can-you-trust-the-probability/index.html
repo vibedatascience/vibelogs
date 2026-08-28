@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--paper:#FAFAF8;--ink:#17171C;--cobalt:#2545FF;--muted:#6E6E76;--rule:#E7E7E2;--chip:#EEF1FF}
+:root{--paper:#FAFAF8;--ink:#17171C;--cobalt:#2545FF;--muted:#6E6E76;--rule:#E7E7E2;--chip:#EEF1FF;--red:#D6453D;--green:#1D9A6C}
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:17px;line-height:1.7}
 .wrap{max-width:680px;margin:0 auto;padding:0 24px}
@@ -21,16 +21,13 @@ header.post{padding:32px 0 24px;border-bottom:1px solid var(--rule)}
 .tag{background:var(--chip);color:var(--cobalt);padding:1px 8px;border-radius:4px;font-weight:500}
 h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.7rem,5vw,2.3rem);letter-spacing:-0.02em;line-height:1.2}
 article{padding:32px 0 60px}
-article h2{font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:1.3rem;margin:36px 0 12px}
+article h2{font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:1.3rem;margin:44px 0 12px}
 article p{margin:0 0 18px}
-article ol,article ul{margin:0 0 18px 22px}
-article li{margin-bottom:8px}
 article a{color:var(--cobalt)}
-pre{background:#111116;color:#E8E8EE;font-family:'IBM Plex Mono',monospace;font-size:0.82rem;line-height:1.55;padding:16px 18px;border-radius:8px;overflow-x:auto;margin:0 0 18px}
 code{font-family:'IBM Plex Mono',monospace;font-size:0.86em;background:var(--chip);padding:1px 5px;border-radius:4px}
-pre code{background:none;padding:0}
-.gotcha{border-left:3px solid var(--cobalt);padding:12px 16px;background:#fff;margin:0 0 18px}
-.gotcha strong{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;letter-spacing:0.08em;color:var(--cobalt)}
+.fig{margin:0 0 8px;background:#fff;border:1px solid var(--rule);border-radius:8px;padding:18px}
+.fig svg{display:block;width:100%;height:auto}
+.cap{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:var(--muted);margin:0 0 28px}
 footer{border-top:1px solid var(--rule);padding:24px 0 56px;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted)}
 footer a{color:var(--muted)}
 </style>
@@ -45,30 +42,231 @@ footer a{color:var(--muted)}
 </header>
 
 <article>
-<p>A fraud model scores a $10,000 transaction at 0.95 and you recommend blocking it. Then someone asks: what if only 60% of transactions scored 0.95 turn out to be fraud? That gap is the whole topic. The model ranked the transaction as very risky, but the number 0.95 was not a probability you could take literally.</p>
+<p>A fraud model says 0.95 on a $10,000 transaction. Can you read that as "95% chance of fraud"? Usually no. Here is the whole idea in five pictures.</p>
 
-<h2>Ranking risk vs measuring risk</h2>
-<p>Most people treat <code>.predict_proba()</code> as a true probability. It usually is not one. XGBoost and deep nets are trained and tuned to separate classes, and their scores often come out miscalibrated: 0.90 means "the model is confident", not "90% of cases like this are positive". A model can be excellent at ranking (high AUC) while its scores are badly off as frequencies. Ranking answers "which transactions are riskier than which". Measuring answers "how often is a 0.8 actually fraud". Automated decisions need the second one.</p>
+<h2>1. The model says 0.95. Reality says 0.60.</h2>
+<div class="fig">
+<svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+<text x="160" y="24" text-anchor="middle" font-size="14" font-weight="600">Model score</text>
+<text x="160" y="150" text-anchor="middle" font-size="52" font-weight="700" fill="#2545FF">0.95</text>
+<text x="160" y="180" text-anchor="middle" font-size="13" fill="#6E6E76">"very confident"</text>
+<text x="480" y="24" text-anchor="middle" font-size="14" font-weight="600">100 transactions scored 0.95</text>
+<g>
+<circle cx="340" cy="50" r="7" fill="#D6453D"/>
+<circle cx="362" cy="50" r="7" fill="#D6453D"/>
+<circle cx="384" cy="50" r="7" fill="#1D9A6C"/>
+<circle cx="406" cy="50" r="7" fill="#1D9A6C"/>
+<circle cx="428" cy="50" r="7" fill="#1D9A6C"/>
+<circle cx="450" cy="50" r="7" fill="#1D9A6C"/>
+<circle cx="472" cy="50" r="7" fill="#D6453D"/>
+<circle cx="494" cy="50" r="7" fill="#1D9A6C"/>
+<circle cx="516" cy="50" r="7" fill="#1D9A6C"/>
+<circle cx="538" cy="50" r="7" fill="#D6453D"/>
+<circle cx="340" cy="68" r="7" fill="#D6453D"/>
+<circle cx="362" cy="68" r="7" fill="#D6453D"/>
+<circle cx="384" cy="68" r="7" fill="#1D9A6C"/>
+<circle cx="406" cy="68" r="7" fill="#1D9A6C"/>
+<circle cx="428" cy="68" r="7" fill="#D6453D"/>
+<circle cx="450" cy="68" r="7" fill="#D6453D"/>
+<circle cx="472" cy="68" r="7" fill="#D6453D"/>
+<circle cx="494" cy="68" r="7" fill="#D6453D"/>
+<circle cx="516" cy="68" r="7" fill="#1D9A6C"/>
+<circle cx="538" cy="68" r="7" fill="#1D9A6C"/>
+<circle cx="340" cy="86" r="7" fill="#D6453D"/>
+<circle cx="362" cy="86" r="7" fill="#D6453D"/>
+<circle cx="384" cy="86" r="7" fill="#D6453D"/>
+<circle cx="406" cy="86" r="7" fill="#D6453D"/>
+<circle cx="428" cy="86" r="7" fill="#D6453D"/>
+<circle cx="450" cy="86" r="7" fill="#D6453D"/>
+<circle cx="472" cy="86" r="7" fill="#D6453D"/>
+<circle cx="494" cy="86" r="7" fill="#D6453D"/>
+<circle cx="516" cy="86" r="7" fill="#D6453D"/>
+<circle cx="538" cy="86" r="7" fill="#1D9A6C"/>
+<circle cx="340" cy="104" r="7" fill="#1D9A6C"/>
+<circle cx="362" cy="104" r="7" fill="#1D9A6C"/>
+<circle cx="384" cy="104" r="7" fill="#D6453D"/>
+<circle cx="406" cy="104" r="7" fill="#D6453D"/>
+<circle cx="428" cy="104" r="7" fill="#1D9A6C"/>
+<circle cx="450" cy="104" r="7" fill="#1D9A6C"/>
+<circle cx="472" cy="104" r="7" fill="#1D9A6C"/>
+<circle cx="494" cy="104" r="7" fill="#1D9A6C"/>
+<circle cx="516" cy="104" r="7" fill="#D6453D"/>
+<circle cx="538" cy="104" r="7" fill="#D6453D"/>
+<circle cx="340" cy="122" r="7" fill="#D6453D"/>
+<circle cx="362" cy="122" r="7" fill="#1D9A6C"/>
+<circle cx="384" cy="122" r="7" fill="#D6453D"/>
+<circle cx="406" cy="122" r="7" fill="#1D9A6C"/>
+<circle cx="428" cy="122" r="7" fill="#D6453D"/>
+<circle cx="450" cy="122" r="7" fill="#D6453D"/>
+<circle cx="472" cy="122" r="7" fill="#1D9A6C"/>
+<circle cx="494" cy="122" r="7" fill="#D6453D"/>
+<circle cx="516" cy="122" r="7" fill="#D6453D"/>
+<circle cx="538" cy="122" r="7" fill="#1D9A6C"/>
+<circle cx="340" cy="140" r="7" fill="#D6453D"/>
+<circle cx="362" cy="140" r="7" fill="#1D9A6C"/>
+<circle cx="384" cy="140" r="7" fill="#D6453D"/>
+<circle cx="406" cy="140" r="7" fill="#D6453D"/>
+<circle cx="428" cy="140" r="7" fill="#1D9A6C"/>
+<circle cx="450" cy="140" r="7" fill="#D6453D"/>
+<circle cx="472" cy="140" r="7" fill="#D6453D"/>
+<circle cx="494" cy="140" r="7" fill="#1D9A6C"/>
+<circle cx="516" cy="140" r="7" fill="#1D9A6C"/>
+<circle cx="538" cy="140" r="7" fill="#1D9A6C"/>
+<circle cx="340" cy="158" r="7" fill="#D6453D"/>
+<circle cx="362" cy="158" r="7" fill="#D6453D"/>
+<circle cx="384" cy="158" r="7" fill="#D6453D"/>
+<circle cx="406" cy="158" r="7" fill="#D6453D"/>
+<circle cx="428" cy="158" r="7" fill="#1D9A6C"/>
+<circle cx="450" cy="158" r="7" fill="#D6453D"/>
+<circle cx="472" cy="158" r="7" fill="#1D9A6C"/>
+<circle cx="494" cy="158" r="7" fill="#D6453D"/>
+<circle cx="516" cy="158" r="7" fill="#D6453D"/>
+<circle cx="538" cy="158" r="7" fill="#D6453D"/>
+<circle cx="340" cy="176" r="7" fill="#1D9A6C"/>
+<circle cx="362" cy="176" r="7" fill="#1D9A6C"/>
+<circle cx="384" cy="176" r="7" fill="#1D9A6C"/>
+<circle cx="406" cy="176" r="7" fill="#1D9A6C"/>
+<circle cx="428" cy="176" r="7" fill="#D6453D"/>
+<circle cx="450" cy="176" r="7" fill="#D6453D"/>
+<circle cx="472" cy="176" r="7" fill="#1D9A6C"/>
+<circle cx="494" cy="176" r="7" fill="#1D9A6C"/>
+<circle cx="516" cy="176" r="7" fill="#D6453D"/>
+<circle cx="538" cy="176" r="7" fill="#1D9A6C"/>
+<circle cx="340" cy="194" r="7" fill="#1D9A6C"/>
+<circle cx="362" cy="194" r="7" fill="#D6453D"/>
+<circle cx="384" cy="194" r="7" fill="#D6453D"/>
+<circle cx="406" cy="194" r="7" fill="#D6453D"/>
+<circle cx="428" cy="194" r="7" fill="#D6453D"/>
+<circle cx="450" cy="194" r="7" fill="#D6453D"/>
+<circle cx="472" cy="194" r="7" fill="#D6453D"/>
+<circle cx="494" cy="194" r="7" fill="#D6453D"/>
+<circle cx="516" cy="194" r="7" fill="#1D9A6C"/>
+<circle cx="538" cy="194" r="7" fill="#D6453D"/>
+<circle cx="340" cy="212" r="7" fill="#1D9A6C"/>
+<circle cx="362" cy="212" r="7" fill="#D6453D"/>
+<circle cx="384" cy="212" r="7" fill="#D6453D"/>
+<circle cx="406" cy="212" r="7" fill="#1D9A6C"/>
+<circle cx="428" cy="212" r="7" fill="#D6453D"/>
+<circle cx="450" cy="212" r="7" fill="#D6453D"/>
+<circle cx="472" cy="212" r="7" fill="#1D9A6C"/>
+<circle cx="494" cy="212" r="7" fill="#D6453D"/>
+<circle cx="516" cy="212" r="7" fill="#D6453D"/>
+<circle cx="538" cy="212" r="7" fill="#D6453D"/>
+<circle cx="352" cy="238" r="7" fill="#D6453D"/><text x="366" y="243" font-size="12">fraud (60)</text>
+<circle cx="470" cy="238" r="7" fill="#1D9A6C"/><text x="484" y="243" font-size="12">clean (40)</text>
+</g>
+</svg>
+</div>
+<p class="cap">left: what the model outputs. right: what actually happened.</p>
 
-<div class="gotcha"><strong>GOTCHA · WHY IT SKEWS</strong><br>Fraud training data is heavily downsampled on the negative class in most pipelines. Undersampling shifts the base rate the model sees, so raw scores overstate fraud probability by construction, before you even get to model-specific miscalibration.</div>
+<h2>2. Ranking is not measuring</h2>
+<div class="fig">
+<svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+<text x="160" y="30" text-anchor="middle" font-size="14" font-weight="600">Ranking</text>
+<text x="160" y="52" text-anchor="middle" font-size="12" fill="#6E6E76">"A is riskier than B" ✓</text>
+<circle cx="90" cy="110" r="16" fill="#D6453D"/><text x="90" y="115" text-anchor="middle" font-size="12" fill="#fff">A</text>
+<text x="160" y="115" text-anchor="middle" font-size="18" fill="#6E6E76">&gt;</text>
+<circle cx="230" cy="110" r="16" fill="#1D9A6C"/><text x="230" y="115" text-anchor="middle" font-size="12" fill="#fff">B</text>
+<text x="160" y="165" text-anchor="middle" font-size="12" fill="#1D9A6C">the model is good at this</text>
+<line x1="320" y1="20" x2="320" y2="180" stroke="#E7E7E2"/>
+<text x="480" y="30" text-anchor="middle" font-size="14" font-weight="600">Measuring</text>
+<text x="480" y="52" text-anchor="middle" font-size="12" fill="#6E6E76">"0.95 means 95%" ?</text>
+<text x="480" y="120" text-anchor="middle" font-size="34" font-weight="700" fill="#D6453D">0.95 ≠ 95%</text>
+<text x="480" y="165" text-anchor="middle" font-size="12" fill="#D6453D">the model is often bad at this</text>
+</svg>
+</div>
+<p class="cap">automated decisions need the right side to be true.</p>
 
-<h2>What calibrated means</h2>
-<p>A calibrated model has scores that match observed frequencies: among all transactions scored around 0.80, roughly 80% are actually fraudulent. Once that holds, the score stops being an internal confidence number and becomes something you can plug into expected value math.</p>
+<h2>3. The reliability curve shows the lie</h2>
+<div class="fig">
+<svg viewBox="0 0 640 420" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+<g transform="translate(70,20)">
+<rect width="520" height="330" fill="none"/>
+<line x1="0" y1="330" x2="520" y2="330" stroke="#17171C"/>
+<line x1="0" y1="0" x2="0" y2="330" stroke="#17171C"/>
+<line x1="0" y1="330" x2="520" y2="0" stroke="#1D9A6C" stroke-width="2.5" stroke-dasharray="6 5"/>
+<path d="M 26 313 C 150 300, 300 250, 416 198 C 460 178, 494 150, 494 132" fill="none" stroke="#2545FF" stroke-width="3"/>
+<circle cx="494" cy="132" r="6" fill="#2545FF"/>
+<text x="330" y="70" font-size="13" fill="#1D9A6C">calibrated: score = reality</text>
+<text x="240" y="290" font-size="13" fill="#2545FF">this model: score too high</text>
+<line x1="494" y1="132" x2="494" y2="17" stroke="#D6453D" stroke-width="2"/>
+<text x="486" y="120" text-anchor="end" font-size="12" fill="#2545FF">says 0.95, real 0.60</text>
+<text x="0" y="352" font-size="12" fill="#6E6E76">0.0</text>
+<text x="500" y="352" font-size="12" fill="#6E6E76">1.0</text>
+<text x="260" y="372" text-anchor="middle" font-size="13">model score</text>
+<text x="-165" y="-40" transform="rotate(-90)" font-size="13">actual fraud rate</text>
+<text x="-14" y="334" text-anchor="end" font-size="12" fill="#6E6E76">0.0</text>
+<text x="-14" y="10" text-anchor="end" font-size="12" fill="#6E6E76">1.0</text>
+</g>
+</svg>
+</div>
+<p class="cap">green dashed line = trustworthy. blue curve = this model. the red gap is the error. one number for the whole gap: ECE.</p>
 
-<h2>The pipeline</h2>
-<ol>
-<li>Measure calibration. Bin predictions, compare predicted probability to observed fraud rate per bin. Reliability curves make it visual; Expected Calibration Error (ECE) gives one number.</li>
-<li>Calibrate. Fit Platt scaling (a logistic on the scores) or isotonic regression (monotonic, non-parametric, needs more data) on a holdout set the model never trained on. Calibrating on training data just memorizes the miscalibration.</li>
-<li>Convert to money. Expected loss = P(fraud) * transaction exposure. A calibrated 0.60 on $10,000 is $6,000 of expected loss.</li>
-<li>Compare against the cost of the alternative. Blocking a legitimate customer has its own cost: lost revenue, support load, churn. Block when expected loss exceeds that cost.</li>
-</ol>
+<h2>4. Fix: calibrate on data the model never saw</h2>
+<div class="fig">
+<svg viewBox="0 0 640 150" xmlns="http://www.w3.org/2000/svg" font-family="'IBM Plex Mono',monospace" font-size="13">
+<rect x="20" y="45" width="130" height="60" rx="8" fill="#EEF1FF"/>
+<text x="85" y="72" text-anchor="middle" fill="#17171C">raw score</text>
+<text x="85" y="92" text-anchor="middle" font-weight="700" fill="#2545FF">0.95</text>
+<line x1="150" y1="75" x2="245" y2="75" stroke="#17171C" stroke-width="2" marker-end="url(#a)"/>
+<rect x="250" y="35" width="180" height="80" rx="8" fill="#17171C"/>
+<text x="340" y="66" text-anchor="middle" fill="#fff">Platt or</text>
+<text x="340" y="86" text-anchor="middle" fill="#fff">isotonic</text>
+<text x="340" y="130" text-anchor="middle" fill="#6E6E76" font-size="11">fit on holdout only</text>
+<line x1="430" y1="75" x2="525" y2="75" stroke="#17171C" stroke-width="2" marker-end="url(#a)"/>
+<rect x="530" y="45" width="100" height="60" rx="8" fill="#EEF1FF"/>
+<text x="580" y="72" text-anchor="middle" fill="#17171C">true prob</text>
+<text x="580" y="92" text-anchor="middle" font-weight="700" fill="#1D9A6C">0.60</text>
+<defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#17171C"/></marker></defs>
+</svg>
+</div>
+<p class="cap">calibrating on training data just memorizes the miscalibration.</p>
 
-<pre><code>score -> calibrated P(fraud) -> expected loss -> action</code></pre>
+<h2>5. Now the number can make the decision</h2>
+<div class="fig">
+<svg viewBox="0 0 640 320" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+<text x="320" y="26" text-anchor="middle" font-size="14" font-weight="600">Expected loss = P(fraud) × $10,000</text>
+<g transform="translate(120,60)">
+<rect x="0" y="0" width="120" height="190" fill="#D6453D" opacity="0.25"/>
+<rect x="0" y="0" width="120" height="190" fill="none" stroke="#D6453D" stroke-dasharray="5 4"/>
+<text x="60" y="215" text-anchor="middle" font-size="13">raw 0.95</text>
+<text x="60" y="-8" text-anchor="middle" font-size="15" font-weight="700" fill="#D6453D">$9,500</text>
+<rect x="280" y="70" width="120" height="120" fill="#2545FF"/>
+<text x="340" y="215" text-anchor="middle" font-size="13">calibrated 0.60</text>
+<text x="340" y="58" text-anchor="middle" font-size="15" font-weight="700" fill="#2545FF">$6,000</text>
+<line x1="-40" y1="130" x2="440" y2="130" stroke="#1D9A6C" stroke-width="2.5" stroke-dasharray="7 5"/>
+<text x="444" y="126" font-size="12" fill="#1D9A6C">cost of blocking a</text>
+<text x="444" y="142" font-size="12" fill="#1D9A6C">good customer</text>
+</g>
+<text x="320" y="300" text-anchor="middle" font-size="13" fill="#17171C">above the green line → block. below it → let it through.</text>
+</svg>
+</div>
+<p class="cap">$6,000 still clears the line here, so block. a 0.60 on a $500 transaction would not.</p>
 
-<p>The naive version is score -> block above threshold. The threshold version can still work for ranking-only use, but it cannot adapt to transaction size. A 0.95 on a $10 transaction and a 0.60 on a $50,000 transaction are opposite decisions once you price them.</p>
-
-<h2>Back to the 60% question</h2>
-<p>If only 60% of transactions scored 0.95 are fraud, the honest answer is: the model over-reports, so calibrate it, then redo the math with 0.60. Expected loss drops from $9,500 to $6,000. That may still clear the bar for blocking a $10,000 transaction, but now the decision has a defensible number under it instead of a confidence score dressed up as one.</p>
+<h2>The whole pipeline</h2>
+<div class="fig">
+<svg viewBox="0 0 640 90" xmlns="http://www.w3.org/2000/svg" font-family="'IBM Plex Mono',monospace" font-size="12.5">
+<g fill="#EEF1FF">
+<rect x="10" y="25" width="90" height="40" rx="8"/>
+<rect x="150" y="25" width="130" height="40" rx="8"/>
+<rect x="330" y="25" width="130" height="40" rx="8"/>
+<rect x="510" y="25" width="120" height="40" rx="8"/>
+</g>
+<g fill="#17171C" text-anchor="middle">
+<text x="55" y="50">score</text>
+<text x="215" y="50">calibrated P</text>
+<text x="395" y="50">expected loss</text>
+<text x="570" y="50">action</text>
+</g>
+<g stroke="#2545FF" stroke-width="2">
+<line x1="100" y1="45" x2="143" y2="45" marker-end="url(#b)"/>
+<line x1="280" y1="45" x2="323" y2="45" marker-end="url(#b)"/>
+<line x1="460" y1="45" x2="503" y2="45" marker-end="url(#b)"/>
+</g>
+<defs><marker id="b" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#2545FF"/></marker></defs>
+</svg>
+</div>
+<p class="cap">not score → block.</p>
 </article>
 
 <footer><a href="../../">← back to all logs</a></footer>
