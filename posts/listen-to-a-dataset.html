@@ -72,6 +72,10 @@ canvas#roll{display:block;width:100%;height:280px;background:#fbfcfe}
 .inlink:hover{border-bottom-color:var(--red)}
 #instSel{font-family:var(--mono);font-size:12.5px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);cursor:pointer}
 #instSel:focus{outline:2px solid var(--navy)}
+.gram{margin-top:16px;max-width:760px}
+.gram summary{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--navy);cursor:pointer;padding:12px 16px;background:#fff;border:1px solid var(--line);border-radius:10px}
+.gram summary:hover{border-color:var(--navy)}
+.gram[open] summary{border-radius:10px 10px 0 0;border-bottom:none}
 footer{margin-top:40px;font-size:12px;color:var(--slate);font-family:var(--mono);line-height:1.7}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -118,6 +122,28 @@ footer{margin-top:40px;font-size:12px;color:var(--slate);font-family:var(--mono)
 
 <h2 style="margin-top:32px">Source and credit</h2>
 <p class="body">Published on Hugging Face by <b>Itsuki-music</b> (August 2026) as the training data release for their piano generation project. So none of this music was composed by hand for the dataset: the weak and middle stages are real human performances that were transcribed from audio recordings into MIDI, and the lyria stage is model-generated audio transcribed the same way. The weak stage derives from EleutherAI's <a class="inlink" href="https://huggingface.co/datasets/loubb/aria-midi" target="_blank" rel="noopener">Aria-MIDI</a> dataset. License is CC BY-NC-SA 4.0 (free to use and share with credit, no commercial use), inherited from Aria-MIDI. The repo also ships the raw MIDI files and the tokenizer that produced the integers, which is what makes this page possible.</p>
+
+<p class="body" style="margin-top:14px">432,182 rows in total, 8.62 GB. Besides the token table, the repo ships the raw MIDI files for every piece and the tokenizer source code.</p>
+
+<details class="gram">
+<summary>The full token vocabulary, in plain language</summary>
+<div class="schema" style="margin-top:12px">
+<table>
+<tr><th>token type</th><th>meaning</th></tr>
+<tr><td class="mono">KEY_*</td><td>the key of the piece, one of 24 (C major through B minor); first number in every row</td></tr>
+<tr><td class="mono">TEMPO_*</td><td>overall speed: slow, moderate, or fast</td></tr>
+<tr><td class="mono">SEC_A ... SEC_H</td><td>section labels; the header lists the piece's structure (like verse/chorus for a song), and the label repeats in the stream so the model always knows which section it's in</td></tr>
+<tr><td class="mono">PLAN_0 ... PLAN_9</td><td>digits; after each section label in the header, they spell out how many 5-second windows that section lasts</td></tr>
+<tr><td class="mono">piano (pitch, velocity)</td><td>a key press: which of the 128 keys, and how hard, in 13 loudness steps</td></tr>
+<tr><td class="mono">onset</td><td>when the press happens, in milliseconds on a 25ms grid, counted within the current 5-second window</td></tr>
+<tr><td class="mono">dur</td><td>how long the key is held, same 25ms grid</td></tr>
+<tr><td class="mono">&lt;T&gt;</td><td>the clock: advances time by 5 seconds and resets the onset counter; a 3-minute piece has about 36 of these</td></tr>
+<tr><td class="mono">pedal on / off</td><td>the sustain pedal, which lets notes ring after the key is released</td></tr>
+<tr><td class="mono">&lt;S&gt; / &lt;E&gt;</td><td>start and end of the note stream; everything before &lt;S&gt; is the header</td></tr>
+</table>
+</div>
+<p class="body" style="margin-top:12px">So the row you hear below reads like: "G major, fast, sections A-B-A-B-C-D lasting so many windows each, begin: pedal down, press key 79 at 0ms softly, hold 325ms, press key 55 at 25ms, ..." and on for a few thousand numbers until &lt;E&gt;. The dataset card also notes that pedal events are ordered before simultaneous notes, and that the section and header tokens can be stripped if you only want to model the notes themselves.</p>
+</details>
 
 <h2>Pick a row</h2>
 <div class="picker">
