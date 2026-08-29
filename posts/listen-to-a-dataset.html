@@ -70,6 +70,8 @@ canvas#roll{display:block;width:100%;height:280px;background:#fbfcfe}
 .trunc{max-width:380px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
 .inlink{color:var(--red);text-decoration:none;border-bottom:1px solid #f4b8c3}
 .inlink:hover{border-bottom-color:var(--red)}
+#instSel{font-family:var(--mono);font-size:12.5px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);cursor:pointer}
+#instSel:focus{outline:2px solid var(--navy)}
 footer{margin-top:40px;font-size:12px;color:var(--slate);font-family:var(--mono);line-height:1.7}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -136,7 +138,17 @@ footer{margin-top:40px;font-size:12px;color:var(--slate);font-family:var(--mono)
       <div class="badges" id="badges"></div>
       <div class="timebar" id="timebar"><div class="timefill" id="timefill"></div></div>
     </div>
-    <div class="timelab" id="timelab">0:00 / 0:00</div>
+    <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+      <select id="instSel" aria-label="Instrument">
+        <option value="piano">Piano</option>
+        <option value="epiano">Electric piano</option>
+        <option value="organ">Organ</option>
+        <option value="harp">Harp</option>
+        <option value="strings">Strings</option>
+        <option value="musicbox">Music box</option>
+      </select>
+      <div class="timelab" id="timelab">0:00 / 0:00</div>
+    </div>
   </div>
   <div class="status" id="status">Pick a row above. The page will fetch it straight from Hugging Face.</div>
   <canvas id="roll" height="280" style="display:none"></canvas>
@@ -168,7 +180,7 @@ footer{margin-top:40px;font-size:12px;color:var(--slate);font-family:var(--mono)
 
 <footer>
 Data fetched live from datasets-server.huggingface.co &middot; Itsuki-music/text2music-generation-data-collection &middot; CC BY-NC-SA 4.0<br>
-Timing resolution 25ms. Synth is a 3-partial additive tone, so the timbre is approximate; every pitch, timing, and velocity value is exactly what the row encodes. If a row fails to load, the Hugging Face API may be rate-limiting; wait a moment and retry.
+Timing resolution 25ms. The instrument picker only changes the synthesized voice, not the data: this is a piano dataset, and every voice plays the same notes. All timbres are approximate; every pitch, timing, and velocity value is exactly what the row encodes. If a row fails to load, the Hugging Face API may be rate-limiting; wait a moment and retry.
 </footer>
 </div>
 
@@ -272,17 +284,30 @@ function updatePipe(ids,dec){
 }
 
 function ensureCtx(){if(!ctx)ctx=new (window.AudioContext||window.webkitAudioContext)();return ctx}
+const INSTRUMENTS={
+  piano:{wave:'sine',partials:[[1,1],[2,.35],[3,.12]],attack:.008,decayTo:.25,decayLen:.9,release:.25,gain:.22},
+  epiano:{wave:'sine',partials:[[1,1],[3,.2],[7,.05]],attack:.004,decayTo:.35,decayLen:1.2,release:.35,gain:.2},
+  organ:{wave:'sine',partials:[[1,1],[2,.6],[3,.4],[4,.25]],attack:.03,decayTo:.95,decayLen:99,release:.08,gain:.11},
+  harp:{wave:'triangle',partials:[[1,1],[2,.25]],attack:.003,decayTo:.05,decayLen:.5,release:.4,gain:.24},
+  strings:{wave:'sawtooth',partials:[[1,1]],attack:.12,decayTo:.85,decayLen:99,release:.3,gain:.09,lowpass:2.5},
+  musicbox:{wave:'sine',partials:[[1,1],[4,.4],[10,.08]],attack:.002,decayTo:.03,decayLen:.6,release:.5,gain:.2}
+};
+let currentInst='piano';
 function playNote(note,vel,when,dur){
-  const c=ensureCtx(),f=440*Math.pow(2,(note-69)/12),g=c.createGain(),v=(vel/127)*.22;
+  const c=ensureCtx(),I=INSTRUMENTS[currentInst];
+  const f=440*Math.pow(2,(note-69)/12),g=c.createGain(),v=(vel/127)*I.gain;
   g.gain.setValueAtTime(0,when);
-  g.gain.linearRampToValueAtTime(v,when+.008);
-  g.gain.exponentialRampToValueAtTime(Math.max(v*.25,.0001),when+Math.min(dur,.9));
-  g.gain.exponentialRampToValueAtTime(.0001,when+dur+.25);
-  g.connect(c.destination);
-  [[1,1],[2,.35],[3,.12]].forEach(([m,a])=>{
+  g.gain.linearRampToValueAtTime(v,when+I.attack);
+  const dLen=Math.min(dur,I.decayLen);
+  g.gain.exponentialRampToValueAtTime(Math.max(v*I.decayTo,.0001),when+Math.max(dLen,I.attack+.01));
+  g.gain.exponentialRampToValueAtTime(.0001,when+dur+I.release);
+  let dest=g;
+  if(I.lowpass){const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=f*I.lowpass;g.connect(lp);lp.connect(c.destination)}
+  else g.connect(c.destination);
+  I.partials.forEach(([m,a])=>{
     const o=c.createOscillator(),og=c.createGain();
-    o.type='sine';o.frequency.value=f*m;og.gain.value=a;
-    o.connect(og);og.connect(g);o.start(when);o.stop(when+dur+.3);
+    o.type=I.wave;o.frequency.value=f*m;og.gain.value=a;
+    o.connect(og);og.connect(g);o.start(when);o.stop(when+dur+I.release+.05);
     scheduled.push(o);
   });
 }
@@ -350,6 +375,10 @@ $('btnRandom').onclick=()=>{const n=Math.floor(Math.random()*(totalRows||400000)
 $('btnPrev').onclick=()=>{const n=Math.max(0,currentRow()-1);$('rowInput').value=n;loadRow(n)};
 $('btnNext').onclick=()=>{const n=currentRow()+1;$('rowInput').value=n;loadRow(n)};
 $('rowInput').addEventListener('keydown',e=>{if(e.key==='Enter')loadRow(currentRow())});
+$('instSel').onchange=e=>{
+  currentInst=e.target.value;
+  if(playing){pause();play()}
+};
 window.addEventListener('resize',()=>draw(playing?ctx.currentTime-startAt+offset:offset));
 
 getTotal();
