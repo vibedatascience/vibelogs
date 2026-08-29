@@ -288,7 +288,17 @@ function updatePipe(ids,dec){
   $('demoStats').textContent=dec.notes.length.toLocaleString()+' key presses reconstructed, '+fmt(dec.duration)+' of music, first note '+NOTE_NAMES[dec.notes[0].note%12]+(Math.floor(dec.notes[0].note/12)-1);
 }
 
-function ensureCtx(){if(!ctx)ctx=new (window.AudioContext||window.webkitAudioContext)();return ctx}
+let master=null;
+function ensureCtx(){
+  if(!ctx){
+    ctx=new (window.AudioContext||window.webkitAudioContext)();
+    master=ctx.createDynamicsCompressor();
+    master.threshold.value=-18;master.knee.value=12;master.ratio.value=6;
+    master.attack.value=.003;master.release.value=.2;
+    master.connect(ctx.destination);
+  }
+  return ctx;
+}
 const INSTRUMENTS={
   piano:{wave:'sine',partials:[[1,1],[2,.35],[3,.12]],attack:.008,decayTo:.25,decayLen:.9,release:.25,gain:.22},
   epiano:{wave:'sine',partials:[[1,1],[3,.2],[7,.05]],attack:.004,decayTo:.35,decayLen:1.2,release:.35,gain:.2},
@@ -296,9 +306,9 @@ const INSTRUMENTS={
   harp:{wave:'triangle',partials:[[1,1],[2,.25]],attack:.003,decayTo:.05,decayLen:.5,release:.4,gain:.24},
   strings:{wave:'sawtooth',partials:[[1,1]],attack:.12,decayTo:.85,decayLen:99,release:.3,gain:.09,lowpass:2.5},
   musicbox:{wave:'sine',partials:[[1,1],[4,.4],[10,.08]],attack:.002,decayTo:.03,decayLen:.6,release:.5,gain:.2},
-  acoustic:{wave:'triangle',partials:[[1,1],[2,.45],[3,.18],[4,.08]],attack:.004,decayTo:.12,decayLen:1.1,release:.3,gain:.2,lowpass:4},
-  eguitar:{wave:'sawtooth',partials:[[1,1],[2,.3]],attack:.005,decayTo:.4,decayLen:1.5,release:.2,gain:.12,lowpass:3,drive:8},
-  metal:{wave:'sawtooth',partials:[[1,1],[.5,.5],[2,.4]],attack:.004,decayTo:.85,decayLen:99,release:.12,gain:.07,lowpass:5,drive:40},
+  acoustic:{wave:'sawtooth',partials:[[1,1],[2,.5],[2.76,.12],[4,.06]],attack:.002,decayTo:.05,decayLen:.55,release:.25,gain:.17,lowpass:2.2},
+  eguitar:{wave:'sawtooth',partials:[[1,1],[2,.25]],attack:.005,decayTo:.35,decayLen:1.4,release:.2,gain:.07,lowpass:2.8,drive:3.5},
+  metal:{wave:'sawtooth',partials:[[1,1],[.5,.5],[2,.4]],attack:.004,decayTo:.85,decayLen:99,release:.12,gain:.04,lowpass:4,drive:18},
   bass:{wave:'sawtooth',partials:[[.5,1],[1,.4]],attack:.01,decayTo:.5,decayLen:1.2,release:.2,gain:.22,lowpass:1.5},
   flute:{wave:'sine',partials:[[1,1],[2,.12],[3,.05]],attack:.09,decayTo:.9,decayLen:99,release:.15,gain:.16,vibrato:true}
 };
@@ -320,10 +330,10 @@ function playNote(note,vel,when,dur){
   g.gain.exponentialRampToValueAtTime(Math.max(v*I.decayTo,.0001),when+Math.max(dLen,I.attack+.01));
   g.gain.exponentialRampToValueAtTime(.0001,when+dur+I.release);
   let tail=g;
-  if(I.drive){const pre=c.createGain();pre.gain.value=I.drive*.15;const ws=getShaper(c,I.drive);const post=c.createGain();post.gain.value=1/Math.sqrt(I.drive);
+  if(I.drive){const pre=c.createGain();pre.gain.value=I.drive*.12;const ws=getShaper(c,I.drive);const post=c.createGain();post.gain.value=.8/Math.sqrt(I.drive);
     tail.connect(pre);pre.connect(ws);ws.connect(post);tail=post;}
-  if(I.lowpass){const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=Math.min(f*I.lowpass,12000);tail.connect(lp);tail=lp;}
-  tail.connect(c.destination);
+  if(I.lowpass){const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=Math.min(f*I.lowpass,9000);tail.connect(lp);tail=lp;}
+  tail.connect(master);
   I.partials.forEach(([m,a])=>{
     const o=c.createOscillator(),og=c.createGain();
     o.type=I.wave;o.frequency.value=f*m;og.gain.value=a;
