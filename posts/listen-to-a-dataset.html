@@ -41,6 +41,7 @@ code{font-family:var(--mono);font-size:13px;background:#eef2f7;padding:1px 6px;b
 .badges{display:flex;gap:8px;margin-top:7px;flex-wrap:wrap}
 .badge{font-family:var(--mono);font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:#eef2f7;color:var(--navy)}
 .badge.red{background:#fde8ec;color:var(--red)}
+.badge.prov{background:#e0f2f0;color:#0b6e63}
 .timebar{width:100%;height:6px;background:#eef2f7;border-radius:99px;margin-top:12px;cursor:pointer}
 .timefill{height:100%;width:0%;background:var(--red);border-radius:99px}
 .timelab{font-family:var(--mono);font-size:11px;color:var(--slate);min-width:92px;text-align:right}
@@ -145,6 +146,7 @@ footer{margin-top:40px;font-size:12px;color:var(--slate);font-family:var(--mono)
 <tr><td class="mono">&lt;S&gt; / &lt;E&gt;</td><td>start and end of the note stream; everything before &lt;S&gt; is the header</td></tr>
 </table>
 </div>
+<p class="body" style="margin-top:12px">One more thing the numbers carry: for rows that trace back to Aria-MIDI (the numeric piece_ids), EleutherAI published provenance metadata: composer, genre, performer, opus. There are no song titles in the data, but composer plus opus usually pins the piece down, and it's how you can confirm that the pop cover you just recognized is filed under its actual writer. These show as green badges when available.</p>
 <p class="body" style="margin-top:12px">So the row you hear below reads like: "G major, fast, sections A-B-A-B-C-D lasting so many windows each, begin: pedal down, press key 79 at 0ms softly, hold 325ms, press key 55 at 25ms, ..." and on for a few thousand numbers until &lt;E&gt;. The dataset card also notes that pedal events are ordered before simultaneous notes, and that the section and header tokens can be stripped if you only want to model the notes themselves.</p>
 </details>
 
@@ -310,6 +312,7 @@ async function loadRow(n){
     b.push([fmt(piece.duration)+' long','']);
     b.push([piece.nTokens.toLocaleString()+' numbers in the row','']);
     $('badges').innerHTML=b.map(([t,c])=>`<span class="badge ${c}">${t}</span>`).join('');
+    addProvenance(piece.id);
     $('status').style.display='none';$('roll').style.display='block';$('keys').style.display='block';
     $('btnPlay').disabled=false;
     draw(0);drawKeys(0);updatePipe(row.input_ids,dec);
@@ -318,6 +321,24 @@ async function loadRow(n){
   }
 }
 
+const metaCache={};
+async function addProvenance(pieceId){
+  const fid=pieceId.split('_')[0];
+  if(!/^\d+$/.test(fid))return;
+  const shard=String(parseInt(fid)%32).padStart(2,'0');
+  try{
+    if(!metaCache[shard]){
+      const r=await fetch(`meta/aria-meta-${shard}.json`);
+      if(!r.ok)return;
+      metaCache[shard]=await r.json();
+    }
+    const md=metaCache[shard][fid];
+    if(!md||piece.id!==pieceId)return;
+    const nice={composer:'composer',performer:'performer',genre:'genre',form:'form',opus:'opus',piece_number:'no.',difficulty:'difficulty'};
+    const extra=Object.entries(md).map(([k,v])=>`<span class="badge prov">${nice[k]}: ${v}</span>`).join('');
+    $('badges').innerHTML+=extra;
+  }catch(e){}
+}
 function updatePipe(ids,dec){
   $('demoRaw').textContent=ids.slice(0,26).join(' ')+' ...';
   let html='';
