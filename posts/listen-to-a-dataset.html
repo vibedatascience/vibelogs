@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>vibelogs — a dataset you can listen to</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--red:#E60023;--navy:#0a3069;--teal:#0d9488;--slate:#64748b;--bg:#f8fafc;--card:#fff;--ink:#0f172a;--line:#e2e8f0;
+--mono:'IBM Plex Mono',monospace;--disp:'Archivo',sans-serif;--body:'Inter',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.6}
+.wrap{max-width:960px;margin:0 auto;padding:48px 24px 80px}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--red);font-weight:600}
+h1{font-family:var(--disp);font-weight:800;font-size:clamp(30px,4.6vw,50px);letter-spacing:-.02em;margin:10px 0 14px}
+.lede{color:#334155;font-size:16.5px;max-width:700px}
+.lede b{color:var(--ink)}
+h2{font-family:var(--disp);font-size:19px;font-weight:700;margin:44px 0 10px}
+p.body{color:#334155;font-size:15px;max-width:700px;margin-bottom:10px}
+code{font-family:var(--mono);font-size:13px;background:#eef2f7;padding:1px 6px;border-radius:4px;color:var(--navy)}
+
+.picker{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:22px 0 14px}
+.picker label{font-family:var(--mono);font-size:12.5px;color:var(--slate)}
+.picker input{font-family:var(--mono);font-size:15px;padding:9px 12px;border:1px solid var(--line);border-radius:9px;width:130px;background:#fff}
+.picker input:focus{outline:2px solid var(--navy)}
+.btn{font-family:var(--body);font-weight:600;font-size:14px;padding:10px 16px;border-radius:9px;border:1px solid var(--line);background:#fff;cursor:pointer}
+.btn:hover{border-color:var(--navy)}
+.btn:focus-visible{outline:3px solid var(--navy);outline-offset:2px}
+.btn.primary{background:var(--red);border-color:var(--red);color:#fff}
+.btn.primary:hover{background:#c4001e}
+.hint{font-family:var(--mono);font-size:11.5px;color:var(--slate)}
+
+.stage{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:8px}
+.stagehead{display:flex;align-items:center;gap:16px;padding:18px 20px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.playbtn{width:54px;height:54px;border-radius:50%;border:none;background:var(--red);color:#fff;font-size:20px;cursor:pointer;flex:none}
+.playbtn:disabled{background:#cbd5e1;cursor:default}
+.playbtn:hover:not(:disabled){background:#c4001e}
+.playbtn:focus-visible{outline:3px solid var(--navy);outline-offset:2px}
+.meta{flex:1;min-width:220px}
+.mname{font-family:var(--mono);font-size:16px;font-weight:600}
+.badges{display:flex;gap:8px;margin-top:7px;flex-wrap:wrap}
+.badge{font-family:var(--mono);font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:#eef2f7;color:var(--navy)}
+.badge.red{background:#fde8ec;color:var(--red)}
+.timebar{width:100%;height:6px;background:#eef2f7;border-radius:99px;margin-top:12px;cursor:pointer}
+.timefill{height:100%;width:0%;background:var(--red);border-radius:99px}
+.timelab{font-family:var(--mono);font-size:11px;color:var(--slate);min-width:92px;text-align:right}
+canvas#roll{display:block;width:100%;height:280px;background:#fbfcfe}
+.status{padding:40px 20px;text-align:center;font-family:var(--mono);font-size:13px;color:var(--slate)}
+
+.pipe{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:0;align-items:stretch;margin-top:16px}
+.pipe .step{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.pipe .arrow{align-self:center;font-size:20px;color:var(--red);padding:0 10px;font-weight:700}
+.pipe h3{font-family:var(--disp);font-size:14px;font-weight:700;margin-bottom:6px}
+.pipe p{font-size:12.5px;color:var(--slate)}
+.pipe .demo{font-family:var(--mono);font-size:11.5px;margin-top:10px;color:var(--navy);word-break:break-all;line-height:1.7}
+.chip{display:inline-block;padding:1px 6px;border-radius:5px;margin:1px;font-size:10.5px}
+.c-note{background:#fde8ec;color:#a3001a}
+.c-time{background:#e6eef8;color:var(--navy)}
+.c-dur{background:#e0f2f0;color:#0b6e63}
+.c-hdr{background:#f1f5f9;color:var(--slate)}
+@media(max-width:760px){.pipe{grid-template-columns:1fr}.pipe .arrow{transform:rotate(90deg);justify-self:center;padding:4px 0}}
+.dslink{font-family:var(--mono);font-size:13px;color:var(--red);text-decoration:none;border:1px solid var(--line);padding:8px 14px;border-radius:9px;display:inline-block;background:#fff}
+.dslink:hover{border-color:var(--red)}
+.schema table{border-collapse:collapse;width:100%;font-size:13px;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.schema{border:1px solid var(--line);border-radius:10px;overflow:hidden;max-width:760px}
+.schema th{text-align:left;font-family:var(--mono);font-size:11.5px;color:var(--navy);background:#f1f5f9;padding:8px 12px;border-bottom:2px solid var(--line)}
+.schema td{padding:8px 12px;border-bottom:1px solid #f1f5f9;color:#1e293b;vertical-align:top}
+.schema tr:last-child td{border-bottom:none}
+.mono{font-family:var(--mono);font-size:12px}
+.trunc{max-width:380px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+footer{margin-top:40px;font-size:12px;color:var(--slate);font-family:var(--mono);line-height:1.7}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="kicker">vibelogs &middot; [2026-08-29] &middot; interactive</div>
+<h1>A dataset you can listen to</h1>
+<p class="lede">AI music models don't train on sound. They train on tables. This page pulls a live row from a Hugging Face dataset of <b id="totalRows">422,000+</b> piano pieces, where each row is just a list of numbers, and turns that row back into music in your browser. Type any row number and press play.</p>
+
+<h2>The dataset</h2>
+<p class="body"><a class="dslink" href="https://huggingface.co/datasets/Itsuki-music/text2music-generation-data-collection" target="_blank" rel="noopener">Itsuki-music/text2music-generation-data-collection on Hugging Face &nearr;</a></p>
+<p class="body">It's a table of solo piano pieces built to train a text-to-music model. One row per piece, three columns. The music lives entirely in the third column.</p>
+
+<div class="schema">
+<table>
+<tr><th>column</th><th>type</th><th>what it holds</th></tr>
+<tr><td class="mono">piece_id</td><td class="mono">string</td><td>name of the piece, e.g. sample_000000</td></tr>
+<tr><td class="mono">n_tokens</td><td class="mono">int32</td><td>how many numbers encode this piece</td></tr>
+<tr><td class="mono">input_ids</td><td class="mono">list&lt;int32&gt;</td><td>the piece itself, as a sequence of integers</td></tr>
+</table>
+</div>
+
+<p class="body" style="margin-top:14px">Three sample rows, with input_ids truncated:</p>
+<div class="schema">
+<table>
+<tr><th>piece_id</th><th>n_tokens</th><th>input_ids</th></tr>
+<tr><td class="mono">sample_000000</td><td class="mono">4,740</td><td class="mono trunc">[2089, 2108, 2074, 2115, 2075, 2115, 2074, 2116, ...]</td></tr>
+<tr><td class="mono">sample_000001</td><td class="mono">2,548</td><td class="mono trunc">[2091, 2107, 2074, 2112, 2075, 2113, 2076, 2111, ...]</td></tr>
+<tr><td class="mono">279732_0</td><td class="mono">743</td><td class="mono trunc">[2096, 2106, 2074, 2110, 2075, 2110, 2076, 2109, ...]</td></tr>
+</table>
+</div>
+
+<p class="body" style="margin-top:14px">The 422K rows come in three stages of data quality: 371K pieces transcribed from public piano recordings (weak), 51K from named public-domain recordings (middle), and a smaller model-generated set (lyria). The repo also ships the raw MIDI files and the tokenizer that produced the integers, which is what makes this page possible.</p>
+
+<h2>Pick a row</h2>
+<div class="picker">
+  <label for="rowInput">row #</label>
+  <input id="rowInput" type="number" min="0" value="0">
+  <button class="btn primary" id="btnLoad">Load row</button>
+  <button class="btn" id="btnRandom">Random row</button>
+  <button class="btn" id="btnPrev">&larr;</button>
+  <button class="btn" id="btnNext">&rarr;</button>
+  <span class="hint" id="rangeHint"></span>
+</div>
+
+<div class="stage">
+  <div class="stagehead">
+    <button class="playbtn" id="btnPlay" aria-label="Play or pause" disabled>&#9654;</button>
+    <div class="meta">
+      <div class="mname" id="mName">no row loaded</div>
+      <div class="badges" id="badges"></div>
+      <div class="timebar" id="timebar"><div class="timefill" id="timefill"></div></div>
+    </div>
+    <div class="timelab" id="timelab">0:00 / 0:00</div>
+  </div>
+  <div class="status" id="status">Pick a row above. The page will fetch it straight from Hugging Face.</div>
+  <canvas id="roll" height="280" style="display:none"></canvas>
+</div>
+
+<h2>How a row becomes music</h2>
+<p class="body">Every piece in this dataset was flattened into one long list of integers so a language model can read it the same way it reads text. Three kinds of numbers do almost all the work:</p>
+<div class="pipe">
+  <div class="step">
+    <h3>1. The row: raw numbers</h3>
+    <p>What's actually stored. This is the start of the row you loaded.</p>
+    <div class="demo" id="demoRaw">&mdash;</div>
+  </div>
+  <div class="arrow">&rarr;</div>
+  <div class="step">
+    <h3>2. Decoded: musical events</h3>
+    <p>Each number maps to a meaning: <span class="chip c-note">which key was pressed, how hard</span> <span class="chip c-time">when</span> <span class="chip c-dur">for how long</span>. Header numbers <span class="chip c-hdr">key, tempo, structure</span> describe the whole piece.</p>
+    <div class="demo" id="demoDec">&mdash;</div>
+  </div>
+  <div class="arrow">&rarr;</div>
+  <div class="step">
+    <h3>3. Sound</h3>
+    <p>With press + when + how long for every note, the piece is fully reconstructed. Your browser synthesizes each press with a simple piano tone. That's what the play button does.</p>
+    <div class="demo" id="demoStats">&mdash;</div>
+  </div>
+</div>
+
+<p class="body" style="margin-top:18px">The point worth sitting with: the entire performance survives the trip through a spreadsheet. Time becomes a column, pitch becomes a column, touch becomes a column, and nothing musical is lost. A model that learns to predict the next number in these rows is, by construction, learning to play the piano.</p>
+
+<footer>
+Data fetched live from datasets-server.huggingface.co &middot; Itsuki-music/text2music-generation-data-collection &middot; CC BY-NC-SA 4.0<br>
+Timing resolution 25ms. Synth is a 3-partial additive tone, so the timbre is approximate; every pitch, timing, and velocity value is exactly what the row encodes. If a row fails to load, the Hugging Face API may be rate-limiting; wait a moment and retry.
+</footer>
+</div>
+
+<script>
+const DS="Itsuki-music/text2music-generation-data-collection";
+const API="https://datasets-server.huggingface.co";
+const PIANO_BASE=7, DUR_BASE=1671, ONSET_BASE=1872, T_TOK=5, S_TOK=0, E_TOK=1;
+const ID_NAMES={2072:"pedal down",2073:"pedal up",2074:"section A",2075:"section B",2076:"section C",2077:"section D",2078:"section E",2079:"section F",2080:"section G",
+2082:"C major",2083:"Db major",2084:"D major",2085:"Eb major",2086:"E major",2087:"F major",2088:"F# major",2089:"G major",2090:"Ab major",2091:"A major",2092:"Bb major",2093:"B major",
+2094:"C minor",2095:"C# minor",2096:"D minor",2097:"D# minor",2098:"E minor",2099:"F minor",2100:"F# minor",2101:"G minor",2102:"G# minor",2103:"A minor",2104:"Bb minor",2105:"B minor",
+2106:"slow",2107:"moderate",2108:"fast"};
+const NOTE_NAMES=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+
+function decode(ids){
+  let seg=0, cur=null, key=null, tempo=null;
+  const notes=[];
+  for(const id of ids){
+    if(id===T_TOK){seg++;continue}
+    if(id>=2082&&id<=2105&&!key)key=ID_NAMES[id];
+    else if(id>=2106&&id<=2108&&!tempo)tempo=ID_NAMES[id];
+    else if(id>=PIANO_BASE&&id<PIANO_BASE+1664){
+      const off=id-PIANO_BASE;
+      cur={p:Math.floor(off/13),v:(off%13)*10,seg};
+    }else if(id>=ONSET_BASE&&id<ONSET_BASE+200&&cur&&cur.on===undefined){
+      cur.on=(id-ONSET_BASE)*25;
+    }else if(id>=DUR_BASE&&id<DUR_BASE+201&&cur&&cur.on!==undefined){
+      const start=(cur.seg*5000+cur.on)/1000;
+      notes.push({note:cur.p,vel:Math.max(cur.v,10),start,end:start+((id-DUR_BASE)*25)/1000});
+      cur=null;
+    }
+  }
+  notes.sort((a,b)=>a.start-b.start);
+  const duration=notes.length?Math.max(...notes.map(n=>n.end)):0;
+  return {notes,duration,key,tempo};
+}
+
+function describeToken(id){
+  if(id===S_TOK)return['start of piece','c-hdr'];
+  if(id===E_TOK)return['end','c-hdr'];
+  if(id===T_TOK)return['+5 seconds','c-hdr'];
+  if(id>=PIANO_BASE&&id<PIANO_BASE+1664){const o=id-PIANO_BASE,p=Math.floor(o/13);
+    return[NOTE_NAMES[p%12]+(Math.floor(p/12)-1)+' vol '+(o%13)*10,'c-note']}
+  if(id>=ONSET_BASE&&id<ONSET_BASE+200)return['at '+((id-ONSET_BASE)*25/1000).toFixed(2)+'s','c-time'];
+  if(id>=DUR_BASE&&id<DUR_BASE+201)return['hold '+((id-DUR_BASE)*25/1000).toFixed(2)+'s','c-dur'];
+  if(ID_NAMES[id])return[ID_NAMES[id],'c-hdr'];
+  return['token '+id,'c-hdr'];
+}
+
+let piece=null,totalRows=null;
+let ctx=null,playing=false,startAt=0,offset=0,scheduled=[],schedTimer=null,rafId=null;
+const $=id=>document.getElementById(id);
+
+async function getTotal(){
+  try{
+    const r=await fetch(`${API}/size?dataset=${DS}`);
+    const j=await r.json();
+    totalRows=j.size.configs[0].num_rows;
+    $('totalRows').textContent=totalRows.toLocaleString();
+    $('rangeHint').textContent='rows 0 to '+(totalRows-1).toLocaleString();
+    $('rowInput').max=totalRows-1;
+  }catch(e){}
+}
+
+async function loadRow(n){
+  if(playing)pause();
+  piece=null;$('btnPlay').disabled=true;
+  $('roll').style.display='none';$('status').style.display='block';
+  $('status').textContent='fetching row '+n.toLocaleString()+' from Hugging Face...';
+  $('mName').textContent='row '+n.toLocaleString();$('badges').innerHTML='';
+  try{
+    const r=await fetch(`${API}/rows?dataset=${DS}&config=default&split=train&offset=${n}&length=1`);
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const j=await r.json();
+    const row=j.rows[0].row;
+    const dec=decode(row.input_ids);
+    if(!dec.notes.length)throw new Error('no notes decoded');
+    piece={...dec,id:row.piece_id,nTokens:row.n_tokens,rowNum:n};
+    offset=0;
+    $('mName').textContent='row '+n.toLocaleString()+' — '+piece.id;
+    const b=[];
+    if(piece.key)b.push(['key: '+piece.key,'']);
+    if(piece.tempo)b.push(['tempo: '+piece.tempo,'']);
+    b.push([piece.notes.length.toLocaleString()+' notes','red']);
+    b.push([fmt(piece.duration)+' long','']);
+    b.push([piece.nTokens.toLocaleString()+' numbers in the row','']);
+    $('badges').innerHTML=b.map(([t,c])=>`<span class="badge ${c}">${t}</span>`).join('');
+    $('status').style.display='none';$('roll').style.display='block';
+    $('btnPlay').disabled=false;
+    draw(0);updatePipe(row.input_ids,dec);
+  }catch(e){
+    $('status').textContent='could not load row '+n+' ('+e.message+'). Try again or pick another row.';
+  }
+}
+
+function updatePipe(ids,dec){
+  $('demoRaw').textContent=ids.slice(0,26).join(' ')+' ...';
+  let html='';
+  for(const id of ids.slice(0,26)){const[t,c]=describeToken(id);html+=`<span class="chip ${c}">${t}</span>`}
+  $('demoDec').innerHTML=html+' ...';
+  $('demoStats').textContent=dec.notes.length.toLocaleString()+' key presses reconstructed, '+fmt(dec.duration)+' of music, first note '+NOTE_NAMES[dec.notes[0].note%12]+(Math.floor(dec.notes[0].note/12)-1);
+}
+
+function ensureCtx(){if(!ctx)ctx=new (window.AudioContext||window.webkitAudioContext)();return ctx}
+function playNote(note,vel,when,dur){
+  const c=ensureCtx(),f=440*Math.pow(2,(note-69)/12),g=c.createGain(),v=(vel/127)*.22;
+  g.gain.setValueAtTime(0,when);
+  g.gain.linearRampToValueAtTime(v,when+.008);
+  g.gain.exponentialRampToValueAtTime(Math.max(v*.25,.0001),when+Math.min(dur,.9));
+  g.gain.exponentialRampToValueAtTime(.0001,when+dur+.25);
+  g.connect(c.destination);
+  [[1,1],[2,.35],[3,.12]].forEach(([m,a])=>{
+    const o=c.createOscillator(),og=c.createGain();
+    o.type='sine';o.frequency.value=f*m;og.gain.value=a;
+    o.connect(og);og.connect(g);o.start(when);o.stop(when+dur+.3);
+    scheduled.push(o);
+  });
+}
+function scheduleChunk(){
+  if(!playing)return;
+  const now=ctx.currentTime,pos=now-startAt+offset,horizon=pos+1.2;
+  for(const n of piece.notes){
+    if(n.start>=pos-.02&&n.start<horizon&&!n._q){n._q=true;
+      playNote(n.note,n.vel,startAt+n.start-offset,Math.max(n.end-n.start,.08));}
+  }
+  if(pos>piece.duration+.5){stopAll();offset=0;draw(0);return}
+  schedTimer=setTimeout(scheduleChunk,300);
+}
+function clearFlags(){if(piece)for(const n of piece.notes)delete n._q}
+function stopAll(){playing=false;scheduled.forEach(o=>{try{o.stop()}catch(e){}});scheduled=[];clearTimeout(schedTimer);cancelAnimationFrame(rafId);$('btnPlay').innerHTML='&#9654;'}
+function play(){
+  const c=ensureCtx();if(c.state==='suspended')c.resume();
+  playing=true;startAt=c.currentTime;clearFlags();
+  $('btnPlay').innerHTML='&#10074;&#10074;';
+  scheduleChunk();loop();
+}
+function pause(){offset+=ctx.currentTime-startAt;stopAll();draw(offset)}
+$('btnPlay').onclick=()=>{if(!piece)return;playing?pause():play()};
+
+function fmt(s){s=Math.max(0,s);return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0')}
+
+const canvas=$('roll');
+function draw(pos){
+  if(!piece)return;
+  const dpr=window.devicePixelRatio||1,w=canvas.clientWidth,h=280;
+  canvas.width=w*dpr;canvas.height=h*dpr;
+  const g=canvas.getContext('2d');g.scale(dpr,dpr);g.clearRect(0,0,w,h);
+  const ps=piece.notes.map(n=>n.note);
+  const lo=Math.min(...ps)-2,hi=Math.max(...ps)+2,span=hi-lo;
+  const win=12,t0=Math.max(0,pos-win*.35),t1=t0+win;
+  for(let n=lo;n<=hi;n++){const y=h-((n-lo)/span)*h;
+    if([1,3,6,8,10].includes(((n%12)+12)%12)){g.fillStyle='#f1f5f9';g.fillRect(0,y-h/span,w,h/span)}}
+  for(const n of piece.notes){
+    if(n.end<t0||n.start>t1)continue;
+    const x=((n.start-t0)/win)*w,wid=Math.max(((n.end-n.start)/win)*w,2);
+    const y=h-((n.note-lo)/span)*h,hh=Math.max(h/span-1,2);
+    const on=pos>=n.start&&pos<n.end;
+    g.fillStyle=on?'#E60023':(n.start>pos?'#0a3069':'#cbd5e1');
+    g.beginPath();g.roundRect(x,y-hh,wid,hh,2);g.fill();
+  }
+  const cx=((pos-t0)/win)*w;
+  g.strokeStyle='#E60023';g.lineWidth=1.5;g.setLineDash([4,3]);
+  g.beginPath();g.moveTo(cx,0);g.lineTo(cx,h);g.stroke();g.setLineDash([]);
+  $('timefill').style.width=(Math.min(pos/piece.duration,1)*100)+'%';
+  $('timelab').textContent=fmt(pos)+' / '+fmt(piece.duration);
+}
+function loop(){if(!playing)return;draw(ctx.currentTime-startAt+offset);rafId=requestAnimationFrame(loop)}
+
+$('timebar').onclick=e=>{
+  if(!piece)return;
+  const r=e.currentTarget.getBoundingClientRect(),frac=(e.clientX-r.left)/r.width;
+  const was=playing;if(playing)pause();
+  offset=frac*piece.duration;clearFlags();draw(offset);
+  if(was)play();
+};
+
+function currentRow(){return parseInt($('rowInput').value)||0}
+$('btnLoad').onclick=()=>loadRow(currentRow());
+$('btnRandom').onclick=()=>{const n=Math.floor(Math.random()*(totalRows||400000));$('rowInput').value=n;loadRow(n)};
+$('btnPrev').onclick=()=>{const n=Math.max(0,currentRow()-1);$('rowInput').value=n;loadRow(n)};
+$('btnNext').onclick=()=>{const n=currentRow()+1;$('rowInput').value=n;loadRow(n)};
+$('rowInput').addEventListener('keydown',e=>{if(e.key==='Enter')loadRow(currentRow())});
+window.addEventListener('resize',()=>draw(playing?ctx.currentTime-startAt+offset:offset));
+
+getTotal();
+loadRow(0);
+</script>
+</body>
+</html>
