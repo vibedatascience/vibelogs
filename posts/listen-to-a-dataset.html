@@ -146,6 +146,11 @@ footer{margin-top:40px;font-size:12px;color:var(--slate);font-family:var(--mono)
         <option value="harp">Harp</option>
         <option value="strings">Strings</option>
         <option value="musicbox">Music box</option>
+        <option value="acoustic">Acoustic guitar</option>
+        <option value="eguitar">Electric guitar</option>
+        <option value="metal">Heavy metal</option>
+        <option value="bass">Bass</option>
+        <option value="flute">Flute</option>
       </select>
       <div class="timelab" id="timelab">0:00 / 0:00</div>
     </div>
@@ -290,8 +295,21 @@ const INSTRUMENTS={
   organ:{wave:'sine',partials:[[1,1],[2,.6],[3,.4],[4,.25]],attack:.03,decayTo:.95,decayLen:99,release:.08,gain:.11},
   harp:{wave:'triangle',partials:[[1,1],[2,.25]],attack:.003,decayTo:.05,decayLen:.5,release:.4,gain:.24},
   strings:{wave:'sawtooth',partials:[[1,1]],attack:.12,decayTo:.85,decayLen:99,release:.3,gain:.09,lowpass:2.5},
-  musicbox:{wave:'sine',partials:[[1,1],[4,.4],[10,.08]],attack:.002,decayTo:.03,decayLen:.6,release:.5,gain:.2}
+  musicbox:{wave:'sine',partials:[[1,1],[4,.4],[10,.08]],attack:.002,decayTo:.03,decayLen:.6,release:.5,gain:.2},
+  acoustic:{wave:'triangle',partials:[[1,1],[2,.45],[3,.18],[4,.08]],attack:.004,decayTo:.12,decayLen:1.1,release:.3,gain:.2,lowpass:4},
+  eguitar:{wave:'sawtooth',partials:[[1,1],[2,.3]],attack:.005,decayTo:.4,decayLen:1.5,release:.2,gain:.12,lowpass:3,drive:8},
+  metal:{wave:'sawtooth',partials:[[1,1],[.5,.5],[2,.4]],attack:.004,decayTo:.85,decayLen:99,release:.12,gain:.07,lowpass:5,drive:40},
+  bass:{wave:'sawtooth',partials:[[.5,1],[1,.4]],attack:.01,decayTo:.5,decayLen:1.2,release:.2,gain:.22,lowpass:1.5},
+  flute:{wave:'sine',partials:[[1,1],[2,.12],[3,.05]],attack:.09,decayTo:.9,decayLen:99,release:.15,gain:.16,vibrato:true}
 };
+const shaperCache={};
+function getShaper(c,amount){
+  if(shaperCache[amount])return shaperCache[amount];
+  const n=1024,curve=new Float32Array(n);
+  for(let i=0;i<n;i++){const x=i*2/n-1;curve[i]=Math.tanh(amount*x)/Math.tanh(amount)}
+  const ws=c.createWaveShaper();ws.curve=curve;ws.oversample='2x';
+  shaperCache[amount]=ws;return ws;
+}
 let currentInst='piano';
 function playNote(note,vel,when,dur){
   const c=ensureCtx(),I=INSTRUMENTS[currentInst];
@@ -301,12 +319,17 @@ function playNote(note,vel,when,dur){
   const dLen=Math.min(dur,I.decayLen);
   g.gain.exponentialRampToValueAtTime(Math.max(v*I.decayTo,.0001),when+Math.max(dLen,I.attack+.01));
   g.gain.exponentialRampToValueAtTime(.0001,when+dur+I.release);
-  let dest=g;
-  if(I.lowpass){const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=f*I.lowpass;g.connect(lp);lp.connect(c.destination)}
-  else g.connect(c.destination);
+  let tail=g;
+  if(I.drive){const pre=c.createGain();pre.gain.value=I.drive*.15;const ws=getShaper(c,I.drive);const post=c.createGain();post.gain.value=1/Math.sqrt(I.drive);
+    tail.connect(pre);pre.connect(ws);ws.connect(post);tail=post;}
+  if(I.lowpass){const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=Math.min(f*I.lowpass,12000);tail.connect(lp);tail=lp;}
+  tail.connect(c.destination);
   I.partials.forEach(([m,a])=>{
     const o=c.createOscillator(),og=c.createGain();
     o.type=I.wave;o.frequency.value=f*m;og.gain.value=a;
+    if(I.vibrato){const lfo=c.createOscillator(),lg=c.createGain();
+      lfo.frequency.value=5.5;lg.gain.value=f*.006;
+      lfo.connect(lg);lg.connect(o.frequency);lfo.start(when+.15);lfo.stop(when+dur+I.release);scheduled.push(lfo);}
     o.connect(og);og.connect(g);o.start(when);o.stop(when+dur+I.release+.05);
     scheduled.push(o);
   });
