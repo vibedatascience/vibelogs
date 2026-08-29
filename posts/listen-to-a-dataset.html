@@ -77,6 +77,8 @@ canvas#keys{display:block;width:100%;height:90px;background:#fff;border-top:1px 
 .gram summary{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--navy);cursor:pointer;padding:12px 16px;background:#fff;border:1px solid var(--line);border-radius:10px}
 .gram summary:hover{border-color:var(--navy)}
 .gram[open] summary{border-radius:10px 10px 0 0;border-bottom:none}
+#speedSel{font-family:var(--mono);font-size:12.5px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);cursor:pointer}
+#speedSel:focus{outline:2px solid var(--navy)}
 footer{margin-top:40px;font-size:12px;color:var(--slate);font-family:var(--mono);line-height:1.7}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -166,6 +168,14 @@ footer{margin-top:40px;font-size:12px;color:var(--slate);font-family:var(--mono)
       <div class="timebar" id="timebar"><div class="timefill" id="timefill"></div></div>
     </div>
     <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+      <select id="speedSel" aria-label="Playback speed">
+        <option value="0.5">Very slow (half speed)</option>
+        <option value="0.75">Slow</option>
+        <option value="1" selected>As performed</option>
+        <option value="1.25">A bit faster</option>
+        <option value="1.5">Fast</option>
+        <option value="2">Very fast (double)</option>
+      </select>
       <select id="instSel" aria-label="Instrument">
         <option value="piano">Piano</option>
         <option value="epiano">Electric piano</option>
@@ -262,7 +272,7 @@ function describeToken(id){
   return['token '+id,'c-hdr'];
 }
 
-let piece=null,totalRows=null;
+let piece=null,totalRows=null,rate=1;
 let ctx=null,playing=false,startAt=0,offset=0,scheduled=[],schedTimer=null,rafId=null;
 const $=id=>document.getElementById(id);
 
@@ -374,12 +384,12 @@ function playNote(note,vel,when,dur){
 }
 function scheduleChunk(){
   if(!playing)return;
-  const now=ctx.currentTime,pos=now-startAt+offset,horizon=pos+1.2;
+  const now=ctx.currentTime,pos=(now-startAt)*rate+offset,horizon=pos+1.2*rate;
   for(const n of piece.notes){
     if(n.start>=pos-.02&&n.start<horizon&&!n._q){n._q=true;
-      playNote(n.note,n.vel,startAt+n.start-offset,Math.max(n.end-n.start,.08));}
+      playNote(n.note,n.vel,startAt+(n.start-offset)/rate,Math.max((n.end-n.start)/rate,.08));}
   }
-  if(pos>piece.duration+.5){stopAll();offset=0;draw(0);return}
+  if(pos>piece.duration+.5){stopAll();offset=0;draw(0);drawKeys(0);return}
   schedTimer=setTimeout(scheduleChunk,300);
 }
 function clearFlags(){if(piece)for(const n of piece.notes)delete n._q}
@@ -390,7 +400,7 @@ function play(){
   $('btnPlay').innerHTML='&#10074;&#10074;';
   scheduleChunk();loop();
 }
-function pause(){offset+=ctx.currentTime-startAt;stopAll();draw(offset);drawKeys(offset)}
+function pause(){offset+=(ctx.currentTime-startAt)*rate;stopAll();draw(offset);drawKeys(offset)}
 $('btnPlay').onclick=()=>{if(!piece)return;playing?pause():play()};
 
 function fmt(s){s=Math.max(0,s);return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0')}
@@ -450,7 +460,7 @@ function drawKeys(pos){
     }
   });
 }
-function loop(){if(!playing)return;const p=ctx.currentTime-startAt+offset;draw(p);drawKeys(p);rafId=requestAnimationFrame(loop)}
+function loop(){if(!playing)return;const p=(ctx.currentTime-startAt)*rate+offset;draw(p);drawKeys(p);rafId=requestAnimationFrame(loop)}
 
 $('timebar').onclick=e=>{
   if(!piece)return;
@@ -470,7 +480,12 @@ $('instSel').onchange=e=>{
   currentInst=e.target.value;
   if(playing){pause();play()}
 };
-window.addEventListener('resize',()=>{const p=playing?ctx.currentTime-startAt+offset:offset;draw(p);drawKeys(p)});
+$('speedSel').onchange=e=>{
+  const was=playing;if(playing)pause();
+  rate=parseFloat(e.target.value);
+  if(was)play();
+};
+window.addEventListener('resize',()=>{const p=playing?(ctx.currentTime-startAt)*rate+offset:offset;draw(p);drawKeys(p)});
 
 getTotal();
 loadRow(0);
