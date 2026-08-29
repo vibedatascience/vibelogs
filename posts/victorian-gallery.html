@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>vibelogs — the infinite Victorian gallery</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--red:#E60023;--navy:#0a3069;--teal:#0d9488;--slate:#64748b;--bg:#f8fafc;--card:#fff;--ink:#0f172a;--line:#e2e8f0;
+--mono:'IBM Plex Mono',monospace;--disp:'Archivo',sans-serif;--body:'Inter',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.6}
+.wrap{max-width:1020px;margin:0 auto;padding:44px 24px 80px}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--red);font-weight:600}
+h1{font-family:var(--disp);font-weight:800;font-size:clamp(30px,4.6vw,50px);letter-spacing:-.02em;margin:10px 0 14px}
+.lede{color:#334155;font-size:16px;max-width:720px}
+.lede b{color:var(--ink)}
+
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:24px 0 16px}
+.btn{font-family:var(--body);font-weight:600;font-size:14px;padding:11px 18px;border-radius:9px;border:1px solid var(--line);background:#fff;cursor:pointer}
+.btn:hover{border-color:var(--navy)}
+.btn:focus-visible{outline:3px solid var(--navy);outline-offset:2px}
+.btn.primary{background:var(--red);border-color:var(--red);color:#fff}
+.btn.primary:hover{background:#c4001e}
+.btn[aria-pressed=true]{background:var(--navy);border-color:var(--navy);color:#fff}
+select{font-family:var(--mono);font-size:12.5px;padding:9px 12px;border:1px solid var(--line);border-radius:9px;background:#fff;cursor:pointer}
+.hint{font-family:var(--mono);font-size:11.5px;color:var(--slate)}
+
+.frame{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:clamp(14px,3vw,34px);min-height:420px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.mat{background:#fff;box-shadow:0 10px 34px rgba(15,23,42,.14);padding:clamp(8px,1.6vw,18px);max-width:100%}
+.mat img{display:block;max-width:100%;max-height:74vh;height:auto}
+.loading{font-family:var(--mono);font-size:13px;color:var(--slate);padding:60px 0}
+.caption{margin-top:18px;text-align:center;max-width:720px}
+.cap-title{font-family:var(--disp);font-weight:700;font-size:17px}
+.cap-sub{font-family:var(--mono);font-size:12px;color:var(--slate);margin-top:5px}
+.cap-sub a{color:var(--red);text-decoration:none;border-bottom:1px solid #f4b8c3}
+.cap-sub a:hover{border-bottom-color:var(--red)}
+.counterline{font-family:var(--mono);font-size:11px;color:var(--slate);margin-top:22px;text-align:center}
+footer{margin-top:36px;font-size:12px;color:var(--slate);font-family:var(--mono);line-height:1.7}
+footer a{color:var(--red);text-decoration:none;border-bottom:1px solid #f4b8c3}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="kicker">vibelogs &middot; [2026-08-29] &middot; interactive</div>
+<h1>The infinite Victorian gallery</h1>
+<p class="lede">Half a million engravings, plates, and illustrations sit inside two Hugging Face datasets: <b>115,293 illustrated pages</b> from the 1911 Encyclopaedia Britannica and <b>385,231 plates</b> the British Library scanned out of 19th-century books. This page pulls one at random, straight from the dataset API, every time you press the button. Nobody has curated what you're about to see. Press space to keep going.</p>
+
+<div class="bar">
+  <button class="btn primary" id="btnNext">Another plate</button>
+  <select id="srcSel" aria-label="Collection">
+    <option value="both">Both collections</option>
+    <option value="brit">Britannica 1911</option>
+    <option value="bl">British Library books</option>
+  </select>
+  <button class="btn" id="btnAuto" aria-pressed="false">Slideshow</button>
+  <span class="hint">space or &rarr; for next</span>
+</div>
+
+<div class="frame" id="frame">
+  <div class="loading" id="loading">fetching a plate...</div>
+</div>
+<div class="caption" id="caption"></div>
+<div class="counterline" id="counter"></div>
+
+<footer>
+Sources, fetched live per click: <a href="https://huggingface.co/datasets/biglam/britannica-illustrated-pages" target="_blank" rel="noopener">biglam/britannica-illustrated-pages</a> and <a href="https://huggingface.co/datasets/biglam/british-library-book-images" target="_blank" rel="noopener">biglam/british-library-book-images</a>, both public-domain scans published by the BigLAM initiative. Every Britannica plate links back to its original scan on the Internet Archive. Images render at the dataset's stored resolution; some pages are text-heavy by classifier error, press on.
+</footer>
+</div>
+
+<script>
+const API="https://datasets-server.huggingface.co/rows";
+const SOURCES={
+  brit:{ds:"biglam/britannica-illustrated-pages",config:"pages",total:115293,label:"Encyclopaedia Britannica, 11th edition"},
+  bl:{ds:"biglam/british-library-book-images",config:"plates",total:385231,label:"British Library 19th-century books"}
+};
+const $=id=>document.getElementById(id);
+let seen=0,auto=false,autoTimer=null,busy=false;
+
+function pickSource(){
+  const v=$('srcSel').value;
+  if(v!=='both')return v;
+  return Math.random()<115293/(115293+385231)?'brit':'bl';
+}
+function parseBLTitle(fname){
+  if(!fname)return null;
+  const parts=fname.replace(/\.jpg$/i,'').split('_');
+  const words=parts.filter(p=>/[a-zA-Z]{3}/.test(p));
+  if(!words.length)return null;
+  return words.join(' — ').replace(/\s{2,}/g,' ').trim();
+}
+async function loadPlate(){
+  if(busy)return;busy=true;
+  const key=pickSource(),S=SOURCES[key];
+  const off=Math.floor(Math.random()*S.total);
+  $('loading').style.display='block';$('loading').textContent='fetching plate '+off.toLocaleString()+' of '+S.total.toLocaleString()+'...';
+  try{
+    const r=await fetch(`${API}?dataset=${S.ds}&config=${S.config}&split=train&offset=${off}&length=1`);
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const j=await r.json();
+    const row=j.rows[0].row;
+    const src=row.image&&row.image.src;
+    if(!src)throw new Error('no image in row');
+    const img=new Image();
+    img.onload=()=>{
+      const mat=document.createElement('div');mat.className='mat';mat.appendChild(img);
+      $('frame').innerHTML='';$('frame').appendChild(mat);
+      seen++;
+      let title,sub;
+      if(key==='brit'){
+        title=row.title||'Encyclopaedia Britannica';
+        sub=`${S.label} &middot; ${row.year||1911} &middot; page ${row.page??'?'}`;
+        if(row.ia_page_url)sub+=` &middot; <a href="${row.ia_page_url}" target="_blank" rel="noopener">original scan &nearr;</a>`;
+      }else{
+        title=parseBLTitle(row.fname)||'19th-century book plate';
+        sub=`${S.label} &middot; printed ${row.date||'1800s'}`;
+      }
+      $('caption').innerHTML=`<div class="cap-title">${title}</div><div class="cap-sub">${sub} &middot; row ${off.toLocaleString()}</div>`;
+      $('counter').textContent=seen+' plate'+(seen===1?'':'s')+' seen this visit';
+      busy=false;
+      if(auto)autoTimer=setTimeout(loadPlate,8000);
+    };
+    img.onerror=()=>{busy=false;loadPlate()};
+    img.src=src;
+  }catch(e){
+    $('loading').textContent='that fetch failed ('+e.message+'), trying another...';
+    busy=false;setTimeout(loadPlate,900);
+  }
+}
+$('btnNext').onclick=()=>{clearTimeout(autoTimer);loadPlate()};
+$('btnAuto').onclick=e=>{
+  auto=!auto;e.currentTarget.setAttribute('aria-pressed',auto);
+  e.currentTarget.textContent=auto?'Stop slideshow':'Slideshow';
+  if(auto)loadPlate();else clearTimeout(autoTimer);
+};
+document.addEventListener('keydown',e=>{
+  if(e.key===' '||e.key==='ArrowRight'){e.preventDefault();clearTimeout(autoTimer);loadPlate()}
+});
+loadPlate();
+</script>
+</body>
+</html>
