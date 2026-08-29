@@ -45,6 +45,7 @@ code{font-family:var(--mono);font-size:13px;background:#eef2f7;padding:1px 6px;b
 .timefill{height:100%;width:0%;background:var(--red);border-radius:99px}
 .timelab{font-family:var(--mono);font-size:11px;color:var(--slate);min-width:92px;text-align:right}
 canvas#roll{display:block;width:100%;height:280px;background:#fbfcfe}
+canvas#keys{display:block;width:100%;height:90px;background:#fff;border-top:1px solid var(--line)}
 .status{padding:40px 20px;text-align:center;font-family:var(--mono);font-size:13px;color:var(--slate)}
 
 .pipe{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:0;align-items:stretch;margin-top:16px}
@@ -183,6 +184,7 @@ footer{margin-top:40px;font-size:12px;color:var(--slate);font-family:var(--mono)
   </div>
   <div class="status" id="status">Pick a row above. The page will fetch it straight from Hugging Face.</div>
   <canvas id="roll" height="280" style="display:none"></canvas>
+  <canvas id="keys" height="90" style="display:none"></canvas>
 </div>
 
 <h2>How a row becomes music</h2>
@@ -278,7 +280,7 @@ async function getTotal(){
 async function loadRow(n){
   if(playing)pause();
   piece=null;$('btnPlay').disabled=true;
-  $('roll').style.display='none';$('status').style.display='block';
+  $('roll').style.display='none';$('keys').style.display='none';$('status').style.display='block';
   $('status').textContent='fetching row '+n.toLocaleString()+' from Hugging Face...';
   $('mName').textContent='row '+n.toLocaleString();$('badges').innerHTML='';
   try{
@@ -298,9 +300,9 @@ async function loadRow(n){
     b.push([fmt(piece.duration)+' long','']);
     b.push([piece.nTokens.toLocaleString()+' numbers in the row','']);
     $('badges').innerHTML=b.map(([t,c])=>`<span class="badge ${c}">${t}</span>`).join('');
-    $('status').style.display='none';$('roll').style.display='block';
+    $('status').style.display='none';$('roll').style.display='block';$('keys').style.display='block';
     $('btnPlay').disabled=false;
-    draw(0);updatePipe(row.input_ids,dec);
+    draw(0);drawKeys(0);updatePipe(row.input_ids,dec);
   }catch(e){
     $('status').textContent='could not load row '+n+' ('+e.message+'). Try again or pick another row.';
   }
@@ -388,7 +390,7 @@ function play(){
   $('btnPlay').innerHTML='&#10074;&#10074;';
   scheduleChunk();loop();
 }
-function pause(){offset+=ctx.currentTime-startAt;stopAll();draw(offset)}
+function pause(){offset+=ctx.currentTime-startAt;stopAll();draw(offset);drawKeys(offset)}
 $('btnPlay').onclick=()=>{if(!piece)return;playing?pause():play()};
 
 function fmt(s){s=Math.max(0,s);return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0')}
@@ -418,13 +420,43 @@ function draw(pos){
   $('timefill').style.width=(Math.min(pos/piece.duration,1)*100)+'%';
   $('timelab').textContent=fmt(pos)+' / '+fmt(piece.duration);
 }
-function loop(){if(!playing)return;draw(ctx.currentTime-startAt+offset);rafId=requestAnimationFrame(loop)}
+const KLO=21,KHI=108;
+const kcanvas=$('keys');
+function isBlack(n){return[1,3,6,8,10].includes(n%12)}
+function drawKeys(pos){
+  if(!piece)return;
+  const dpr=window.devicePixelRatio||1,w=kcanvas.clientWidth,h=90;
+  kcanvas.width=w*dpr;kcanvas.height=h*dpr;
+  const g=kcanvas.getContext('2d');g.scale(dpr,dpr);
+  g.fillStyle='#fff';g.fillRect(0,0,w,h);
+  const active=new Set();
+  for(const n of piece.notes){if(pos>=n.start&&pos<n.end)active.add(n.note)}
+  const whites=[];
+  for(let n=KLO;n<=KHI;n++)if(!isBlack(n))whites.push(n);
+  const ww=w/whites.length;
+  whites.forEach((n,i)=>{
+    g.fillStyle=active.has(n)?'#E60023':'#fff';
+    g.fillRect(i*ww,0,ww,h);
+    g.strokeStyle='#e2e8f0';g.strokeRect(i*ww+.5,.5,ww,h-1);
+    if(n%12===0){g.fillStyle=active.has(n)?'#fff':'#94a3b8';g.font='9px IBM Plex Mono';
+      g.fillText('C'+(Math.floor(n/12)-1),i*ww+2,h-5)}
+  });
+  const bw=ww*.62,bh=h*.62;
+  whites.forEach((n,i)=>{
+    const nb=n+1;
+    if(nb<=KHI&&isBlack(nb)){
+      g.fillStyle=active.has(nb)?'#E60023':'#0f172a';
+      g.fillRect((i+1)*ww-bw/2,0,bw,bh);
+    }
+  });
+}
+function loop(){if(!playing)return;const p=ctx.currentTime-startAt+offset;draw(p);drawKeys(p);rafId=requestAnimationFrame(loop)}
 
 $('timebar').onclick=e=>{
   if(!piece)return;
   const r=e.currentTarget.getBoundingClientRect(),frac=(e.clientX-r.left)/r.width;
   const was=playing;if(playing)pause();
-  offset=frac*piece.duration;clearFlags();draw(offset);
+  offset=frac*piece.duration;clearFlags();draw(offset);drawKeys(offset);
   if(was)play();
 };
 
@@ -438,7 +470,7 @@ $('instSel').onchange=e=>{
   currentInst=e.target.value;
   if(playing){pause();play()}
 };
-window.addEventListener('resize',()=>draw(playing?ctx.currentTime-startAt+offset:offset));
+window.addEventListener('resize',()=>{const p=playing?ctx.currentTime-startAt+offset:offset;draw(p);drawKeys(p)});
 
 getTotal();
 loadRow(0);
