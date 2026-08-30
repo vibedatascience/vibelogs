@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="Rahul">
+<title>vibelogs — chart agent</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+<style>
+:root{--red:#E60023;--navy:#0a3069;--teal:#0d9488;--slate:#64748b;--bg:#f8fafc;--card:#fff;--ink:#0f172a;--line:#e2e8f0;
+--mono:'IBM Plex Mono',monospace;--disp:'Archivo',sans-serif;--body:'Inter',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.6}
+.wrap{max-width:1280px;margin:0 auto;padding:36px 20px 40px}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--red);font-weight:600}
+h1{font-family:var(--disp);font-weight:800;font-size:clamp(26px,4vw,40px);letter-spacing:-.02em;margin:8px 0 6px}
+.lede{color:#334155;font-size:14.5px;max-width:720px}
+h2{font-family:var(--disp);font-size:15px;font-weight:700;margin:0 0 10px}
+.src{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:20px 0 16px}
+.tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.tab{font-family:var(--mono);font-size:12px;padding:6px 12px;border-radius:99px;border:1px solid var(--line);background:#fff;cursor:pointer;color:var(--slate)}
+.tab.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.pane{display:none;gap:10px;align-items:center;flex-wrap:wrap}
+.pane.on{display:flex}
+input[type=text],select{font-family:var(--mono);font-size:12.5px;padding:8px 11px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+input[type=text]{flex:1;min-width:260px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--navy)}
+.btn{font-family:var(--body);font-weight:600;font-size:13px;padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:#fff;cursor:pointer}
+.btn:hover{border-color:var(--navy)}
+.btn.primary{background:var(--red);border-color:var(--red);color:#fff}
+.btn.primary:hover{background:#c4001e}
+.btn:disabled{opacity:.5;cursor:default}
+.hint{font-family:var(--mono);font-size:11px;color:var(--slate)}
+.dsinfo{font-family:var(--mono);font-size:12px;color:var(--navy);margin-top:10px;display:none}
+.dsinfo b{color:var(--red)}
+.grid{display:grid;grid-template-columns:380px 1fr;gap:16px;min-height:640px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.stage{background:var(--card);border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;overflow:hidden;min-height:0}
+.log{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;max-height:640px}
+.msg{max-width:92%;padding:10px 13px;border-radius:12px;font-size:13.5px;word-wrap:break-word}
+.msg.user{align-self:flex-end;background:var(--navy);color:#fff;border-bottom-right-radius:4px;white-space:pre-wrap}
+.msg.bot{align-self:flex-start;background:#f1f5f9;border-bottom-left-radius:4px}
+.msg.bot p{margin:0 0 6px}.msg.bot p:last-child{margin:0}
+.msg.bot code{font-family:var(--mono);font-size:12px;background:#e2e8f0;padding:1px 5px;border-radius:4px}
+.msg.err{align-self:flex-start;background:#fde8ec;color:#a3001a;font-family:var(--mono);font-size:12px;white-space:pre-wrap}
+.msg.sys{align-self:center;font-family:var(--mono);font-size:11px;color:var(--slate);background:none;padding:0}
+.who{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;opacity:.65;margin-bottom:3px;display:block}
+.tok{font-family:var(--mono);font-size:10.5px;opacity:.6;margin-top:6px;display:block}
+.compose{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}
+textarea{flex:1;font-family:var(--body);font-size:13.5px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;resize:none;min-height:42px;max-height:140px;line-height:1.45}
+.chartwrap{position:relative;flex:1;min-height:560px;background:#fff}
+iframe{width:100%;height:100%;min-height:560px;border:none;display:block}
+.chips{display:flex;gap:6px;flex-wrap:wrap;padding:10px 12px;border-bottom:1px solid var(--line)}
+.chip{font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:99px;background:#eef2f7;color:var(--navy);cursor:pointer;border:none}
+.chip:hover{background:#e0e7ff}
+.codebox{border-top:1px solid var(--line)}
+.codebox summary{font-family:var(--mono);font-size:12px;color:var(--navy);cursor:pointer;padding:10px 14px}
+.codebox pre{background:#0f172a;color:#e2e8f0;padding:12px 14px;font-family:var(--mono);font-size:11.5px;line-height:1.5;overflow-x:auto;max-height:300px;margin:0}
+.foot{font-family:var(--mono);font-size:11px;color:var(--slate);margin-top:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.foot a{color:var(--red);text-decoration:none}
+.dots::after{content:'';animation:d 1.2s infinite}
+@keyframes d{0%{content:''}33%{content:'.'}66%{content:'..'}100%{content:'...'}}
+.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:13px;color:var(--slate);text-align:center;padding:40px;pointer-events:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">llm-apps</div>
+  <h1>chart agent</h1>
+  <p class="lede">Load a CSV, describe the chart you want, get a Plotly chart. The model only sees column names, types and 20 sample rows. The full data stays in your browser. Code runs in a sandboxed iframe; failures are sent back to the model to fix, up to two retries.</p>
+
+  <div class="src">
+    <div class="tabs">
+      <button class="tab on" data-p="tt">tidytuesday</button>
+      <button class="tab" data-p="gh">github / url</button>
+      <button class="tab" data-p="up">upload csv</button>
+    </div>
+    <div class="pane on" id="p-tt">
+      <select id="ttsel"></select>
+      <button class="btn primary" id="ttload">load</button>
+      <span class="hint">curated weeks under 10MB from rfordatascience/tidytuesday</span>
+    </div>
+    <div class="pane" id="p-gh">
+      <input type="text" id="ghurl" placeholder="https://github.com/user/repo/blob/main/data.csv or any raw CSV url">
+      <button class="btn primary" id="ghload">load</button>
+    </div>
+    <div class="pane" id="p-up">
+      <input type="file" id="upfile" accept=".csv,.tsv,text/csv">
+      <span class="hint">parsed locally with papaparse</span>
+    </div>
+    <div class="dsinfo" id="dsinfo"></div>
+  </div>
+
+  <div class="grid">
+    <div class="stage">
+      <div class="chips" id="chips">
+        <button class="chip">what is interesting here?</button>
+        <button class="chip">trend over time</button>
+        <button class="chip">top 10 by count</button>
+        <button class="chip">distribution of a numeric column</button>
+        <button class="chip">two variables, scatter</button>
+      </div>
+      <div class="log" id="log"><div class="msg sys">load a dataset to start</div></div>
+      <div class="compose">
+        <textarea id="input" placeholder="Describe the chart. Enter to send." rows="1"></textarea>
+        <button class="btn primary" id="send" disabled>go</button>
+      </div>
+    </div>
+    <div class="stage">
+      <div class="chartwrap">
+        <div class="empty" id="empty">chart appears here</div>
+        <iframe id="frame" sandbox="allow-scripts"></iframe>
+      </div>
+      <details class="codebox"><summary>generated code</summary><pre id="code">// nothing yet</pre></details>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span>model <select id="model"><option value="deepseek/deepseek-v4-flash">deepseek/deepseek-v4-flash ($0.08 / $0.16)</option><option value="qwen/qwen3.7-flash">qwen/qwen3.7-flash ($0.03 / $0.13)</option><option value="openai/gpt-oss-20b">openai/gpt-oss-20b ($0.03 / $0.13)</option><option value="openai/gpt-5-nano">openai/gpt-5-nano ($0.05 / $0.40)</option></select></span>
+    <span id="usage">0 tokens / $0.00000 this session</span>
+    <span><a href="../">back to vibelogs</a></span>
+  </div>
+</div>
+
+<script>
+const KEY=atob('c2stb3ItdjEtZDAxYjlmNjhkOWFiY2JlYWJlYTU2OWNhMzA1YWZiMzM0YjlhY2NkZmY0M2MxNDFiZDQ1MmJjYzRmZmZkZjJkMg==');
+const API='https://openrouter.ai/api/v1/chat/completions';
+const TTB='https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/';
+const TT=[
+['Palmer penguins (2020-07-28)','2020/2020-07-28/penguins.csv'],
+['Coffee taste survey (2024-05-14)','2024/2024-05-14/coffee_survey.csv'],
+['Netflix titles (2021-04-20)','2021/2021-04-20/netflix_titles.csv'],
+['Board game ratings (2022-01-25)','2022/2022-01-25/ratings.csv'],
+['Hot Ones episodes (2023-08-08)','2023/2023-08-08/episodes.csv'],
+['Baltimore trash wheel (2024-03-05)','2024/2024-03-05/trashwheel.csv'],
+['Holiday movies (2023-12-12)','2023/2023-12-12/holiday_movies.csv'],
+['Math Olympiad country results (2024-09-24)','2024/2024-09-24/country_results_df.csv'],
+['Psychometrics characters (2022-08-16)','2022/2022-08-16/characters.csv'],
+['Monster movies (2024-10-29)','2024/2024-10-29/monster_movies.csv'],
+['Centenarians (2023-05-30)','2023/2023-05-30/centenarians.csv'],
+['Simpsons episodes (2025-02-04)','2025/2025-02-04/simpsons_episodes.csv'],
+['FDA drugs (2023-03-14)','2023/2023-03-14/drugs.csv'],
+['US census 1790-1870 (2021-02-16)','2021/2021-02-16/census.csv'],
+['Cheeses (2024-06-04)','2024/2024-06-04/cheeses.csv'],
+['US House elections (2023-11-07)','2023/2023-11-07/house.csv'],
+['OWID energy (2023-06-06)','2023/2023-06-06/owid-energy.csv'],
+['Bob\'s Burgers episode metrics (2024-11-19)','2024/2024-11-19/episode_metrics.csv']
+];
+const $=id=>document.getElementById(id);
+const log=$('log'),input=$('input'),send=$('send'),frame=$('frame'),codeEl=$('code'),usage=$('usage'),dsinfo=$('dsinfo'),empty=$('empty');
+let rows=[],cols=[],dsName='',history=[],tokens=0,cost=0,busy=false,lastCode='';
+
+TT.forEach(([n,p])=>{const o=document.createElement('option');o.value=TTB+p;o.textContent=n;$('ttsel').appendChild(o);});
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab,.pane').forEach(e=>e.classList.remove('on'));t.classList.add('on');$('p-'+t.dataset.p).classList.add('on');});
+
+function add(role,text){
+  const d=document.createElement('div');d.className='msg '+role;
+  if(role!=='sys'){d.innerHTML='<span class="who">'+(role==='user'?'you':role==='bot'?'agent':'error')+'</span>';}
+  if(role==='bot'){const b=document.createElement('div');b.innerHTML=DOMPurify.sanitize(marked.parse(text));d.appendChild(b);}
+  else d.appendChild(document.createTextNode(text));
+  log.appendChild(d);log.scrollTop=log.scrollHeight;return d;
+}
+
+function inferType(vals){
+  const v=vals.filter(x=>x!==null&&x!==''&&x!==undefined);
+  if(!v.length)return 'empty';
+  if(v.every(x=>typeof x==='number'))return 'number';
+  if(v.every(x=>/^\d{4}-\d{2}-\d{2}/.test(String(x))))return 'date';
+  if(new Set(v).size<=Math.max(12,v.length*0.05))return 'category';
+  return 'text';
+}
+
+function summary(){
+  const n=rows.length;
+  const lines=cols.map(c=>{
+    const vals=rows.map(r=>r[c]);const t=inferType(vals);
+    let extra='';
+    if(t==='number'){const nums=vals.filter(x=>typeof x==='number');extra=' min='+Math.min(...nums)+' max='+Math.max(...nums);}
+    else if(t==='category'){extra=' values='+JSON.stringify([...new Set(vals.filter(x=>x!==null&&x!==''))].slice(0,12));}
+    const nulls=vals.filter(x=>x===null||x===''||x===undefined).length;
+    return '- '+c+' ('+t+(nulls?', '+nulls+' missing':'')+')'+extra;
+  });
+  return 'Dataset: '+dsName+'\nRows: '+n+'\nColumns:\n'+lines.join('\n')+'\n\nFirst 20 rows as JSON:\n'+JSON.stringify(rows.slice(0,20));
+}
+
+function loaded(name){
+  cols=Object.keys(rows[0]||{});
+  dsName=name;
+  dsinfo.style.display='block';
+  dsinfo.innerHTML='<b>'+name+'</b> · '+rows.length.toLocaleString()+' rows · '+cols.length+' columns · '+cols.slice(0,10).join(', ')+(cols.length>10?' ...':'');
+  history=[];log.innerHTML='';add('sys','loaded '+name+'. describe a chart.');
+  send.disabled=false;input.focus();
+}
+
+function parseText(text,name){
+  const r=Papa.parse(text.trim(),{header:true,dynamicTyping:true,skipEmptyLines:true});
+  if(!r.data.length){add('err','no rows parsed');return;}
+  rows=r.data;loaded(name);
+}
+
+async function loadUrl(u){
+  let url=u.trim();
+  const m=url.match(/^https:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/(.+)$/);
+  if(m)url='https://raw.githubusercontent.com/'+m[1]+'/'+m[2]+'/'+m[3];
+  add('sys','fetching '+url);
+  try{const r=await fetch(url);if(!r.ok)throw new Error('HTTP '+r.status);parseText(await r.text(),url.split('/').pop());}
+  catch(e){add('err','fetch failed: '+e.message+'. The host may block cross-origin requests.');}
+}
+$('ttload').onclick=()=>loadUrl($('ttsel').value);
+$('ghload').onclick=()=>loadUrl($('ghurl').value);
+$('ghurl').addEventListener('keydown',e=>{if(e.key==='Enter')loadUrl($('ghurl').value);});
+$('upfile').onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>parseText(rd.result,f.name);rd.readAsText(f);};
+
+const SYSTEM=`You are a data visualization agent. You write Plotly.js code that runs in the browser.
+
+Respond with a short sentence about the chart (one or two sentences, plain language) followed by exactly one JavaScript code block. The code block must define:
+
+function chart(rows) { ... return {data, layout}; }
+
+rows is an array of objects, one per CSV row, with the column names given. Numbers are already parsed. Do the aggregation, filtering and sorting yourself inside chart(). Do not fetch anything. Do not use libraries other than plain JS and Plotly trace/layout objects. Handle nulls.
+
+Style rules, strictly:
+- Palette: Pinterest red #E60023 for the primary series or highlight, navy #0a3069 secondary, teal #0d9488 tertiary, slate #64748b for everything unimportant. At most 4 colors. Never default Plotly colors.
+- White background: layout.paper_bgcolor and plot_bgcolor '#ffffff'. Light gray gridlines '#e2e8f0'. No zero lines.
+- Font: layout.font = {family:'Inter, sans-serif', size:12, color:'#0f172a'}.
+- Title as layout.title = {text:'<b>Title</b><br><span style="font-size:12px;color:#64748b">subtitle stating the takeaway</span>', x:0, xanchor:'left'}. Set layout.margin = {t:90,l:60,r:40,b:60}.
+- Line charts: annotate the last point of each line with its value (layout.annotations, e.g. '12.3M' or '4.5%').
+- Horizontal bars for rankings, sorted. Top N only when there are many categories.
+- No pie charts. Use horizontal bar or treemap.
+- One chart only. No subplots unless asked.
+- Legends outside the plot area if needed: layout.legend = {orientation:'h', y:-0.15}.
+- Set layout.hovermode appropriately. Keep tick labels short enough not to overlap.
+
+If the user asks a question rather than a chart, still answer with the single best chart for that question.`;
+
+function extractCode(t){const m=t.match(/\`\`\`(?:javascript|js)?\s*([\s\S]*?)\`\`\`/);return m?m[1]:null;}
+function stripCode(t){return t.replace(/\`\`\`[\s\S]*?\`\`\`/g,'').trim();}
+
+let pendingResolve=null;
+window.addEventListener('message',e=>{if(e.source!==frame.contentWindow)return;if(pendingResolve){pendingResolve(e.data);pendingResolve=null;}});
+
+function render(code){
+  return new Promise(res=>{
+    pendingResolve=res;
+    const timer=setTimeout(()=>{if(pendingResolve){pendingResolve({ok:false,error:'render timed out after 15s'});pendingResolve=null;}},15000);
+    const doc=`<!DOCTYPE html><html><head><meta charset="utf-8"><script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.35.2/plotly.min.js"><\/script><style>html,body{margin:0;height:100%;background:#fff}#c{width:100%;height:100vh}</style></head><body><div id="c"></div><script>
+window.addEventListener('message',function(e){
+  var rows=e.data.rows;
+  try{
+    ${code}
+    var out=chart(rows);
+    if(!out||!out.data)throw new Error('chart() did not return {data, layout}');
+    var layout=Object.assign({paper_bgcolor:'#fff',plot_bgcolor:'#fff',font:{family:'Inter, sans-serif',size:12,color:'#0f172a'},autosize:true},out.layout||{});
+    Plotly.newPlot('c',out.data,layout,{responsive:true,displaylogo:false}).then(function(){parent.postMessage({ok:true},'*')}).catch(function(err){parent.postMessage({ok:false,error:String(err&&err.message||err)},'*')});
+  }catch(err){parent.postMessage({ok:false,error:String(err&&err.stack||err)},'*')}
+});
+parent.postMessage({ready:true},'*');
+<\/script></body></html>`;
+    frame.onload=()=>{frame.contentWindow.postMessage({rows},'*');};
+    frame.srcdoc=doc;
+  });
+}
+
+async function callModel(msgs){
+  const r=await fetch(API,{method:'POST',headers:{'Authorization':'Bearer '+KEY,'Content-Type':'application/json','HTTP-Referer':location.origin,'X-Title':'vibelogs chart agent'},
+    body:JSON.stringify({model:$('model').value,messages:[{role:'system',content:SYSTEM},...msgs],max_tokens:2500,temperature:0.2,usage:{include:true}})});
+  const j=await r.json();
+  if(j.error)throw new Error(j.error.message||JSON.stringify(j.error));
+  const u=j.usage||{};tokens+=u.total_tokens||0;cost+=Number(u.cost||0);
+  usage.textContent=tokens.toLocaleString()+' tokens / $'+cost.toFixed(5)+' this session';
+  return {text:j.choices[0].message.content,u};
+}
+
+async function ask(text){
+  if(!text||busy||!rows.length)return;
+  busy=true;send.disabled=true;input.value='';input.style.height='auto';
+  add('user',text);
+  if(!history.length)history.push({role:'user',content:summary()+'\n\nRequest: '+text});
+  else history.push({role:'user',content:text});
+  const pending=add('bot','');pending.appendChild(Object.assign(document.createElement('span'),{className:'dots'}));
+  let attempt=0,msgs=history.slice(-12);
+  try{
+    while(true){
+      const {text:reply,u}=await callModel(msgs);
+      const code=extractCode(reply);
+      if(!code)throw new Error('model returned no code block');
+      codeEl.textContent=code.trim();lastCode=code;
+      const res=await render(code);
+      if(res.ok){
+        empty.style.display='none';
+        pending.remove();
+        const d=add('bot',stripCode(reply)||'done');
+        const t=document.createElement('span');t.className='tok';t.textContent=(u.prompt_tokens||0)+' in / '+(u.completion_tokens||0)+' out / $'+Number(u.cost||0).toFixed(6)+(attempt?' / '+attempt+' retry':'');d.appendChild(t);
+        history.push({role:'assistant',content:reply});
+        break;
+      }
+      attempt++;
+      if(attempt>2){pending.remove();add('err','gave up after 2 retries:\n'+res.error);history.pop();break;}
+      add('sys','retry '+attempt+': '+res.error.split('\n')[0].slice(0,120));
+      msgs=[...msgs,{role:'assistant',content:reply},{role:'user',content:'That code threw this error when run:\n'+res.error+'\nFix it and return the full corrected code block.'}];
+    }
+  }catch(e){pending.remove();add('err',e.message);if(history.length&&history[history.length-1].role==='user')history.pop();}
+  busy=false;send.disabled=false;input.focus();
+}
+
+send.onclick=()=>ask(input.value.trim());
+input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();ask(input.value.trim());}});
+input.addEventListener('input',()=>{input.style.height='auto';input.style.height=Math.min(input.scrollHeight,140)+'px';});
+document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{if(rows.length)ask(c.textContent);else add('err','load a dataset first');});
+</script>
+</body>
+</html>
