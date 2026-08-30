@@ -37,6 +37,8 @@ textarea{flex:1;font-family:var(--body);font-size:14.5px;padding:10px 12px;borde
 textarea:focus{outline:2px solid var(--navy)}
 .foot{font-family:var(--mono);font-size:11px;color:var(--slate);margin-top:10px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 .foot a{color:var(--red);text-decoration:none}
+.hint{font-family:var(--mono);font-size:11px;color:var(--slate)}
+.tok{font-family:var(--mono);font-size:10.5px;opacity:.6;margin-top:6px;display:block}
 .dots::after{content:'';animation:d 1.2s infinite}
 @keyframes d{0%{content:''}33%{content:'.'}66%{content:'..'}100%{content:'...'}}
 </style>
@@ -50,11 +52,14 @@ textarea:focus{outline:2px solid var(--navy)}
   <div class="bar">
     <label for="model">model</label>
     <select id="model">
-      <option value="openai/gpt-4o-mini">openai/gpt-4o-mini</option>
-      <option value="openai/gpt-4o">openai/gpt-4o</option>
-      <option value="anthropic/claude-sonnet-4.6">anthropic/claude-sonnet-4.6</option>
-      <option value="google/gemini-3.7-flash">google/gemini-3.7-flash</option>
+      <option value="mistralai/mistral-nemo">mistralai/mistral-nemo ($0.019 / $0.03)</option>
+      <option value="qwen/qwen3.7-flash">qwen/qwen3.7-flash ($0.03 / $0.13)</option>
+      <option value="openai/gpt-oss-20b">openai/gpt-oss-20b ($0.03 / $0.13)</option>
+      <option value="deepseek/deepseek-v4-flash">deepseek/deepseek-v4-flash ($0.08 / $0.16)</option>
+      <option value="meta-llama/llama-3.1-8b-instruct">meta-llama/llama-3.1-8b-instruct ($0.05 / $0.08)</option>
+      <option value="openai/gpt-5-nano">openai/gpt-5-nano ($0.05 / $0.40)</option>
     </select>
+    <span class="hint">prices are $ per 1M tokens, in / out</span>
     <button class="btn" id="clear">clear</button>
   </div>
 
@@ -67,7 +72,7 @@ textarea:focus{outline:2px solid var(--navy)}
   </div>
 
   <div class="foot">
-    <span id="usage">0 tokens this session</span>
+    <span id="usage">0 tokens / $0.00000 this session</span>
     <span><a href="../">back to vibelogs</a></span>
   </div>
 </div>
@@ -76,7 +81,7 @@ textarea:focus{outline:2px solid var(--navy)}
 const KEY=atob('c2stb3ItdjEtZDAxYjlmNjhkOWFiY2JlYWJlYTU2OWNhMzA1YWZiMzM0YjlhY2NkZmY0M2MxNDFiZDQ1MmJjYzRmZmZkZjJkMg==');
 const URL='https://openrouter.ai/api/v1/chat/completions';
 const log=document.getElementById('log'),input=document.getElementById('input'),send=document.getElementById('send'),modelSel=document.getElementById('model'),usage=document.getElementById('usage');
-let history=[],tokens=0,busy=false;
+let history=[],tokens=0,cost=0,busy=false;
 
 function add(role,text){
   const d=document.createElement('div');
@@ -99,15 +104,19 @@ async function ask(){
   pending.appendChild(Object.assign(document.createElement('span'),{className:'dots'}));
   try{
     const r=await fetch(URL,{method:'POST',headers:{'Authorization':'Bearer '+KEY,'Content-Type':'application/json','HTTP-Referer':location.origin,'X-Title':'vibelogs chat'},
-      body:JSON.stringify({model:modelSel.value,messages:history.slice(-20),max_tokens:800})});
+      body:JSON.stringify({model:modelSel.value,messages:history.slice(-20),max_tokens:800,usage:{include:true}})});
     const j=await r.json();
     if(j.error)throw new Error(j.error.message||JSON.stringify(j.error));
     const reply=j.choices[0].message.content;
     pending.lastChild.remove();
     pending.appendChild(document.createTextNode(reply));
     history.push({role:'assistant',content:reply});
-    tokens+=(j.usage&&j.usage.total_tokens)||0;
-    usage.textContent=tokens.toLocaleString()+' tokens this session';
+    const u=j.usage||{};
+    const t=document.createElement('span');t.className='tok';
+    t.textContent=(u.prompt_tokens||0)+' in / '+(u.completion_tokens||0)+' out'+(u.cost!=null?' / $'+Number(u.cost).toFixed(6):'');
+    pending.appendChild(t);
+    tokens+=u.total_tokens||0;cost+=Number(u.cost||0);
+    usage.textContent=tokens.toLocaleString()+' tokens / $'+cost.toFixed(5)+' this session';
   }catch(e){
     pending.remove();
     history.pop();
