@@ -266,12 +266,19 @@ parent.postMessage({ready:true},'*');
 
 async function callModel(msgs){
   const r=await fetch(API,{method:'POST',headers:{'Authorization':'Bearer '+KEY,'Content-Type':'application/json','HTTP-Referer':location.origin,'X-Title':'vibelogs chart agent'},
-    body:JSON.stringify({model:$('model').value,messages:[{role:'system',content:SYSTEM},...msgs],max_tokens:2500,temperature:0.2,usage:{include:true}})});
+    body:JSON.stringify({model:$('model').value,messages:[{role:'system',content:SYSTEM},...msgs],max_tokens:4000,temperature:0.2,reasoning:{effort:'low'},usage:{include:true}})});
   const j=await r.json();
   if(j.error)throw new Error(j.error.message||JSON.stringify(j.error));
   const u=j.usage||{};tokens+=u.total_tokens||0;cost+=Number(u.cost||0);
   usage.textContent=tokens.toLocaleString()+' tokens / $'+cost.toFixed(5)+' this session';
-  return {text:j.choices[0].message.content,u};
+  const ch=(j.choices||[])[0];
+  let text=ch&&ch.message?ch.message.content:null;
+  if(Array.isArray(text))text=text.map(x=>x.text||'').join('');
+  if(!text||!text.trim()){
+    const rs=ch&&ch.message&&ch.message.reasoning?' reasoning='+String(ch.message.reasoning).slice(0,200):'';
+    throw new Error('empty reply from '+$('model').value+' (finish_reason='+(ch&&ch.finish_reason)+(ch&&ch.native_finish_reason?'/'+ch.native_finish_reason:'')+')'+rs);
+  }
+  return {text,u};
 }
 
 async function ask(text){
