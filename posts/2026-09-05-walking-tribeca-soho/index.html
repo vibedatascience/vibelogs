@@ -53,6 +53,10 @@ blockquote{border-left:3px solid var(--cobalt);margin:0 0 18px;padding:8px 16px;
 .cue{display:grid;grid-template-columns:28px 1fr;gap:10px;margin:0 0 18px;padding:13px 14px;border:1px solid var(--rule);border-radius:8px;background:#fff}
 .cue .ico{font-family:'IBM Plex Mono',monospace;color:var(--cobalt);font-weight:700;text-align:center}.cue strong{display:block;font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.08em;color:var(--cobalt);margin-bottom:2px}.cue p{margin:0;font-size:.92rem;line-height:1.55}
 .cue.history{border-left:3px solid #8B5CF6}.cue.history .ico,.cue.history strong{color:#7048D7}.cue.nearby{border-left:3px solid #0D9488}.cue.nearby .ico,.cue.nearby strong{color:#087E73}
+.timeline{position:relative;margin:8px 0 30px;padding-left:112px}.timeline::before{content:"";position:absolute;left:88px;top:8px;bottom:8px;width:2px;background:var(--rule)}
+.event{position:relative;padding:0 0 18px}.event::before{content:"";position:absolute;left:-29px;top:7px;width:10px;height:10px;border-radius:50%;background:var(--paper);border:2px solid var(--cobalt)}
+.year{position:absolute;right:calc(100% + 40px);top:0;font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--cobalt);white-space:nowrap}.event b{font-family:'Space Grotesk',sans-serif;font-weight:500}.event p{font-size:.9rem;line-height:1.5;margin:2px 0 0}.event a{font-family:'IBM Plex Mono',monospace;font-size:.7rem;text-decoration:none;background:var(--chip);padding:2px 6px;border-radius:4px;white-space:nowrap}
+@media(max-width:560px){.timeline{padding-left:82px}.timeline::before{left:61px}.event::before{left:-26px}.year{right:calc(100% + 33px);font-size:.8rem}}
 </style>
 </head>
 <body>
@@ -71,6 +75,33 @@ blockquote{border-left:3px solid var(--cobalt);margin:0 0 18px;padding:8px 16px;
 <div class="legend"><span>◉ LOOK FOR</span><span>↳ THEN / NOW</span><span>＋ NEARBY</span></div>
 <h2>Map</h2>
 <div id="map"></div>
+<h2>Timeline: 400 years in 2.5 miles</h2>
+<p>The route is short, but its sites span colonial New Amsterdam, the first northward expansion of Manhattan, industrialization, urban renewal, and SoHo's reinvention.</p>
+<div class="timeline">
+  <div class="event"><span class="year">1626</span><b>Enslaved Africans documented in New Amsterdam</b> <a href="#s2">STOP 2</a><p>The Dutch colony's African community is present within two years of settlement.</p></div>
+  <div class="event"><span class="year">1644</span><b>“Half-freedom” farms north of the Collect Pond</b> <a href="#s2">STOP 2</a><p>Freed petitioners establish Manhattan's first known free Black settlement, though their children remain enslaved.</p></div>
+  <div class="event"><span class="year">1705</span><b>Queen Anne grants Trinity Church 215 acres</b> <a href="#s4">STOP 4</a> <a href="#s8">STOP 8</a><p>The church's farm later contains the Harrison houses and St John's Park.</p></div>
+  <div class="event"><span class="year">1755</span><b>A map labels the African burial ground</b> <a href="#s2">STOP 2</a><p>The cemetery may already have been in use for more than a century.</p></div>
+  <div class="event"><span class="year">1797</span><b>Oldest Harrison Street house built</b> <a href="#s4">STOP 4</a><p>No. 317 Washington Street, later moved to Harrison Street, is the earliest of the nine survivors.</p></div>
+  <div class="event"><span class="year">1800</span><b>Elma Sands murder trial</b> <a href="#s13">STOP 13</a><p>Aaron Burr and Alexander Hamilton jointly defend Levi Weeks; the actual murder well is now lost.</p></div>
+  <div class="event"><span class="year">1803</span><b>St John's Square opens</b> <a href="#s8">STOP 8</a><p>A private, key-holder park anchors one of Manhattan's most fashionable districts.</p></div>
+  <div class="event"><span class="year">1809–15</span><b>Tucker House and Old St Patrick's rise</b> <a href="#s7">STOP 7</a> <a href="#s18">STOP 18</a><p>No. 2 White Street dates to about 1809; the cathedral's cornerstone is laid that year and it opens in 1815.</p></div>
+  <div class="event"><span class="year">1811</span><b>The Collect Pond is filled</b> <a href="#s9">STOP 9</a><p>Its drainage canal is buried beneath the street that keeps its name.</p></div>
+  <div class="event"><span class="year">1817–25</span><b>SoHo's residential era</b> <a href="#s13">STOP 13</a> <a href="#s15">STOP 15</a><p>No. 129 Spring rises in 1817 and No. 139 Greene in 1825, both before commerce remakes the neighborhood.</p></div>
+  <div class="event"><span class="year">1846</span><b>Stewart Building opens</b> <a href="#s1">STOP 1</a><p>The marble store at 280 Broadway is one of the country's earliest department stores.</p></div>
+  <div class="event"><span class="year">1856–57</span><b>The cast-iron city arrives</b> <a href="#s9">STOP 9</a> <a href="#s10">STOP 10</a><p>Arnold Constable opens in 1856; Haughwout follows in 1857 with New York's first passenger safety elevator.</p></div>
+  <div class="event"><span class="year">1861–71</span><b>Courthouse graft and Tweed's fall</b> <a href="#s1">STOP 1</a><p>A $1 million project balloons beyond $10 million before its accounts are exposed in 1871.</p></div>
+  <div class="event"><span class="year">1866–67</span><b>St John's Park becomes a rail terminal</b> <a href="#s8">STOP 8</a><p>Vanderbilt buys the park; its trees fall and freight trains replace promenades.</p></div>
+  <div class="event"><span class="year">1871</span><b>No. 101 Spring Street is built</b> <a href="#s12">STOP 12</a><p>The light-filled industrial loft will become Donald Judd's home and studio.</p></div>
+  <div class="event"><span class="year">1881–94</span><b>Firehouse and hospital buildings</b> <a href="#s14">STOP 14</a> <a href="#s3">STOP 3</a><p>The Wooster Street firehouse opens in 1881; New York Hospital's House of Relief follows in 1894.</p></div>
+  <div class="event"><span class="year">1903</span><b>Two icons open</b> <a href="#s6">STOP 6</a> <a href="#s17">STOP 17</a><p>Hook &amp; Ladder 8 and Ernest Flagg's Little Singer Building are completed.</p></div>
+  <div class="event"><span class="year">1914–36</span><b>Streets redesigned for subway and cars</b> <a href="#s6">STOP 6</a> <a href="#s8">STOP 8</a><p>Varick Street widening halves the firehouse; the Holland Tunnel opens in 1927 and its exit rotary in 1936.</p></div>
+  <div class="event"><span class="year">1965–73</span><b>Preservation defeats the expressway</b> <a href="#s10">STOP 10</a><p>Haughwout is landmarked in 1965, the highway is dead by 1970, and SoHo becomes a historic district in 1973.</p></div>
+  <div class="event"><span class="year">1968–74</span><b>Artists and activists claim SoHo</b> <a href="#s12">STOP 12</a> <a href="#s14">STOP 14</a> <a href="#s16">STOP 16</a><p>Judd buys 101 Spring; the GAA occupies its firehouse; Richard Haas begins his mural.</p></div>
+  <div class="event"><span class="year">1989</span><b>Charging Bull leaves Crosby Street</b> <a href="#s11">STOP 11</a><p>Di Modica installs the sculpture outside the Stock Exchange without permission.</p></div>
+  <div class="event"><span class="year">1991–2006</span><b>The burial ground returns to public memory</b> <a href="#s2">STOP 2</a><p>Construction reveals the graves in 1991; 419 people are reinterred in 2003 and the site becomes a National Monument in 2006.</p></div>
+  <div class="event"><span class="year">2013–23</span><b>Preservation continues</b> <a href="#s12">STOP 12</a> <a href="#s16">STOP 16</a><p>The Judd Foundation opens 101 Spring in 2013; the Haas mural is restored in 2023.</p></div>
+</div>
 <h2>The stops</h2><div class="strip"><a href="#s1">1 Tweed Courthouse</a><a href="#s2">2 African Burial Ground National Monument</a><a href="#s3">3 Staple Street Skybridge</a><a href="#s4">4 Harrison Street Houses</a><a href="#s5">5 Mercantile Exchange</a><a href="#s6">6 Ghostbusters Firehouse</a><a href="#s7">7 No. 2 White Street</a><a href="#s8">8 St John's Square</a><a href="#s9">9 Canal Street</a><a href="#s10">10 Haughwout Building</a><a href="#s11">11 Arturo Di Modica Studio</a><a href="#s12">12 Judd Foundation</a><a href="#s13">13 No. 129 Spring Street</a><a href="#s14">14 Gay Activists Alliance Firehouse</a><a href="#s15">15 No. 139 Greene Street</a><a href="#s16">16 Richard Haas Mural</a><a href="#s17">17 Little Singer Building</a><a href="#s18">18 St Patrick's Old Cathedral</a></div>
 <div class="route">Start at 52 Chambers Street</div>
 <h2 class="stop" id="s1"><span class="n">1</span>Tweed Courthouse</h2>
