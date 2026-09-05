@@ -42,6 +42,8 @@ footer a{color:var(--muted)}
 #map{height:520px;border:1px solid var(--rule);border-radius:8px;margin:0 0 18px}
 figure{margin:0 0 18px}figure img{width:100%;border-radius:8px;display:block}
 figcaption{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:var(--muted);margin-top:6px}
+.gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:0 0 18px}.gallery figure{margin:0}.gallery img{height:260px;object-fit:cover}
+@media(max-width:560px){.gallery{grid-template-columns:1fr}.gallery img{height:auto}}
 .card{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 18px}.card div{border:1px solid var(--rule);border-radius:8px;padding:10px 12px;background:#fff}.card b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1.2rem}.card span{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
 article h2.stop{display:flex;align-items:center;gap:12px}.n{display:inline-flex;width:32px;height:32px;border-radius:50%;background:var(--cobalt);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:0.85rem;align-items:center;justify-content:center;flex:none}
 .strip{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 18px}.strip a{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;background:var(--chip);color:var(--cobalt);padding:3px 8px;border-radius:4px;text-decoration:none}
@@ -74,6 +76,7 @@ blockquote{border-left:3px solid var(--cobalt);margin:0 0 18px;padding:8px 16px;
 <p>Enslaved Africans are documented in the Dutch colony from 1626. In 1644 a group petitioned for freedom and got "half-freedom": their own farm grants north of the pond, but their children stayed enslaved. That makes Tribeca and SoHo the first known free Black settlement on Manhattan. Under the British, Black New Yorkers could not be buried in churchyards, so a burial ground grew here, labeled on a 1755 map. It was buried under 20 feet of fill around 1795 and forgotten until a 1991 excavation for a federal tower turned up hundreds of colonial-era skeletons. 419 were exhumed, studied, and reinterred in 2003 in seven vaults, marked by the seven mounds on site. Perhaps 15,000 more lie under the surrounding buildings.</p>
 <div class="route">West along Duane, through Duane Park, north on Staple Street to Jay</div>
 <h2 class="stop" id="s3"><span class="n">3</span>Staple Street Skybridge</h2>
+<figure><img src="p40.jpg" alt="Staple Street Skybridge" loading="lazy"><figcaption>Staple Street Skybridge</figcaption></figure>
 <p>An iron footbridge at the third floor linking 67 Hudson and 9 Jay. Both were New York Hospital buildings: a "House of Relief" from 1894 and its stables and laundry from 1908. Look for the small "NYH" medallion on the Staple Street side. The two apartments it connects were listed together in 2015 for $50 million and sold in 2023 for about half that.</p>
 <div class="route">Left on Jay, right on Greenwich, to Harrison</div>
 <h2 class="stop" id="s4"><span class="n">4</span>Harrison Street Houses</h2>
@@ -83,6 +86,7 @@ blockquote{border-left:3px solid var(--cobalt);margin:0 0 18px;padding:8px 16px;
 <p>Red brick with granite and cast iron, 1884. Founded in 1872 as the Butter and Cheese Exchange, renamed a decade later as it expanded to groceries, dried fruit, poultry, and canned goods. It sat here because Washington Market, the city's main produce market from 1813 until the 1960s, was a few blocks south.</p>
 <div class="route">Left on Hudson, right on Franklin, left on Varick to North Moore</div>
 <h2 class="stop" id="s6"><span class="n">6</span>Ghostbusters Firehouse</h2>
+<figure><img src="p43.jpg" alt="Ghostbusters Firehouse" loading="lazy"><figcaption>Ghostbusters Firehouse</figcaption></figure>
 <p>Hook &amp; Ladder 8, completed 1903, was originally 55 feet wide with two bays. Varick Street was widened to 100 feet for the subway starting in 1914 and the western half of the firehouse was demolished. The Italianate details were moved to the new facade, so it is hard to tell anything was cut. Still an active FDNY company.</p>
 <div class="route">East past the firehouse to West Broadway</div>
 <h2 class="stop" id="s7"><span class="n">7</span>No. 2 White Street</h2>
@@ -92,37 +96,55 @@ blockquote{border-left:3px solid var(--cobalt);margin:0 0 18px;padding:8px 16px;
 <p>The Holland Tunnel exit rotary on your left was St John's Park, laid out in 1803 as a key-holder park like Gramercy, with the Hamiltons and Schuylers as neighbors and a Trinity chapel whose steeple was among the tallest structures in the city. Trinity sold the park to Vanderbilt's Hudson River Railroad in 1866. Trees were felled and a freight terminal went up the next year. The chapel was razed in 1918 for the Varick widening, the tunnel opened in 1927, and the terminal came down for the rotary in 1936. Nothing of the park remains.</p>
 <div class="route">North on Varick, right on Laight, right on Canal heading east</div>
 <h2 class="stop" id="s9"><span class="n">9</span>Canal Street</h2>
-<figure><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Canal_St-Baxter_St.JPG/1600px-Canal_St-Baxter_St.JPG" alt="Canal Street" loading="lazy"><figcaption>Canal Street (Wikimedia Commons)</figcaption></figure>
+<div class="gallery">
+<figure><img src="p43-1.jpg" alt="Canal Street looking east" loading="lazy"><figcaption>Canal Street looking east</figcaption></figure>
+<figure><img src="p43-2.jpg" alt="Canal Street" loading="lazy"><figcaption>Canal Street</figcaption></figure>
+<figure><img src="p47.jpg" alt="Arnold Constable Building" loading="lazy"><figcaption>Arnold Constable Building</figcaption></figure>
+<figure><img src="p47-1.jpg" alt="Mercer Street between Broome and Grand" loading="lazy"><figcaption>Mercer Street between Broome and Grand</figcaption></figure>
+</div>
 <p>Named for the actual canal dug here around 1800, now a sewer. It is the Tribeca and SoHo boundary. On the north side between Greene and Mercer, Nos. 313 to 327 are eight adjoining houses from the 1810s and 1820s; 321, 323, and 327 keep their peaked roofs and dormers. Samuel Morse lived at 321. Turning up Mercer, the marble and iron block between Canal and Howard is the 1856 Arnold Constable department store.</p>
 <div class="route">Left on Mercer, right on Broome, to Broadway</div>
 <h2 class="stop" id="s10"><span class="n">10</span>Haughwout Building</h2>
-<figure><img src="https://upload.wikimedia.org/wikipedia/commons/9/93/E.V._Haughwout_Building%2C_Broadway%2C_New_York.jpg" alt="E.V. Haughwout Building, 488 Broadway" loading="lazy"><figcaption>E.V. Haughwout Building, 488 Broadway (Wikimedia Commons)</figcaption></figure>
+<div class="gallery">
+<figure><img src="p47-2.jpg" alt="Haughwout Building" loading="lazy"><figcaption>Haughwout Building</figcaption></figure>
+<figure><img src="p47-3.jpg" alt="Broome Street near Crosby Street" loading="lazy"><figcaption>Broome Street near Crosby Street</figcaption></figure>
+</div>
 <blockquote>"a very New York thing, not equaled anywhere else"<br><small>Landmarks Preservation Commission on the cast iron palaces, quoted in the book</small></blockquote>
 <p>Pronounced HOW-itt. Built 1857 as a glass and china emporium, with the first passenger elevator in New York using Otis safety cables. Mary Todd Lincoln bought White House china here in 1861. Robert Moses wanted a 10-lane elevated Lower Manhattan Expressway along Broome Street through this neighborhood. The Landmarks Commission designated the Haughwout in 1965, calling it the best of the city's cast iron palaces, and it sat directly in the expressway's right of way. The road was scrapped by 1970 and SoHo became a historic district in 1973. The book credits this building with saving the neighborhood.</p>
 <div class="route">East on Broome, left on Crosby</div>
 <h2 class="stop" id="s11"><span class="n">11</span>Arturo Di Modica Studio, 54 Crosby</h2>
+<figure><img src="p47-4.jpg" alt="Crosby Street between Spring and Broome" loading="lazy"><figcaption>Crosby Street between Spring and Broome</figcaption></figure>
 <p>Di Modica bought this vacant lot in 1978 and built the studio by hand. On December 15, 1989 he trucked a 3.5-ton bronze bull from here to the Stock Exchange and left it under the Christmas tree overnight with no permit. Police hauled it to a Queens warehouse the same day. It has been at Bowling Green ever since. He sold the building in 2004 and died in Sicily in 2021.</p>
 <div class="route">North on Crosby, left on Spring to Mercer</div>
 <h2 class="stop" id="s12"><span class="n">12</span>Judd Foundation, 101 Spring Street</h2>
+<figure><img src="p50.jpg" alt="Donald Judd Foundation" loading="lazy"><figcaption>Donald Judd Foundation</figcaption></figure>
 <p>An 1871 cast iron loft with so much glass the facade reads as more window than metal. A 1962 City Club study called this whole district a "true wasteland" and the plan was to level it. Industry left, artists moved into the cheap lofts, gallerists followed from Madison Avenue, and by 1970 the area was rebranded SoHo from the planning department's South Houston Industrial District. Donald Judd bought this building in 1968. The foundation opened it to the public in 2013 with his works installed as he left them. Tours only, closed Sunday and Monday.</p>
 <div class="route">West on Spring, past Greene</div>
 <h2 class="stop" id="s13"><span class="n">13</span>No. 129 Spring Street</h2>
+<div class="gallery">
+<figure><img src="p56.jpg" alt="Broadway and Spring Street" loading="lazy"><figcaption>Broadway &amp; Spring Street</figcaption></figure>
+<figure><img src="p56-2.jpg" alt="129 Spring Street" loading="lazy"><figcaption>129 Spring Street</figcaption></figure>
+</div>
 <p>An 1817 Flemish-bond brick house, one of the oldest in SoHo, now a COS store. In the basement is a round brick structure sold as the well where Elma Sands was found murdered in January 1800. Her fiance Levi Weeks was acquitted with Alexander Hamilton, Aaron Burr, and Brockholst Livingston as his defense team. The book's verdict: the structure is almost certainly an 1817 cistern, and the real well stood a bit north on the west side of Greene Street and is lost. The confusion dates to a 1974 ghost claim and a 1980 basement discovery that got merged in the press.</p>
 <div class="route">West on Spring, right on Wooster</div>
 <h2 class="stop" id="s14"><span class="n">14</span>Gay Activists Alliance Firehouse, 99 Wooster</h2>
+<figure><img src="p56-1.jpg" alt="Corner of Spring and Wooster" loading="lazy"><figcaption>Corner of Spring &amp; Wooster</figcaption></figure>
 <p>An 1881 firehouse by Napoleon LeBrun, leased by the GAA in April 1971 as headquarters until 1974. Meetings, screenings, and dances made it a hub of post-Stonewall activism, and more than a dozen later groups including ACT UP trace back to it. Arson destroyed half the interior in October 1974. It is unclear whether that was a homophobic attack or internal factionalism. The GAA disbanded in 1981.</p>
 <div class="route">North on Wooster to Houston, east, right on Greene</div>
 <h2 class="stop" id="s15"><span class="n">15</span>No. 139 Greene Street</h2>
+<figure><img src="p58.jpg" alt="Greene Street between Spring and Prince" loading="lazy"><figcaption>Greene Street between Spring and Prince</figcaption></figure>
 <p>Built 1825 for merchant-tailor Anthony Arnoux. By 1862 it was a brothel, one of more than a dozen on this block. An 1870 guide counted 41 barrooms and 8 houses of assignation on the six blocks between Canal and Bleecker. Peter Ballantine, a fabricator for Donald Judd, bought it in 1973 to restore as his home. Fifty years later the work is still going. On the way, the north side of Houston (Silver Towers, NYU's Paulson Center) shows what the rest of SoHo would have looked like if the renewal plans had gone through.</p>
 <div class="route">South on Greene to Prince</div>
 <h2 class="stop" id="s16"><span class="n">16</span>Richard Haas Mural, 112 Prince</h2>
+<figure><img src="p56-3.jpg" alt="Richard Haas Mural" loading="lazy"><figcaption>Richard Haas Mural</figcaption></figure>
 <p>A trompe l'oeil painting begun in 1974 that continues the building's cast iron facade around onto the blank east wall. It was badly decayed by the 2010s and restored in 2023, with a dog and two cats belonging to current residents added.</p>
 <div class="route">Left on Prince, east across Mercer</div>
 <h2 class="stop" id="s17"><span class="n">17</span>Little Singer Building, 88 Prince</h2>
+<figure><img src="p56-4.jpg" alt="Little Singer Building" loading="lazy"><figcaption>Little Singer Building</figcaption></figure>
 <p>Ernest Flagg, 1903, for the Singer sewing machine company. Painted iron tracery, huge windows, red terracotta tile, and false Ionic columns rendered as iron bars at the third floor. The building is L-shaped and the same facade appears again at 561 to 563 Broadway. Flagg's other Singer building downtown grew a 674-foot tower in 1908, the tallest on earth for a year, demolished in the 1960s.</p>
 <div class="route">East on Prince to Mulberry</div>
 <h2 class="stop" id="s18"><span class="n">18</span>St Patrick's Old Cathedral</h2>
-<figure><img src="https://upload.wikimedia.org/wikipedia/commons/8/8b/Saint_Pats_Old_Cathedral_Manh_jeh.JPG" alt="Basilica of St Patrick's Old Cathedral" loading="lazy"><figcaption>Basilica of St Patrick's Old Cathedral (Wikimedia Commons)</figcaption></figure>
+<figure><img src="p58-1.jpg" alt="Basilica of St Patrick's Old Cathedral" loading="lazy"><figcaption>Basilica of St Patrick's Old Cathedral</figcaption></figure>
 <p>Cornerstone 1809, completed 1815, the city's first cathedral, built on a burial ground St Peter's bought in 1801. The brick wall around the grounds went up in 1834 during anti-Catholic violence. A fire in 1866 destroyed the interior; the stone walls survived and it was rededicated within two years. The 5th Avenue St Patrick's replaced it as the seat in 1879. Look through the peepholes in the graveyard doors. In late August and September there are usually sheep grazing the yard.</p>
 <h2>After</h2>
 <p>The book's food list from here: Albanese butcher (238 Elizabeth), Golden Steamer pork buns (143A Mott), Piemonte ravioli (190 Grand), DiPalo's cheese (200 Grand), Wah Fung pork plate (9 Chrystie, expect a line).</p>
