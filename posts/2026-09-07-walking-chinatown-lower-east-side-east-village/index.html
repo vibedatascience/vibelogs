@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Rahul">
+<meta name="description" content="An outsider-friendly walking tour through Chinatown, the Lower East Side, and the East Village: 18 stops, four centuries, maps, images, and context.">
+<title>Walking Chinatown, the Lower East Side, and the East Village | vibelogs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{--paper:#FAFAF8;--ink:#17171C;--cobalt:#2545FF;--muted:#6E6E76;--rule:#E7E7E2;--chip:#EEF1FF}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:17px;line-height:1.7}
+.wrap{max-width:680px;margin:0 auto;padding:0 24px}
+.top{padding:40px 0 0;font-family:'IBM Plex Mono',monospace;font-size:.8rem}.top a,footer a{color:var(--muted);text-decoration:none}.top a:hover,footer a:hover{color:var(--cobalt)}
+header.post{padding:32px 0 24px;border-bottom:1px solid var(--rule)}
+.meta{font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.tag{background:var(--chip);color:var(--cobalt);padding:1px 8px;border-radius:4px;font-weight:500}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.7rem,5vw,2.3rem);letter-spacing:-.02em;line-height:1.2}
+article{padding:32px 0 60px}article h2{font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:1.3rem;margin:36px 0 12px}article p{margin:0 0 18px}article a{color:var(--cobalt)}
+footer{border-top:1px solid var(--rule);padding:24px 0 56px;font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--muted)}
+#map{height:520px;border:1px solid var(--rule);border-radius:8px;margin:0 0 18px}
+figure{margin:0 0 18px}figure img{width:100%;border-radius:8px;display:block}figcaption{font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--muted);margin-top:6px}
+.gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:0 0 18px}.gallery figure{margin:0}.gallery img{height:260px;object-fit:cover}
+.card{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 18px}.card div{border:1px solid var(--rule);border-radius:8px;padding:10px 12px;background:#fff}.card b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1.15rem}.card span{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+article h2.stop{display:flex;align-items:center;gap:12px;scroll-margin-top:16px}.n{display:inline-flex;width:32px;height:32px;border-radius:50%;background:var(--cobalt);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:.85rem;align-items:center;justify-content:center;flex:none}
+.strip{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 18px}.strip a{font-family:'IBM Plex Mono',monospace;font-size:.72rem;background:var(--chip);color:var(--cobalt);padding:3px 8px;border-radius:4px;text-decoration:none}
+.route{font-family:'IBM Plex Mono',monospace;font-size:.8rem;color:var(--cobalt);margin:24px 0 8px;padding-left:12px;border-left:2px dashed var(--cobalt)}.route::before{content:"→ "}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}.legend span{font-family:'IBM Plex Mono',monospace;font-size:.72rem;padding:4px 9px;border-radius:999px;border:1px solid var(--rule);background:#fff}
+.cue{display:grid;grid-template-columns:28px 1fr;gap:10px;margin:0 0 18px;padding:13px 14px;border:1px solid var(--rule);border-radius:8px;background:#fff}.cue .ico{font-family:'IBM Plex Mono',monospace;color:var(--cobalt);font-weight:700;text-align:center}.cue strong{display:block;font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.08em;color:var(--cobalt);margin-bottom:2px}.cue p{margin:0;font-size:.92rem;line-height:1.55}
+.cue.history{border-left:3px solid #8B5CF6}.cue.history .ico,.cue.history strong{color:#7048D7}.cue.nearby{border-left:3px solid #0D9488}.cue.nearby .ico,.cue.nearby strong{color:#087E73}.cue.why{border-left:3px solid #D97706;background:#FFFBEB}.cue.why .ico,.cue.why strong{color:#B45309}
+.timeline{position:relative;margin:8px 0 30px;padding-left:112px}.timeline::before{content:"";position:absolute;left:88px;top:8px;bottom:8px;width:2px;background:var(--rule)}.event{position:relative;padding:0 0 18px}.event::before{content:"";position:absolute;left:-29px;top:7px;width:10px;height:10px;border-radius:50%;background:var(--paper);border:2px solid var(--cobalt)}.year{position:absolute;right:calc(100% + 40px);top:0;font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--cobalt);white-space:nowrap}.event b{font-family:'Space Grotesk',sans-serif;font-weight:500}.event p{font-size:.9rem;line-height:1.5;margin:2px 0 0}.event a{font-family:'IBM Plex Mono',monospace;font-size:.7rem;text-decoration:none;background:var(--chip);padding:2px 6px;border-radius:4px;white-space:nowrap}
+@media(max-width:560px){.gallery{grid-template-columns:1fr}.gallery img{height:auto}.timeline{padding-left:82px}.timeline::before{left:61px}.event::before{left:-26px}.year{right:calc(100% + 33px);font-size:.8rem}.card{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><a href="../../">← vibelogs</a></div>
+<header class="post">
+  <div class="meta"><span>[2026-09-07]</span><span>Rahul</span><span class="upd">updated 2026-09-07</span><span class="tag">NOTES</span></div>
+  <h1>Walking Chinatown, the Lower East Side, and the East Village</h1>
+</header>
+<article>
+<figure><img src="p63.jpg" alt="Pell Street in Manhattan's Chinatown, viewed from the Bowery"><figcaption>Pell Street from the Bowery</figcaption></figure>
+<p>Notes from Route 03 of <em>Walking New York</em>: a south-to-north walk through three neighborhoods that became gateways to America. The route starts over the buried Collect Pond, crosses the historic centers of Chinese and Jewish New York, passes through the former German district, and ends in the East Village.</p>
+<div class="card"><div><b>3.5 mi</b><span>distance</span></div><div><b>2–3 h</b><span>book estimate</span></div><div><b>18</b><span>stops</span></div></div>
+<h2>Getting there</h2>
+<p>Start at Worth and Baxter Streets, beside Columbus Park. Canal St (J/Z or N/Q/R/W/6) is the most useful subway hub; Brooklyn Bridge–City Hall (4/5/6) is also nearby. The route ends at Tompkins Square Park. From there, walk west to Astor Place (6) or northeast to 1 Av (L). Allow extra time for the Eldridge Street museum, food stops, and the density of details along St Mark's Place.</p>
+<div class="legend"><span>◆ WHY IT MATTERS</span><span>◉ LOOK FOR</span><span>↳ THEN / NOW</span><span>＋ NEARBY</span></div>
+<h2>Why this walk matters</h2>
+<p>For a visitor, “the Lower East Side” can sound like one fixed neighborhood. Historically it was a succession of arrival zones. Irish, German, Chinese, Jewish, Italian, Puerto Rican, Ukrainian, Black, and Hispanic communities all built institutions here. People often moved elsewhere as they gained money or faced displacement, while new arrivals reused the same streets and buildings.</p>
+<p><b>Chinatown</b> grew around Mott, Pell, and Doyers Streets as Chinese migrants sought safety from exclusion and violence. The <b>Lower East Side</b> became shorthand for the American immigrant experience, especially Jewish tenement life. The name <b>East Village</b> arrived only in the 1950s and 60s, partly to distinguish the area north of Houston from the less fashionable Lower East Side and associate it with Greenwich Village.</p>
+<p>The larger story is how migration changes a city—and how the city changes migrants. Synagogues become churches, churches become synagogues, a German clinic becomes offices, a Yiddish newspaper becomes apartments, and a working-class district becomes expensive. What remains is not a frozen ethnic museum but layers of institutions, food, architecture, memory, and argument.</p>
+<h2>Map</h2>
+<div id="map"></div>
+<figure><img src="p60.jpg" alt="Printed route map from Chinatown north to Tompkins Square Park" loading="lazy"><figcaption>The book's route map, with nearby landmarks and subway stations</figcaption></figure>
+<h2>Timeline: immigration and reinvention</h2>
+<div class="timeline">
+  <div class="event"><span class="year">1654</span><b>First Jewish congregation</b> <a href="#s4">STOP 4</a><p>Sephardic refugees arrive despite Peter Stuyvesant's opposition.</p></div>
+  <div class="event"><span class="year">1683</span><b>First burial at the Jewish cemetery</b> <a href="#s4">STOP 4</a><p>The graveyard then stood beyond the settled city.</p></div>
+  <div class="event"><span class="year">1807–21</span><b>Collect Pond drained; Canal Street buried</b> <a href="#s1">STOP 1</a><p>Unstable fill helps create the Five Points slum.</p></div>
+  <div class="event"><span class="year">1830–34</span><b>Cemeteries and Tompkins Square open</b> <a href="#s12">STOP 12</a> <a href="#s18">STOP 18</a><p>The growing city pushes into what had been countryside.</p></div>
+  <div class="event"><span class="year">1848–59</span><b>German migration and Cooper Union</b> <a href="#s13">STOP 13</a> <a href="#s15">STOP 15</a><p>Kleindeutschland grows while Peter Cooper builds a free school.</p></div>
+  <div class="event"><span class="year">1882–87</span><b>Exclusion and arrival</b> <a href="#s2">STOP 2</a> <a href="#s7">STOP 7</a><p>Chinese exclusion hardens while Eastern European Jewish migration expands; Eldridge Street Synagogue opens.</p></div>
+  <div class="event"><span class="year">1890</span><b>Jacob Riis publishes <em>How the Other Half Lives</em></b> <a href="#s1">STOP 1</a><p>Images of poverty build support for clearing Five Points.</p></div>
+  <div class="event"><span class="year">1904</span><b>General Slocum disaster</b> <a href="#s14">STOP 14</a><p>More than 1,000 die, accelerating the dispersal of Little Germany.</p></div>
+  <div class="event"><span class="year">1909–12</span><b>Bridge, bank, and newspaper towers</b> <a href="#s6">STOP 6</a> <a href="#s8">STOP 8</a><p>New infrastructure and immigrant institutions reshape the skyline.</p></div>
+  <div class="event"><span class="year">1929–34</span><b>Blocks cleared for light and air</b> <a href="#s11">STOP 11</a><p>Sara D. Roosevelt Park replaces tenements and institutions.</p></div>
+  <div class="event"><span class="year">1965</span><b>Immigration law changes</b> <a href="#s2">STOP 2</a><p>National-origin quotas end, enabling Chinatown's dramatic growth.</p></div>
+  <div class="event"><span class="year">1980s</span><b>History becomes something to preserve</b> <a href="#s7">STOP 7</a> <a href="#s10">STOP 10</a><p>Eldridge Street is rescued and the Tenement Museum is founded.</p></div>
+</div>
+<h2>The stops</h2>
+<div class="strip"><a href="#s1">1 Five Points</a><a href="#s2">2 Chinatown</a><a href="#s3">3 Chatham Square</a><a href="#s4">4 First Jewish Cemetery</a><a href="#s5">5 Al Smith House</a><a href="#s6">6 Manhattan Bridge</a><a href="#s7">7 Eldridge Street Synagogue</a><a href="#s8">8 Straus Square</a><a href="#s9">9 Ridley &amp; Sons</a><a href="#s10">10 Allen Street</a><a href="#s11">11 Lenin Statue</a><a href="#s12">12 Marble Cemeteries</a><a href="#s13">13 German East 4th Street</a><a href="#s14">14 St Mark's Lutheran</a><a href="#s15">15 Cooper Union</a><a href="#s16">16 St Mark's Place</a><a href="#s17">17 Ottendorfer Library</a><a href="#s18">18 Tompkins Square Park</a></div>
+
+<div class="route">Start at Worth and Baxter Streets, beside Columbus Park</div>
+<h2 class="stop" id="s1"><span class="n">1</span>Five Points</h2>
+<p>This ordinary intersection once gave its name to America's most notorious 19th-century slum. Cross, Anthony, and Orange Streets met in a five-way collision over the former Collect Pond. The city drained the polluted pond by 1811, but springs kept flowing, the canal worked badly, and buildings sank into wet, unstable fill. Poverty here was not just personal misfortune; it was literally built on failed infrastructure.</p>
+<p>Jacob Riis made the district nationally infamous in his 1890 book <em>How the Other Half Lives</em>. Reformers used his photography to argue for sanitation, housing regulation, and demolition. By 1900 much of the old street pattern had vanished; Worth and Baxter are among its last traces.</p>
+<aside class="cue why"><span class="ico">◆</span><div><strong>WHY IT MATTERS</strong><p>Five Points shows how environmental engineering, speculative building, immigration, and poverty became entangled. It also asks whether “slum clearance” solved injustice or merely erased the people and streets that made it visible.</p></div></aside>
+<aside class="cue"><span class="ico">◉</span><div><strong>ORIENT YOURSELF</strong><p>The courthouses to the southwest represent the later Civic Center. Columbus Park to the northeast occupies land cleared from Five Points and now serves Chinatown.</p></div></aside>
+
+<div class="route">Walk through Columbus Park to Mosco Street; climb to Mott Street</div>
+<h2 class="stop" id="s2"><span class="n">2</span>Historic Chinatown</h2>
+<p>By the 1880s roughly 2,000 Chinese immigrants lived around Mott, Pell, and Doyers Streets. Many had first gone west for mining and railroad work, then moved east as anti-Chinese violence intensified in California. Restaurants, tea parlors, shops, and associations made this both a safe haven and a destination for curious outsiders.</p>
+<p>That tourist image can hide why the district's closeness was necessary. Federal exclusion laws, racial caricatures, raids, and restrictions on citizenship made community institutions essential. The Immigration and Nationality Act of 1965 finally ended the old national-origin quota system. The metropolitan Chinese population has since grown toward one million, with major centers in Flushing, Sunset Park, and along East Broadway; Mandarin is more prominent in many newer districts than the Cantonese traditionally heard here.</p>
+<aside class="cue why"><span class="ico">◆</span><div><strong>WHY IT MATTERS</strong><p>This is not merely a restaurant district. Chinatown is physical evidence of how a targeted minority created mutual support, political power, and cultural continuity under exclusion—and how immigration reform transformed the whole metropolitan region.</p></div></aside>
+<aside class="cue"><span class="ico">◉</span><div><strong>LOOK AND LISTEN</strong><p>Walk the narrow Mott–Pell–Doyers loop. Notice storefront depth, upper-floor associations, languages, fire escapes, and how a few blocks can function as both neighborhood and symbol.</p></div></aside>
+
+<div class="route">Pell to Doyers; follow Doyers to the Bowery and cross at Chatham Square</div>
+<h2 class="stop" id="s3"><span class="n">3</span>Chatham Square</h2>
+<p>The plaza may feel like a leftover traffic island, but in the 19th century it played the role Times Square later assumed: crowds, entertainment, all-night activity, and some of the world's earliest illuminated shop signs. It also marks the southern end of the Bowery, Manhattan's oldest major road.</p>
+<p><em>Bouwerij</em> is Dutch for farm. The road connected New Amsterdam to farms farther up the island and likely followed a route used before Dutch colonization. From this junction, Chinatown, Two Bridges, the Civic Center, the Seaport, and the Lower East Side all sit within a short walk.</p>
+<aside class="cue why"><span class="ico">◆</span><div><strong>WHY IT MATTERS</strong><p>Chatham Square is a lesson in looking past appearance. A space that seems unremarkable can be a surviving hinge in the city's geography—the old entertainment center and the meeting point of several immigrant districts.</p></div></aside>
+<aside class="cue"><span class="ico">◉</span><div><strong>LOOK FOR</strong><p>The Lin Zexu statue, honoring the Chinese official remembered for resisting the opium trade, and the many streets converging around the plaza.</p></div></aside>
+
+<div class="route">Cross Oliver Street and continue along St James Place</div>
+<h2 class="stop" id="s4"><span class="n">4</span>First Jewish Cemetery</h2>
+<p>This tiny cemetery predates the Lower East Side's famous Eastern European Jewish era by about two centuries. Sephardic Jews fleeing persecution in Iberia and Brazil arrived in 1654. Peter Stuyvesant tried to exclude them, but Dutch religious-liberty rules allowed them to remain. Their congregation, Shearith Israel, is still active and is the oldest continuous Jewish congregation in the Western Hemisphere.</p>
+<p>Joseph Bueno de Mesquita purchased burial land beside the Bowery Road in 1682; the first burial followed in 1683. The cemetery remained active until 1831. George Washington would have passed it—already a century old—while reentering New York after British evacuation in 1783.</p>
+<aside class="cue why"><span class="ico">◆</span><div><strong>WHY IT MATTERS</strong><p>The graveyard breaks the easy assumption that Jewish New York began with Ellis Island. It connects the modern city directly to colonial struggles over who was allowed to belong.</p></div></aside>
+<aside class="cue nearby"><span class="ico">＋</span><div><strong>ST JAMES' CHURCH</strong><p>Nearby, the 1836 Catholic church recalls an early Irish community often overshadowed by later Chinese and Jewish histories. The Ancient Order of Hibernians was established there.</p></div></aside>
+
+<div class="route">Continue to James Street; turn left, then left on Madison and left on Oliver</div>
+<h2 class="stop" id="s5"><span class="n">5</span>Al Smith House</h2>
+<div class="gallery">
+<figure><img src="p70.jpg" alt="Madison Street seen from the Manhattan Bridge" loading="lazy"><figcaption>Madison Street from the Manhattan Bridge</figcaption></figure>
+<figure><img src="p67.jpg" alt="Tenement buildings on Henry Street" loading="lazy"><figcaption>Henry Street tenements</figcaption></figure>
+</div>
+<p>Alfred E. Smith lived at 25 Oliver Street from 1907 to 1923. A child of the Lower East Side, he became governor of New York and, in 1928, the first Catholic nominee of a major party for president. He lost to Herbert Hoover amid intense anti-Catholic prejudice.</p>
+<aside class="cue why"><span class="ico">◆</span><div><strong>WHY IT MATTERS</strong><p>Smith turned a background national elites treated as disqualifying—urban, immigrant, Catholic, working class—into a political identity. His house makes the neighborhood's promise of mobility concrete while revealing the limits immigrants still faced.</p></div></aside>
+<aside class="cue nearby"><span class="ico">＋</span><div><strong>MARINERS' TEMPLE</strong><p>The 1844 Baptist church at Oliver and Henry began as a refuge for sailors. Swedish, Italian, Russian, Chinese, Black, and Hispanic congregations have successively used it.</p></div></aside>
+
+<div class="route">Follow Henry Street east to Market Street and the Manhattan Bridge</div>
+<h2 class="stop" id="s6"><span class="n">6</span>Manhattan Bridge</h2>
+<figure><img src="p67-1.jpg" alt="East Broadway viewed from beneath the Manhattan Bridge" loading="lazy"><figcaption>East Broadway from the Manhattan Bridge</figcaption></figure>
+<p>The Manhattan Bridge opened on December 31, 1909, eleven years after Brooklyn became part of Greater New York. It relieved the older Brooklyn Bridge and carries subway trains, cars, bicycles, and pedestrians. Its massive approach cut into the existing neighborhood while making movement between boroughs much easier.</p>
+<aside class="cue why"><span class="ico">◆</span><div><strong>WHY IT MATTERS</strong><p>Bridges made the five-borough city practical, but they were never neutral additions. Their ramps and shadows divided older street networks even as the subway tracks connected immigrant workers to housing and jobs across Brooklyn.</p></div></aside>
+<aside class="cue nearby"><span class="ico">＋</span><div><strong>FIRST CHINESE PRESBYTERIAN</strong><p>The stone church on Market Street began as Dutch Reformed in 1819, became Presbyterian in 1866, and became home to a Chinese congregation in 1951—a building-level history of neighborhood succession.</p></div></aside>
+
+<div class="route">Cross under the bridge; turn left and follow Eldridge north past Division</div>
+<h2 class="stop" id="s7"><span class="n">7</span>Eldridge Street Synagogue</h2>
+<figure><img src="p67-2.jpg" alt="Moorish Revival facade of the Eldridge Street Synagogue" loading="lazy"><figcaption>The Museum at Eldridge Street</figcaption></figure>
+<p>Completed in 1887 for Congregation Khal Adath Jeshurun, the blond-brick synagogue uses Moorish arches, terracotta, painted ceilings, gilding, and a great rose window. At its peak the congregation had more than 4,000 members. The building contradicts the stereotype that the Lower East Side contained only desperate poverty; immigrant communities also accumulated wealth and built ambitious institutions.</p>
+<p>New York's Jewish population rose from about 13,000 in 1847 to more than 200,000 in 1890. As families moved uptown and outward in the 1910s and 20s, the main sanctuary became unaffordable and closed in the 1930s. A rescue begun in the 1980s led to a two-decade restoration and reopening in 2007 as the Museum at Eldridge Street.</p>
+<aside class="cue why"><span class="ico">◆</span><div><strong>WHY IT MATTERS</strong><p>The synagogue is both evidence and memory: evidence of a diverse, organized community at its height, and memory preserved after that community dispersed. The Lower East Side became a symbolic homeland even for many American Jews whose ancestors never lived here.</p></div></aside>
+<aside class="cue"><span class="ico">◉</span><div><strong>GO INSIDE IF YOU CAN</strong><p>The modest street width hides the scale and color of the sanctuary. The contemporary rose window, installed in 2010, makes restoration visible rather than pretending every element is original.</p></div></aside>
+
+<div class="route">Continue north; turn right on Canal and walk east to Straus Square</div>
+<h2 class="stop" id="s8"><span class="n">8</span>Straus Square and the Forward</h2>
+<div class="gallery">
+<figure><img src="p67-4.jpg" alt="Canal Street streetscape" loading="lazy"><figcaption>Canal Street</figcaption></figure>
+<figure><img src="p67-3.jpg" alt="Hester Street near Ludlow Street" loading="lazy"><figcaption>Hester Street near Ludlow</figcaption></figure>
+</div>
+<p>At Canal, Essex, and East Broadway, commercial routes met in the center of Yiddish-speaking New York. The twelve-story Forward Building opened in 1912 for the progressive <em>Jewish Daily Forward</em>, founded in 1897. During World War I its circulation approached 200,000, making it a practical guide to American life and the reference point around which other Jewish newspapers positioned themselves.</p>
+<p>The paper left in 1974 and the building became apartments, but “FORWARD” remains in orange brick. Nearby Hester Street was a wall of pushcarts. At Hester and Ludlow, the “pig market” was a daily hiring shape-up where small garment contractors assembled workers for short production runs.</p>
+<aside class="cue why"><span class="ico">◆</span><div><strong>WHY IT MATTERS</strong><p>Immigration is not only a story of private households. Newspapers taught readers how to navigate politics and work; sidewalks operated as retail systems and labor markets. The neighborhood produced an entire public sphere in Yiddish.</p></div></aside>
+<aside class="cue nearby"><span class="ico">＋</span><div><strong>JARMULOWSKY BUILDING</strong><p>The 1912 tower at Canal and Orchard housed a bank trusted by immigrants. It failed after a 1917 run and is now the luxury hotel Nine Orchard—a sharp then-and-now comparison.</p></div></aside>
+
+<div class="route">North on Essex; left on Hester; right on Orchard to Grand</div>
+<h2 class="stop" id="s9"><span class="n">9</span>Ridley &amp; Sons Department Store</h2>
+<p>Grand Street was the Lower East Side's major retail corridor, fed by a ferry to Brooklyn before the Williamsburg Bridge. English immigrant Edward Ridley founded his store in 1848. By 1886 it occupied a rebuilt five-story cast-iron block at Grand and Orchard and employed an estimated 2,500 people.</p>
+<p>As shopping moved uptown to Ladies' Mile and Herald Square, Ridley stayed behind and closed in 1901. Allen Street's later widening exposed a new side of the building, which received a Deco-influenced brick facade.</p>
+<aside class="cue why"><span class="ico">◆</span><div><strong>WHY IT MATTERS</strong><p>Retail districts migrate with money and transit. This surviving store lets you see Grand Street before Fifth Avenue became the default mental picture of New York shopping.</p></div></aside>
+<aside class="cue"><span class="ico">◉</span><div><strong>LOOK FOR</strong><p>The blush-pink cast-iron facade, heavy cornice, and arched top-floor windows—commercial grandeur on a street that no longer reads as the city's premier shopping district.</p></div></aside>
+
+<div class="route">Walk north on Orchard to Delancey, then follow Allen Street north</div>
+<h2 class="stop" id="s10"><span class="n">10</span>Tenements and the Allen Street Malls</h2>
+<div class="gallery">
+<figure><img src="p75.jpg" alt="Colorful storefront of Economy Candy" loading="lazy"><figcaption>Economy Candy, established in 1937</figcaption></figure>
+<figure><img src="p75-1.jpg" alt="Corner of Essex and Rivington Streets" loading="lazy"><figcaption>Corner of Essex and Rivington</figcaption></figure>
+</div>
+<p>The Tenement Museum, founded in 1988 inside preserved buildings on Orchard Street, interprets the homes and workplaces of immigrant families. Next door, the grandly named Bank of the United States failed in 1931 and became the Hebrew Publishing Company. Both buildings sit beside Allen Street, widened in the 1930s to bring circulation, light, and air into one of the world's densest districts.</p>
+<p>The widening exposed what had been the plain backs of buildings. The center malls now soften the avenue, but the abrupt rear facades show that an entire strip of the neighborhood was removed.</p>
+<aside class="cue why"><span class="ico">◆</span><div><strong>WHY IT MATTERS</strong><p>Housing reform improved dangerous conditions, but “light and air” projects also displaced residents and erased institutions. The museum and widened street present two different ways the city responded to density: preserve and interpret, or demolish and redesign.</p></div></aside>
+<aside class="cue nearby"><span class="ico">＋</span><div><strong>RIVINGTON STREET</strong><p>A carved school doorway at 95 Rivington survives beside the empty site of the First Roumanian-American Synagogue, demolished after a 2006 roof collapse.</p></div></aside>
+
+<div class="route">Rivington to Essex; right on Stanton; left on Norfolk</div>
+<h2 class="stop" id="s11"><span class="n">11</span>Oldest Synagogue Building and Lenin</h2>
+<p>The Gothic Revival building at 172–176 Norfolk opened in 1850 for Ansche Chesed, one of New York's first Ashkenazi congregations. With room for 1,200 people, it was then the city's largest synagogue. Congregations came and went as members moved; the building closed in 1974 and was later revived by artist Angel Orensanz as a gallery, performance space, and occasional synagogue.</p>
+<p>Next door, look up to an 18-foot statue of Vladimir Lenin. Commissioned as the Soviet Union collapsed, it reached a building called Red Square on Houston Street in 1994, where it faced toward Wall Street. A property sale displaced it in 2016; it reappeared here the next year.</p>
+<aside class="cue why"><span class="ico">◆</span><div><strong>WHY IT MATTERS</strong><p>The pairing is pure Lower East Side: a landmark of 19th-century religious migration beside a late-20th-century artwork about socialism, real estate, and spectacle. Reuse keeps both history and irony visible.</p></div></aside>
+<aside class="cue nearby"><span class="ico">＋</span><div><strong>FOOD LANDMARKS</strong><p>Walking west on Houston takes you past Katz's Delicatessen (1888), Russ &amp; Daughters (1914), and Yonah Schimmel's Knish Bakery (pushcart 1890; here since 1910).</p></div></aside>
+<aside class="cue history"><span class="ico">↳</span><div><strong>SARA D. ROOSEVELT PARK</strong><p>The narrow park from Houston to Canal replaces blocks cleared in 1929 to bring “light and air” to the tenement district. It opened in 1934, named for Franklin Roosevelt's mother—who objected and suggested honoring reforming park commissioner Charles Stover instead.</p></div></aside>
+
+<div class="route">West on Houston; cross at 2nd Avenue and turn right on East 2nd Street</div>
+<h2 class="stop" id="s12"><span class="n">12</span>The Marble Cemeteries</h2>
+<p>Two independent cemeteries hide in adjacent blocks: New York Marble Cemetery west of 2nd Avenue (1830) and New York City Marble Cemetery east of it (1831). They were the city's first nonsectarian, for-profit burial grounds. The western one has no headstones and is barely visible through its gate; the eastern one opens behind a high fence on East 2nd Street.</p>
+<p>President James Monroe was buried in the latter after his 1831 death in New York, then moved to Richmond, Virginia, in 1858.</p>
+<aside class="cue why"><span class="ico">◆</span><div><strong>WHY IT MATTERS</strong><p>As Manhattan urbanized, burial itself became a commercial service and cemeteries moved toward the edge of development. These hidden grounds preserve the moment before the city pushed its dead farther out to Brooklyn and Queens.</p></div></aside>
+<aside class="cue"><span class="ico">◉</span><div><strong>DO NOT MIX THEM UP</strong><p>“New York Marble” is west of 2nd Avenue; “New York City Marble” is east. Their confusing names are part of the charm.</p></div></aside>
+
+<div class="route">North on 2nd Avenue; left on East 4th Street</div>
+<h2 class="stop" id="s13"><span class="n">13</span>German East 4th Street</h2>
+<figure><img src="p75-2.jpg" alt="Second Avenue at East 6th Street" loading="lazy"><figcaption>2nd Avenue at 6th Street</figcaption></figure>
+<p>North of Houston you enter the former <em>Kleindeutschland</em>, or Little Germany. Refugees from the revolutions of 1848–49 and Bismarck's anti-socialist laws built a mixed German-speaking community of Jews and Christians. Its food culture helped shape what later Americans understood as Jewish deli food, including corned beef, salami, and tongue.</p>
+<p>At 74 East 4th, the 1873 Aschenbroedel Verein musicians' club displays busts of Mozart, Wagner, and Beethoven; La MaMa theater has occupied it since 1967. Nos. 66–68 housed a German gymnastics and socialist club and possibly America's first Yiddish theatrical production. At No. 62, an 1890 assembly hall hides a spiral fire escape inside an ornamental metal grille.</p>
+<aside class="cue why"><span class="ico">◆</span><div><strong>WHY IT MATTERS</strong><p>Ethnic history survives through institutions, not just residences. Music clubs, gyms, theaters, restaurants, and political groups allowed migrants to build public life—and their buildings seeded the East Village's later experimental-theater identity.</p></div></aside>
+<aside class="cue"><span class="ico">◉</span><div><strong>READ THE FACADES</strong><p>Find the three composers at No. 74 and the disguised fire escape at No. 62. Decorative details functioned as both cultural pride and practical engineering.</p></div></aside>
+
+<div class="route">Return to 2nd Avenue; north to East 6th and turn right</div>
+<h2 class="stop" id="s14"><span class="n">14</span>St Mark's Lutheran Church</h2>
+<p>The small 1847 German Lutheran church at 325 East 6th organized an annual Long Island picnic. On June 15, 1904, it chartered the steamboat <em>General Slocum</em> for 1,358 passengers, mostly women and children. A fire spread through oily material; rotten life jackets failed; many passengers could not swim in heavy clothing. More than 1,000 people died near North Brother Island.</p>
+<p>The disaster was New York's deadliest until September 11, 2001. Nearly every German family downtown or in Yorkville knew a victim. The congregation and Kleindeutschland never recovered; movement uptown accelerated, and the church became the 6th Street Community Synagogue in 1940.</p>
+<aside class="cue why"><span class="ico">◆</span><div><strong>WHY IT MATTERS</strong><p>A neighborhood can disappear through catastrophe as well as gentrification. The modest building is the starting point for a tragedy that changed the demographic map of Manhattan but is little known outside New York.</p></div></aside>
+<aside class="cue nearby"><span class="ico">＋</span><div><strong>MEMORIAL</strong><p>Tompkins Square Park contains a 1906 memorial to the victims. You will reach it at the final stop.</p></div></aside>
+<aside class="cue history"><span class="ico">↳</span><div><strong>MIDDLE COLLEGIATE CHURCH</strong><p>At 2nd Avenue and East 7th, the 1892 church burned in 2020. Its bell—rung for the Declaration of Independence in 1776—survived and is now at the New-York Historical Society.</p></div></aside>
+
+<div class="route">Back to 2nd Avenue; north, then left on East 7th toward 3rd Avenue</div>
+<h2 class="stop" id="s15"><span class="n">15</span>The Cooper Union</h2>
+<figure><img src="p82.jpg" alt="Brownstone Foundation Building of Cooper Union" loading="lazy"><figcaption>The Cooper Union Foundation Building</figcaption></figure>
+<p>Inventor and industrialist Peter Cooper made fortunes in glue, locomotives, iron beams, and the transatlantic telegraph. He spent about $600,000 to open Cooper Union in 1859 as a free school for people excluded by wealth or social position. Women studied in coeducational classes; workers attended at night; public reading rooms stayed open late.</p>
+<p>Abraham Lincoln's 1860 speech here helped turn him from a regional politician into a credible presidential candidate. Nearby on East 7th, early-1830s houses, the former Hebrew Actors' Union, and McSorley's Old Ale House show the neighborhood's residential, theatrical, labor, and drinking history in one block.</p>
+<aside class="cue why"><span class="ico">◆</span><div><strong>WHY IT MATTERS</strong><p>Cooper Union embodies a radical 19th-century claim: technical and artistic education should create mobility and informed citizens, not merely reproduce privilege. Its Great Hall made education, reform, and national politics part of the same project.</p></div></aside>
+<aside class="cue nearby"><span class="ico">＋</span><div><strong>McSORLEY'S</strong><p>The bar likely dates to 1854 and still serves only light or dark ale. Its “tradition” also included excluding women until a 1970 court ruling—another reminder to ask who nostalgia leaves out.</p></div></aside>
+
+<div class="route">North one block on 3rd Avenue; turn right onto St Mark's Place</div>
+<h2 class="stop" id="s16"><span class="n">16</span>St Mark's Place</h2>
+<figure><img src="p82-1.jpg" alt="German-American Shooting Society clubhouse on St Mark's Place" loading="lazy"><figcaption>German-American Shooting Society clubhouse</figcaption></figure>
+<p>This three-block stretch of East 8th Street is the East Village's main street. Farmland became an elite 1830s suburb, then an Irish and German immigrant corridor, then a center for Beats, hippies, punks, and anarchists. Every generation tends to declare that its version was authentic and the next one killed it.</p>
+<p>No. 4, the 1832 Hamilton-Holly House, preserves the affluent first phase. No. 12, built in 1888 for the German-American Shooting Society, preserves Kleindeutschland. Nos. 19–23 moved from rowhouses to German music club, ballroom, Polish venue, and finally the Electric Circus, where the Velvet Underground, Grateful Dead, and Tina Turner performed in the late 1960s.</p>
+<aside class="cue why"><span class="ico">◆</span><div><strong>WHY IT MATTERS</strong><p>St Mark's Place shows culture as a relay rather than a single golden age. Successive groups reused the same buildings to make new communities, while memories of each era became part of the street's appeal—and eventually its real-estate value.</p></div></aside>
+<aside class="cue"><span class="ico">◉</span><div><strong>COMPARE THREE ERAS</strong><p>Read No. 4 as 1830s wealth, No. 12 as 1880s German community, and Nos. 19–23 as 1960s counterculture. The short block is a timeline in brick.</p></div></aside>
+
+<div class="route">Turn left on 2nd Avenue; stop between St Mark's and East 9th</div>
+<h2 class="stop" id="s17"><span class="n">17</span>Ottendorfer Library and German Dispensary</h2>
+<figure><img src="p82-2.jpg" alt="Ornate red-brick facade of the former German Dispensary" loading="lazy"><figcaption>The former Deutsches Dispensary</figcaption></figure>
+<p>Anna and Oswald Ottendorfer, publishers of the influential <em>New Yorker Staats-Zeitung</em>, funded a free library and medical clinic for Little Germany. Both ornate red-brick and terracotta buildings opened in 1884. Anna, a Bavarian immigrant who had expanded the newspaper after her first husband's death, died shortly before completion; the dedication also served as her memorial.</p>
+<p>The library joined the New York Public Library in 1901 and is the city's oldest library building still serving its original purpose. The dispensary evolved institutionally into Lenox Hill Hospital; this building later became offices.</p>
+<aside class="cue why"><span class="ico">◆</span><div><strong>WHY IT MATTERS</strong><p>Immigrant success created public infrastructure. A newspaper fortune funded free knowledge and health care, showing how ethnic institutions could serve immediate community needs while becoming permanent parts of the wider city.</p></div></aside>
+<aside class="cue nearby"><span class="ico">＋</span><div><strong>2nd AVENUE</strong><p>Veselka preserves Ukrainian food traditions; stars in the sidewalk mark the Yiddish Theater Walk of Fame; the Village East Cinema began as a 1926 Yiddish playhouse.</p></div></aside>
+<aside class="cue history"><span class="ico">↳</span><div><strong>ST MARK'S CHURCH IN-THE-BOWERY</strong><p>The 1799 church replaced the Stuyvesant family's 1651 chapel and still holds Peter Stuyvesant's vault. Because it predates Manhattan's 1811 grid, the church sits at an unusual angle beside surviving Stuyvesant Street. A 1978 fire nearly destroyed it; restoration returned it to use as both parish and arts center.</p></div></aside>
+
+<div class="route">Continue north; at East 10th turn east to Avenue A</div>
+<h2 class="stop" id="s18"><span class="n">18</span>Tompkins Square Park</h2>
+<p>The 10.5-acre park lies in Alphabet City, the part of Manhattan extending east of 1st Avenue into Avenues A through D. Laid out in 1834, it was expected to attract wealthy residents but proved too far from Broadway. Working-class housing instead filled the surrounding streets.</p>
+<p>That made the park a recurring stage for conflict: riots in 1857, 1863, and 1874; anti-war demonstrations in the 1960s; and confrontations over police removal of unhoused residents in the late 1980s and early 1990s. Today rising rents and luxury development test a neighborhood identity built around immigrants, labor, art, music, and refuge for people priced out elsewhere.</p>
+<aside class="cue why"><span class="ico">◆</span><div><strong>WHY IT MATTERS</strong><p>Public parks reveal who a city believes public space is for. Tompkins Square has alternated between amenity, protest ground, shelter, and symbol of gentrification. Ending here leaves the route's central question unresolved: can a neighborhood improve without excluding the people who gave it meaning?</p></div></aside>
+<aside class="cue"><span class="ico">◉</span><div><strong>FIND THE SLOCUM MEMORIAL</strong><p>The small 1906 fountain remembers the women and children killed in the General Slocum disaster, connecting the final park back to Stop 14.</p></div></aside>
+
+<h2>Eat along the route</h2>
+<p>The route passes enough food history to become an all-day walk: Chinatown's Mott and Pell Street restaurants; Economy Candy on Rivington; Katz's for pastrami; Russ &amp; Daughters for appetizing; Yonah Schimmel for knishes; McSorley's for ale; and Veselka for pierogi and borscht. These are not side notes—the foods show how immigrant traditions entered the shared vocabulary of New York.</p>
+</article>
+<footer><a href="../../">← back to all logs</a></footer>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+var stops=[
+[40.71445,-74.00015,"1 Five Points"],
+[40.71453,-73.99824,"2 Historic Chinatown"],
+[40.7139012,-73.9978135,"3 Chatham Square"],
+[40.7127341,-73.9983555,"4 First Jewish Cemetery"],
+[40.7123179,-73.9980610,"5 Al Smith House"],
+[40.71345,-73.99455,"6 Manhattan Bridge"],
+[40.7147291,-73.9934610,"7 Eldridge Street Synagogue"],
+[40.7142719,-73.9899853,"8 Straus Square"],
+[40.71725,-73.99068,"9 Ridley & Sons"],
+[40.71872,-73.98816,"10 Allen Street"],
+[40.7212804,-73.9856272,"11 Lenin Statue"],
+[40.7246014,-73.9889420,"12 Marble Cemeteries"],
+[40.72630,-73.99038,"13 German East 4th Street"],
+[40.7270718,-73.9871649,"14 St Mark's Lutheran"],
+[40.72930,-73.99055,"15 Cooper Union"],
+[40.72832,-73.98775,"16 St Mark's Place"],
+[40.7289076,-73.9877636,"17 Ottendorfer Library"],
+[40.7264858,-73.9816843,"18 Tompkins Square Park"]
+];
+var map=L.map('map');
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map);
+var pts=stops.map(function(s){return [s[0],s[1]]});
+L.polyline(pts,{color:'#2545FF',weight:3}).addTo(map);
+stops.forEach(function(s,i){L.circleMarker([s[0],s[1]],{radius:9,color:'#2545FF',fillColor:'#fff',fillOpacity:1,weight:2}).addTo(map).bindTooltip(String(i+1),{permanent:true,direction:'center',className:'num'}).bindPopup(s[2]);});
+map.fitBounds(L.latLngBounds(pts).pad(.08));
+</script>
+<style>.num{background:none;border:none;box-shadow:none;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;color:#2545FF}</style>
+</body>
+</html>
