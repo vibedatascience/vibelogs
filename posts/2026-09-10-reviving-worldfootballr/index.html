@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Rahul">
+<title>Reviving worldfootballR: the data sources and the update plan | vibelogs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#FAFAF8;--ink:#17171C;--cobalt:#2545FF;--muted:#6E6E76;--rule:#E7E7E2;--chip:#EEF1FF}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:17px;line-height:1.7}
+.wrap{max-width:680px;margin:0 auto;padding:0 24px}
+.top{padding:40px 0 0;font-family:'IBM Plex Mono',monospace;font-size:0.8rem}
+.top a{color:var(--muted);text-decoration:none}
+.top a:hover{color:var(--cobalt)}
+header.post{padding:32px 0 24px;border-bottom:1px solid var(--rule)}
+.meta{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted);display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.upd{color:var(--muted)}
+.tag{background:var(--chip);color:var(--cobalt);padding:1px 8px;border-radius:4px;font-weight:500}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.7rem,5vw,2.3rem);letter-spacing:-0.02em;line-height:1.2}
+article{padding:32px 0 60px}
+article p{margin:0 0 18px}
+article a{color:var(--cobalt)}
+article h2{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.45rem;letter-spacing:-0.01em;margin:36px 0 14px}
+.src{background:#fff;border:1px solid var(--rule);border-radius:14px;padding:22px 24px 16px;margin:0 0 20px;box-shadow:0 1px 3px rgba(23,23,28,0.04)}
+.src-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.src h3{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;letter-spacing:-0.01em}
+.pill{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;padding:2px 9px;border-radius:4px;white-space:nowrap}
+.ok{background:#E6F6EE;color:#0B6B3A}
+.fix{background:#FFF1E0;color:#9A4B00}
+.frozen{background:#EEF1FF;color:var(--cobalt)}
+.new{background:#F3EEFF;color:#5A2CB5}
+.src p.note{font-size:0.95rem;color:#3d3d45;margin:0 0 12px}
+.facts{display:grid;grid-template-columns:110px 1fr;gap:4px 14px;font-size:0.88rem;border-top:1px solid var(--rule);padding-top:12px}
+.facts dt{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+.facts dd{margin:0}
+pre{background:#fff;border:1px solid var(--rule);border-radius:10px;padding:16px 18px;font-family:'IBM Plex Mono',monospace;font-size:0.8rem;line-height:1.55;overflow-x:auto;margin:0 0 20px;color:#3d3d45}
+.gotcha{border-left:3px solid var(--cobalt);padding:12px 16px;background:#fff;margin:0 0 18px}
+.gotcha strong{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;letter-spacing:0.08em;color:var(--cobalt)}
+article ul,article ol{margin:0 0 18px 24px}
+article li{margin-bottom:6px}
+table{width:100%;border-collapse:collapse;font-size:0.9rem;margin:0 0 20px}
+th{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule)}
+td{padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+footer{border-top:1px solid var(--rule);padding:24px 0 56px;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted)}
+footer a{color:var(--muted)}
+@media (max-width:480px){.src{padding:18px 16px 12px}.facts{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><a href="../../">← vibelogs</a></div>
+
+<header class="post">
+  <div class="meta"><span>[2026-09-10]</span><span>Rahul</span><span class="upd">updated 2026-09-10</span><span class="tag">DATA-SCIENCE</span></div>
+  <h1>Reviving worldfootballR: the data sources and the update plan</h1>
+</header>
+
+<article>
+<p><a href="https://github.com/JaseZiv/worldfootballR">worldfootballR</a> is the package most R users reach for when they want football data. It has 75 exported functions covering FBref, Transfermarkt, and Understat, plus a companion data repository so people can load pre-collected tables without scraping anything. In September 2025 the author archived it and wrote that anyone was welcome to take it as the bones of a version 2. A year later it still gets 700 to 900 CRAN downloads a month, and the data it serves stopped on September 16, 2025.</p>
+
+<p>I have been using it for a while and I have offered to take over maintenance. The continuation lives at <a href="https://github.com/vibedatascience/worldfootballR">vibedatascience/worldfootballR</a>. It already passes R CMD check on current R with two upstream check problems fixed, and it ships a small script that calls one function per source against the live site and records what happened. This post explains what each source is, what state it is in today, and how the package will stay current from here.</p>
+
+<h2>What the first live run found</h2>
+
+<p>I ran the status script on September 8, 2026 from a cloud machine. The short version is that the Understat parsers are broken by a site change, the Transfermarkt league lookups fail because they read the frozen data repository, and the load functions work but serve year-old data. FBref returned 403, which is Sports Reference blocking datacentre IPs rather than proof that the parsers are dead; that needs a re-run from a home connection.</p>
+
+<table>
+<tr><th>Function</th><th>Source</th><th>Result</th></tr>
+<tr><td>fb_match_results, fb_league_stats, fb_season_team_stats</td><td>FBref</td><td>HTTP 403 from cloud IP, inconclusive</td></tr>
+<tr><td>tm_player_market_values</td><td>Transfermarkt</td><td>Season 2025 not found in frozen lookup tables</td></tr>
+<tr><td>tm_team_transfers</td><td>Transfermarkt</td><td>Connection refused from cloud IP, inconclusive</td></tr>
+<tr><td>understat_league_match_results, understat_league_season_shots</td><td>Understat</td><td>Broken, site changed its embedded JSON</td></tr>
+<tr><td>load_match_results</td><td>data repo</td><td>Works, 380 rows, last refreshed 2025-09-16</td></tr>
+<tr><td>load_understat_league_shots</td><td>data repo</td><td>Works with an encoding warning</td></tr>
+</table>
+
+<h2>The sources</h2>
+
+<p>Three of these are what the package already covers. Four are additions chosen because their terms allow automated access without argument. Each card says what the source gives you, how far back it goes, what the site allows, and where it stands right now.</p>
+
+<div class="src">
+  <div class="src-head"><h3>FBref</h3><span class="pill fix">needs verification</span></div>
+  <p class="note">The deepest free source of match and season statistics. Player and team tables for shooting, passing, possession, defence, and keeper stats, match reports with lineups and events, scouting reports, and advanced stats for the big five leagues and many more. Powered by Opta data through Sports Reference.</p>
+  <dl class="facts">
+    <dt>Coverage</dt><dd>Big five leagues with advanced stats from 2017/18, basic results for dozens of competitions going back decades.</dd>
+    <dt>Terms</dt><dd>Sports Reference publishes a bot policy with a request rate limit. The package will enforce that limit by default and users can slow it down but not remove it.</dd>
+    <dt>In package</dt><dd>24 functions, the largest source. First job is a proper live run from a residential IP to see which parsers still match the HTML.</dd>
+  </dl>
+</div>
+
+<div class="src">
+  <div class="src-head"><h3>Understat</h3><span class="pill fix">broken, fix in progress</span></div>
+  <p class="note">Expected goals. Shot-level xG for every shot in six leagues (Premier League, La Liga, Bundesliga, Serie A, Ligue 1, Russian Premier League), plus player and team season aggregates for xG, xA, npxG, xGChain, and xGBuildup.</p>
+  <dl class="facts">
+    <dt>Coverage</dt><dd>2014/15 to the current season, six leagues.</dd>
+    <dt>Terms</dt><dd>No published policy. The package reads JSON that the site embeds in its own pages, at a rate of one request every two seconds.</dd>
+    <dt>In package</dt><dd>11 functions. All of them currently fail with "second argument must be a list" because the site changed how it embeds the JSON. This is the first parser fix on the list.</dd>
+  </dl>
+</div>
+
+<div class="src">
+  <div class="src-head"><h3>Transfermarkt</h3><span class="pill frozen">works, lookups frozen</span></div>
+  <p class="note">Market values, transfer history and fees, squads, contract details, injuries, and staff. The only free source of a consistent valuation series for every player in the world.</p>
+  <dl class="facts">
+    <dt>Coverage</dt><dd>Valuations back to the early 2000s, transfers much further.</dd>
+    <dt>Terms</dt><dd>Their terms prohibit automated access. The functions stay in the package and get bug fixes, but Transfermarkt is not part of any funded or scheduled data collection, and the data repository will not refresh it.</dd>
+    <dt>In package</dt><dd>20 functions. The league and team URL lookups read from the frozen data repository, so anything asking for the 2025/26 season fails today. Rebuilding those lookup tables fixes most of it.</dd>
+  </dl>
+</div>
+
+<div class="src">
+  <div class="src-head"><h3>football-data.co.uk</h3><span class="pill new">new</span></div>
+  <p class="note">Results and bookmaker odds as plain CSV files, one per league per season. Full-time and half-time scores, shots, corners, cards, and closing odds from a dozen bookmakers. It is the dataset most betting and forecasting papers are built on.</p>
+  <dl class="facts">
+    <dt>Coverage</dt><dd>22 leagues, from 1993/94 to the current season, updated within a day of matches.</dd>
+    <dt>Terms</dt><dd>Free to download and use. No scraping involved; the files are published for exactly this purpose.</dd>
+    <dt>Plan</dt><dd>One function to read any league and season, one load function backed by the weekly refresh.</dd>
+  </dl>
+</div>
+
+<div class="src">
+  <div class="src-head"><h3>ClubElo</h3><span class="pill new">new</span></div>
+  <p class="note">Elo ratings for every European club, recomputed after every match. The cleanest single number for "how good is this team right now", and the standard baseline for match forecasting.</p>
+  <dl class="facts">
+    <dt>Coverage</dt><dd>1946 to the current week, every club in Europe's top divisions and most second tiers.</dd>
+    <dt>Terms</dt><dd>Public API at api.clubelo.com, returns CSV, the author encourages use.</dd>
+    <dt>Plan</dt><dd>Functions for a club's rating history and for the full table on a given date.</dd>
+  </dl>
+</div>
+
+<div class="src">
+  <div class="src-head"><h3>International results</h3><span class="pill new">new</span></div>
+  <p class="note">Every men's international match on record: date, teams, score, tournament, venue, and whether it was played at a neutral ground. Maintained as an open dataset by Mart Jürisoo and mirrored on Kaggle.</p>
+  <dl class="facts">
+    <dt>Coverage</dt><dd>48,000 matches from 1872 to the current month, 288 teams including historical names.</dd>
+    <dt>Terms</dt><dd>CC BY 4.0.</dd>
+    <dt>Plan</dt><dd>A single load function with the country name mapping table attached, so historical names resolve to current ones.</dd>
+  </dl>
+</div>
+
+<div class="src">
+  <div class="src-head"><h3>Reep player register</h3><span class="pill new">new</span></div>
+  <p class="note">The missing join key. A public register of 488,000 players with their IDs on FBref, Understat, Transfermarkt, Sofascore, Opta, StatsBomb, and about 30 other providers. Without it, matching a player across two sources means fuzzy name matching and manual cleanup.</p>
+  <dl class="facts">
+    <dt>Coverage</dt><dd>Active and recent players across all major providers.</dd>
+    <dt>Terms</dt><dd>Public CSV on GitHub.</dd>
+    <dt>Plan</dt><dd>A join_ids() helper so a table from any source can be keyed to any other source in one call.</dd>
+  </dl>
+</div>
+
+<div class="src">
+  <div class="src-head"><h3>StatsBomb open data</h3><span class="pill frozen">later</span></div>
+  <p class="note">Event-level data: every pass, shot, carry, and duel with pitch coordinates and xG, plus 360 freeze frames for some competitions. 80 competition-seasons across 24 competitions including World Cups, Euros, Champions League, and full seasons of major leagues.</p>
+  <dl class="facts">
+    <dt>Terms</dt><dd>Open license for non-commercial use with attribution.</dd>
+    <dt>Plan</dt><dd>StatsBombR already exists on GitHub. Loaders for worldfootballR come after the core revival, not before.</dd>
+  </dl>
+</div>
+
+<h2>Sources that stay out</h2>
+
+<div class="gotcha"><strong>GOTCHA · FOTMOB</strong><br>FotMob was removed from the package in 2024 when its terms changed to prohibit automated access. It stays out. Nothing in this continuation touches it.</div>
+
+<p>The same rule applies to anything that requires another site's private API token, and to prediction markets or betting exchanges. If a source does not publish either a file, an API, or a bot policy, it does not get a scheduled job.</p>
+
+<h2>How the package stays current</h2>
+
+<p>The reason the package went stale is structural, not personal. One maintainer, one repository, and every site change landing as a bug report that only that person can fix. The fix is to make breakage visible automatically and to make most users never hit the sites at all.</p>
+
+<pre>
+  weekly GitHub Actions
+  ┌──────────────────────────────────────────────────┐
+  │  Monday 07:00 UTC   live_check.R                  │
+  │    one call per source  →  inst/status/live_status.csv
+  │                                                   │
+  │  Monday 06:00 UTC   worldfootballR_data refresh   │
+  │    football-data.co.uk  ─┐                        │
+  │    ClubElo               ├─→  CSV + Parquet + manifest.json
+  │    international results ─┤       (GitHub release assets)
+  │    Understat aggregates  ─┘                        │
+  └──────────────────────────────────────────────────┘
+                     │
+                     ▼
+     load_*()  reads manifest.json, fetches latest file
+     fb_*()  tm_*()  understat_*()  hit the site, rate limited
+</pre>
+
+<ol>
+  <li>A weekly live check calls one representative function per source and commits the result to the repository. When a site changes, the status file goes red within seven days instead of waiting for someone to file an issue.</li>
+  <li>The data repository comes back to life on a weekly cron. Every dataset behind a load function gets rebuilt, published as CSV and Parquet with a manifest that records the timestamp, and the load functions read the manifest to find the latest file. Most users should never scrape.</li>
+  <li>The package splits into one package per source (fbrefR, understatR, transfermarktR) with worldfootballR as a meta-package that re-exports everything under the current names. Existing code keeps working, and a break in one site can be fixed and released without touching the others.</li>
+  <li>Rate limits become a shared helper with per-source defaults that follow each site's published policy. Users can slow requests down. They cannot switch the limit off.</li>
+  <li>Every function that cannot be fixed gets a deprecation message that says why, and the last good snapshot of its data stays available through the data repository with a date stamp.</li>
+</ol>
+
+<h2>What is on the board</h2>
+
+<table>
+<tr><th>When</th><th>What</th></tr>
+<tr><td>September 2026</td><td>Live run from a residential IP. Fix the Understat parsers. Rebuild the Transfermarkt lookup tables. Tag 0.7.0.</td></tr>
+<tr><td>October 2026</td><td>Weekly data refresh live for the existing load functions. football-data.co.uk added.</td></tr>
+<tr><td>Winter 2026/27</td><td>Per-source split with the meta-package preserving the API. ClubElo, international results, Reep join helper. Back on CRAN.</td></tr>
+</table>
+
+<p>If you use the package, the most useful thing you can do is open an issue on the continuation repository for any function that fails for you, with the call and the error. The status script only covers one function per source; your failures cover the rest.</p>
+</article>
+
+<footer><a href="../../">← back to all logs</a></footer>
+</div>
+</body>
+</html>
