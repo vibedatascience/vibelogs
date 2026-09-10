@@ -59,13 +59,10 @@ footer a{color:var(--muted)}
 </header>
 
 <article>
-<p><a href="https://github.com/JaseZiv/worldfootballR">worldfootballR</a> is the package most R users reach for when they want football data. It has 75 exported functions covering FBref, Transfermarkt, and Understat, plus a companion data repository so people can load pre-collected tables without scraping anything. In September 2025 the author archived it and wrote that anyone was welcome to take it as the bones of a version 2. A year later it still gets 700 to 900 CRAN downloads a month, and the data it serves stopped on September 16, 2025.</p>
+<p><a href="https://github.com/JaseZiv/worldfootballR">worldfootballR</a> was archived in September 2025. Continuation at <a href="https://github.com/vibedatascience/worldfootballR">vibedatascience/worldfootballR</a>. Passes R CMD check. Data last refreshed 2025-09-16.</p>
 
-<p>I have been using it for a while and I have offered to take over maintenance. The continuation lives at <a href="https://github.com/vibedatascience/worldfootballR">vibedatascience/worldfootballR</a>. It already passes R CMD check on current R with two upstream check problems fixed, and it ships a small script that calls one function per source against the live site and records what happened. This post explains what each source is, what state it is in today, and how the package will stay current from here.</p>
+<h2>Live run, 2026-09-08</h2>
 
-<h2>What the first live run found</h2>
-
-<p>I ran the status script on September 8, 2026 from a cloud machine. The short version is that the Understat parsers are broken by a site change, the Transfermarkt league lookups fail because they read the frozen data repository, and the load functions work but serve year-old data. FBref returned 403, which is Sports Reference blocking datacentre IPs rather than proof that the parsers are dead; that needs a re-run from a home connection.</p>
 
 <table>
 <tr><th>Function</th><th>Source</th><th>Result</th></tr>
@@ -79,96 +76,93 @@ footer a{color:var(--muted)}
 
 <h2>The sources</h2>
 
-<p>Three of these are what the package already covers. Four are additions chosen because their terms allow automated access without argument. Each card says what the source gives you, how far back it goes, what the site allows, and where it stands right now.</p>
 
 <div class="src">
   <div class="src-head"><h3>FBref</h3><span class="pill fix">needs verification</span></div>
-  <p class="note">The deepest free source of match and season statistics. Player and team tables for shooting, passing, possession, defence, and keeper stats, match reports with lineups and events, scouting reports, and advanced stats for the big five leagues and many more. Powered by Opta data through Sports Reference.</p>
+  <p class="note">Match and season stats. Shooting, passing, possession, defence, keepers, lineups, scouting reports. Opta data via Sports Reference.</p>
   <dl class="facts">
-    <dt>Coverage</dt><dd>Big five leagues with advanced stats from 2017/18, basic results for dozens of competitions going back decades.</dd>
-    <dt>Terms</dt><dd>Sports Reference publishes a bot policy with a request rate limit. The package will enforce that limit by default and users can slow it down but not remove it.</dd>
-    <dt>In package</dt><dd>24 functions, the largest source. First job is a proper live run from a residential IP to see which parsers still match the HTML.</dd>
+    <dt>Coverage</dt><dd>Big five advanced stats from 2017/18, basic results for dozens of competitions.</dd>
+    <dt>Terms</dt><dd>Published bot policy with rate limit. Enforced by default.</dd>
+    <dt>In package</dt><dd>24 functions. Needs a live run from a residential IP.</dd>
   </dl>
 </div>
 
 <div class="src">
   <div class="src-head"><h3>Understat</h3><span class="pill fix">broken, fix in progress</span></div>
-  <p class="note">Expected goals. Shot-level xG for every shot in six leagues (Premier League, La Liga, Bundesliga, Serie A, Ligue 1, Russian Premier League), plus player and team season aggregates for xG, xA, npxG, xGChain, and xGBuildup.</p>
+  <p class="note">Shot-level xG, six leagues. Player and team xG, xA, npxG, xGChain, xGBuildup.</p>
   <dl class="facts">
-    <dt>Coverage</dt><dd>2014/15 to the current season, six leagues.</dd>
-    <dt>Terms</dt><dd>No published policy. The package reads JSON that the site embeds in its own pages, at a rate of one request every two seconds.</dd>
-    <dt>In package</dt><dd>11 functions. All of them currently fail with "second argument must be a list" because the site changed how it embeds the JSON. This is the first parser fix on the list.</dd>
+    <dt>Coverage</dt><dd>2014/15 to now, six leagues.</dd>
+    <dt>Terms</dt><dd>No published policy. One request per two seconds.</dd>
+    <dt>In package</dt><dd>11 functions. All fail, site changed its embedded JSON. First fix.</dd>
   </dl>
 </div>
 
 <div class="src">
   <div class="src-head"><h3>Transfermarkt</h3><span class="pill frozen">works, lookups frozen</span></div>
-  <p class="note">Market values, transfer history and fees, squads, contract details, injuries, and staff. The only free source of a consistent valuation series for every player in the world.</p>
+  <p class="note">Market values, transfers and fees, squads, contracts, injuries.</p>
   <dl class="facts">
-    <dt>Coverage</dt><dd>Valuations back to the early 2000s, transfers much further.</dd>
-    <dt>Terms</dt><dd>Their terms prohibit automated access. The functions stay in the package and get bug fixes, but Transfermarkt is not part of any funded or scheduled data collection, and the data repository will not refresh it.</dd>
-    <dt>In package</dt><dd>20 functions. The league and team URL lookups read from the frozen data repository, so anything asking for the 2025/26 season fails today. Rebuilding those lookup tables fixes most of it.</dd>
+    <dt>Coverage</dt><dd>Valuations from early 2000s, transfers further.</dd>
+    <dt>Terms</dt><dd>Terms prohibit automated access. Bug fixes only, no scheduled collection.</dd>
+    <dt>In package</dt><dd>20 functions. Lookups read the frozen data repo, 2025/26 fails. Rebuild lookups.</dd>
   </dl>
 </div>
 
 <div class="src">
   <div class="src-head"><h3>football-data.co.uk</h3><span class="pill new">new</span></div>
-  <p class="note">Results and bookmaker odds as plain CSV files, one per league per season. Full-time and half-time scores, shots, corners, cards, and closing odds from a dozen bookmakers. It is the dataset most betting and forecasting papers are built on.</p>
+  <p class="note">Results and bookmaker odds as CSV, one file per league per season.</p>
   <dl class="facts">
-    <dt>Coverage</dt><dd>22 leagues, from 1993/94 to the current season, updated within a day of matches.</dd>
-    <dt>Terms</dt><dd>Free to download and use. No scraping involved; the files are published for exactly this purpose.</dd>
-    <dt>Plan</dt><dd>One function to read any league and season, one load function backed by the weekly refresh.</dd>
+    <dt>Coverage</dt><dd>22 leagues, 1993/94 to now, updated daily.</dd>
+    <dt>Terms</dt><dd>Free files, no scraping.</dd>
+    <dt>Plan</dt><dd>One read function, one load function on the weekly refresh.</dd>
   </dl>
 </div>
 
 <div class="src">
   <div class="src-head"><h3>ClubElo</h3><span class="pill new">new</span></div>
-  <p class="note">Elo ratings for every European club, recomputed after every match. The cleanest single number for "how good is this team right now", and the standard baseline for match forecasting.</p>
+  <p class="note">Club Elo ratings, recomputed after every match.</p>
   <dl class="facts">
-    <dt>Coverage</dt><dd>1946 to the current week, every club in Europe's top divisions and most second tiers.</dd>
-    <dt>Terms</dt><dd>Public API at api.clubelo.com, returns CSV, the author encourages use.</dd>
-    <dt>Plan</dt><dd>Functions for a club's rating history and for the full table on a given date.</dd>
+    <dt>Coverage</dt><dd>1946 to now, European top divisions and most second tiers.</dd>
+    <dt>Terms</dt><dd>Public CSV API at api.clubelo.com.</dd>
+    <dt>Plan</dt><dd>Club history and full table by date.</dd>
   </dl>
 </div>
 
 <div class="src">
   <div class="src-head"><h3>International results</h3><span class="pill new">new</span></div>
-  <p class="note">Every men's international match on record: date, teams, score, tournament, venue, and whether it was played at a neutral ground. Maintained as an open dataset by Mart Jürisoo and mirrored on Kaggle.</p>
+  <p class="note">Every men's international match: date, teams, score, tournament, venue, neutral flag. Maintained by Mart Jürisoo.</p>
   <dl class="facts">
-    <dt>Coverage</dt><dd>48,000 matches from 1872 to the current month, 288 teams including historical names.</dd>
+    <dt>Coverage</dt><dd>48,000 matches, 1872 to now, 288 teams.</dd>
     <dt>Terms</dt><dd>CC BY 4.0.</dd>
-    <dt>Plan</dt><dd>A single load function with the country name mapping table attached, so historical names resolve to current ones.</dd>
+    <dt>Plan</dt><dd>One load function with the country name mapping.</dd>
   </dl>
 </div>
 
 <div class="src">
   <div class="src-head"><h3>Reep player register</h3><span class="pill new">new</span></div>
-  <p class="note">The missing join key. A public register of 488,000 players with their IDs on FBref, Understat, Transfermarkt, Sofascore, Opta, StatsBomb, and about 30 other providers. Without it, matching a player across two sources means fuzzy name matching and manual cleanup.</p>
+  <p class="note">488,000 players with IDs across FBref, Understat, Transfermarkt, Sofascore, Opta, StatsBomb, and 30 more providers.</p>
   <dl class="facts">
-    <dt>Coverage</dt><dd>Active and recent players across all major providers.</dd>
+    <dt>Coverage</dt><dd>Active and recent players.</dd>
     <dt>Terms</dt><dd>Public CSV on GitHub.</dd>
-    <dt>Plan</dt><dd>A join_ids() helper so a table from any source can be keyed to any other source in one call.</dd>
+    <dt>Plan</dt><dd>join_ids() helper.</dd>
   </dl>
 </div>
 
 <div class="src">
   <div class="src-head"><h3>StatsBomb open data</h3><span class="pill frozen">later</span></div>
-  <p class="note">Event-level data: every pass, shot, carry, and duel with pitch coordinates and xG, plus 360 freeze frames for some competitions. 80 competition-seasons across 24 competitions including World Cups, Euros, Champions League, and full seasons of major leagues.</p>
+  <p class="note">Event data with coordinates and xG. 80 competition-seasons, 24 competitions.</p>
   <dl class="facts">
-    <dt>Terms</dt><dd>Open license for non-commercial use with attribution.</dd>
-    <dt>Plan</dt><dd>StatsBombR already exists on GitHub. Loaders for worldfootballR come after the core revival, not before.</dd>
+    <dt>Terms</dt><dd>Open license, non-commercial, attribution.</dd>
+    <dt>Plan</dt><dd>After the core revival. StatsBombR exists on GitHub.</dd>
   </dl>
 </div>
 
 <h2>Sources that stay out</h2>
 
-<div class="gotcha"><strong>GOTCHA · FOTMOB</strong><br>FotMob was removed from the package in 2024 when its terms changed to prohibit automated access. It stays out. Nothing in this continuation touches it.</div>
+<div class="gotcha"><strong>GOTCHA · FOTMOB</strong><br>Removed in 2024 when terms changed. Stays out. Same rule for anything needing a private token, and for betting markets.</div>
 
-<p>The same rule applies to anything that requires another site's private API token, and to prediction markets or betting exchanges. If a source does not publish either a file, an API, or a bot policy, it does not get a scheduled job.</p>
 
-<h2>How the package stays current</h2>
+<h2>Update plan</h2>
 
-<p>The reason the package went stale is structural, not personal. One maintainer, one repository, and every site change landing as a bug report that only that person can fix. The fix is to make breakage visible automatically and to make most users never hit the sites at all.</p>
 
 <pre>
   weekly GitHub Actions
@@ -189,14 +183,14 @@ footer a{color:var(--muted)}
 </pre>
 
 <ol>
-  <li>A weekly live check calls one representative function per source and commits the result to the repository. When a site changes, the status file goes red within seven days instead of waiting for someone to file an issue.</li>
-  <li>The data repository comes back to life on a weekly cron. Every dataset behind a load function gets rebuilt, published as CSV and Parquet with a manifest that records the timestamp, and the load functions read the manifest to find the latest file. Most users should never scrape.</li>
-  <li>The package splits into one package per source (fbrefR, understatR, transfermarktR) with worldfootballR as a meta-package that re-exports everything under the current names. Existing code keeps working, and a break in one site can be fixed and released without touching the others.</li>
-  <li>Rate limits become a shared helper with per-source defaults that follow each site's published policy. Users can slow requests down. They cannot switch the limit off.</li>
-  <li>Every function that cannot be fixed gets a deprecation message that says why, and the last good snapshot of its data stays available through the data repository with a date stamp.</li>
+  <li>Weekly live check, one function per source, result committed. Site changes show up within seven days.</li>
+  <li>Weekly data refresh. CSV and Parquet with a manifest. load_*() reads the manifest. Most users never scrape.</li>
+  <li>One package per source (fbrefR, understatR, transfermarktR). worldfootballR re-exports under current names. Existing code keeps working.</li>
+  <li>Shared rate limiter, per-source defaults from each site's policy. Users can slow it, not remove it.</li>
+  <li>Unfixable functions get a deprecation message and a dated last snapshot in the data repo.</li>
 </ol>
 
-<h2>What is on the board</h2>
+<h2>Roadmap</h2>
 
 <table>
 <tr><th>When</th><th>What</th></tr>
@@ -205,7 +199,6 @@ footer a{color:var(--muted)}
 <tr><td>Winter 2026/27</td><td>Per-source split with the meta-package preserving the API. ClubElo, international results, Reep join helper. Back on CRAN.</td></tr>
 </table>
 
-<p>If you use the package, the most useful thing you can do is open an issue on the continuation repository for any function that fails for you, with the call and the error. The status script only covers one function per source; your failures cover the rest.</p>
 </article>
 
 <footer><a href="../../">← back to all logs</a></footer>
