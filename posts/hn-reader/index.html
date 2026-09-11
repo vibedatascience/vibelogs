@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wire — a Hacker News reader</title>
+<meta name="description" content="Read Hacker News by live feed, search, or submission date, with topics and expandable comment threads.">
 <style>
 :root{
   --bg:#faf9f7;
@@ -11,9 +12,9 @@
   --panel2:#f0eeea;
   --ink:#1d1f24;
   --ink-dim:#5c6270;
-  --ink-faint:#9aa0ad;
-  --amber:#d97a00;
-  --amber-dim:#b56600;
+  --ink-faint:#6b7280;
+  --amber:#a45c00;
+  --amber-dim:#8a4b00;
   --green:#1a8f4a;
   --line:#e4e1db;
   --mono:'SF Mono',ui-monospace,'Cascadia Code','JetBrains Mono',Menlo,Consolas,monospace;
@@ -32,25 +33,6 @@ nav{display:flex;gap:4px;flex-wrap:wrap}
 nav button{background:none;border:none;color:var(--ink-dim);font-family:var(--mono);font-size:13px;padding:5px 10px;cursor:pointer;border-radius:4px}
 nav button:hover{color:var(--ink)}
 nav button.on{background:var(--panel2);color:var(--amber)}
-.search{margin-left:auto}
-.tm input{background:var(--panel);border:1px solid var(--line);color:var(--ink-dim);font-family:var(--mono);font-size:12px;padding:5px 8px;border-radius:6px;outline:none}
-.tm input:focus{border-color:var(--amber-dim)}
-.tm input{color:var(--ink);font-weight:700;cursor:pointer}
-.tm input::-webkit-calendar-picker-indicator{cursor:pointer;opacity:.6}
-.tm{display:flex;align-items:center;gap:4px}
-.tmsep{color:var(--ink-faint);font-size:12px}
-.leadwrap{display:grid;grid-template-columns:1.6fr 1fr;gap:22px;align-items:start}
-.shot{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;border:1px solid var(--line);background:var(--panel2);display:block}
-.shot.small{aspect-ratio:16/9;margin-bottom:10px}
-.pull{margin-top:12px;padding:10px 14px;border-left:3px solid var(--amber);font-family:var(--serif);font-style:italic;font-size:14px;line-height:1.5;color:var(--ink-dim)}
-.pull .who{display:block;margin-top:5px;font-family:var(--mono);font-style:normal;font-size:11px;color:var(--ink-faint)}
-.pull.small{font-size:13px;padding:7px 11px;margin-top:9px}
-@media (max-width:640px){.leadwrap{grid-template-columns:1fr}}
-.tmbanner{margin-bottom:16px;padding:10px 14px;background:var(--panel);border:1px solid var(--amber-dim);border-radius:8px;font-size:13px;color:var(--amber)}
-.tmbanner .x{float:right;cursor:pointer;color:var(--ink-dim)}
-.tmbanner .x:hover{color:var(--ink)}
-.search input{background:var(--panel);border:1px solid var(--line);color:var(--ink);font-family:var(--mono);font-size:13px;padding:6px 10px;border-radius:6px;width:170px;outline:none}
-.search input:focus{border-color:var(--amber-dim)}
 
 main{max-width:860px;margin:0 auto;padding:18px 20px 80px}
 .paper{border-top:3px double var(--ink);padding-top:18px}
@@ -62,8 +44,6 @@ main{max-width:860px;margin:0 auto;padding:18px 20px 80px}
 .chips button{background:var(--panel);border:1px solid var(--line);color:var(--ink-dim);font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:14px;cursor:pointer}
 .chips button:hover{border-color:var(--amber-dim);color:var(--ink)}
 .chips button.on{background:var(--amber);border-color:var(--amber);color:#fff}
-.lead h1{font-family:var(--serif);font-size:34px;line-height:1.15;font-weight:700;letter-spacing:-.3px}
-.lead h1 a:hover{color:var(--amber)}
 .deck{margin-top:8px;font-size:13px;color:var(--ink-dim)}
 .deck b{color:var(--ink)}
 .secrow{display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid var(--ink)}
@@ -74,17 +54,17 @@ main{max-width:860px;margin:0 auto;padding:18px 20px 80px}
 .seccard h2 a:hover{color:var(--amber)}
 .seccard .deck{margin-top:5px;font-size:12px}
 .idxhead{margin:20px 0 6px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-faint)}
-.idx{column-count:2;column-gap:34px;column-rule:1px solid var(--line)}
+.idx{display:grid;grid-template-columns:1fr 1fr;column-gap:18px}
+.irow:nth-child(2n){border-left:1px solid var(--line);padding-left:18px}
 .irow{break-inside:avoid;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;line-height:1.45}
 .irow .t:hover{color:var(--amber)}
 .irow .m{color:var(--ink-faint);font-size:11px;margin-top:2px}
 .irow .m a:hover{color:var(--amber)}
-.irow .pts{color:var(--amber);font-weight:700}
 @media (max-width:640px){
-  .lead h1{font-size:26px}
   .secrow{grid-template-columns:1fr}
   .seccard:nth-child(2n){border-left:none;padding-left:0}
-  .idx{column-count:1}
+  .idx{grid-template-columns:1fr}
+  .irow:nth-child(2n){border-left:none;padding-left:0}
 }
 .loading{padding:40px 0;text-align:center;color:var(--ink-faint)}
 .loading::after{content:'';display:inline-block;width:8px;animation:dots 1.2s steps(4) infinite}
@@ -115,318 +95,88 @@ main{max-width:860px;margin:0 auto;padding:18px 20px 80px}
 .ctext pre{overflow-x:auto;background:var(--panel2);padding:10px;border-radius:6px;font-size:13px;margin:10px 0;font-family:var(--mono)}
 .ctext code{font-family:var(--mono);font-size:13px}
 .ctext i{color:var(--ink-dim)}
-.collapsed .ctext,.collapsed .kids{display:none}
+.collapsed > .cbody{display:none}
 .dead{color:var(--ink-faint);font-style:italic}
 .loadkids{background:none;border:none;color:var(--green);font-family:var(--mono);font-size:12px;cursor:pointer;padding:6px 0}
 .loadkids:hover{text-decoration:underline}
 
 @media (max-width:600px){
-  .score{flex-basis:40px}
-  .search input{width:120px}
   .hwrap{gap:10px;padding:12px 14px}
   main{padding:14px 14px 60px}
 }
+
+:focus-visible{outline:2px solid var(--amber-dim);outline-offset:3px}
+button,input,select{font:inherit}
+button{cursor:pointer}
+button:disabled{cursor:wait;opacity:.65}
+button,a,input,select{touch-action:manipulation}
+.tools{max-width:860px;margin:0 auto;padding:18px 20px 0;display:grid;gap:16px}
+#archive-controls summary{cursor:pointer;color:var(--amber-dim);font-size:12px;min-height:28px}
+.tools label{font-size:12px;color:var(--ink-dim)}
+.fieldrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:5px}
+.fieldrow input,.fieldrow button,.viewhead button,.viewhead select{background:var(--panel);border:1px solid var(--line);border-radius:5px;padding:7px 10px;color:var(--ink);min-height:36px}
+.searchform input{flex:1;min-width:150px}
+.searchform button,.dateform button{color:var(--amber-dim)}
+.dates label{display:grid;gap:4px}
+.dates{align-items:end}
+.dates > span{align-self:center}
+.dates input{max-width:160px;min-width:0}
+.hint{font-size:11px;color:var(--ink-dim);margin-top:6px}
+.viewhead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.viewhead h1{font-size:16px;overflow-wrap:anywhere;min-width:0}
+.viewactions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px}
+.resultnote{font-size:12px;color:var(--ink-dim);margin-bottom:12px;overflow-wrap:anywhere}
+.chips{margin-top:8px}
+.topicnote{font-size:11px;color:var(--ink-dim)}
+.message{padding:20px 0;color:var(--ink-dim)}
+.error{color:#a33121;margin:12px 0;font-size:13px}
+.retry{font:inherit;padding:6px 12px;cursor:pointer;margin:8px 0;background:var(--panel);border:1px solid var(--line);border-radius:5px}
+.morebtn{min-height:40px}
+.cbtn,[data-open]{cursor:pointer}
+.cbtn{text-decoration:underline;text-underline-offset:3px}
+.lead h2{font-family:var(--serif);font-size:34px;line-height:1.15;letter-spacing:-.3px;overflow-wrap:anywhere}
+.lead h2 a:hover{color:var(--amber)}
+.seccard h2,.dtitle{overflow-wrap:anywhere}
+.back{text-decoration:underline;text-underline-offset:3px}
+.dtext,.ctext{overflow-wrap:anywhere}
+.cmeta{display:block;text-align:left;background:none;border:0;padding:3px 0;color:var(--ink-dim);font:inherit;font-size:12px;line-height:1.7}
+.cmt.deep{padding-left:0;border-left:none}
+.loadkids{display:block;min-height:36px;text-align:left}
+.commentlink{font-size:11px;color:var(--ink-dim);text-decoration:underline}
+.footer{max-width:860px;padding:0 20px 24px;margin:0 auto;color:var(--ink-dim);font-size:11px}
+.footer a{text-decoration:underline}
+@media(max-width:640px){.lead h2{font-size:26px}.tools{padding:14px 14px 0}.dates{gap:6px}.dates input{width:140px}.dateform button{margin-top:4px}.hwrap{gap:8px}.cmt{padding-left:10px}}
+@media(prefers-reduced-motion:reduce){.loading::after{animation:none}}
 </style>
 </head>
 <body>
 <header>
   <div class="hwrap">
-    <div class="logo">wire<span>/hn</span></div>
-    <nav id="nav"></nav>
-    <div class="tm"><input id="tmfrom" type="date" title="from"><span class="tmsep">→</span><input id="tmto" type="date" title="to"></div>
-    <div class="search"><input id="q" type="search" placeholder="search... (enter)"></div>
+    <a class="logo" href="../../" aria-label="Back to vibelogs">wire<span>/hn</span></a>
+    <nav id="nav" aria-label="Live Hacker News feeds"></nav>
   </div>
 </header>
-<main id="main"><div class="loading">loading</div></main>
-
-<script>
-const FB='https://hacker-news.firebaseio.com/v0';
-const ALG='https://hn.algolia.com/api/v1';
-const FEEDS=[['top','topstories'],['new','newstories'],['best','beststories'],['ask','askstories'],['show','showstories'],['jobs','jobstories']];
-const PAGE=30;
-let state={feed:'top',ids:[],shown:0,cache:{}};
-const $=s=>document.querySelector(s);
-const main=$('#main');
-
-function ago(t){
-  const s=Math.floor(Date.now()/1000-t);
-  if(s<3600)return Math.floor(s/60)+'m';
-  if(s<86400)return Math.floor(s/3600)+'h';
-  return Math.floor(s/86400)+'d';
-}
-function dom(u){try{return new URL(u).hostname.replace(/^www\./,'')}catch{return''}}
-function esc(x){const d=document.createElement('div');d.textContent=x;return d.innerHTML}
-
-function buildNav(){
-  const n=$('#nav');
-  n.innerHTML=FEEDS.map(([k])=>`<button data-f="${k}" class="${k===state.feed?'on':''}">${k}</button>`).join('');
-  n.querySelectorAll('button').forEach(b=>b.onclick=()=>loadFeed(b.dataset.f));
-}
-
-async function item(id){
-  if(state.cache[id])return state.cache[id];
-  const r=await fetch(`${FB}/item/${id}.json`);
-  const j=await r.json();
-  state.cache[id]=j;
-  return j;
-}
-
-async function loadFeed(f){
-  state.feed=f;buildNav();
-  history.replaceState(null,'','#'+f);
-  main.innerHTML='<div class="loading">loading</div>';
-  const r=await fetch(`${FB}/${FEEDS.find(x=>x[0]===f)[1]}.json`);
-  state.ids=await r.json();
-  state.shown=0;state.page=[];state.filter=null;
-  main.innerHTML='<div id="list"></div>';
-  await more();
-}
-
-async function more(){
-  const slice=state.ids.slice(state.shown,state.shown+PAGE);
-  const items=await Promise.all(slice.map(item));
-  state.page=(state.page||[]).concat(items.filter(Boolean));
-  state.shown+=slice.length;
-  renderChips();
-  renderPaper(state.page,$('#list'));
-  const old=$('.morebtn');if(old)old.remove();
-  if(state.shown<state.ids.length){
-    main.insertAdjacentHTML('beforeend','<button class="morebtn">more</button>');
-    $('.morebtn').onclick=more;
-  }
-  bindStoryLinks();
-}
-
-function shotHTML(it,small){
-  if(!it.url)return'';
-  const src='https://image.thum.io/get/width/500/crop/700/'+encodeURI(it.url);
-  const fb='https://www.google.com/s2/favicons?domain='+dom(it.url)+'&sz=64';
-  return `<img class="shot${small?' small':''}" loading="lazy" src="${src}" onerror="this.onerror=null;this.src='${fb}';this.style.objectFit='contain';this.style.padding='30px'" alt="">`;
-}
-function stripTags(html){const d=document.createElement('div');d.innerHTML=html;return d.textContent||''}
-async function fillPulls(items){
-  const targets=items.slice(0,5);
-  await Promise.all(targets.map(async it=>{
-    let kids=it.kids;
-    if(!kids){const full=await item(it.id);kids=full&&full.kids}
-    if(!kids||!kids.length)return;
-    const c=await item(kids[0]);
-    if(!c||c.deleted||c.dead||!c.text)return;
-    const el=document.querySelector(`.pull[data-for="${it.id}"]`);
-    if(!el)return;
-    let t=stripTags(c.text);
-    if(t.length>220)t=t.slice(0,220).replace(/\s+\S*$/,'')+'...';
-    el.innerHTML=`“${esc(t)}”<span class="who">— ${esc(c.by||'?')}, top comment</span>`;
-    el.style.display='block';
-  }));
-}
-
-const CATS=['show hn','ask hn','code','paper','archive','blog','news','ai'];
-const NEWS_D=['bbc.com','reuters.com','theguardian.com','nytimes.com','wsj.com','ft.com','bloomberg.com','techcrunch.com','arstechnica.com','theverge.com','wired.com','economist.com','cnbc.com','theregister.com','404media.co','theatlantic.com','apnews.com','cnn.com','washingtonpost.com'];
-const BLOG_D=['substack.com','bearblog.dev','github.io','wordpress.com','blogspot.com','neocities.org','micro.blog','write.as'];
-function classify(it){
-  const t=it.title||'', d=it.url?dom(it.url):'';
-  if(/^Show HN[:\s]/i.test(t))return'show hn';
-  if(/^(Ask|Tell) HN[:\s]/i.test(t))return'ask hn';
-  if(/\((19\d\d|20[012]\d)\)\s*$/.test(t))return'archive';
-  if(d==='github.com'||d==='gitlab.com'||d==='codeberg.org')return'code';
-  if(d==='arxiv.org'||d==='nature.com'||d==='science.org'||/\[pdf\]\s*$/i.test(t))return'paper';
-  if(NEWS_D.includes(d))return'news';
-  if(BLOG_D.some(b=>d.endsWith(b))||/\.(dev|blog)$/.test(d))return'blog';
-  if(/\b(LLM|GPT|A\.?I\.?|Claude|Gemini|DeepSeek|transformer|diffusion)\b/i.test(t))return'ai';
-  return null;
-}
-state.filter=null;
-function renderChips(){
-  const present=new Set((state.page||[]).map(classify).filter(Boolean));
-  let host=$('#chips');
-  if(!host){main.insertAdjacentHTML('afterbegin','<div class="chips" id="chips"></div>');host=$('#chips')}
-  host.innerHTML=['all',...CATS.filter(c=>present.has(c))].map(c=>
-    `<button data-c="${c}" class="${(state.filter||'all')===c?'on':''}">${c}</button>`).join('');
-  host.querySelectorAll('button').forEach(b=>b.onclick=()=>{
-    state.filter=b.dataset.c==='all'?null:b.dataset.c;
-    renderChips();
-    renderPaper(state.page,$('#list'));
-    bindStoryLinks();
-  });
-}
-function renderPaper(all,list){
-  const items=state.filter?all.filter(it=>classify(it)===state.filter):all;
-  if(!items.length){list.innerHTML='<div class="dead">nothing here</div>';return}
-  const lead=items[0],cards=items.slice(1,5),rest=items.slice(5);
-  const deck=it=>{
-    const d=it.url?`<b>${dom(it.url)}</b> · `:'';
-    return `${d}${it.score||0} points · by ${esc(it.by||'?')} · ${ago(it.time)} ago · <a class="cbtn" data-open="${it.id}">${it.descendants||0} comments</a>`;
-  };
-  const tlink=it=>it.url
-    ?`<a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.title||'')}</a>`
-    :`<a data-open="${it.id}">${esc(it.title||'')}</a>`;
-  let h=`<div class="paper">
-    <div class="lead">
-      <div class="kick">${classify(lead)||state.feed+" story"}</div>
-      <div class="leadwrap">
-        <div>
-          <h1>${tlink(lead)}</h1>
-          <div class="deck">${deck(lead)}</div>
-          <div class="pull" data-for="${lead.id}" style="display:none"></div>
-        </div>
-        ${shotHTML(lead)}
-      </div>
+<div class="tools">
+  <form id="searchform" class="searchform" role="search">
+    <label for="q">Search HN stories</label>
+    <div class="fieldrow"><input id="q" type="search" placeholder="Title, topic, or phrase" maxlength="300"><button type="submit">Search</button></div>
+    <p id="searchscope" class="hint">Searches all HN stories.</p>
+  </form>
+  <details id="archive-controls"><summary>Browse by date</summary>
+  <form id="dateform" class="dateform">
+    <div class="fieldrow dates">
+      <label>From (UTC)<input id="tmfrom" type="date" required></label>
+      <span aria-hidden="true">→</span>
+      <label>Through (UTC)<input id="tmto" type="date" required></label>
+      <button type="submit">Apply dates</button>
     </div>
-    <div class="secrow">${cards.map(it=>`
-      <div class="seccard">${shotHTML(it,true)}${classify(it)?`<span class="cat">${classify(it)}</span>`:``}<h2>${tlink(it)}</h2><div class="deck">${deck(it)}</div><div class="pull small" data-for="${it.id}" style="display:none"></div></div>`).join('')}
-    </div>`;
-  if(rest.length){
-    h+=`<div class="idxhead">index</div><div class="idx">${rest.map(it=>`
-      <div class="irow">
-        ${classify(it)?`<span class="cat mini">${classify(it)}</span>`:``}<span class="t">${tlink(it)}</span>
-        <div class="m"><span class="pts">${it.score||0}</span> pts · ${ago(it.time)} · <a class="cbtn" data-open="${it.id}">${it.descendants||0}c</a></div>
-      </div>`).join('')}</div>`;
-  }
-  h+='</div>';
-  list.innerHTML=h;
-  fillPulls(items);
-}
+    <p class="hint">Dates select when stories were submitted.</p>
+  </form>
+  </details>
+</div>
+<main id="main" tabindex="-1" aria-busy="true"><div class="loading" role="status">Loading stories</div></main>
+<footer class="footer"><a href="../../">vibelogs</a> · <a href="https://news.ycombinator.com/" target="_blank" rel="noopener">Hacker News ↗</a> · Data from HN and Algolia.</footer>
 
-function bindStoryLinks(){
-  document.querySelectorAll('[data-open]').forEach(a=>{
-    a.onclick=e=>{e.preventDefault();openStory(a.dataset.open)};
-  });
-}
-
-async function openStory(id){
-  main.innerHTML='<div class="loading">loading thread</div>';
-  window.scrollTo(0,0);
-  const it=await item(id);
-  const d=it.url?` · <a href="${esc(it.url)}" target="_blank" rel="noopener" style="color:var(--amber)">${dom(it.url)} ↗</a>`:'';
-  main.innerHTML=`
-    <span class="back">← back to ${state.feed}</span>
-    <div class="dtitle">${esc(it.title||'')}</div>
-    <div class="dmeta">${it.score||0} pts · by ${esc(it.by||'?')} · ${ago(it.time)} ago · ${it.descendants||0} comments${d}</div>
-    ${it.text?`<div class="dtext">${it.text}</div>`:''}
-    <div class="chead">— thread —</div>
-    <div id="cmts"><div class="loading">loading comments</div></div>`;
-  $('.back').onclick=()=>loadFeed(state.feed);
-  const box=$('#cmts');
-  box.innerHTML='';
-  if(it.kids&&it.kids.length){
-    await renderKids(it.kids,box,0,it.by);
-  }else{
-    box.innerHTML='<div class="dead">no comments yet</div>';
-  }
-}
-
-async function renderKids(ids,container,depth,op){
-  const CHUNK=depth===0?15:ids.length;
-  const first=ids.slice(0,CHUNK);
-  const rest=ids.slice(CHUNK);
-  const items=await Promise.all(first.map(item));
-  for(const c of items){
-    if(!c||c.deleted)continue;
-    const el=document.createElement('div');
-    el.className='cmt d'+Math.min(depth,1);
-    const kidCount=c.kids?c.kids.length:0;
-    el.innerHTML=`
-      <div class="cmeta"><span class="au">${esc(c.by||'?')}</span>${c.by===op?'<span class="op">OP</span>':''} ${ago(c.time)} ago <span class="tog">[–]</span></div>
-      <div class="ctext">${c.dead?'<span class="dead">[flagged]</span>':(c.text||'')}</div>
-      <div class="kids"></div>`;
-    const meta=el.querySelector('.cmeta');
-    meta.onclick=()=>{
-      el.classList.toggle('collapsed');
-      meta.querySelector('.tog').textContent=el.classList.contains('collapsed')?`[+${1+countDesc(c)}]`:'[–]';
-    };
-    container.appendChild(el);
-    if(c.kids&&c.kids.length){
-      await renderKids(c.kids,el.querySelector('.kids'),depth+1,op);
-    }
-  }
-  if(rest.length){
-    const b=document.createElement('button');
-    b.className='loadkids';
-    b.textContent=`load ${rest.length} more comments`;
-    b.onclick=async()=>{b.remove();await renderKids(rest,container,depth,op)};
-    container.appendChild(b);
-  }
-}
-
-function countDesc(c){
-  let n=0;
-  const walk=x=>{if(x&&x.kids)x.kids.forEach(k=>{n++;const kc=state.cache[k];if(kc)walk(kc)})};
-  walk(c);
-  return n;
-}
-
-$('#q').addEventListener('keydown',async e=>{
-  if(e.key!=='Enter')return;
-  const q=e.target.value.trim();
-  if(!q)return;
-  main.innerHTML='<div class="loading">searching</div>';
-  const r=await fetch(`${ALG}/search?query=${encodeURIComponent(q)}&tags=story&hitsPerPage=30`);
-  const j=await r.json();
-  main.innerHTML=`<span class="back">← back to ${state.feed}</span><div id="list"></div>`;
-  $('.back').onclick=()=>loadFeed(state.feed);
-  state.page=j.hits.map(h=>({id:+h.objectID,title:h.title,url:h.url,score:h.points,by:h.author,time:h.created_at_i,descendants:h.num_comments}));
-  state.filter=null;renderChips();
-  renderPaper(state.page,$('#list'));
-  bindStoryLinks();
-});
-
-async function tmFetch(pageNum){
-  const nf=encodeURIComponent(`created_at_i>${state.tm.d0},created_at_i<${state.tm.d1}`);
-  const r=await fetch(`${ALG}/search?tags=story&numericFilters=${nf}&hitsPerPage=30&page=${pageNum}`);
-  const j=await r.json();
-  state.tm.pages=j.nbPages;
-  return j.hits.map(h=>({id:+h.objectID,title:h.title,url:h.url,score:h.points,by:h.author,time:h.created_at_i,descendants:h.num_comments}));
-}
-async function timeMachine(fromStr,toStr){
-  main.innerHTML='<div class="loading">rewinding</div>';
-  const d0=Math.floor(new Date(fromStr+'T00:00:00').getTime()/1000);
-  const d1=Math.floor(new Date(toStr+'T00:00:00').getTime()/1000)+86400;
-  state.tm={d0,d1,pageNum:0,pages:1};
-  const n0=new Date(fromStr+'T00:00:00').toDateString();
-  const n1=new Date(toStr+'T00:00:00').toDateString();
-  const label=fromStr===toStr?`front page of ${n0}`:`top stories ${n0} → ${n1}`;
-  main.innerHTML=`<div class="tmbanner">${label} — ranked by points<span class="x">✕ exit</span></div><div id="list"></div>`;
-  main.querySelector('.x').onclick=exitTM;
-  state.page=await tmFetch(0);
-  state.filter=null;renderChips();
-  renderPaper(state.page,$('#list'));
-  bindStoryLinks();
-  tmMoreBtn();
-}
-function tmMoreBtn(){
-  const old=$('.morebtn');if(old)old.remove();
-  if(state.tm.pageNum+1<state.tm.pages){
-    main.insertAdjacentHTML('beforeend','<button class="morebtn">more</button>');
-    $('.morebtn').onclick=async()=>{
-      state.tm.pageNum++;
-      state.page=state.page.concat(await tmFetch(state.tm.pageNum));
-      renderChips();
-      renderPaper(state.page,$('#list'));
-      bindStoryLinks();
-      tmMoreBtn();
-    };
-  }
-}
-function exitTM(){
-  state.tm=null;
-  tmf.value=tmf.max;tmt.value=tmt.max;
-  loadFeed(state.feed);
-}
-const tmf=$('#tmfrom'),tmt=$('#tmto');
-const today=new Date().toISOString().slice(0,10);
-[tmf,tmt].forEach(i=>{i.max=today;i.min='2007-02-19';i.value=today});
-function tmChange(){
-  if(!tmf.value||!tmt.value)return;
-  if(tmf.value>tmt.value){if(this===tmf)tmt.value=tmf.value;else tmf.value=tmt.value}
-  if(tmf.value===today&&tmt.value===today){if(state.tm)exitTM();return}
-  timeMachine(tmf.value,tmt.value);
-}
-tmf.addEventListener('change',tmChange);
-tmt.addEventListener('change',tmChange);
-
-const initial=location.hash.slice(1);
-loadFeed(FEEDS.some(f=>f[0]===initial)?initial:'top');
-</script>
+<script src="reader.js"></script>
 </body>
 </html>
