@@ -122,6 +122,17 @@ button{cursor:pointer}
 button:disabled{cursor:wait;opacity:.65}
 button,a,input,select{touch-action:manipulation}
 .tools{max-width:860px;margin:0 auto;padding:18px 20px 0;display:grid;gap:16px}
+#search-date-tools > summary{font-size:12px;color:var(--ink-dim);cursor:pointer;min-height:28px}
+.extra-fields{display:grid;gap:16px;padding-top:10px}
+.discover-head{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;color:var(--ink-dim)}
+.discover-head button{font:inherit;background:var(--amber);color:#fff;border:1px solid var(--amber);border-radius:5px;padding:7px 12px;min-height:36px}
+.discover-topics{margin:10px 0 8px}
+.periods{display:flex;gap:8px 16px;flex-wrap:wrap}
+.periods button{font-size:12px;background:none;border:0;padding:4px 0;color:var(--ink-dim);text-underline-offset:4px}
+.periods button[aria-pressed="true"]{color:var(--amber);text-decoration:underline}
+.refine{margin:10px 0 16px;font-size:12px;color:var(--ink-dim)}
+.refine summary{cursor:pointer;min-height:28px}
+.refine .chips{margin-bottom:8px}
 .dateheading{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;color:var(--ink-dim)}
 .dateheading button,.shortcuts button{background:none;border:0;color:var(--amber-dim);padding:5px 0;text-decoration:underline;text-underline-offset:3px;font-size:12px}
 .daycontrols input{width:165px}
@@ -174,6 +185,15 @@ button:disabled{cursor:default}
   </div>
 </header>
 <div class="tools">
+  <section class="discover" aria-label="Discover stories">
+    <div class="discover-head"><span>Explore</span><button id="surprise" type="button">Surprise me</button></div>
+    <div id="interests" class="chips discover-topics" role="group" aria-label="Search the archive by topic"></div>
+    <div id="periods" class="periods" role="group" aria-label="Browse a period">
+      <button type="button" data-period="week">This week</button><button type="button" data-period="month">This month</button><button type="button" data-period="year">This year</button><button type="button" data-period="all">All time</button>
+    </div>
+    <div class="shortcuts"><button id="yesterday" type="button">Yesterday</button><button id="yearago" type="button">A year ago</button></div>
+  </section>
+  <details id="search-date-tools"><summary>Search or choose a date</summary><div class="extra-fields">
   <form id="searchform" class="searchform" role="search">
     <label for="q">Search HN stories</label>
     <div class="fieldrow"><input id="q" type="search" placeholder="Title, topic, or phrase" maxlength="300"><button type="submit">Search</button></div>
@@ -194,13 +214,14 @@ button:disabled{cursor:default}
       <button id="applyrange" type="submit">Apply range</button>
     </div>
   </form>
-    <div class="shortcuts"><button id="yesterday" type="button">Yesterday</button><button id="yearago" type="button">A year ago</button></div>
     <p class="hint" id="datehint">Choose a day to load its stories.</p>
   </section>
+  </div></details>
 </div>
 <main id="main" tabindex="-1" aria-busy="true"><div class="loading" role="status">Loading stories</div></main>
 <footer class="footer"><a href="../../">vibelogs</a> · <a href="https://news.ycombinator.com/" target="_blank" rel="noopener">Hacker News ↗</a> · Data from HN and Algolia.</footer>
 
+<script src="discovery.js"></script>
 <script src="reader.js"></script>
 </body>
 </html>

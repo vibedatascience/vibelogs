@@ -58,21 +58,26 @@ function parseRoute() {
   const p = new URLSearchParams(query);
   const from = p.get('from') || '', to = p.get('to') || '';
   const datesOK = validDate(from) && validDate(to) && from <= to;
+  const mix = /^[a-z0-9]{1,10}$/.test(p.get('mix') || '') ? p.get('mix') : '';
   return {
-    feed: Object.hasOwn(FEEDS, feed) ? feed : 'top', q: (p.get('q') || '').trim().slice(0, 300),
-    from: datesOK ? from : '', to: datesOK ? to : '', sort: p.get('sort') === 'newest' ? 'newest' : 'popular',
-    topic: CATS.includes(p.get('topic')) ? p.get('topic') : '',
+    feed: Object.hasOwn(FEEDS, feed) ? feed : 'top', q: mix ? '' : (p.get('q') || '').trim().slice(0, 300),
+    from: !mix && datesOK ? from : '', to: !mix && datesOK ? to : '', sort: !mix && p.get('sort') === 'newest' ? 'newest' : 'popular',
+    interest: !mix && Object.hasOwn(Discovery.topics, p.get('interest')) ? p.get('interest') : '',
+    all: !mix && p.get('all') === '1' ? '1' : '', mix,
+    asof: mix && validDate(p.get('asof') || '') ? p.get('asof') : '',
+    topic: !mix && CATS.includes(p.get('topic')) ? p.get('topic') : '',
     story: /^\d{1,12}$/.test(p.get('story') || '') ? p.get('story') : ''
   };
 }
 function hashFor(r) {
   const p = new URLSearchParams();
-  for (const k of ['q', 'from', 'to', 'topic', 'story']) if (r[k]) p.set(k, r[k]);
-  if (r.sort === 'newest' && (r.q || r.from)) p.set('sort', r.sort);
+  for (const k of ['q', 'from', 'to', 'interest', 'all', 'mix', 'topic', 'story']) if (r[k]) p.set(k, r[k]);
+  if (r.mix && r.asof) p.set('asof', r.asof);
+  if (r.sort === 'newest' && isArchive(r) && !r.mix) p.set('sort', r.sort);
   return '#' + r.feed + (p.size ? '?' + p.toString() : '');
 }
-function listKey(r) { return JSON.stringify([r.feed, r.q, r.from, r.to, r.sort]); }
-function isArchive(r) { return Boolean(r.q || r.from); }
+function listKey(r) { return JSON.stringify([r.feed, r.q, r.from, r.to, r.sort, r.interest, r.all, r.mix, r.asof]); }
+function isArchive(r) { return Boolean(r.q || r.from || r.interest || r.all || r.mix); }
 function saveScroll() { history.replaceState({...history.state, scroll: window.scrollY}, '', location.href); }
 function navigate(next, focus = '') {
   saveScroll();
@@ -150,7 +155,17 @@ function syncControls() {
   $('#prevday').disabled = $('#day').value <= '2007-02-19';
   $('#nextday').disabled = $('#day').value >= today;
   setDateMode(Boolean(route.from && route.from !== route.to));
+  const editingDate = ['day', 'prevday', 'nextday', 'yesterday', 'yearago', 'applyrange'].includes(history.state?.focus);
+  $('#search-date-tools').open = Boolean(route.q || editingDate || (route.from && route.from === route.to && !route.interest));
   $('#searchscope').textContent = route.from ? `Searches HN stories submitted ${dateLabel(route.from)}${route.from !== route.to ? ' through ' + dateLabel(route.to) : ''} (UTC).` : 'Searches all HN stories.';
+  $('#interests').innerHTML = Object.entries(Discovery.topics).map(([key, topic]) => `<button id="interest-${key}" data-interest="${key}" aria-pressed="${route.interest === key}" class="${route.interest === key ? 'on' : ''}">${esc(topic.label)}</button>`).join('');
+  $('#interests').querySelectorAll('button').forEach(button => button.onclick = () => navigate({...route,
+    interest: route.interest === button.dataset.interest ? '' : button.dataset.interest,
+    q: '', mix: '', all: '1', topic: '', story: '', sort: 'popular'}, button.id));
+  $('#periods').querySelectorAll('button').forEach(button => {
+    const dates = Discovery.period(today, button.dataset.period);
+    button.setAttribute('aria-pressed', String(!route.mix && isArchive(route) && route.from === dates.from && route.to === dates.to));
+  });
 }
 function setDateMode(range) {
   $('#dateform').hidden = !range;
@@ -163,7 +178,7 @@ function setDateMode(range) {
 }
 function showDay(value, focus) {
   if (!validDate(value)) return;
-  navigate({...route, from: value, to: value, topic: '', story: ''}, focus);
+  navigate({...route, from: value, to: value, mix: '', topic: '', story: ''}, focus);
 }
 function remember(key, list) {
   lists.delete(key);
@@ -171,6 +186,9 @@ function remember(key, list) {
   if (lists.size > 8) lists.delete(lists.keys().next().value);
 }
 async function fetchPage(list, r, signal) {
+  const request = (endpoint, params, requestSignal) => json(`${ALG}/${endpoint}?${params}`, requestSignal);
+  if (r.mix) return Discovery.surprise(r.mix, r.asof || today, request, signal);
+  if (r.interest) return Discovery.topicPage(list, r, request, signal);
   if (!isArchive(r)) {
     const ids = list.ids || await json(`${FB}/${FEEDS[r.feed]}.json`, signal);
     if (!Array.isArray(ids)) throw new Error('Hacker News returned an invalid feed.');
@@ -194,7 +212,7 @@ async function fetchPage(list, r, signal) {
 function appendPage(list, data) {
   const seen = new Set(list.stories.map(it => it.id));
   for (const it of data.stories) if (!seen.has(it.id)) { list.stories.push(it); seen.add(it.id); }
-  for (const k of ['ids', 'cursor', 'page', 'more']) if (data[k] !== undefined) list[k] = data[k];
+  for (const k of ['ids', 'cursor', 'page', 'more', 'topicPages']) if (data[k] !== undefined) list[k] = data[k];
 }
 async function renderRoute() {
   previewController?.abort();
@@ -230,7 +248,7 @@ async function renderRoute() {
   }
 }
 function classify(it) {
-  const title = it.title || '', host = domain(it.url), tags = [];
+  const title = it.title || '', host = domain(it.url), tags = it.discoveryTopic ? [Discovery.topics[it.discoveryTopic].label.toLowerCase()] : [];
   const at = d => host === d || host.endsWith('.' + d);
   if (/^Show HN[:\s]/i.test(title)) tags.push('show hn');
   if (/^(Ask|Tell) HN[:\s]/i.test(title)) tags.push('ask hn');
@@ -241,7 +259,7 @@ function classify(it) {
   if (/\b(LLMs?|GPT\w*|AI|A\.I\.|OpenAI|Anthropic|Claude|Gemini|DeepSeek|transformers?|diffusion|machine learning|artificial intelligence|language models?)\b/i.test(title)) tags.push('ai');
   const year = title.match(/\((19\d\d|20\d\d)\)\s*$/)?.[1];
   if (year && Number(year) < Number(today.slice(0, 4))) tags.push('older');
-  return tags.length ? tags : ['other'];
+  return tags.length ? [...new Set(tags)] : ['other'];
 }
 function storyHash(id) { return hashFor({...route, story: String(id)}); }
 function titleLink(it) {
@@ -335,7 +353,7 @@ function loadFeaturedPreviews(stories) {
   }));
 }
 function renderPaper(stories) {
-  if (!stories.length) return `<p class="message">${activeList.stories.length ? 'No loaded stories match this topic. Choose another topic or load more stories.' : 'No stories found. Try different search terms or dates.'}</p>`;
+  if (!stories.length) return `<p class="message">${route.mix ? 'No matches for this mix. Try another mix.' : activeList.stories.length ? 'No loaded stories match this filter. Choose another filter or load more stories.' : 'No stories found. Try another topic or a wider date range.'}</p>`;
   const [lead, ...rest] = stories;
   const cards = rest.slice(0, 4), index = rest.slice(4);
   const tags = it => classify(it).map(c => `<span class="cat mini">${esc(c)}</span>`).join('');
@@ -348,26 +366,29 @@ function renderList() {
   const list = activeList;
   const archive = isArchive(route);
   const dates = route.from ? dateLabel(route.from) + (route.from !== route.to ? ' – ' + dateLabel(route.to) : '') : '';
-  const title = route.q ? `Search: ${route.q}` : dates || `${route.feed[0].toUpperCase() + route.feed.slice(1)} stories`;
-  const scope = archive ? `${route.from ? `Submitted ${dates} (UTC)` : 'All dates'} · ${route.sort === 'newest' ? 'Newest first' : route.q ? 'Ranked by search relevance' : 'Ranked by points'}` : 'Live HN ranking · Use Refresh to get the latest stories.';
+  const title = route.mix ? `${list.stories.length} to explore` : route.interest ? Discovery.topics[route.interest].label : route.q ? `Search: ${route.q}` : dates || (route.all ? 'All-time stories' : `${route.feed[0].toUpperCase() + route.feed.slice(1)} stories`);
+  const scope = route.mix ? 'A mix from across HN’s archive.' : archive ? `${route.from ? `Submitted ${dates} (UTC)` : 'All dates'} · ${route.sort === 'newest' ? 'Newest first' : route.interest ? 'Popular title matches' : route.q ? 'Ranked by search relevance' : 'Ranked by points'}` : 'Live HN ranking · Use Refresh to get the latest stories.';
   const filtered = route.topic ? list.stories.filter(it => classify(it).includes(route.topic)) : list.stories;
   const counts = Object.fromEntries(CATS.map(c => [c, list.stories.filter(it => classify(it).includes(c)).length]));
   main.setAttribute('aria-busy', 'false');
   main.innerHTML = `<div class="viewhead"><h1>${esc(title)}</h1><div class="viewactions">
-    ${archive ? `<label>Sort <select id="sort"><option value="popular">${route.q ? 'Relevance' : 'Points'}</option><option value="newest">Newest</option></select></label><button id="exit">Back to live</button>` : ''}<button id="refresh">Refresh</button></div></div>
-    <p class="resultnote">${esc(scope)}</p><p class="topicnote" role="status">${route.topic ? `${filtered.length} matching · ` : ''}${list.stories.length} stories loaded. Topics are automatic and can overlap.</p>
-    <div id="chips" class="chips" role="group" aria-label="Filter loaded stories by topic">${['', ...CATS.filter(c => counts[c] || route.topic === c)].map(c => `<button data-topic="${c}" aria-pressed="${route.topic === c}" class="${route.topic === c ? 'on' : ''}">${c || 'all'} (${c ? counts[c] : list.stories.length})</button>`).join('')}</div>
-    <div id="list">${renderPaper(filtered)}</div><div id="morestatus" aria-live="polite"></div>${list.more ? '<button class="morebtn">Load more stories</button>' : '<p class="hint">End of available results.</p>'}`;
-  $('#chips').querySelectorAll('button').forEach(b => b.onclick = () => navigate({...route, topic: b.dataset.topic}));
+    ${archive ? `${!route.mix ? `<label>Sort <select id="sort"><option value="popular">${route.interest ? 'Popular' : route.q ? 'Relevance' : 'Points'}</option><option value="newest">Newest</option></select></label>` : ''}<button id="exit">Back to live</button>` : ''}<button id="refresh">${route.mix ? 'Another mix' : 'Refresh'}</button></div></div>
+    <p class="resultnote">${esc(scope)}</p><p class="topicnote" role="status">${route.topic ? `${filtered.length} matching · ` : ''}${list.stories.length} stories${route.mix ? '' : ' loaded'}.</p>
+    ${route.mix ? '' : `<details class="refine" ${route.topic ? 'open' : ''}><summary>Refine these results</summary><div id="chips" class="chips" role="group" aria-label="Filter loaded stories">${['', ...CATS.filter(c => counts[c] || route.topic === c)].map(c => `<button data-topic="${c}" aria-pressed="${route.topic === c}" class="${route.topic === c ? 'on' : ''}">${c || 'all'} (${c ? counts[c] : list.stories.length})</button>`).join('')}</div><p class="hint">Filters apply to loaded stories. Labels are automatic.</p></details>`}
+    <div id="list">${renderPaper(filtered)}</div><div id="morestatus" aria-live="polite"></div>${list.more ? '<button class="morebtn">Load more stories</button>' : route.mix ? '' : '<p class="hint">End of available results.</p>'}`;
+  $('#chips')?.querySelectorAll('button').forEach(b => b.onclick = () => navigate({...route, topic: b.dataset.topic}));
   $('#refresh').onclick = () => {
+    if (route.mix) { surpriseMe(); return; }
     for (const it of list.stories) items.delete(String(it.id));
     lists.delete(listKey(route));
     saveScroll();
     renderRoute();
   };
   if (archive) {
-    $('#sort').value = route.sort;
-    $('#sort').onchange = e => navigate({...route, sort: e.target.value});
+    if ($('#sort')) {
+      $('#sort').value = route.sort;
+      $('#sort').onchange = e => navigate({...route, sort: e.target.value});
+    }
     $('#exit').onclick = () => navigate({feed: route.feed});
   }
   if ($('.morebtn')) $('.morebtn').onclick = loadMore;
@@ -421,7 +442,7 @@ function richText(html) {
   return result.innerHTML;
 }
 function returnLink() {
-  return `<a class="back" data-return href="${esc(hashFor({...route, story: ''}))}">← Back to ${route.q ? 'search results' : route.from ? 'date results' : esc(route.feed) + ' stories'}</a>`;
+  return `<a class="back" data-return href="${esc(hashFor({...route, story: ''}))}">← Back to ${route.mix ? 'your mix' : route.interest ? esc(Discovery.topics[route.interest].label) : route.q ? 'search results' : route.from ? 'date results' : esc(route.feed) + ' stories'}</a>`;
 }
 async function renderStory(id, g, signal, scroll) {
   try {
@@ -505,7 +526,17 @@ main.addEventListener('click', event => {
 });
 $('#searchform').addEventListener('submit', event => {
   event.preventDefault();
-  navigate({...route, q: $('#q').value.trim(), topic: '', story: ''});
+  navigate({...route, q: $('#q').value.trim(), interest: '', mix: '', topic: '', story: ''});
+});
+function surpriseMe() {
+  const seed = crypto.getRandomValues(new Uint32Array(1))[0].toString(36);
+  navigate({feed: route.feed, mix: seed, asof: today}, 'surprise');
+}
+$('#surprise').onclick = surpriseMe;
+$('#periods').querySelectorAll('button').forEach(button => {
+  button.id = 'period-' + button.dataset.period;
+  button.onclick = () => navigate({...route, ...Discovery.period(today, button.dataset.period),
+    all: '1', mix: '', topic: '', story: '', sort: 'popular'}, button.id);
 });
 for (const input of [$('#day'), $('#tmfrom'), $('#tmto')]) { input.min = '2007-02-19'; input.max = today; input.value = today; input.oninput = () => $('#tmto').setCustomValidity(''); }
 $('#day').addEventListener('change', () => showDay($('#day').value, 'day'));
@@ -530,7 +561,7 @@ $('#dateform').addEventListener('submit', event => {
     $('#tmto').setCustomValidity('Choose an end date on or after the start date, no later than today.');
     $('#tmto').reportValidity(); return;
   }
-  navigate({...route, from, to, topic: '', story: ''}, from === to ? 'day' : 'applyrange');
+  navigate({...route, from, to, mix: '', topic: '', story: ''}, from === to ? 'day' : 'applyrange');
 });
 window.addEventListener('popstate', renderRoute);
 window.addEventListener('hashchange', () => { if (hashFor(parseRoute()) !== hashFor(route)) renderRoute(); });
