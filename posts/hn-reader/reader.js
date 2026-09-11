@@ -314,7 +314,7 @@ async function loadFeaturedComment(it, host, signal, threadURL) {
     link.append(document.createTextNode('“' + excerpt + '”'));
     const author = document.createElement('span');
     author.className = 'who';
-    author.textContent = `— ${comment.by || '[deleted]'} · featured comment →`;
+    author.textContent = `— ${comment.by || '[deleted]'}`;
     link.append(author);
     host.replaceChildren(link);
     host.hidden = false;
