@@ -37,6 +37,16 @@ nav button.on{background:var(--panel2);color:var(--amber)}
 main{max-width:860px;margin:0 auto;padding:18px 20px 80px}
 .paper{border-top:3px double var(--ink);padding-top:18px}
 .lead{padding-bottom:20px;border-bottom:1px solid var(--ink)}
+.lead-layout.has-snapshot{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:22px;align-items:start}
+.snapshot{display:block;margin-bottom:12px}
+.snapshot img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;border:1px solid var(--line);background:var(--panel2)}
+.lead-layout .snapshot{margin-bottom:0}
+.pull{margin-top:12px;padding:10px 14px;border-left:3px solid var(--amber);font-family:var(--serif);font-size:15px;line-height:1.5;font-style:italic;overflow-wrap:anywhere}
+.pull .who{display:block;margin-top:6px;font-family:var(--mono);font-size:11px;font-style:normal;color:var(--ink-dim)}
+.pull a{display:block}
+.pull a:hover .who{color:var(--amber)}
+.seccard .pull{font-size:14px;padding:8px 11px}
+.snapshot[hidden],.pull[hidden]{display:none}
 .kick{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--amber);margin-bottom:8px}
 .cat{display:inline-block;font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber);border:1px solid var(--amber);border-radius:3px;padding:1px 6px;margin-bottom:6px;font-weight:700}
 .cat.mini{font-size:8.5px;padding:0 4px;margin:0 6px 0 0;vertical-align:1px}
@@ -61,6 +71,7 @@ main{max-width:860px;margin:0 auto;padding:18px 20px 80px}
 .irow .m{color:var(--ink-faint);font-size:11px;margin-top:2px}
 .irow .m a:hover{color:var(--amber)}
 @media (max-width:640px){
+  .lead-layout.has-snapshot{grid-template-columns:1fr;gap:14px}
   .secrow{grid-template-columns:1fr}
   .seccard:nth-child(2n){border-left:none;padding-left:0}
   .idx{grid-template-columns:1fr}

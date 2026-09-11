@@ -12,7 +12,7 @@ const main = $('#main');
 const today = new Date().toISOString().slice(0, 10);
 const items = new Map();
 const lists = new Map();
-let route, controller, generation = 0, activeList;
+let route, controller, previewController, generation = 0, activeList;
 
 function esc(value) {
   return String(value ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -197,6 +197,7 @@ function appendPage(list, data) {
   for (const k of ['ids', 'cursor', 'page', 'more']) if (data[k] !== undefined) list[k] = data[k];
 }
 async function renderRoute() {
+  previewController?.abort();
   controller?.abort();
   controller = new AbortController();
   const signal = controller.signal, g = ++generation;
@@ -253,16 +254,97 @@ function metadata(it) {
   const points = it.score == null ? '' : `${esc(it.score)} points · `;
   return `${host ? `<b>${esc(host)}</b> · ` : ''}${points}by ${esc(it.by || '[deleted]')} · ${ago(it.time)} · <a class="cbtn" href="${esc(storyHash(it.id))}" data-open="${esc(it.id)}">${esc(it.descendants || 0)} comments</a>`;
 }
+function snapshotSlot(it) {
+  const url = safeURL(it.url);
+  return url ? `<a class="snapshot" data-snapshot="${esc(it.id)}" href="${esc(url)}" target="_blank" rel="noopener noreferrer" aria-label="Open ${esc(it.title)}" hidden></a>` : '';
+}
+function commentSlot(it) {
+  return `<blockquote class="pull" data-comment-for="${esc(it.id)}" hidden></blockquote>`;
+}
+function loadSnapshot(it, host, signal) {
+  if (!host) return;
+  const image = new Image();
+  image.alt = `Page preview: ${it.title}`;
+  image.loading = 'eager';
+  image.fetchPriority = 'low';
+  image.decoding = 'async';
+  image.referrerPolicy = 'no-referrer';
+  let timer;
+  const cleanup = () => {
+    clearTimeout(timer);
+    image.onload = image.onerror = null;
+    signal.removeEventListener('abort', discard);
+  };
+  const discard = () => {
+    cleanup();
+    image.removeAttribute('src');
+    host.remove();
+  };
+  image.onload = () => {
+    if (signal.aborted || !host.isConnected) { discard(); return; }
+    cleanup();
+    host.hidden = false;
+    if (host.parentElement.classList.contains('lead-layout')) host.parentElement.classList.add('has-snapshot');
+  };
+  image.onerror = discard;
+  signal.addEventListener('abort', discard, {once: true});
+  timer = setTimeout(discard, 20000);
+  host.append(image);
+  const target = new URL(safeURL(it.url));
+  target.hash = '';
+  image.src = 'https://image.thum.io/get/width/640/crop/400/noanimate/' + target.href;
+}
+async function loadFeaturedComment(it, host, signal, threadURL) {
+  if (!host || it.descendants === 0) return;
+  const story = it.kids ? it : await item(it.id, signal);
+  // Only inspect a few top-level comments; do not traverse their replies.
+  for (const id of (story?.kids || []).slice(0, 3)) {
+    if (signal.aborted || !host.isConnected) return;
+    const comment = await item(id, signal);
+    if (!comment || comment.deleted || comment.dead || !comment.text) continue;
+    const text = document.createElement('div');
+    text.innerHTML = richText(comment.text).replace(/<\/(p|pre|blockquote|li)>|<br\s*\/?>/gi, '$& ');
+    let excerpt = text.textContent.replace(/\s+/g, ' ').trim();
+    if (!excerpt) continue;
+    if (excerpt.length > 240) excerpt = excerpt.slice(0, 237).replace(/\s+\S*$/, '') + '…';
+    if (signal.aborted || !host.isConnected) return;
+    const link = document.createElement('a');
+    link.href = threadURL;
+    link.dataset.open = String(it.id);
+    link.append(document.createTextNode('“' + excerpt + '”'));
+    const author = document.createElement('span');
+    author.className = 'who';
+    author.textContent = `— ${comment.by || '[deleted]'} · featured comment →`;
+    link.append(author);
+    host.replaceChildren(link);
+    host.hidden = false;
+    return;
+  }
+}
+function loadFeaturedPreviews(stories) {
+  previewController = new AbortController();
+  const signal = previewController.signal, list = $('#list');
+  const featured = stories.slice(0, 5).map(it => ({it, threadURL: storyHash(it.id)}));
+  // Give headlines a paint before starting optional image and comment requests.
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    if (signal.aborted || !list.isConnected) return;
+    for (const {it, threadURL} of featured) {
+      loadSnapshot(it, list.querySelector(`[data-snapshot="${it.id}"]`), signal);
+      loadFeaturedComment(it, list.querySelector(`[data-comment-for="${it.id}"]`), signal, threadURL).catch(() => {});
+    }
+  }));
+}
 function renderPaper(stories) {
   if (!stories.length) return `<p class="message">${activeList.stories.length ? 'No loaded stories match this topic. Choose another topic or load more stories.' : 'No stories found. Try different search terms or dates.'}</p>`;
   const [lead, ...rest] = stories;
   const cards = rest.slice(0, 4), index = rest.slice(4);
   const tags = it => classify(it).map(c => `<span class="cat mini">${esc(c)}</span>`).join('');
-  return `<div class="paper"><article class="lead"><div class="kick">${esc(classify(lead).join(' · '))}</div><h2>${titleLink(lead)}</h2><div class="deck">${metadata(lead)}</div></article>
-    ${cards.length ? `<div class="secrow">${cards.map(it => `<article class="seccard">${tags(it)}<h2>${titleLink(it)}</h2><div class="deck">${metadata(it)}</div></article>`).join('')}</div>` : ''}
+  return `<div class="paper"><article class="lead"><div class="kick">${esc(classify(lead).join(' · '))}</div><div class="lead-layout"><div><h2>${titleLink(lead)}</h2><div class="deck">${metadata(lead)}</div>${commentSlot(lead)}</div>${snapshotSlot(lead)}</div></article>
+    ${cards.length ? `<div class="secrow">${cards.map(it => `<article class="seccard">${snapshotSlot(it)}${tags(it)}<h2>${titleLink(it)}</h2><div class="deck">${metadata(it)}</div>${commentSlot(it)}</article>`).join('')}</div>` : ''}
     ${index.length ? `<div class="idxhead">More stories</div><div class="idx">${index.map(it => `<article class="irow">${tags(it)}<span class="t">${titleLink(it)}</span><div class="m">${metadata(it)}</div></article>`).join('')}</div>` : ''}</div>`;
 }
 function renderList() {
+  previewController?.abort();
   const list = activeList;
   const archive = isArchive(route);
   const dates = route.from ? dateLabel(route.from) + (route.from !== route.to ? ' – ' + dateLabel(route.to) : '') : '';
@@ -289,6 +371,7 @@ function renderList() {
     $('#exit').onclick = () => navigate({feed: route.feed});
   }
   if ($('.morebtn')) $('.morebtn').onclick = loadMore;
+  loadFeaturedPreviews(filtered);
 }
 async function loadMore() {
   const list = activeList, g = generation, r = {...route}, signal = controller.signal;
