@@ -40,6 +40,19 @@ function validDate(value) {
   const time = Date.parse(value + 'T00:00:00Z');
   return Number.isFinite(time) && new Date(time).toISOString().slice(0, 10) === value && value >= '2007-02-19' && value <= today;
 }
+function shiftDay(value, amount) {
+  return new Date(Date.parse(value + 'T00:00:00Z') + amount * 86400000).toISOString().slice(0, 10);
+}
+function yearAgo(value) {
+  const date = new Date(value + 'T00:00:00Z'), month = date.getUTCMonth();
+  date.setUTCFullYear(date.getUTCFullYear() - 1);
+  // February 29 becomes February 28 when the previous year is not a leap year.
+  if (date.getUTCMonth() !== month) date.setUTCDate(0);
+  return date.toISOString().slice(0, 10);
+}
+function dateLabel(value) {
+  return new Intl.DateTimeFormat('en-US', {month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC'}).format(new Date(value + 'T00:00:00Z'));
+}
 function parseRoute() {
   const [feed, query = ''] = location.hash.slice(1).split('?');
   const p = new URLSearchParams(query);
@@ -61,18 +74,22 @@ function hashFor(r) {
 function listKey(r) { return JSON.stringify([r.feed, r.q, r.from, r.to, r.sort]); }
 function isArchive(r) { return Boolean(r.q || r.from); }
 function saveScroll() { history.replaceState({...history.state, scroll: window.scrollY}, '', location.href); }
-function navigate(next) {
+function navigate(next, focus = '') {
   saveScroll();
   const hash = hashFor(next);
   const returnHash = next.story && !route.story ? hashFor(route) : null;
-  history.pushState({scroll: 0, returnHash}, '', hash);
+  history.pushState({scroll: 0, returnHash, focus}, '', hash);
   renderRoute();
 }
 function current(g) { return g === generation && !controller.signal.aborted; }
 function restoreScroll(scroll) {
   const g = generation;
   requestAnimationFrame(() => {
-    if (current(g)) { window.scrollTo(0, scroll); main.focus({preventScroll: true}); }
+    if (current(g)) {
+      window.scrollTo(0, scroll);
+      const control = document.getElementById(history.state?.focus || '');
+      (control && !control.disabled && control.getClientRects().length ? control : main).focus({preventScroll: true});
+    }
   });
 }
 async function json(url, signal) {
@@ -129,8 +146,24 @@ function syncControls() {
   $('#q').value = route.q;
   $('#tmfrom').value = route.from || today;
   $('#tmto').value = route.to || today;
-  $('#archive-controls').open = Boolean(route.from);
-  $('#searchscope').textContent = route.from ? `Searches HN stories submitted ${route.from} through ${route.to} (UTC).` : 'Searches all HN stories.';
+  $('#day').value = route.from || today;
+  $('#prevday').disabled = $('#day').value <= '2007-02-19';
+  $('#nextday').disabled = $('#day').value >= today;
+  setDateMode(Boolean(route.from && route.from !== route.to));
+  $('#searchscope').textContent = route.from ? `Searches HN stories submitted ${dateLabel(route.from)}${route.from !== route.to ? ' through ' + dateLabel(route.to) : ''} (UTC).` : 'Searches all HN stories.';
+}
+function setDateMode(range) {
+  $('#dateform').hidden = !range;
+  $('#daycontrols').hidden = range;
+  $('#range-toggle').setAttribute('aria-expanded', String(range));
+  $('#range-toggle').textContent = range ? 'Single day' : 'Custom range';
+  $('#datelabel').textContent = range ? 'Custom range (UTC)' : 'Browse a day (UTC)';
+  $('#datelabel').htmlFor = range ? 'tmfrom' : 'day';
+  $('#datehint').textContent = range ? 'Set both dates, then apply the range.' : 'Choose a day to load its stories.';
+}
+function showDay(value, focus) {
+  if (!validDate(value)) return;
+  navigate({...route, from: value, to: value, topic: '', story: ''}, focus);
 }
 function remember(key, list) {
   lists.delete(key);
@@ -232,13 +265,14 @@ function renderPaper(stories) {
 function renderList() {
   const list = activeList;
   const archive = isArchive(route);
-  const title = route.q ? `Search: ${route.q}` : route.from ? 'Stories by date' : `${route.feed[0].toUpperCase() + route.feed.slice(1)} stories`;
-  const scope = archive ? `${route.from ? `Submitted ${route.from} through ${route.to} (UTC)` : 'All dates'} · ${route.sort === 'newest' ? 'Newest first' : route.q ? 'Ranked by search relevance' : 'Ranked by points'}` : 'Live HN ranking · Use Refresh to get the latest stories.';
+  const dates = route.from ? dateLabel(route.from) + (route.from !== route.to ? ' – ' + dateLabel(route.to) : '') : '';
+  const title = route.q ? `Search: ${route.q}` : dates || `${route.feed[0].toUpperCase() + route.feed.slice(1)} stories`;
+  const scope = archive ? `${route.from ? `Submitted ${dates} (UTC)` : 'All dates'} · ${route.sort === 'newest' ? 'Newest first' : route.q ? 'Ranked by search relevance' : 'Ranked by points'}` : 'Live HN ranking · Use Refresh to get the latest stories.';
   const filtered = route.topic ? list.stories.filter(it => classify(it).includes(route.topic)) : list.stories;
   const counts = Object.fromEntries(CATS.map(c => [c, list.stories.filter(it => classify(it).includes(c)).length]));
   main.setAttribute('aria-busy', 'false');
   main.innerHTML = `<div class="viewhead"><h1>${esc(title)}</h1><div class="viewactions">
-    ${archive ? `<label>Sort <select id="sort"><option value="popular">${route.q ? 'Relevance' : 'Points'}</option><option value="newest">Newest</option></select></label><button id="exit">Live feed</button>` : ''}<button id="refresh">Refresh</button></div></div>
+    ${archive ? `<label>Sort <select id="sort"><option value="popular">${route.q ? 'Relevance' : 'Points'}</option><option value="newest">Newest</option></select></label><button id="exit">Back to live</button>` : ''}<button id="refresh">Refresh</button></div></div>
     <p class="resultnote">${esc(scope)}</p><p class="topicnote" role="status">${route.topic ? `${filtered.length} matching · ` : ''}${list.stories.length} stories loaded. Topics are automatic and can overlap.</p>
     <div id="chips" class="chips" role="group" aria-label="Filter loaded stories by topic">${['', ...CATS.filter(c => counts[c] || route.topic === c)].map(c => `<button data-topic="${c}" aria-pressed="${route.topic === c}" class="${route.topic === c ? 'on' : ''}">${c || 'all'} (${c ? counts[c] : list.stories.length})</button>`).join('')}</div>
     <div id="list">${renderPaper(filtered)}</div><div id="morestatus" aria-live="polite"></div>${list.more ? '<button class="morebtn">Load more stories</button>' : '<p class="hint">End of available results.</p>'}`;
@@ -390,7 +424,22 @@ $('#searchform').addEventListener('submit', event => {
   event.preventDefault();
   navigate({...route, q: $('#q').value.trim(), topic: '', story: ''});
 });
-for (const input of [$('#tmfrom'), $('#tmto')]) { input.min = '2007-02-19'; input.max = today; input.value = today; input.oninput = () => $('#tmto').setCustomValidity(''); }
+for (const input of [$('#day'), $('#tmfrom'), $('#tmto')]) { input.min = '2007-02-19'; input.max = today; input.value = today; input.oninput = () => $('#tmto').setCustomValidity(''); }
+$('#day').addEventListener('change', () => showDay($('#day').value, 'day'));
+$('#prevday').onclick = () => showDay(shiftDay(route.from || today, -1), 'prevday');
+$('#nextday').onclick = () => showDay(shiftDay(route.from || today, 1), 'nextday');
+$('#yesterday').onclick = () => showDay(shiftDay(today, -1), 'yesterday');
+$('#yearago').onclick = () => showDay(yearAgo(today), 'yearago');
+$('#range-toggle').onclick = () => {
+  const opening = $('#dateform').hidden;
+  if (!opening && route.from && route.from !== route.to) { showDay(route.from, 'day'); return; }
+  setDateMode(opening);
+  if (opening) {
+    $('#tmfrom').value = route.from || $('#day').value || today;
+    $('#tmto').value = route.to || $('#day').value || today;
+    $('#tmto').setCustomValidity('');
+  }
+};
 $('#dateform').addEventListener('submit', event => {
   event.preventDefault();
   const from = $('#tmfrom').value, to = $('#tmto').value;
@@ -398,7 +447,7 @@ $('#dateform').addEventListener('submit', event => {
     $('#tmto').setCustomValidity('Choose an end date on or after the start date, no later than today.');
     $('#tmto').reportValidity(); return;
   }
-  navigate({...route, from, to, topic: '', story: ''});
+  navigate({...route, from, to, topic: '', story: ''}, from === to ? 'day' : 'applyrange');
 });
 window.addEventListener('popstate', renderRoute);
 window.addEventListener('hashchange', () => { if (hashFor(parseRoute()) !== hashFor(route)) renderRoute(); });
