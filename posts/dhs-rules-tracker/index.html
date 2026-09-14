@@ -38,23 +38,25 @@ th{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;letter-spacing:0.06em
 footer{border-top:1px solid var(--rule);padding:24px 0 56px;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted)}
 footer a{color:var(--muted)}
 
-.wrap.wide{max-width:960px}
+.wrap.wide{max-width:1000px}
 .gridwrap{overflow-x:auto;margin:0 -24px 18px;padding:0 24px}
-table.grid{min-width:820px;font-size:0.82rem;background:#fff;border:1px solid var(--rule)}
-table.grid th,table.grid td{border:none;border-bottom:1px solid var(--rule);padding:10px 10px;vertical-align:middle}
-table.grid th{text-align:center;padding-top:14px;padding-bottom:12px}
-table.grid th:first-child{text-align:left}
-table.grid th .rin{display:block;font-weight:400;letter-spacing:0;text-transform:none;color:var(--muted);font-size:0.7rem;margin-top:3px}
+table.grid{width:100%;min-width:720px;table-layout:fixed;font-size:0.82rem;background:#fff;border:1px solid var(--rule)}
+table.grid th,table.grid td{border:none;border-bottom:1px solid var(--rule);padding:10px 8px;vertical-align:middle}
+table.grid th{text-align:center;padding-top:14px;padding-bottom:12px;width:19%}
+table.grid th:first-child{text-align:left;width:24%}
+table.grid th .rin{display:block;font-weight:400;letter-spacing:0;text-transform:none;color:var(--muted);font-size:0.68rem;margin-top:3px}
 table.grid td{text-align:center}
-table.grid td.stage{text-align:left;font-family:'Inter',sans-serif;font-size:0.88rem;color:var(--ink);width:210px}
-table.grid td.stage small{display:block;font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--muted);letter-spacing:0.02em;margin-top:2px}
+table.grid td.stage{text-align:left;font-family:'Inter',sans-serif;font-size:0.86rem;color:var(--ink)}
+table.grid td.stage small{display:block;font-family:'IBM Plex Mono',monospace;font-size:0.66rem;color:var(--muted);margin-top:2px}
 table.grid tr:last-child td{border-bottom:none}
-.p{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:0.7rem;line-height:1.35;padding:4px 9px;border-radius:999px;white-space:nowrap}
+.p{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:0.68rem;line-height:1.35;padding:5px 9px;border-radius:8px;max-width:100%}
+.p b{display:block;font-weight:500}
 .done{background:#E6F4EC;color:#0F5A3C}
 .now{background:#FFF1D6;color:#7A4A00}
 .blocked{background:#FDE8E8;color:#8F1D1D}
 .exp{background:var(--chip);color:var(--cobalt);border:1px dashed #9AA9FF}
 .legend{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--muted);margin:0 0 28px}
+.legend .p{border-radius:999px}
 </style>
 </head>
 <body>
@@ -87,65 +89,65 @@ table.grid tr:last-child td{border-bottom:none}
 </tr>
 <tr>
   <td class="stage">1. Listed on Unified Agenda<small>intent only, no text</small></td>
-  <td><span class="p done">Sep 4, 2025 (Spring 2025 agenda)</span></td>
-  <td><span class="p done">Aug 14, 2026 agenda</span></td>
-  <td><span class="p done">Aug 14, 2026 agenda</span></td>
-  <td><span class="p now">Aug 14, 2026 agenda</span></td>
+  <td><span class="p done"><b>Sep 4, 2025</b>Spring 2025 agenda</span></td>
+  <td><span class="p done"><b>Aug 14, 2026</b>2026 agenda</span></td>
+  <td><span class="p done"><b>Aug 14, 2026</b>2026 agenda</span></td>
+  <td><span class="p now"><b>Aug 14, 2026</b>long-term action</span></td>
 </tr>
 <tr>
   <td class="stage">2. OIRA clears proposed rule<small>White House sign-off</small></td>
-  <td><span class="p done">in Jun 27, out Aug 7, 2025</span></td>
-  <td><span class="p done">in and out Aug 19, 2026</span></td>
-  <td><span class="p done">in Aug 6, out Aug 27, 2026</span></td>
+  <td><span class="p done"><b>Aug 7, 2025</b>in Jun 27 (41 d)</span></td>
+  <td><span class="p done"><b>Aug 19, 2026</b>in Aug 19 (0 d)</span></td>
+  <td><span class="p done"><b>Aug 27, 2026</b>in Aug 6 (21 d)</span></td>
   <td><span class="p exp">TBD</span></td>
 </tr>
 <tr>
   <td class="stage">3. Proposed rule published<small>Federal Register</small></td>
-  <td><span class="p done">Aug 28, 2025</span></td>
-  <td><span class="p done">Aug 25, 2026</span></td>
-  <td><span class="p done">Sep 11, 2026</span></td>
+  <td><span class="p done"><b>Aug 28, 2025</b>90 FR 42070</span></td>
+  <td><span class="p done"><b>Aug 25, 2026</b>91 FR 54817</span></td>
+  <td><span class="p done"><b>Sep 11, 2026</b>91 FR 57807</span></td>
   <td><span class="p exp">2027 or later</span></td>
 </tr>
 <tr>
   <td class="stage">4. Public comment period<small>30 or 60 days</small></td>
-  <td><span class="p done">closed Sep 29, 2025 (30 d)</span></td>
-  <td><span class="p now">closes Sep 24, 2026 (30 d)</span></td>
-  <td><span class="p now">closes Nov 10, 2026 (60 d)</span></td>
+  <td><span class="p done"><b>Sep 29, 2025</b>closed, 30 d</span></td>
+  <td><span class="p now"><b>Sep 24, 2026</b>closes, 30 d</span></td>
+  <td><span class="p now"><b>Nov 10, 2026</b>closes, 60 d</span></td>
   <td><span class="p exp">2027 or later</span></td>
 </tr>
 <tr>
   <td class="stage">5. Agency drafts final rule<small>answers comments</small></td>
-  <td><span class="p done">Sep 29, 2025 to May 5, 2026</span></td>
-  <td><span class="p exp">Sep 24, 2026 to ~Apr 2027</span></td>
-  <td><span class="p exp">Nov 10, 2026 to ~Jun 2027</span></td>
+  <td><span class="p done"><b>May 5, 2026</b>218 d after close</span></td>
+  <td><span class="p exp"><b>~Apr 2027</b></span></td>
+  <td><span class="p exp"><b>~Jun 2027</b></span></td>
   <td><span class="p exp">2028 ?</span></td>
 </tr>
 <tr>
   <td class="stage">6. OIRA clears final rule<small>second White House pass</small></td>
-  <td><span class="p done">in May 5, out Jun 17, 2026</span></td>
-  <td><span class="p exp">~May to Jun 2027</span></td>
-  <td><span class="p exp">~Jul to Aug 2027</span></td>
+  <td><span class="p done"><b>Jun 17, 2026</b>in May 5 (43 d)</span></td>
+  <td><span class="p exp"><b>~May to Jun 2027</b></span></td>
+  <td><span class="p exp"><b>~Jul to Aug 2027</b></span></td>
   <td><span class="p exp">2028 ?</span></td>
 </tr>
 <tr>
   <td class="stage">7. Final rule published<small>major rule: 60-day wait</small></td>
-  <td><span class="p done">Jul 17, 2026</span></td>
-  <td><span class="p exp">~Jul 2027</span></td>
-  <td><span class="p exp">~Sep 2027</span></td>
+  <td><span class="p done"><b>Jul 17, 2026</b>91 FR 44976</span></td>
+  <td><span class="p exp"><b>~Jul 2027</b></span></td>
+  <td><span class="p exp"><b>~Sep 2027</b></span></td>
   <td><span class="p exp">2028 ?</span></td>
 </tr>
 <tr>
   <td class="stage">8. Effective date<small>enforceable</small></td>
-  <td><span class="p blocked">was Sep 15, 2026, postponed</span></td>
-  <td><span class="p exp">~Sep 2027</span></td>
-  <td><span class="p exp">~Nov 2027</span></td>
+  <td><span class="p blocked"><b>Sep 15, 2026</b>postponed by court</span></td>
+  <td><span class="p exp"><b>~Sep 2027</b></span></td>
+  <td><span class="p exp"><b>~Nov 2027</b></span></td>
   <td><span class="p exp">2028 ?</span></td>
 </tr>
 <tr>
   <td class="stage">9. Court review<small>only after stage 7</small></td>
-  <td><span class="p blocked">sued Aug 18, PI granted Sep 14, 2026</span></td>
-  <td><span class="p exp">~Jul to Sep 2027</span></td>
-  <td><span class="p exp">~Sep to Nov 2027</span></td>
+  <td><span class="p blocked"><b>Sep 14, 2026</b>PI granted, sued Aug 18</span></td>
+  <td><span class="p exp"><b>~Jul to Sep 2027</b></span></td>
+  <td><span class="p exp"><b>~Sep to Nov 2027</b></span></td>
   <td><span class="p exp">2028 ?</span></td>
 </tr>
 </table>
