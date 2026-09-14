@@ -39,14 +39,14 @@ footer{border-top:1px solid var(--rule);padding:24px 0 56px;font-family:'IBM Ple
 footer a{color:var(--muted)}
 
 .wrap.wide{max-width:1000px}
-.gridwrap{overflow-x:auto;margin:0 -24px 18px;padding:0 24px}
-table.grid{width:100%;min-width:720px;table-layout:fixed;font-size:0.82rem;background:#fff;border:1px solid var(--rule)}
-table.grid th,table.grid td{border:none;border-bottom:1px solid var(--rule);padding:10px 8px;vertical-align:middle}
-table.grid th{text-align:center;padding-top:14px;padding-bottom:12px;width:19%}
-table.grid th:first-child{text-align:left;width:24%}
+.gridwrap{overflow-x:auto;margin:0 -24px 18px;padding:0 24px 8px;-webkit-overflow-scrolling:touch}
+table.grid{width:max-content;min-width:100%;table-layout:fixed;font-size:0.82rem;background:#fff;border:1px solid var(--rule)}
+table.grid th,table.grid td{border:none;border-bottom:1px solid var(--rule);padding:10px 8px;vertical-align:middle;width:150px}
+table.grid th{text-align:center;padding-top:14px;padding-bottom:12px}
+table.grid th:first-child,table.grid td.stage{width:200px;position:sticky;left:0;background:#fff;z-index:1;border-right:1px solid var(--rule);text-align:left}
 table.grid th .rin{display:block;font-weight:400;letter-spacing:0;text-transform:none;color:var(--muted);font-size:0.68rem;margin-top:3px}
 table.grid td{text-align:center}
-table.grid td.stage{text-align:left;font-family:'Inter',sans-serif;font-size:0.86rem;color:var(--ink)}
+table.grid td.stage{font-family:'Inter',sans-serif;font-size:0.86rem;color:var(--ink)}
 table.grid td.stage small{display:block;font-family:'IBM Plex Mono',monospace;font-size:0.66rem;color:var(--muted);margin-top:2px}
 table.grid tr:last-child td{border-bottom:none}
 .p{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:0.68rem;line-height:1.35;padding:5px 9px;border-radius:8px;max-width:100%}
@@ -82,73 +82,113 @@ table.grid tr:last-child td{border-bottom:none}
 <table class="grid">
 <tr>
   <th>Stage</th>
-  <th>F-1/J-1 D/S<span class="rin">1653-AA95</span></th>
-  <th>$103k cap fee<span class="rin">1615-AD20</span></th>
-  <th>60-day grace<span class="rin">1615-AD22</span></th>
-  <th>H-4 EAD<span class="rin">1615-AD14</span></th>
+  <th>F-1/J-1 D/S<span class="rin">DHS 1653-AA95</span></th>
+  <th>$103k cap fee<span class="rin">DHS 1615-AD20</span></th>
+  <th>60-day grace<span class="rin">DHS 1615-AD22</span></th>
+  <th>Prevailing wage<span class="rin">DOL 1205-AC30</span></th>
+  <th>H-1B reform<span class="rin">DHS 1615-AD00</span></th>
+  <th>Practical training<span class="rin">DHS 1653-AA97</span></th>
+  <th>H-4 EAD<span class="rin">DHS 1615-AD14</span></th>
+  <th>OPT fee<span class="rin">DHS 1653-AB01</span></th>
 </tr>
 <tr>
   <td class="stage">1. Listed on Unified Agenda<small>intent only, no text</small></td>
   <td><span class="p done"><b>Sep 4, 2025</b>Spring 2025 agenda</span></td>
   <td><span class="p done"><b>Aug 14, 2026</b>2026 agenda</span></td>
   <td><span class="p done"><b>Aug 14, 2026</b>2026 agenda</span></td>
+  <td><span class="p done"><b>Aug 14, 2026</b>2026 agenda</span></td>
+  <td><span class="p done"><b>Sep 4, 2025</b>Spring 2025 agenda</span></td>
+  <td><span class="p done"><b>Sep 4, 2025</b>Spring 2025 agenda</span></td>
   <td><span class="p now"><b>Aug 14, 2026</b>long-term action</span></td>
+  <td><span class="p exp"><b>not listed</b>skipped agenda</span></td>
 </tr>
 <tr>
   <td class="stage">2. OIRA clears proposed rule<small>White House sign-off</small></td>
   <td><span class="p done"><b>Aug 7, 2025</b>in Jun 27 (41 d)</span></td>
   <td><span class="p done"><b>Aug 19, 2026</b>in Aug 19 (0 d)</span></td>
   <td><span class="p done"><b>Aug 27, 2026</b>in Aug 6 (21 d)</span></td>
-  <td><span class="p exp">TBD</span></td>
+  <td><span class="p done"><b>Feb 20, 2026</b>in Dec 20 (62 d)</span></td>
+  <td><span class="p exp"><b>was Aug 2026</b>not sent yet</span></td>
+  <td><span class="p exp"><b>~Jan 2027</b>not sent yet</span></td>
+  <td><span class="p exp"><b>TBD</b></span></td>
+  <td><span class="p done"><b>Sep 11, 2026</b>in Aug 20 (22 d)</span></td>
 </tr>
 <tr>
   <td class="stage">3. Proposed rule published<small>Federal Register</small></td>
   <td><span class="p done"><b>Aug 28, 2025</b>90 FR 42070</span></td>
   <td><span class="p done"><b>Aug 25, 2026</b>91 FR 54817</span></td>
   <td><span class="p done"><b>Sep 11, 2026</b>91 FR 57807</span></td>
-  <td><span class="p exp">2027 or later</span></td>
+  <td><span class="p done"><b>Mar 27, 2026</b>91 FR 15454</span></td>
+  <td><span class="p exp"><b>slipped</b>target was Aug 2026</span></td>
+  <td><span class="p exp"><b>Feb 2027</b>agenda target</span></td>
+  <td><span class="p exp"><b>2027 or later</b></span></td>
+  <td><span class="p now"><b>imminent</b>cleared Sep 11</span></td>
 </tr>
 <tr>
   <td class="stage">4. Public comment period<small>30 or 60 days</small></td>
   <td><span class="p done"><b>Sep 29, 2025</b>closed, 30 d</span></td>
   <td><span class="p now"><b>Sep 24, 2026</b>closes, 30 d</span></td>
   <td><span class="p now"><b>Nov 10, 2026</b>closes, 60 d</span></td>
-  <td><span class="p exp">2027 or later</span></td>
+  <td><span class="p done"><b>May 26, 2026</b>closed, 60 d</span></td>
+  <td><span class="p exp"><b>2027</b></span></td>
+  <td><span class="p exp"><b>~Apr 2027</b></span></td>
+  <td><span class="p exp"><b>2027 or later</b></span></td>
+  <td><span class="p exp"><b>~Oct to Nov 2026</b></span></td>
 </tr>
 <tr>
   <td class="stage">5. Agency drafts final rule<small>answers comments</small></td>
   <td><span class="p done"><b>May 5, 2026</b>218 d after close</span></td>
   <td><span class="p exp"><b>~Apr 2027</b></span></td>
   <td><span class="p exp"><b>~Jun 2027</b></span></td>
-  <td><span class="p exp">2028 ?</span></td>
+  <td><span class="p now"><b>in progress</b>since May 26</span></td>
+  <td><span class="p exp"><b>2027</b></span></td>
+  <td><span class="p exp"><b>2027</b></span></td>
+  <td><span class="p exp"><b>2028 ?</b></span></td>
+  <td><span class="p exp"><b>~Sep 2027</b></span></td>
 </tr>
 <tr>
   <td class="stage">6. OIRA clears final rule<small>second White House pass</small></td>
   <td><span class="p done"><b>Jun 17, 2026</b>in May 5 (43 d)</span></td>
   <td><span class="p exp"><b>~May to Jun 2027</b></span></td>
   <td><span class="p exp"><b>~Jul to Aug 2027</b></span></td>
-  <td><span class="p exp">2028 ?</span></td>
+  <td><span class="p exp"><b>~Jan to Feb 2027</b></span></td>
+  <td><span class="p exp"><b>2027 or later</b></span></td>
+  <td><span class="p exp"><b>2028 ?</b></span></td>
+  <td><span class="p exp"><b>2028 ?</b></span></td>
+  <td><span class="p exp"><b>~Oct 2027</b></span></td>
 </tr>
 <tr>
   <td class="stage">7. Final rule published<small>major rule: 60-day wait</small></td>
   <td><span class="p done"><b>Jul 17, 2026</b>91 FR 44976</span></td>
   <td><span class="p exp"><b>~Jul 2027</b></span></td>
   <td><span class="p exp"><b>~Sep 2027</b></span></td>
-  <td><span class="p exp">2028 ?</span></td>
+  <td><span class="p exp"><b>~Mar 2027</b></span></td>
+  <td><span class="p exp"><b>2027 or later</b></span></td>
+  <td><span class="p exp"><b>2028 ?</b></span></td>
+  <td><span class="p exp"><b>2028 ?</b></span></td>
+  <td><span class="p exp"><b>~Nov 2027</b></span></td>
 </tr>
 <tr>
   <td class="stage">8. Effective date<small>enforceable</small></td>
   <td><span class="p blocked"><b>Sep 15, 2026</b>postponed by court</span></td>
   <td><span class="p exp"><b>~Sep 2027</b></span></td>
   <td><span class="p exp"><b>~Nov 2027</b></span></td>
-  <td><span class="p exp">2028 ?</span></td>
+  <td><span class="p exp"><b>~May 2027</b></span></td>
+  <td><span class="p exp"><b>2027 or later</b></span></td>
+  <td><span class="p exp"><b>2028 ?</b></span></td>
+  <td><span class="p exp"><b>2028 ?</b></span></td>
+  <td><span class="p exp"><b>~Jan 2028</b></span></td>
 </tr>
 <tr>
   <td class="stage">9. Court review<small>only after stage 7</small></td>
   <td><span class="p blocked"><b>Sep 14, 2026</b>PI granted, sued Aug 18</span></td>
   <td><span class="p exp"><b>~Jul to Sep 2027</b></span></td>
   <td><span class="p exp"><b>~Sep to Nov 2027</b></span></td>
-  <td><span class="p exp">2028 ?</span></td>
+  <td><span class="p exp"><b>~Mar to May 2027</b></span></td>
+  <td><span class="p exp"><b>2027 or later</b></span></td>
+  <td><span class="p exp"><b>2028 ?</b></span></td>
+  <td><span class="p exp"><b>2028 ?</b></span></td>
+  <td><span class="p exp"><b>~Nov 2027 to Jan 2028</b></span></td>
 </tr>
 </table>
 </div>
