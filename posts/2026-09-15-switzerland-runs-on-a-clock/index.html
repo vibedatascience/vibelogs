@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Rahul">
+<title>Switzerland runs on a clock | vibelogs</title>
+<meta name="description" content="One Wednesday of Swiss rail departures, sorted by the minute past the hour. Sixty small maps and six station dials from the SBB GTFS timetable.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#FAFAF8;--ink:#17171C;--cobalt:#2545FF;--muted:#6E6E76;--rule:#E7E7E2;--chip:#EEF1FF}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:17px;line-height:1.7}
+.wrap{max-width:980px;margin:0 auto;padding:0 24px}
+.top{padding:40px 0 0;font-family:'IBM Plex Mono',monospace;font-size:0.8rem}
+.top a{color:var(--muted);text-decoration:none}
+.top a:hover{color:var(--cobalt)}
+header.post{padding:32px 0 24px;border-bottom:1px solid var(--rule)}
+.meta{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted);display:flex;gap:10px;align-items:center;margin-bottom:14px}
+.upd{color:var(--muted)}
+.tag{background:var(--chip);color:var(--cobalt);padding:1px 8px;border-radius:4px;font-weight:500}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.7rem,5vw,2.3rem);letter-spacing:-0.02em;line-height:1.2}
+article{padding:32px 0 60px}
+article p{margin:0 0 20px}
+article p.intro{color:var(--muted)}
+article a{color:var(--cobalt)}
+.poster{width:100%;height:auto;display:block;border:1px solid var(--rule);border-radius:8px;margin:0 0 10px}
+.note{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:var(--muted);margin:0 0 30px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.25rem;margin:30px 0 12px}
+table{border-collapse:collapse;width:100%;font-size:0.92rem;margin:0 0 24px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule)}
+th{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
+td.n{font-family:'IBM Plex Mono',monospace;text-align:right}
+th.n{text-align:right}
+footer{border-top:1px solid var(--rule);padding:24px 0 56px;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted)}
+footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><a href="../../">&larr; vibelogs</a></div>
+
+<header class="post">
+  <div class="meta"><span>[2026-09-15]</span><span>Rahul</span><span class="upd">updated 2026-09-15</span><span class="tag">Data &amp; visualizations</span></div>
+  <h1>Switzerland runs on a clock</h1>
+</header>
+
+<article>
+<p class="intro">Every hour, at the same minute, the same train leaves the same platform. Switzerland has run its whole rail network on a clockface timetable, the Taktfahrplan, since 1982. This poster takes one scheduled Wednesday, September 16, 2026, and sorts every rail departure in the country by the minute past the hour at which it leaves. Click the poster for the full size version.</p>
+
+<a href="swiss_takt.png"><img class="poster" src="swiss_takt.jpg" alt="Poster: sixty small maps of Switzerland, one per minute past the hour, showing where trains depart at that minute, plus six radial dials for Zürich HB, Bern, Olten, Basel SBB, Lausanne and Luzern"></a>
+<p class="note">146,502 departures at 1,625 stations on 15,220 trains. Source: SBB GTFS timetable, feed of 2026-09-12, via opentransportdata.swiss.</p>
+
+<h2>What the maps show</h2>
+<p>Each of the sixty maps is one minute past the hour. A dot is a station, sized by how many trains leave it at that minute across the whole day, so a station with an hourly train at :04 gets a dot of about 18 at the :04 map and nothing at :05. Teal is regional and S-Bahn service, pink is long distance. Stations only appear on a map if that minute repeats at least four times in the day, which strips out the one-off early morning and late night runs and leaves the rhythm.</p>
+
+<p>The clock is visible in the hubs. Bern sends 56 trains out on the full hour, its biggest single minute, and the Romandie hubs run four minutes behind it: Lausanne peaks at :04 and :34. Olten, the transfer point where the Zürich, Basel, Bern and Luzern lines cross, fires at :30. Zürich HB's busiest minute is :37 with 70 departures, and Luzern's is :57, three minutes before the hour, timed so its trains meet the :00 wave at Zürich and Olten.</p>
+
+<h2>How clock-like is the network</h2>
+<p>To measure it I took every combination of station, line and departure minute and counted how many distinct hours of the day it appears in. If a line leaves a station at the same minute in eight or more hours, that slot is on the Takt. 89 percent of all rail departures inside Switzerland sit on such a slot.</p>
+
+<table>
+<tr><th>Station</th><th class="n">Departures</th><th class="n">On the Takt</th></tr>
+<tr><td>Murten/Morat</td><td class="n">166</td><td class="n">100%</td></tr>
+<tr><td>Etzwilen</td><td class="n">150</td><td class="n">100%</td></tr>
+<tr><td>Dietikon Stoffelbach</td><td class="n">152</td><td class="n">100%</td></tr>
+<tr><td>Zürich HB</td><td class="n">1,579</td><td class="n">89%</td></tr>
+<tr><td>Bern</td><td class="n">1,071</td><td class="n">88%</td></tr>
+<tr><td>Genève</td><td class="n">458</td><td class="n">68%</td></tr>
+<tr><td>Thun</td><td class="n">264</td><td class="n">66%</td></tr>
+<tr><td>Genève-Sécheron</td><td class="n">157</td><td class="n">57%</td></tr>
+<tr><td>Spiez</td><td class="n">182</td><td class="n">43%</td></tr>
+</table>
+
+<p>The least clock-like stations cluster in two places. Around Genève the Léman Express and the TER lines into France run on French timings, and at Spiez and Thun the Lötschberg and Simplon international trains cut across the local rhythm. The most clock-like stations are small S-Bahn and regional stops where every train is the same line at the same minute all day.</p>
+
+<h2>How it was made</h2>
+<p>The GTFS feed for the 2026 timetable is a 250 MB zip with a 3 GB stop_times file. I filtered routes to rail types (GTFS route_type 100 to 117), resolved which service IDs run on September 16 from calendar.txt and calendar_dates.txt, kept the 19,841 matching trips, then streamed stop_times.txt once to pull their stop events. Platforms were rolled up to their parent station, terminal arrivals were dropped so only departures count, and stations outside the national border were removed with a point-in-polygon test. The poster is a single matplotlib figure: sixty map axes on a fixed grid, six polar axes, and callouts drawn in figure coordinates so the pointer lines land on the right dot.</p>
+
+<p>Two caveats. This is the published schedule, not what ran on the day. And the four-times-a-day filter on the maps hides genuine one-off trains, including most night and international services, which is why the dials at the bottom use the unfiltered counts.</p>
+
+<p>Data: <a href="https://opentransportdata.swiss/">opentransportdata.swiss</a>, Federal Office of Transport, open data. Design after the Swiss infographic tradition of teal, magenta and a mono annotation voice.</p>
+</article>
+
+<footer><a href="../../">vibelogs</a> &middot; Rahul</footer>
+</div>
+</body>
+</html>
