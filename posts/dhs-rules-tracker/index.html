@@ -55,6 +55,10 @@ table.grid tr.desc td b{display:block;font-family:'IBM Plex Mono',monospace;font
 table.grid tr.agenda td.stage{background:#FAFAF8}
 .p{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:0.68rem;line-height:1.35;padding:5px 9px;border-radius:8px;max-width:100%}
 .p b{display:block;font-weight:500}
+.p a{color:inherit;text-decoration:underline;text-decoration-color:currentColor;text-underline-offset:2px;opacity:.85}
+.p a:hover{opacity:1}
+table.grid th .rin a{color:var(--muted);text-decoration:none}
+table.grid th .rin a:hover{color:var(--cobalt)}
 .done{background:#E6F4EC;color:#0F5A3C}
 .now{background:#FFF1D6;color:#7A4A00}
 .blocked{background:#FDE8E8;color:#8F1D1D}
@@ -86,14 +90,14 @@ table.grid tr.agenda td.stage{background:#FAFAF8}
 <table class="grid">
 <tr>
   <th>Stage</th>
-  <th>F-1/J-1 D/S<span class="rin">DHS 1653-AA95</span></th>
-  <th>$103k cap fee<span class="rin">DHS 1615-AD20</span></th>
-  <th>60-day grace<span class="rin">DHS 1615-AD22</span></th>
-  <th>Prevailing wage<span class="rin">DOL 1205-AC30</span></th>
-  <th>H-1B reform<span class="rin">DHS 1615-AD00</span></th>
-  <th>Practical training<span class="rin">DHS 1653-AA97</span></th>
-  <th>H-4 EAD<span class="rin">DHS 1615-AD14</span></th>
-  <th>OPT fee<span class="rin">DHS 1653-AB01</span></th>
+  <th>F-1/J-1 D/S<span class="rin"><a href="https://www.reginfo.gov/public/do/eAgendaViewRule?pubId=202510&RIN=1653-AA95">DHS 1653-AA95</a></span></th>
+  <th>$103k cap fee<span class="rin"><a href="https://www.reginfo.gov/public/do/eAgendaViewRule?pubId=202510&RIN=1615-AD20">DHS 1615-AD20</a></span></th>
+  <th>60-day grace<span class="rin"><a href="https://www.reginfo.gov/public/do/eAgendaViewRule?pubId=202510&RIN=1615-AD22">DHS 1615-AD22</a></span></th>
+  <th>Prevailing wage<span class="rin"><a href="https://www.reginfo.gov/public/do/eAgendaViewRule?pubId=202510&RIN=1205-AC30">DOL 1205-AC30</a></span></th>
+  <th>H-1B reform<span class="rin"><a href="https://www.reginfo.gov/public/do/eAgendaViewRule?pubId=202510&RIN=1615-AD00">DHS 1615-AD00</a></span></th>
+  <th>Practical training<span class="rin"><a href="https://www.reginfo.gov/public/do/eAgendaViewRule?pubId=202510&RIN=1653-AA97">DHS 1653-AA97</a></span></th>
+  <th>H-4 EAD<span class="rin"><a href="https://www.reginfo.gov/public/do/eAgendaViewRule?pubId=202510&RIN=1615-AD14">DHS 1615-AD14</a></span></th>
+  <th>OPT fee<span class="rin"><a href="https://www.reginfo.gov/public/do/eoDetails?rrid=1505717">DHS 1653-AB01</a></span></th>
 </tr>
 <tr class="desc">
   <td class="stage">What it would do<small>and who it hits</small></td>
@@ -108,21 +112,21 @@ table.grid tr.agenda td.stage{background:#FAFAF8}
 </tr>
 <tr>
   <td class="stage">1. White House (OIRA) reviews proposal<small>sent in → cleared out</small></td>
-  <td><span class="p done"><b>Jun 27 → Aug 7, 2025</b>41 days at OIRA</span></td>
-  <td><span class="p done"><b>Aug 19 → Aug 19, 2026</b>same day, 0 days at OIRA</span></td>
+  <td><span class="p done"><b>Jun 27 → Aug 7, 2025</b><a href="https://www.reginfo.gov/public/do/eoDetails?rrid=1002061">41 days at OIRA</a></span></td>
+  <td><span class="p done"><b>Aug 19 → Aug 19, 2026</b><a href="https://www.reginfo.gov/public/do/eoDetails?rrid=1505911">same day, 0 days at OIRA</a></span></td>
   <td><span class="p done"><b>Aug 6 → Aug 27, 2026</b>21 days at OIRA</span></td>
   <td><span class="p done"><b>Dec 20 → Feb 20, 2026</b>62 days at OIRA</span></td>
   <td><span class="p exp"><b>was Aug 2026</b>not sent yet</span></td>
   <td><span class="p exp"><b>~Jan 2027</b>not sent yet</span></td>
   <td><span class="p exp"><b>TBD</b></span></td>
-  <td><span class="p done"><b>Aug 20 → Sep 11, 2026</b>22 days at OIRA</span></td>
+  <td><span class="p done"><b>Aug 20 → Sep 11, 2026</b><a href="https://www.reginfo.gov/public/do/eoDetails?rrid=1505717">22 days at OIRA</a></span></td>
 </tr>
 <tr>
   <td class="stage">2. Proposed rule published<small>Federal Register, text public</small></td>
-  <td><span class="p done"><b>Aug 28, 2025</b>90 FR 42070</span></td>
-  <td><span class="p done"><b>Aug 25, 2026</b>91 FR 54817</span></td>
-  <td><span class="p done"><b>Sep 11, 2026</b>91 FR 57807</span></td>
-  <td><span class="p done"><b>Mar 27, 2026</b>91 FR 15454</span></td>
+  <td><span class="p done"><b>Aug 28, 2025</b><a href="https://www.federalregister.gov/documents/2025/08/28/2025-16554/establishing-a-fixed-time-period-of-admission-and-an-extension-of-stay-procedure-for-nonimmigrant">90 FR 42070</a></span></td>
+  <td><span class="p done"><b>Aug 25, 2026</b><a href="https://www.federalregister.gov/documents/2026/08/25/2026-17324/fee-for-certain-h-1b-petitions">91 FR 54817</a></span></td>
+  <td><span class="p done"><b>Sep 11, 2026</b><a href="https://www.federalregister.gov/documents/2026/09/11/2026-18631/eliminating-the-discretionary-60-day-grace-period">91 FR 57807</a></span></td>
+  <td><span class="p done"><b>Mar 27, 2026</b><a href="https://www.federalregister.gov/documents/2026/03/27/2026-06017/improving-wage-protections-for-the-temporary-and-permanent-employment-of-certain-foreign-nationals">91 FR 15454</a></span></td>
   <td><span class="p exp"><b>slipped</b>target was Aug 2026</span></td>
   <td><span class="p exp"><b>Feb 2027</b>agenda target</span></td>
   <td><span class="p exp"><b>2027 or later</b></span></td>
@@ -130,10 +134,10 @@ table.grid tr.agenda td.stage{background:#FAFAF8}
 </tr>
 <tr>
   <td class="stage">3. Public comment period<small>30 or 60 days</small></td>
-  <td><span class="p done"><b>Sep 29, 2025</b>closed, 30 d</span></td>
-  <td><span class="p now"><b>Sep 24, 2026</b>closes, 30 d</span></td>
-  <td><span class="p now"><b>Nov 10, 2026</b>closes, 60 d</span></td>
-  <td><span class="p done"><b>May 26, 2026</b>closed, 60 d</span></td>
+  <td><span class="p done"><b>Sep 29, 2025</b><a href="https://www.regulations.gov/docket/ICEB-2025-0001">closed, 30 d</a></span></td>
+  <td><span class="p now"><b>Sep 24, 2026</b><a href="https://www.regulations.gov/docket/USCIS-2026-0298">closes, 30 d</a></span></td>
+  <td><span class="p now"><b>Nov 10, 2026</b><a href="https://www.regulations.gov/docket/USCIS-2026-0364">closes, 60 d</a></span></td>
+  <td><span class="p done"><b>May 26, 2026</b><a href="https://www.regulations.gov/docket/ETA-2026-0001">closed, 60 d</a></span></td>
   <td><span class="p exp"><b>2027</b></span></td>
   <td><span class="p exp"><b>~Apr 2027</b></span></td>
   <td><span class="p exp"><b>2027 or later</b></span></td>
@@ -152,7 +156,7 @@ table.grid tr.agenda td.stage{background:#FAFAF8}
 </tr>
 <tr>
   <td class="stage">5. White House (OIRA) reviews final rule<small>sent in → cleared out</small></td>
-  <td><span class="p done"><b>May 5 → Jun 17, 2026</b>43 days at OIRA</span></td>
+  <td><span class="p done"><b>May 5 → Jun 17, 2026</b><a href="https://www.reginfo.gov/public/do/eoDetails?rrid=1370061">43 days at OIRA</a></span></td>
   <td><span class="p exp"><b>~May to Jun 2027</b></span></td>
   <td><span class="p exp"><b>~Jul to Aug 2027</b></span></td>
   <td><span class="p exp"><b>~Jan to Feb 2027</b></span></td>
@@ -163,7 +167,7 @@ table.grid tr.agenda td.stage{background:#FAFAF8}
 </tr>
 <tr>
   <td class="stage">6. Final rule published<small>major rule: 60-day wait</small></td>
-  <td><span class="p done"><b>Jul 17, 2026</b>91 FR 44976</span></td>
+  <td><span class="p done"><b>Jul 17, 2026</b><a href="https://www.federalregister.gov/documents/2026/07/17/2026-14439/establishing-a-fixed-time-period-of-admission-and-an-extension-of-stay-procedure-for-nonimmigrant">91 FR 44976</a></span></td>
   <td><span class="p exp"><b>~Jul 2027</b></span></td>
   <td><span class="p exp"><b>~Sep 2027</b></span></td>
   <td><span class="p exp"><b>~Mar 2027</b></span></td>
@@ -185,7 +189,7 @@ table.grid tr.agenda td.stage{background:#FAFAF8}
 </tr>
 <tr>
   <td class="stage">8. Court review<small>only possible after stage 6</small></td>
-  <td><span class="p blocked"><b>Sep 14, 2026</b>PI granted, sued Aug 18</span></td>
+  <td><span class="p blocked"><b>Sep 14, 2026</b><a href="https://www.courtlistener.com/docket/74661796/presidents-alliance-on-higher-education-and-immigration-v-united-states/">PI granted, sued Aug 18</a></span></td>
   <td><span class="p exp"><b>~Jul to Sep 2027</b></span></td>
   <td><span class="p exp"><b>~Sep to Nov 2027</b></span></td>
   <td><span class="p exp"><b>~Mar to May 2027</b></span></td>
@@ -196,13 +200,13 @@ table.grid tr.agenda td.stage{background:#FAFAF8}
 </tr>
 <tr class="agenda">
   <td class="stage">Listed on Unified Agenda<small>supposed to come first; often published after the rule</small></td>
-  <td><span class="p done"><b>Sep 4, 2025</b>Spring 2025 agenda</span></td>
-  <td><span class="p done"><b>Aug 14, 2026</b>2026 agenda</span></td>
-  <td><span class="p done"><b>Aug 14, 2026</b>2026 agenda</span></td>
-  <td><span class="p done"><b>Aug 14, 2026</b>2026 agenda</span></td>
-  <td><span class="p done"><b>Sep 4, 2025</b>Spring 2025 agenda</span></td>
-  <td><span class="p done"><b>Sep 4, 2025</b>Spring 2025 agenda</span></td>
-  <td><span class="p now"><b>Aug 14, 2026</b>long-term action</span></td>
+  <td><span class="p done"><b>Sep 4, 2025</b><a href="https://www.reginfo.gov/public/do/eAgendaViewRule?pubId=202504&RIN=1653-AA95">Spring 2025 agenda</a></span></td>
+  <td><span class="p done"><b>Aug 14, 2026</b><a href="https://www.federalregister.gov/documents/2026/08/14/2026-16605/unified-agenda-of-federal-regulatory-and-deregulatory-actions">2026 agenda</a></span></td>
+  <td><span class="p done"><b>Aug 14, 2026</b><a href="https://www.federalregister.gov/documents/2026/08/14/2026-16605/unified-agenda-of-federal-regulatory-and-deregulatory-actions">2026 agenda</a></span></td>
+  <td><span class="p done"><b>Aug 14, 2026</b><a href="https://www.federalregister.gov/documents/2026/08/14/2026-16605/unified-agenda-of-federal-regulatory-and-deregulatory-actions">2026 agenda</a></span></td>
+  <td><span class="p done"><b>Sep 4, 2025</b><a href="https://www.reginfo.gov/public/do/eAgendaViewRule?pubId=202504&RIN=1615-AD00">Spring 2025 agenda</a></span></td>
+  <td><span class="p done"><b>Sep 4, 2025</b><a href="https://www.reginfo.gov/public/do/eAgendaViewRule?pubId=202504&RIN=1653-AA97">Spring 2025 agenda</a></span></td>
+  <td><span class="p now"><b>Aug 14, 2026</b><a href="https://www.reginfo.gov/public/do/eAgendaViewRule?pubId=202510&RIN=1615-AD14">long-term action</a></span></td>
   <td><span class="p exp"><b>not listed</b>skipped agenda</span></td>
 </tr>
 </table>
