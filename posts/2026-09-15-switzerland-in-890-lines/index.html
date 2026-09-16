@@ -57,6 +57,23 @@ footer a{color:var(--muted)}
 
 <p>The glyph grid at the bottom borrows the square-pair form Hahn+Zimmermann used for their Women in Politics poster, which took silver at the Swiss Viz Awards 2025. Each opponent gets two squares: the pink one is Swiss wins against them, the grey one is Swiss losses, and the thin bar between is draws. Italy, Germany and Hungary have been the most frequent opponents, and against all three the grey square is bigger.</p>
 
+<h2>Who picked the team</h2>
+<p>Under each strip is a band of the people who selected the side, with their win-draw-loss record computed from the same match list. For the first half century that was mostly a committee. The Referee's Commission ran the team from 1910 to 1924 and the Technical Commission from 1924 to 1937, and Karl Rappan, the Austrian who invented the Swiss bolt defence, moves in and out four times between 1937 and 1963. The full-time single coach only becomes the norm from Alfredo Foni in 1964. Every coach since Uli Stielike in 1989 has averaged more than 1.5 points per match; nobody before him except Rappan managed 1.4.</p>
+
+<table>
+<tr><th>Coach</th><th class="n">From</th><th class="n">Matches</th><th class="n">W-D-L</th><th class="n">Points per match</th></tr>
+<tr><td>Technical Commission</td><td class="n">1924</td><td class="n">102</td><td class="n">26-15-61</td><td class="n">0.91</td></tr>
+<tr><td>Karl Rappan</td><td class="n">1942</td><td class="n">38</td><td class="n">16-4-18</td><td class="n">1.37</td></tr>
+<tr><td>Paul Wolfisberg</td><td class="n">1981</td><td class="n">51</td><td class="n">17-20-14</td><td class="n">1.39</td></tr>
+<tr><td>Uli Stielike</td><td class="n">1989</td><td class="n">25</td><td class="n">13-5-7</td><td class="n">1.76</td></tr>
+<tr><td>Roy Hodgson</td><td class="n">1992</td><td class="n">40</td><td class="n">20-10-10</td><td class="n">1.75</td></tr>
+<tr><td>Köbi Kuhn</td><td class="n">2001</td><td class="n">72</td><td class="n">31-18-23</td><td class="n">1.54</td></tr>
+<tr><td>Ottmar Hitzfeld</td><td class="n">2008</td><td class="n">61</td><td class="n">30-18-13</td><td class="n">1.77</td></tr>
+<tr><td>Vladimir Petković</td><td class="n">2014</td><td class="n">78</td><td class="n">41-18-19</td><td class="n">1.81</td></tr>
+<tr><td>Murat Yakin</td><td class="n">2021</td><td class="n">65</td><td class="n">28-23-14</td><td class="n">1.65</td></tr>
+</table>
+<p>Tenure dates come from RSSSF and worldfootball.net; matches are assigned to a coach by date, so records differ by a game or two from official counts where a tenure started or ended mid-window.</p>
+
 <h2>How it was made</h2>
 <p>The dataset is the results.csv file from martj42/international_results on GitHub, mirrored on Kaggle, filtered to matches with Switzerland as home or away team. Scores are at full time including extra time, so the two shootout wins in 2021 and 2026 appear as draws. Tournaments were grouped into six buckets plus an "other" bucket for the Central European International Cup, the Olympics and one-off invitationals. The poster is one matplotlib figure: three axes for the strips, with one line drawn per match, and one equal-aspect axis for the glyph grid so the squares stay square.</p>
 
