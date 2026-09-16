@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Rahul">
+<title>Switzerland in 890 lines | vibelogs</title>
+<meta name="description" content="Every men's international Switzerland has played since 1905 as one line per match, plus a square-glyph grid of every opponent.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#FAFAF8;--ink:#17171C;--cobalt:#2545FF;--muted:#6E6E76;--rule:#E7E7E2;--chip:#EEF1FF}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:17px;line-height:1.7}
+.wrap{max-width:980px;margin:0 auto;padding:0 24px}
+.top{padding:40px 0 0;font-family:'IBM Plex Mono',monospace;font-size:0.8rem}
+.top a{color:var(--muted);text-decoration:none}
+.top a:hover{color:var(--cobalt)}
+header.post{padding:32px 0 24px;border-bottom:1px solid var(--rule)}
+.meta{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted);display:flex;gap:10px;align-items:center;margin-bottom:14px}
+.upd{color:var(--muted)}
+.tag{background:var(--chip);color:var(--cobalt);padding:1px 8px;border-radius:4px;font-weight:500}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.7rem,5vw,2.3rem);letter-spacing:-0.02em;line-height:1.2}
+article{padding:32px 0 60px}
+article p{margin:0 0 20px}
+article p.intro{color:var(--muted)}
+article a{color:var(--cobalt)}
+.poster{width:100%;height:auto;display:block;border:1px solid var(--rule);border-radius:8px;margin:0 0 10px}
+.note{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:var(--muted);margin:0 0 30px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.25rem;margin:30px 0 12px}
+table{border-collapse:collapse;width:100%;font-size:0.92rem;margin:0 0 24px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule)}
+th{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
+td.n{font-family:'IBM Plex Mono',monospace;text-align:right}
+th.n{text-align:right}
+footer{border-top:1px solid var(--rule);padding:24px 0 56px;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted)}
+footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><a href="../../">&larr; vibelogs</a></div>
+
+<header class="post">
+  <div class="meta"><span>[2026-09-15]</span><span>Rahul</span><span class="upd">updated 2026-09-15</span><span class="tag">Data &amp; visualizations</span></div>
+  <h1>Switzerland in 890 lines</h1>
+</header>
+
+<article>
+<p class="intro">Every men's full international played by Switzerland, from a 0:1 in Paris on February 12, 1905 to the 1:3 against Argentina in the 2026 World Cup quarter-final. One thin line per match: it rises by the goals Switzerland scored and drops by the goals it conceded, and the color is the competition. Click the poster for the full size version.</p>
+
+<a href="nati.png"><img class="poster" src="nati.jpg" alt="Poster: 890 thin vertical lines, one per Swiss international match since 1905, in three chronological strips, followed by a grid of square glyphs for every opponent"></a>
+<p class="note">890 matches, 319 wins, 206 draws, 365 losses, 1,330 goals for, 1,451 against. Source: Mart Jürisoo, International football results 1872 to 2026 (CC0).</p>
+
+<h2>What the lines show</h2>
+<p>The three strips split the record into 1905 to 1949, 1950 to 1989, and 1990 to 2026. The first two are dominated by grey friendlies and by lines that drop further than they rise: Switzerland lost 116 of its first 216 matches and 145 of the next 287. The third strip flips. Since 1990 the team has won 177 and lost 104, the friendlies thin out, and the colored lines of World Cup and Euro qualifiers take over the page. The 2026 World Cup run, six matches ending in Kansas City, is the last cluster of pink at the right edge.</p>
+
+<p>The glyph grid at the bottom borrows the square-pair form Hahn+Zimmermann used for their Women in Politics poster, which took silver at the Swiss Viz Awards 2025. Each opponent gets two squares: the pink one is Swiss wins against them, the grey one is Swiss losses, and the thin bar between is draws. Italy, Germany and Hungary have been the most frequent opponents, and against all three the grey square is bigger.</p>
+
+<h2>How it was made</h2>
+<p>The dataset is the results.csv file from martj42/international_results on GitHub, mirrored on Kaggle, filtered to matches with Switzerland as home or away team. Scores are at full time including extra time, so the two shootout wins in 2021 and 2026 appear as draws. Tournaments were grouped into six buckets plus an "other" bucket for the Central European International Cup, the Olympics and one-off invitationals. The poster is one matplotlib figure: three axes for the strips, with one line drawn per match, and one equal-aspect axis for the glyph grid so the squares stay square.</p>
+
+<p>Data: <a href="https://github.com/martj42/international_results">martj42/international_results</a>, public domain.</p>
+</article>
+
+<footer><a href="../../">vibelogs</a> &middot; Rahul</footer>
+</div>
+</body>
+</html>
+
