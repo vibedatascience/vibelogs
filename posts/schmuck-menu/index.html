@@ -14,8 +14,8 @@
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;color:var(--ink);padding:16px 0}
-.wrap{display:flex;justify-content:center}
-.menu{width:860px;flex:0 0 860px;background:var(--paper);padding:26px 30px 24px;border-radius:26px;box-shadow:0 12px 40px rgba(0,0,0,.4);zoom:var(--z,1)}
+.wrap{display:flex;justify-content:center;min-width:900px}
+.menu{width:860px;flex:0 0 860px;background:var(--paper);padding:26px 30px 24px;border-radius:26px;box-shadow:0 12px 40px rgba(0,0,0,.4)}
 .top{display:flex;justify-content:space-between;align-items:flex-start;height:120px}
 .brand{font-size:96px;font-weight:800;letter-spacing:-.045em;line-height:1;margin:8px 0 0 -4px}
 .right{position:relative;width:250px;height:120px}
@@ -124,9 +124,6 @@ body{margin:0;background:var(--bg);font-family:"Helvetica Neue",Helvetica,Arial,
 
   <p class="cash">&lt;&lt;we prefer cash at <b>schmuck.</b> prices listed are for cash payment. A 1.5% credit card incentive fee applies to all card transactions. &gt;&gt;</p>
 </div></div>
-<script>
-function fit(){var z=Math.min(1,(window.innerWidth-12)/860);document.documentElement.style.setProperty('--z',z);}
-fit();window.addEventListener('resize',fit);
-</script>
+
 </body>
 </html>
