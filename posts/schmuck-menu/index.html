@@ -4,99 +4,90 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>schmuck. menu</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Bodoni+Moda:ital,wght@0,400;0,600;1,400&display=swap">
+<meta name="robots" content="noindex">
+<meta name="author" content="Rahul">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Bodoni+Moda:wght@400;500&display=swap">
 <style>
-:root{
-  --paper:#f5f3ef;--ink:#151515;--bg:#4a4c4f;
-  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
-}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#2b2c2e}}
-:root[data-theme="dark"]{--bg:#2b2c2e}
+:root{--paper:#f6f4f0;--ink:#141414;--bg:#3f4144;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#262728}}
+:root[data-theme="dark"]{--bg:#262728}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;color:var(--ink);padding:24px 8px}
-.menu{background:var(--paper);max-width:880px;margin:0 auto;padding:36px 34px 30px;border-radius:22px;box-shadow:0 10px 40px rgba(0,0,0,.35);position:relative}
-.top{display:flex;justify-content:space-between;align-items:flex-start}
-.brand{font-size:clamp(64px,13vw,124px);font-weight:900;letter-spacing:-.05em;line-height:.85;margin:10px 0 0}
-.socials{font-size:13px;font-weight:700;margin-top:4px}
+body{margin:0;background:var(--bg);font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;color:var(--ink);padding:16px 0}
+.wrap{display:flex;justify-content:center}
+.menu{width:860px;flex:0 0 860px;background:var(--paper);padding:26px 30px 24px;border-radius:26px;box-shadow:0 12px 40px rgba(0,0,0,.4);zoom:var(--z,1)}
+.top{display:flex;justify-content:space-between;align-items:flex-start;height:120px}
+.brand{font-size:96px;font-weight:800;letter-spacing:-.045em;line-height:1;margin:8px 0 0 -4px}
+.right{position:relative;width:250px;height:120px}
+.socials{position:absolute;right:0;top:-6px;font-size:12px;font-weight:700;white-space:nowrap}
 .socials span{font-weight:400}
-.nut{width:110px;height:100px;margin:26px 14px 0 0}
-.cols{display:grid;grid-template-columns:1.25fr 1fr;gap:40px;margin-top:8px}
-.stairs{position:relative;list-style:none;padding:0;margin:0;padding-left:0}
-.stairs::before{content:"";position:absolute;left:-34px;top:0;width:214px;height:32px;background:var(--ink)}
-.stairs::after{content:"";position:absolute;left:140px;top:0;width:40px;height:calc(100% - 20px);background:var(--ink)}
-.stairs li{position:relative;margin-left:-34px;padding:6px 0 8px 34px;border-bottom:7px solid var(--ink)}
-.stairs li:first-child{padding-top:38px}
-.stairs li:last-child{border-bottom:none}
-.stairs li h3{margin:0;font-size:17px;font-weight:900;letter-spacing:.2em;padding-left:176px;position:relative;z-index:1}
-.stairs li p{margin:0;text-align:right;font-size:12px;letter-spacing:.07em;line-height:1.35;position:relative;z-index:1}
-.stairs li p b{font-weight:800}
-.stairs li:last-child{display:flex;align-items:flex-start;gap:14px}
-.stairs li:last-child h3{flex:0 0 auto}
-.stairs li:last-child p{flex:1}
-.kitchen{border:6px dashed var(--ink);padding:16px 14px 10px;text-align:center;font-family:"Bodoni Moda",Georgia,serif;margin-top:120px;align-self:start}
-.kitchen h2{font-size:52px;font-weight:400;letter-spacing:.12em;margin:0;line-height:1}
-.kitchen .collab{font-family:Helvetica,Arial,sans-serif;font-size:12px;margin:2px 0 22px}
+.nut{position:absolute;right:20px;top:22px;width:130px;height:96px}
+.body{position:relative;height:640px;margin-top:8px}
+.cocktails{position:absolute;left:-30px;top:0;width:498px}
+.cap{position:absolute;left:0;top:0;width:105px;height:18px;background:var(--ink)}
+.bar{position:absolute;left:84px;top:0;width:21px;height:612px;background:var(--ink)}
+.cocktails ul{list-style:none;margin:0;padding:22px 0 0 30px}
+.cocktails li{height:45px;border-bottom:4px solid var(--ink);margin-left:-20px;padding:4px 0 0 20px;position:relative}
+.cocktails li:last-child{border-bottom:none}
+.cocktails h3{margin:0;font-size:12.5px;font-weight:800;letter-spacing:.22em;padding-left:91px;line-height:1.15}
+.cocktails p{margin:1px 0 0;text-align:right;font-size:9.6px;letter-spacing:.09em;line-height:1.3}
+.cocktails p b{font-weight:800}
+.cocktails li.inline{display:flex;gap:14px;align-items:flex-start}
+.cocktails li.inline h3{flex:0 0 auto}
+.cocktails li.inline p{flex:1;text-align:right;max-width:170px}
+.kitchen{position:absolute;left:495px;top:76px;width:262px;height:566px;border:5px dashed var(--ink);padding:10px 8px 6px;text-align:center;font-family:"Bodoni Moda",Georgia,serif}
+.kitchen h2{font-size:34px;font-weight:400;letter-spacing:.14em;margin:0;line-height:1}
+.kitchen .collab{font-family:Helvetica,Arial,sans-serif;font-size:8px;margin:0 0 14px}
 .kitchen .collab b{font-weight:800}
-.dish{margin-bottom:16px}
-.dish h4{margin:0;font-size:16px;font-weight:400;letter-spacing:.06em}
-.dish small{display:block;font-family:Helvetica,Arial,sans-serif;font-size:11px;line-height:1.2}
-.dish .price{display:block;font-size:14px;margin-top:2px}
-.kitchen .legal{font-size:7px;line-height:1.3;margin:6px 0 0;color:#333;font-family:Helvetica,Arial,sans-serif}
-.notes{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:12px;letter-spacing:.06em;margin:18px 0 6px}
+.dish{margin-bottom:9px}
+.dish h4{margin:0;font-size:10.8px;font-weight:400;letter-spacing:.07em}
+.dish small{display:block;font-family:Helvetica,Arial,sans-serif;font-size:7.4px;line-height:1.15}
+.dish .price{display:block;font-size:9.5px;margin-top:1px}
+.kitchen .legal{font-size:5.4px;line-height:1.25;margin:10px 0 0;color:#333;font-family:Helvetica,Arial,sans-serif}
+.notes{display:flex;justify-content:space-between;font-size:9.6px;letter-spacing:.08em;margin:16px 0 6px;white-space:nowrap}
 .notes b{font-weight:800}
-.rule{height:9px;background:var(--ink);margin:0 -34px 14px}
-.bottom{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:12px;text-align:center;font-family:Anton,Impact,"Arial Narrow",sans-serif;text-transform:uppercase}
-.bottom h2{font-size:clamp(44px,7vw,74px);margin:0;line-height:1;letter-spacing:-.01em}
-.bottom .p{font-size:20px;margin:22px 0 10px;font-family:Helvetica,Arial,sans-serif;font-weight:700}
-.bottom ul{list-style:none;padding:0;margin:0;font-size:22px;line-height:1.5;letter-spacing:.01em}
-.cash{font-size:12px;letter-spacing:.05em;margin:34px 0 0;text-align:center}
+.rule{height:8px;background:var(--ink);margin:0 -30px 14px}
+.bottom{display:grid;grid-template-columns:1fr 1.15fr 1fr;text-align:center;font-family:Anton,Impact,"Arial Narrow",sans-serif;text-transform:uppercase}
+.bottom h2{font-size:52px;margin:0;line-height:1;letter-spacing:-.01em;font-weight:400}
+.bottom .p{font-size:12px;margin:18px 0 8px;font-family:Helvetica,Arial,sans-serif;font-weight:700}
+.bottom ul{list-style:none;padding:0;margin:0;font-size:15px;line-height:1.55;letter-spacing:.005em}
+.cash{font-size:9.6px;letter-spacing:.06em;margin:28px 0 0;text-align:center;white-space:nowrap}
 .cash b{font-weight:800}
-@media (max-width:640px){
-  .cols{grid-template-columns:1fr}
-  .kitchen{margin-top:20px}
-  .stairs::before{width:110px;left:-16px}
-  .stairs::after{left:60px;width:22px}
-  .stairs li{margin-left:-16px;padding-left:16px}
-  .stairs li h3{font-size:13px;letter-spacing:.12em;padding-left:80px}
-  .stairs li:last-child{display:block}
-  .bottom{grid-template-columns:1fr}
-  .menu{padding:24px 16px}
-}
 </style>
 </head>
 <body>
-<div class="menu">
+<div class="wrap"><div class="menu">
   <div class="top">
-    <div>
-      <h1 class="brand">schmuck.</h1>
-    </div>
-    <div style="text-align:right">
+    <h1 class="brand">schmuck.</h1>
+    <div class="right">
       <div class="socials"><span>socials:</span> schmuck.NY</div>
-      <svg class="nut" viewBox="0 0 110 100" aria-hidden="true">
-        <path d="M14 46 C 10 70, 40 96, 66 92 C 96 88, 108 60, 96 40 C 84 20, 60 8, 40 18 C 24 26, 16 34, 14 46 Z" fill="#5a2a2a"/>
-        <path d="M22 44 C 30 26, 52 18, 70 24 C 60 32, 40 40, 22 44 Z" fill="#c98a3a"/>
-        <path d="M22 45 C 40 42, 58 34, 72 24" stroke="#f5f3ef" stroke-width="3" fill="none"/>
+      <svg class="nut" viewBox="0 0 130 96" aria-hidden="true">
+        <path d="M18 46 C 12 68, 40 94, 70 90 C 104 86, 124 62, 114 40 C 104 20, 70 4, 44 16 C 28 24, 22 34, 18 46 Z" fill="#5c2b2a"/>
+        <path d="M26 42 C 36 24, 64 16, 88 22 C 74 30, 50 38, 26 42 Z" fill="#c68b3c"/>
+        <path d="M26 43 C 48 40, 70 32, 90 22" stroke="#f6f4f0" stroke-width="3" fill="none"/>
       </svg>
     </div>
   </div>
 
-  <div class="cols">
-    <ul class="stairs">
-      <li style="--i:0"><h3>BLANKA</h3><p>Fords Gin green drink with<br><b>granny smith, celery, absinthe &amp; ginger.</b></p></li>
-      <li style="--i:1"><h3>FRENCHIE</h3><p>Dolin Blanc Vermouth, Amontillado Sherry<br><b>butter, sage, shiso &amp; cheese.</b></p></li>
-      <li style="--i:2"><h3>BREAD WITH TOMATOES</h3><p>Grey Goose savoury highball<br>with <b>bread</b> and <b>well...tomatoes.</b></p></li>
-      <li style="--i:3"><h3>LARB GAI</h3><p>Remy Martin Cognac shaken with<br><b>peanut &amp; herbs distillate, rice, chili oil.</b></p></li>
-      <li style="--i:4"><h3>LIMONADA SUÍCA</h3><p><b>caramalized condensed milk &amp; whole lime</b><br>with Vanilla bean infused Diplomatico rum.</p></li>
-      <li style="--i:5"><h3>SCHMUCK MARTINI</h3><p>Fords Gin with Shochu, Blanche de Normandie<br>and a blend of blanc &amp; dry vermouth, also <b>olive oil.</b></p></li>
-      <li style="--i:6"><h3>MARGARITA &amp; CREAM</h3><p>Patron Tequila with <b>mango, cilantro</b><br>and a salted heavy whipped <b>cream</b></p></li>
-      <li style="--i:7"><h3>CARAMALIZED APPLE 3</h3><p>Teeling irish whiskey &amp; Kota Pandan<br>with <b>apples &amp; caramalized yoghurt.</b></p></li>
-      <li style="--i:8"><h3>VERSACE SLIPPERS</h3><p>fresh <b>bananas</b> with <b>coffee. blue cheese</b><br>&amp; Old Forrester Bourbon.</p></li>
-      <li style="--i:9"><h3>Le PETIT FIZZ</h3><p>ramos fizz with Fords Gin<br><b>passion fruit &amp; hazelnut praline.</b></p></li>
-      <li style="--i:10"><h3>PINA COLADA PICKLEBACK</h3><p><b>coconut</b> fat washed four walls whisky with<br>homemade <b>pickled pineapple brine.</b></p></li>
-      <li style="--i:11"><h3>GREEN PALOMA</h3><p><b>Cucumber Water, Green Sour Tomatoes,</b><br><b>Cilantro &amp; Green peppers</b> with Patron Tequila, <b>Fizzy.</b></p></li>
-      <li style="--i:12"><h3>MELON MICHELADA</h3><p><b>rock melon &amp; hot sauce</b><br>with N/A Athletic IPA.</p></li>
-    </ul>
+  <div class="body">
+    <div class="cocktails">
+      <div class="cap"></div><div class="bar"></div>
+      <ul>
+        <li><h3>BLANKA</h3><p>Fords Gin green drink with<br><b>granny smith, celery, absinthe &amp; ginger.</b></p></li>
+        <li><h3>FRENCHIE</h3><p>Dolin Blanc Vermouth, Amontillado Sherry<br><b>butter, sage, shiso &amp; cheese.</b></p></li>
+        <li><h3>BREAD WITH TOMATOES</h3><p>Grey Goose savoury highball<br>with <b>bread</b> and <b>well...tomatoes.</b></p></li>
+        <li><h3>LARB GAI</h3><p>Remy Martin Cognac shaken with<br><b>peanut &amp; herbs distillate, rice, chili oil.</b></p></li>
+        <li><h3>LIMONADA SUÍCA</h3><p><b>caramalized condensed milk &amp; whole lime</b><br>with Vanilla bean infused Diplomatico rum.</p></li>
+        <li><h3>SCHMUCK MARTINI</h3><p>Fords Gin with Shochu, Blanche de Normandie<br>and a blend of blanc &amp; dry vermouth, also <b>olive oil.</b></p></li>
+        <li><h3>MARGARITA &amp; CREAM</h3><p>Patron Tequila with <b>mango, cilantro</b><br>and a salted heavy whipped <b>cream</b></p></li>
+        <li><h3>CARAMALIZED APPLE 3</h3><p>Teeling irish whiskey &amp; Kota Pandan<br>with <b>apples &amp; caramalized yoghurt.</b></p></li>
+        <li><h3>VERSACE SLIPPERS</h3><p>fresh <b>bananas</b> with <b>coffee. blue cheese</b><br>&amp; Old Forrester Bourbon.</p></li>
+        <li><h3>Le PETIT FIZZ</h3><p>ramos fizz with Fords Gin<br><b>passion fruit &amp; hazelnut praline.</b></p></li>
+        <li><h3>PINA COLADA PICKLEBACK</h3><p><b>coconut</b> fat washed four walls whisky with<br>homemade <b>pickled pineapple brine.</b></p></li>
+        <li><h3>GREEN PALOMA</h3><p><b>Cucumber Water, Green Sour Tomatoes,</b><br><b>Cilantro &amp; Green peppers</b> with Patron Tequila, <b>Fizzy.</b></p></li>
+        <li class="inline"><h3>MELON MICHELADA</h3><p><b>rock melon &amp; hot sauce</b><br>with N/A Athletic IPA.</p></li>
+      </ul>
+    </div>
 
     <div class="kitchen">
       <h2>KITCHEN</h2>
@@ -132,6 +123,10 @@ body{margin:0;background:var(--bg);font-family:"Helvetica Neue",Helvetica,Arial,
   </div>
 
   <p class="cash">&lt;&lt;we prefer cash at <b>schmuck.</b> prices listed are for cash payment. A 1.5% credit card incentive fee applies to all card transactions. &gt;&gt;</p>
-</div>
+</div></div>
+<script>
+function fit(){var z=Math.min(1,(window.innerWidth-12)/860);document.documentElement.style.setProperty('--z',z);}
+fit();window.addEventListener('resize',fit);
+</script>
 </body>
 </html>
