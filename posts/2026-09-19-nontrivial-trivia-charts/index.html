@@ -26,8 +26,15 @@ article p{margin:0 0 18px}
 article a{color:var(--cobalt)}
 article code{font-family:'IBM Plex Mono',monospace;font-size:0.85em;background:var(--chip);padding:1px 5px;border-radius:4px}
 .fig-title{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted);margin:0 0 10px}
-.fig{margin:0 0 16px;background:#fff;border:1px solid var(--rule);border-radius:8px;padding:6px;overflow-x:auto}
+.fig{margin:0 0 16px;background:#fff;border:1px solid var(--rule);border-radius:8px;padding:6px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.fig a{display:block}
 .fig img{width:100%;max-width:100%;height:auto;display:block;border-radius:4px}
+.fig-hint{display:none}
+@media (max-width:640px){
+  .fig{margin-left:-24px;margin-right:-24px;border-radius:0;border-left:0;border-right:0;padding:6px 0}
+  .fig img{width:920px;max-width:none}
+  .fig-hint{display:block;font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--muted);margin:-8px 0 14px}
+}
 .toc{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 14px;margin:0 0 26px}
 .toc a{color:var(--muted);text-decoration:none} .toc a:hover{color:var(--cobalt)}
 footer{border-top:1px solid var(--rule);padding:24px 0 56px;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted)}
@@ -45,95 +52,120 @@ footer a{color:var(--muted)}
 
 <h2 id="chi"><span class="num">I</span> The cosmos</h2>
 <p class="fig-title">Every star system within ten light years</p>
-<div class="fig"><img src="img/c1_stars.png" alt="Every star system within ten light years" loading="lazy"></div>
+<div class="fig"><a href="img/c1_stars.png"><img src="img/c1_stars.png" alt="Every star system within ten light years" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>Nine systems lie within ten light years of the Sun. The nearest, Alpha Centauri, is 4.24 light years away and has three stars. Six of the nine are red dwarfs, two are brown dwarf pairs, and one, Sirius, is a bright A-type star with a white dwarf companion. Nothing sits inside four light years.</p>
 <p class="fig-title">The eight planets: distance, orbital period, size and moons</p>
-<div class="fig"><img src="img/c1c_planets.png" alt="The eight planets: distance, orbital period, size and moons" loading="lazy"></div>
+<div class="fig"><a href="img/c1c_planets.png"><img src="img/c1c_planets.png" alt="The eight planets: distance, orbital period, size and moons" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>Mercury is 0.39 AU from the Sun and orbits in 88 days; Neptune is 30 AU out and takes 164 years. Jupiter is 142,984 km across with 79 moons; Saturn 120,536 km with 82. Mercury and Venus have none. On log axes the eight sit on the line period = distance^1.5.</p>
 <p class="fig-title">Thirteen animal spaceflights, 1947 to 1973</p>
-<div class="fig"><img src="img/c1b_animals.png" alt="Thirteen animal spaceflights, 1947 to 1973" loading="lazy"></div>
+<div class="fig"><a href="img/c1b_animals.png"><img src="img/c1b_animals.png" alt="Thirteen animal spaceflights, 1947 to 1973" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>Fruit flies flew first, on a captured V2 in 1947, and came back. Albert II, a rhesus monkey, died in 1948 when his parachute failed. Laika orbited Earth in 1957 and died in space. Two tortoises circled the Moon on Zond 5 in 1968 and returned. Nine of the thirteen flights brought the animals back alive; the US flew seven, the USSR five, France one.</p>
 
 <h2 id="chii"><span class="num">II</span> The human planet</h2>
 <p class="fig-title">The largest city on Earth, 4000 BCE to 2025, on a true time axis</p>
-<div class="fig"><img src="img/c2_cities.png" alt="The largest city on Earth, 4000 BCE to 2025, on a true time axis" loading="lazy"></div>
+<div class="fig"><a href="img/c2_cities.png"><img src="img/c2_cities.png" alt="The largest city on Earth, 4000 BCE to 2025, on a true time axis" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>Uruk had 5,000 people in 4000 BCE and 45,000 a thousand years later. Rome reached a million around 100 CE. Chang'an, Kaifeng, Hangzhou and Beijing each topped out at about a million between 800 and 1800. London had 6.6 million in 1900, New York 12.4 million in 1950, Tokyo 38 million in 2025.</p>
 <p class="fig-title">The same series as a line, log scale, with the collapses marked</p>
-<div class="fig"><img src="img/c2b_logline.png" alt="The same series as a line, log scale, with the collapses marked" loading="lazy"></div>
+<div class="fig"><a href="img/c2b_logline.png"><img src="img/c2b_logline.png" alt="The same series as a line, log scale, with the collapses marked" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>The largest city shrank from 80,000 to 50,000 around 1200 BCE, from a million to 800,000 by 400 CE, and from a million to 500,000 between 1200 and 1400.</p>
 <p class="fig-title">The same series on a linear scale</p>
-<div class="fig"><img src="img/c2c_bars.png" alt="The same series on a linear scale" loading="lazy"></div>
+<div class="fig"><a href="img/c2c_bars.png"><img src="img/c2c_bars.png" alt="The same series on a linear scale" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>Every city before 1900 is under 1.1 million. London in 1900 is six times Beijing in 1800; Tokyo in 2025 is 35 times Beijing in 1800.</p>
 <p class="fig-title">How many countries there are, by definition</p>
-<div class="fig"><img src="img/c2e_countries.png" alt="How many countries there are, by definition" loading="lazy"></div>
+<div class="fig"><a href="img/c2e_countries.png"><img src="img/c2e_countries.png" alt="How many countries there are, by definition" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>193 UN members. 195 with the two observer states, the Holy See and Palestine. 201 adding Taiwan, Western Sahara, Kosovo, South Ossetia, Abkhazia and Northern Cyprus. 204 with Artsakh, Transnistria and Somaliland. 206 in the Olympics, 211 in FIFA, 249 with an ISO country code.</p>
 <p class="fig-title">The ten largest countries by area, against population</p>
-<div class="fig"><img src="img/c2f_areapop.png" alt="The ten largest countries by area, against population" loading="lazy"></div>
+<div class="fig"><a href="img/c2f_areapop.png"><img src="img/c2f_areapop.png" alt="The ten largest countries by area, against population" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>Russia 17.1 million km², 146 million people. Canada 9.98 million km², 42 million. China 9.6 million km², 1,408 million. India 3.29 million km², 1,413 million. Canada, Australia and Kazakhstan together cover 20 million km² and hold 89 million people. Canada and India are about 9 percent water by area.</p>
 <p class="fig-title">Oldest and youngest countries by median age</p>
-<div class="fig"><img src="img/c2g_medianage.png" alt="Oldest and youngest countries by median age" loading="lazy"></div>
+<div class="fig"><a href="img/c2g_medianage.png"><img src="img/c2g_medianage.png" alt="Oldest and youngest countries by median age" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>Monaco 55.4, Japan 48.6, Germany 47.8, Italy 46.5, Andorra 46.2. Niger 14.8, Uganda 15.7, Angola 15.9, Mali 16, Chad 16.1. The ten oldest are all in Europe except Japan; the ten youngest are all in sub-Saharan Africa.</p>
 <p class="fig-title">The eleven most common US county names</p>
-<div class="fig"><img src="img/c2d_counties.png" alt="The eleven most common US county names" loading="lazy"></div>
+<div class="fig"><a href="img/c2d_counties.png"><img src="img/c2d_counties.png" alt="The eleven most common US county names" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>Washington 31, Jefferson 26, Franklin 25, Jackson 24, Lincoln 24, Madison 20, Clay 18, Montgomery 18, Union 18, Marion 17, Monroe 17. There are 3,142 counties; 130 are named for five men. 31 states have a Washington County.</p>
 
 <h2 id="chiii"><span class="num">III</span> Measurement</h2>
 <p class="fig-title">The current year in ten calendars, June 2026</p>
-<div class="fig"><img src="img/c3_calendars.png" alt="The current year in ten calendars, June 2026" loading="lazy"></div>
+<div class="fig"><a href="img/c3_calendars.png"><img src="img/c3_calendars.png" alt="The current year in ten calendars, June 2026" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>Byzantine 7534, Freemasonry 6026, Hebrew 5786, Korean 4359, Buddhist 2569, Gregorian 2026, Islamic lunar 1447, Islamic solar 1405, French Republican 234, Juche 115. Three of the ten count from a date of creation and disagree by 1,748 years. The Holocene calendar, which starts at 10000 BCE, puts the year at 12026.</p>
 
 <h2 id="chiv"><span class="num">IV</span> Histories and politics</h2>
 <p class="fig-title">The tallest building on Earth since 1300</p>
-<div class="fig"><img src="img/c4_buildings.png" alt="The tallest building on Earth since 1300" loading="lazy"></div>
+<div class="fig"><a href="img/c4_buildings.png"><img src="img/c4_buildings.png" alt="The tallest building on Earth since 1300" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>The Great Pyramid, 147 metres, held the record from about 2570 BCE until 1311. Eight European churches held it from 1311 to 1901, all between 142 and 162 metres. Nine US buildings held it from 1901 to 1998, rising from 167 to 442 metres. The Burj Khalifa, 828 metres, has held it since 2010.</p>
 <p class="fig-title">How long each record-holder lasted</p>
-<div class="fig"><img src="img/c4b_reigns.png" alt="How long each record-holder lasted" loading="lazy"></div>
+<div class="fig"><a href="img/c4b_reigns.png"><img src="img/c4b_reigns.png" alt="How long each record-holder lasted" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>The median reign is six years. The Pyramid's 3,881 years is five times the other nineteen combined. The Bank of Manhattan lost the record to the Chrysler Building within a month in 1930.</p>
 <p class="fig-title">Record-holders by country</p>
-<div class="fig"><img src="img/c4c_countries.png" alt="Record-holders by country" loading="lazy"></div>
+<div class="fig"><a href="img/c4c_countries.png"><img src="img/c4c_countries.png" alt="Record-holders by country" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>United States 9 buildings, 97 years. Germany 4, 121 years. France 2, 231 years. England, Egypt, Malaysia, Taiwan and the UAE one each.</p>
 
 <h2 id="chv"><span class="num">V</span> The natural world</h2>
 <p class="fig-title">Magnitude against death toll for the ten largest recorded earthquakes</p>
-<div class="fig"><img src="img/c5_quakes.png" alt="Magnitude against death toll for the ten largest recorded earthquakes" loading="lazy"></div>
+<div class="fig"><a href="img/c5_quakes.png"><img src="img/c5_quakes.png" alt="Magnitude against death toll for the ten largest recorded earthquakes" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>Valdivia 1960, M9.5, killed 1,655. Rat Islands 1965, M8.7, killed nobody. Sumatra 2012, M8.6, killed ten. The three quakes above 10,000 deaths, Sumatra 2004, Tohoku 2011 and Kamchatka 1952, killed mostly by tsunami.</p>
 <p class="fig-title">When the ten happened</p>
-<div class="fig"><img src="img/c5b_timeline.png" alt="When the ten happened" loading="lazy"></div>
+<div class="fig"><a href="img/c5b_timeline.png"><img src="img/c5b_timeline.png" alt="When the ten happened" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>Six of the ten occurred between 1950 and 1965. Nothing above M8.6 was recorded between 1965 and 2004.</p>
 <p class="fig-title">Rank by magnitude against rank by deaths</p>
-<div class="fig"><img src="img/c5c_rankslope.png" alt="Rank by magnitude against rank by deaths" loading="lazy"></div>
+<div class="fig"><a href="img/c5c_rankslope.png"><img src="img/c5c_rankslope.png" alt="Rank by magnitude against rank by deaths" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>The largest quake ranks fourth for deaths. The deadliest, Sumatra 2004 at 283,100, ranks third for magnitude.</p>
 
 <h2 id="chvi"><span class="num">VI</span> Communication</h2>
 <p class="fig-title">Native speakers to total speakers, the 15 most spoken languages</p>
-<div class="fig"><img src="img/c6_languages.png" alt="Native speakers to total speakers, the 15 most spoken languages" loading="lazy"></div>
+<div class="fig"><a href="img/c6_languages.png"><img src="img/c6_languages.png" alt="Native speakers to total speakers, the 15 most spoken languages" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>English has 370 million native speakers and 1,268 million in total. Mandarin has 922 million native and 1,120 million in total. Standard Arabic has 274 million speakers and no native speakers.</p>
 <p class="fig-title">Learner share of each language</p>
-<div class="fig"><img src="img/c6b_stacked.png" alt="Learner share of each language" loading="lazy"></div>
+<div class="fig"><a href="img/c6b_stacked.png"><img src="img/c6b_stacked.png" alt="Learner share of each language" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>Standard Arabic 100 percent learned, Swahili 84, Indonesian 78, French 72, English 71. Japanese 0.2 percent, Portuguese 10, Marathi 13.</p>
 <p class="fig-title">Rank by native speakers against rank by all speakers</p>
-<div class="fig"><img src="img/c6c_bump.png" alt="Rank by native speakers against rank by all speakers" loading="lazy"></div>
+<div class="fig"><a href="img/c6c_bump.png"><img src="img/c6c_bump.png" alt="Rank by native speakers against rank by all speakers" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>English moves from third to first, Standard Arabic from fifteenth to sixth, French from fourteenth to fifth. Spanish drops from second to fourth, Bengali from fifth to seventh, Portuguese from sixth to ninth.</p>
 
 <h2 id="chvii"><span class="num">VII</span> Leisure</h2>
 <p class="fig-title">Top ten films by gross, as reported and in 2023 dollars</p>
-<div class="fig"><img src="img/c7_films.png" alt="Top ten films by gross, as reported and in 2023 dollars" loading="lazy"></div>
+<div class="fig"><a href="img/c7_films.png"><img src="img/c7_films.png" alt="Top ten films by gross, as reported and in 2023 dollars" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>Four films are on both lists: Avatar, Titanic, Avengers: Endgame and The Force Awakens. Gone with the Wind (1939) tops the adjusted list at $4.3 billion. Nine of the ten on the nominal list are sequels or franchise launchers; six of the ten on the adjusted list were released before 1985.</p>
 <p class="fig-title">The four films on both lists, before and after adjustment</p>
-<div class="fig"><img src="img/c7b_dumbbell.png" alt="The four films on both lists, before and after adjustment" loading="lazy"></div>
+<div class="fig"><a href="img/c7b_dumbbell.png"><img src="img/c7b_dumbbell.png" alt="The four films on both lists, before and after adjustment" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>Avatar $2.92bn to $4.0bn, Titanic $2.22bn to $3.7bn, Endgame $2.72bn to $3.3bn, The Force Awakens $2.06bn to $2.6bn.</p>
 <p class="fig-title">US share of worldwide gross, top ten films</p>
-<div class="fig"><img src="img/c7c_usshare.png" alt="US share of worldwide gross, top ten films" loading="lazy"></div>
+<div class="fig"><a href="img/c7c_usshare.png"><img src="img/c7c_usshare.png" alt="US share of worldwide gross, top ten films" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>The Force Awakens 46 percent, Spider-Man: No Way Home 42, Jurassic World 39, Inside Out 2 38. Avatar 27. Ne Zha 2 took $1,970 million worldwide and $17 million in the US, 1 percent.</p>
 
 <h2 id="chviii"><span class="num">VIII</span> Oddities</h2>
 <p class="fig-title">Tallest free-standing flagpole, 2001 to 2026</p>
-<div class="fig"><img src="img/c8_flagpoles.png" alt="Tallest free-standing flagpole, 2001 to 2026" loading="lazy"></div>
+<div class="fig"><a href="img/c8_flagpoles.png"><img src="img/c8_flagpoles.png" alt="Tallest free-standing flagpole, 2001 to 2026" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>Abu Dhabi 122 m in 2001, Amman 127 m in 2003, Aqaba 130 m in 2004, Ashgabat 133 m in 2008, Baku 162 m in 2010, Dushanbe 165 m in 2011, Jeddah 171 m in 2014. All seven were built by Trident Support. North Korea's 160 m Kijong-dong structure, 1988, is classed by Guinness as a mast. The tallest in the US is 122 m, in Sheboygan, Wisconsin.</p>
 
 <h2 id="chix"><span class="num">IX</span> The end</h2>
 <p class="fig-title">Annual probability: car crash against extinction</p>
-<div class="fig"><img src="img/c9_waffle.png" alt="Annual probability: car crash against extinction" loading="lazy"></div>
+<div class="fig"><a href="img/c9_waffle.png"><img src="img/c9_waffle.png" alt="Annual probability: car crash against extinction" loading="lazy"></a></div>
+<p class="fig-hint">scroll sideways, or tap to open full size</p>
 <p>An American's chance of dying in a car crash in a given year is about 0.01 percent. The 2006 Stern Review put the annual chance of human extinction at 0.1 percent. On a grid of 10,000 dots, that is one dot against ten.</p>
 
 </article>
