@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="author" content="Rahul">
+<title>Nontrivial Trivia in nineteen charts | vibelogs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#FAFAF8;--ink:#17171C;--cobalt:#2545FF;--muted:#6E6E76;--rule:#E7E7E2;--chip:#EEF1FF;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#141416;--ink:#ECECE8;--muted:#9A9AA2;--rule:#2A2A2E;--chip:#1E2440}}
+:root[data-theme="dark"]{--paper:#141416;--ink:#ECECE8;--muted:#9A9AA2;--rule:#2A2A2E;--chip:#1E2440}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:17px;line-height:1.7}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px}
+.top{padding:40px 0 0;font-family:'IBM Plex Mono',monospace;font-size:0.8rem}
+.top a{color:var(--muted);text-decoration:none}
+header.post{padding:32px 0 24px;border-bottom:1px solid var(--rule)}
+.meta{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted);display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.tag{background:var(--chip);color:var(--cobalt);padding:1px 8px;border-radius:4px;font-weight:500}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.7rem,5vw,2.3rem);letter-spacing:-0.02em;line-height:1.2}
+h2{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.35rem;letter-spacing:-0.01em;margin:44px 0 6px;padding-top:18px;border-top:1px solid var(--rule)}
+h2 .num{font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:0.8rem;color:var(--cobalt);margin-right:10px;vertical-align:middle}
+article{padding:28px 0 60px}
+article p{margin:0 0 18px}
+article a{color:var(--cobalt)}
+article code{font-family:'IBM Plex Mono',monospace;font-size:0.85em;background:var(--chip);padding:1px 5px;border-radius:4px}
+.fig-title{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted);margin:0 0 10px}
+.fig{margin:0 0 16px;background:#fff;border:1px solid var(--rule);border-radius:8px;padding:6px;overflow-x:auto}
+.fig img{width:100%;max-width:100%;height:auto;display:block;border-radius:4px}
+.toc{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 14px;margin:0 0 26px}
+.toc a{color:var(--muted);text-decoration:none} .toc a:hover{color:var(--cobalt)}
+footer{border-top:1px solid var(--rule);padding:24px 0 56px;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted)}
+footer a{color:var(--muted)}
+</style></head>
+<body>
+<div class="wrap">
+<div class="top"><a href="../../">&larr; vibelogs</a></div>
+<header class="post">
+  <div class="meta"><span>[2026-09-19]</span><span>Rahul</span><span class="tag">DATA-VIZ</span><span class="tag">BOOKS</span></div>
+  <h1>Nontrivial Trivia in nineteen charts</h1>
+</header>
+<article>
+<p>Nineteen charts from the tables in Jonn Elledge's <em>Nontrivial Trivia</em> (2024), one section per chapter. Where a table supports more than one reading there are three charts; otherwise one. Charts are matplotlib; source code is in the repo alongside this post.</p>
+<div class="toc"><a href="#chi">I. The cosmos</a> <a href="#chii">II. The human planet</a> <a href="#chiii">III. Measurement</a> <a href="#chiv">IV. Histories and politics</a> <a href="#chv">V. The natural world</a> <a href="#chvi">VI. Communication</a> <a href="#chvii">VII. Leisure</a> <a href="#chviii">VIII. Oddities</a> <a href="#chix">IX. The end</a></div>
+
+<h2 id="chi"><span class="num">I</span> The cosmos</h2>
+<p class="fig-title">Every star system within ten light years</p>
+<div class="fig"><img src="img/c1_stars.png" alt="Every star system within ten light years" loading="lazy"></div>
+<p>Nine systems lie within ten light years of the Sun. The nearest, Alpha Centauri, is 4.24 light years away and has three stars. Six of the nine are red dwarfs, two are brown dwarf pairs, and one, Sirius, is a bright A-type star with a white dwarf companion. Nothing sits inside four light years.</p>
+
+<h2 id="chii"><span class="num">II</span> The human planet</h2>
+<p class="fig-title">The largest city on Earth, 4000 BCE to 2025, on a true time axis</p>
+<div class="fig"><img src="img/c2_cities.png" alt="The largest city on Earth, 4000 BCE to 2025, on a true time axis" loading="lazy"></div>
+<p>Uruk had 5,000 people in 4000 BCE and 45,000 a thousand years later. Rome reached a million around 100 CE. Chang'an, Kaifeng, Hangzhou and Beijing each topped out at about a million between 800 and 1800. London had 6.6 million in 1900, New York 12.4 million in 1950, Tokyo 38 million in 2025.</p>
+<p class="fig-title">The same series as a line, log scale, with the collapses marked</p>
+<div class="fig"><img src="img/c2b_logline.png" alt="The same series as a line, log scale, with the collapses marked" loading="lazy"></div>
+<p>The largest city shrank from 80,000 to 50,000 around 1200 BCE, from a million to 800,000 by 400 CE, and from a million to 500,000 between 1200 and 1400.</p>
+<p class="fig-title">The same series on a linear scale</p>
+<div class="fig"><img src="img/c2c_bars.png" alt="The same series on a linear scale" loading="lazy"></div>
+<p>Every city before 1900 is under 1.1 million. London in 1900 is six times Beijing in 1800; Tokyo in 2025 is 35 times Beijing in 1800.</p>
+
+<h2 id="chiii"><span class="num">III</span> Measurement</h2>
+<p class="fig-title">The current year in ten calendars, June 2026</p>
+<div class="fig"><img src="img/c3_calendars.png" alt="The current year in ten calendars, June 2026" loading="lazy"></div>
+<p>Byzantine 7534, Freemasonry 6026, Hebrew 5786, Korean 4359, Buddhist 2569, Gregorian 2026, Islamic lunar 1447, Islamic solar 1405, French Republican 234, Juche 115. Three of the ten count from a date of creation and disagree by 1,748 years. The Holocene calendar, which starts at 10000 BCE, puts the year at 12026.</p>
+
+<h2 id="chiv"><span class="num">IV</span> Histories and politics</h2>
+<p class="fig-title">The tallest building on Earth since 1300</p>
+<div class="fig"><img src="img/c4_buildings.png" alt="The tallest building on Earth since 1300" loading="lazy"></div>
+<p>The Great Pyramid, 147 metres, held the record from about 2570 BCE until 1311. Eight European churches held it from 1311 to 1901, all between 142 and 162 metres. Nine US buildings held it from 1901 to 1998, rising from 167 to 442 metres. The Burj Khalifa, 828 metres, has held it since 2010.</p>
+<p class="fig-title">How long each record-holder lasted</p>
+<div class="fig"><img src="img/c4b_reigns.png" alt="How long each record-holder lasted" loading="lazy"></div>
+<p>The median reign is six years. The Pyramid's 3,881 years is five times the other nineteen combined. The Bank of Manhattan lost the record to the Chrysler Building within a month in 1930.</p>
+<p class="fig-title">Record-holders by country</p>
+<div class="fig"><img src="img/c4c_countries.png" alt="Record-holders by country" loading="lazy"></div>
+<p>United States 9 buildings, 97 years. Germany 4, 121 years. France 2, 231 years. England, Egypt, Malaysia, Taiwan and the UAE one each.</p>
+
+<h2 id="chv"><span class="num">V</span> The natural world</h2>
+<p class="fig-title">Magnitude against death toll for the ten largest recorded earthquakes</p>
+<div class="fig"><img src="img/c5_quakes.png" alt="Magnitude against death toll for the ten largest recorded earthquakes" loading="lazy"></div>
+<p>Valdivia 1960, M9.5, killed 1,655. Rat Islands 1965, M8.7, killed nobody. Sumatra 2012, M8.6, killed ten. The three quakes above 10,000 deaths, Sumatra 2004, Tohoku 2011 and Kamchatka 1952, killed mostly by tsunami.</p>
+<p class="fig-title">When the ten happened</p>
+<div class="fig"><img src="img/c5b_timeline.png" alt="When the ten happened" loading="lazy"></div>
+<p>Six of the ten occurred between 1950 and 1965. Nothing above M8.6 was recorded between 1965 and 2004.</p>
+<p class="fig-title">Rank by magnitude against rank by deaths</p>
+<div class="fig"><img src="img/c5c_rankslope.png" alt="Rank by magnitude against rank by deaths" loading="lazy"></div>
+<p>The largest quake ranks fourth for deaths. The deadliest, Sumatra 2004 at 283,100, ranks third for magnitude.</p>
+
+<h2 id="chvi"><span class="num">VI</span> Communication</h2>
+<p class="fig-title">Native speakers to total speakers, the 15 most spoken languages</p>
+<div class="fig"><img src="img/c6_languages.png" alt="Native speakers to total speakers, the 15 most spoken languages" loading="lazy"></div>
+<p>English has 370 million native speakers and 1,268 million in total. Mandarin has 922 million native and 1,120 million in total. Standard Arabic has 274 million speakers and no native speakers.</p>
+<p class="fig-title">Learner share of each language</p>
+<div class="fig"><img src="img/c6b_stacked.png" alt="Learner share of each language" loading="lazy"></div>
+<p>Standard Arabic 100 percent learned, Swahili 84, Indonesian 78, French 72, English 71. Japanese 0.2 percent, Portuguese 10, Marathi 13.</p>
+<p class="fig-title">Rank by native speakers against rank by all speakers</p>
+<div class="fig"><img src="img/c6c_bump.png" alt="Rank by native speakers against rank by all speakers" loading="lazy"></div>
+<p>English moves from third to first, Standard Arabic from fifteenth to sixth, French from fourteenth to fifth. Spanish drops from second to fourth, Bengali from fifth to seventh, Portuguese from sixth to ninth.</p>
+
+<h2 id="chvii"><span class="num">VII</span> Leisure</h2>
+<p class="fig-title">Top ten films by gross, as reported and in 2023 dollars</p>
+<div class="fig"><img src="img/c7_films.png" alt="Top ten films by gross, as reported and in 2023 dollars" loading="lazy"></div>
+<p>Four films are on both lists: Avatar, Titanic, Avengers: Endgame and The Force Awakens. Gone with the Wind (1939) tops the adjusted list at $4.3 billion. Nine of the ten on the nominal list are sequels or franchise launchers; six of the ten on the adjusted list were released before 1985.</p>
+<p class="fig-title">The four films on both lists, before and after adjustment</p>
+<div class="fig"><img src="img/c7b_dumbbell.png" alt="The four films on both lists, before and after adjustment" loading="lazy"></div>
+<p>Avatar $2.92bn to $4.0bn, Titanic $2.22bn to $3.7bn, Endgame $2.72bn to $3.3bn, The Force Awakens $2.06bn to $2.6bn.</p>
+<p class="fig-title">US share of worldwide gross, top ten films</p>
+<div class="fig"><img src="img/c7c_usshare.png" alt="US share of worldwide gross, top ten films" loading="lazy"></div>
+<p>The Force Awakens 46 percent, Spider-Man: No Way Home 42, Jurassic World 39, Inside Out 2 38. Avatar 27. Ne Zha 2 took $1,970 million worldwide and $17 million in the US, 1 percent.</p>
+
+<h2 id="chviii"><span class="num">VIII</span> Oddities</h2>
+<p class="fig-title">Tallest free-standing flagpole, 2001 to 2026</p>
+<div class="fig"><img src="img/c8_flagpoles.png" alt="Tallest free-standing flagpole, 2001 to 2026" loading="lazy"></div>
+<p>Abu Dhabi 122 m in 2001, Amman 127 m in 2003, Aqaba 130 m in 2004, Ashgabat 133 m in 2008, Baku 162 m in 2010, Dushanbe 165 m in 2011, Jeddah 171 m in 2014. All seven were built by Trident Support. North Korea's 160 m Kijong-dong structure, 1988, is classed by Guinness as a mast. The tallest in the US is 122 m, in Sheboygan, Wisconsin.</p>
+
+<h2 id="chix"><span class="num">IX</span> The end</h2>
+<p class="fig-title">Annual probability: car crash against extinction</p>
+<div class="fig"><img src="img/c9_waffle.png" alt="Annual probability: car crash against extinction" loading="lazy"></div>
+<p>An American's chance of dying in a car crash in a given year is about 0.01 percent. The 2006 Stern Review put the annual chance of human extinction at 0.1 percent. On a grid of 10,000 dots, that is one dot against ten.</p>
+
+</article>
+<footer>vibelogs &middot; Rahul &middot; <a href="../../">index</a></footer>
+</div>
+</body>
+</html>
