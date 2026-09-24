@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Interview Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..500&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#15235a;--ink:#f3efe6;--acc:#ff7a59;
+  --display:"Bricolage Grotesque","Avenir Next Condensed","Helvetica Neue",Arial,sans-serif;
+  --body:"Newsreader","Iowan Old Style",Georgia,serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --fs:1;
+}
+html,body{height:100%;margin:0;overflow:hidden}
+body{background:var(--bg);color:var(--ink);transition:background-color 1.4s ease;font-family:var(--body)}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;background-image:var(--grain);opacity:.13;mix-blend-mode:overlay;z-index:5}
+.stage{position:fixed;inset:0;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);padding:calc(env(safe-area-inset-top,0px) + clamp(28px,5vh,64px)) clamp(20px,4.5vw,84px) calc(env(safe-area-inset-bottom,0px) + clamp(40px,7vh,80px));gap:clamp(20px,3.5vw,64px);box-sizing:border-box}
+.text{position:relative;min-height:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:calc(18px * var(--fs));transition:opacity .7s ease,transform .7s ease}
+.text.out{opacity:0;transform:translateY(-12px)}
+.text.pre{opacity:0;transform:translateY(14px);transition:none}
+.cat{display:flex;align-items:center;gap:12px;font-family:var(--display);font-weight:600;font-size:calc(13px * var(--fs));letter-spacing:.14em;text-transform:uppercase;color:var(--acc)}
+.cat .dot{width:9px;height:9px;border-radius:50%;background:var(--acc)}
+.cat .count{color:color-mix(in srgb,var(--ink) 45%,transparent);letter-spacing:.08em;font-weight:500}
+h1{font-family:var(--display);font-optical-sizing:auto;font-weight:720;font-size:calc(clamp(34px,4.3vw,76px) * var(--fs));line-height:.98;letter-spacing:-.025em;margin:0;text-wrap:balance;max-width:16ch}
+.lead{font-style:italic;font-size:calc(clamp(18px,1.55vw,25px) * var(--fs));line-height:1.35;margin:0;max-width:40ch;color:color-mix(in srgb,var(--ink) 82%,transparent);text-wrap:pretty}
+ul{list-style:none;margin:0;padding:0;display:grid;gap:calc(11px * var(--fs));max-width:52ch}
+li{position:relative;padding-left:26px;font-size:calc(clamp(16px,1.2vw,20px) * var(--fs));line-height:1.42;text-wrap:pretty}
+li::before{content:"";position:absolute;left:2px;top:.62em;width:12px;height:2px;background:var(--acc)}
+.note{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:baseline;border-top:1px solid color-mix(in srgb,var(--ink) 22%,transparent);padding-top:calc(14px * var(--fs));max-width:52ch}
+.note b{font-family:var(--display);font-weight:650;font-size:calc(12.5px * var(--fs));letter-spacing:.12em;text-transform:uppercase;color:var(--acc);white-space:nowrap}
+.note span{font-size:calc(clamp(15.5px,1.12vw,19px) * var(--fs));line-height:1.4;color:color-mix(in srgb,var(--ink) 88%,transparent)}
+.vis{position:relative;min-height:0}
+.vis canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.bar{position:fixed;left:0;bottom:0;height:3px;width:100%;background:var(--acc);transform-origin:left;transform:scaleX(0);z-index:6;opacity:.85}
+.help{position:fixed;right:clamp(20px,4.5vw,84px);bottom:calc(env(safe-area-inset-bottom,0px) + 16px);font-family:var(--display);font-size:12px;letter-spacing:.06em;color:color-mix(in srgb,var(--ink) 55%,transparent);opacity:0;transition:opacity 1s;z-index:6}
+.help.on{opacity:1}
+.paused .bar{opacity:.3}
+@media (max-width:760px){
+  .stage{grid-template-columns:1fr;grid-template-rows:minmax(0,34vh) minmax(0,1fr);gap:14px;padding-inline:18px}
+  .vis{grid-row:1}.text{grid-row:2;justify-content:flex-start}
+  h1{max-width:none}
+  .help{display:none}
+}
+@media (prefers-reduced-motion:reduce){.text,.text.out{transition:opacity .4s}}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="text" id="text" aria-live="polite"></div>
+  <div class="vis"><canvas id="cv" aria-hidden="true"></canvas></div>
+</div>
+<div class="bar" id="bar"></div>
+<div class="help" id="help">Arrow keys or click to move. Space to pause.</div>
+<script>
+const CARDS = [
+{cat:"exp",title:"Network effects break a 50/50 split",lead:"Group calls, chat, marketplaces: when treated users interact with control users, the two groups stop being independent.",
+points:["Name the problem first: spillover biases the estimate, usually toward zero.","Blocking cross-group interactions keeps the test pure but measures a product nobody would ship.","Country, time-zone or language splits cut spillover, but the groups now differ in other ways.","Cluster randomization only works if you can say how the clusters are built from the graph."],
+note:["Strong answer","Weighs test purity, bias and user experience out loud before picking a design."],vis:{type:"network"}},
+
+{cat:"stat",title:"Power, in one sentence",lead:"The probability of detecting an effect, given that the effect is really there.",
+points:["It is a conditional probability: P(reject H0 | H1 is true).","Double the sample size and power goes up, because the standard error shrinks with the square root of n.","How much it rises depends on the MDE, alpha and n. Power is a function, so you compute it.","Low power means a flat result tells you almost nothing."],
+note:["Trap","Hesitating on whether more data raises power. It always does."],vis:{type:"dist"}},
+
+{cat:"exp",title:"Sizing an experiment",lead:"Before launch, decide how long the test runs and how many users it needs.",
+points:["Inputs: eligible traffic, baseline rate, minimum detectable effect, alpha, power.","Run at least one full week so weekday and weekend behavior both show up.","For a rate metric, compare groups with a two-proportion z-test.","If the real goal lags by months, pick a leading proxy or keep a long-running holdout."],
+note:["Trap","Leaving out the confidence level or the run length when describing the design."],vis:{type:"powercurve"}},
+
+{cat:"stat",title:"The p-value came back 0.07",lead:"The test missed 0.05. Should the feature ship?",
+points:["0.05 is a convention, not a cliff. Compare the cost of a wrong launch with the cost of a wrong kill.","Look at the effect size and its confidence interval, not only the p-value.","Check guardrails and whether the effect is consistent across major segments.","If the test was underpowered, extend it on a plan. Do not keep peeking until it crosses."],
+note:["Strong answer","Ends with a clear decision rule that could be defended to a skeptic."],vis:{type:"dist",p:true}},
+
+{cat:"stat",title:"The one significant subgroup",lead:"Overall the test is flat, but new professional users in the US show a significant lift.",
+points:["Slice enough ways and something will cross p < 0.05 by chance.","Ask whether this cut was planned before the test started.","Correct for the number of comparisons with Bonferroni or a false discovery rate.","Treat it as a new hypothesis and confirm it with a targeted follow-up test."],
+note:["Trap","Shipping to the subgroup because the PM found a green number."],vis:{type:"forest"}},
+
+{cat:"exp",title:"Randomizing enterprise accounts",lead:"The change goes to users at companies with enterprise contracts. Coworkers talk to each other.",
+points:["Randomize at the organization level so one company sees one experience.","Fewer units means less power. Use cluster-robust standard errors.","Stratify by account size so a few giant customers do not land in one arm.","Plan for the sales team, who may want to hand-pick accounts."],
+note:["Strong answer","Explains why user-level assignment would contaminate the result."],vis:{type:"geo"}},
+
+{cat:"exp",title:"Who gets two-factor login?",lead:"Testing a new security step in the login flow.",
+points:["Choose the unit: visitors before login (cookie) or accounts after the password step.","Account level keeps the experience consistent across devices.","Always-logged-in users never reach the new step. Analyze only people who hit the trigger.","Metrics: login success, funnel conversion, reports of hacked accounts, long-term retention."],
+note:["Strong answer","Notices that some blocked users will create new accounts to get around the friction."],vis:{type:"funnel",labels:["Visit","Password","Code sent","Code entered","Logged in"],vals:[1,.82,.8,.69,.66]}},
+
+{cat:"exp",title:"Testing 50% off Premium",lead:"Design an experiment for a half-price subscription offer.",
+points:["Conversions will rise. The real question is revenue and lifetime value.","Discounted users may churn faster when the price resets. Track retention by cohort.","Some users would have paid full price anyway. Measure that cannibalization.","Prices get shared, so spillover and later expectations of discounts matter too."],
+note:["Trap","Declaring victory on signup rate alone."],vis:{type:"tradeoff",labels:["Upgrades","Revenue per user","90-day retention"],vals:[.34,-.12,-.05]}},
+
+{cat:"stat",title:"When usage is not normal",lead:"A few power users drive most of the activity. The new version needs a fair comparison.",
+points:["The mean is pulled around by the tail, so variance is huge.","Options: log transform, winsorize, bootstrap confidence intervals, or compare medians and quantiles.","Mann-Whitney tests whether one group tends to use more, not whether the means differ.","Pre-period covariates (CUPED) cut variance a lot for heavy-tailed metrics."],
+note:["Strong answer","Says which question each method answers, not just which test to run."],vis:{type:"longtail"}},
+
+{cat:"causal",title:"The test said +1. The launch says +10.",lead:"A back-end change shipped to everyone. Retention after launch looks ten times better than the A/B test predicted.",
+points:["Check seasonality: compare the same weeks in prior years.","Retention is a ratio. Did the numerator rise or did the denominator of new users fall?","Other launches, marketing pushes or mix shifts in who signed up can land in the same window.","Path forward: a holdback group, or a difference-in-differences against prior years."],
+note:["Strong answer","Keeps proposing new checks as the interviewer removes options."],vis:{type:"timeseries"}},
+
+{cat:"metric",title:"Measuring notification quality",lead:"We only want to send notifications that are worth it. How do we know if we are?",
+points:["Notifications do different jobs. Value to the user and value to the app can diverge.","CTR is a coarse proxy. Pair it with the actions people take after they open.","Surveys ask directly, but people who answer are not a random sample.","Guardrails: turn-offs and uninstalls. They happen once and are very hard to reverse."],
+note:["Senior signal","Asks whether we care about average quality or about the worst user experiences."],vis:{type:"ratio",num:"clicks",den:"notifications sent"}},
+
+{cat:"metric",title:"CTR fell from 40% to 30%",lead:"Notification click-through dropped over one month. Find out why.",
+points:["It is a ratio. Did sends go up, or did clicks go down?","Cut by country, OS and app version. A bug often lives in one release.","Compare with the same period last year to rule out seasonality.","Check platform changes in how phones display notifications. Only then blame quality."],
+note:["Strong answer","Rules out hypotheses one at a time before concluding that quality dropped."],vis:{type:"drop"}},
+
+{cat:"metric",title:"Total calls is not a goal",lead:"An engineer proposes goaling a new group-call feature on total call volume.",
+points:["Calls can rise because the service drops calls and people redial.","Calls can fall because one group call replaces three one-to-one calls.","Goal on outcomes instead: daily actives, time spent, retention.","Guardrails: latency and cost, abuse reports, drops in 1:1 calls and other products."],
+note:["Strong answer","Treats volume as a means to an end and explains both directions it can move."],vis:{type:"tradeoff",labels:["Group calls","1:1 calls","Time on calls"],vals:[.42,-.18,.06]}},
+
+{cat:"metric",title:"The detection-bias trap",lead:"A trust team wants to goal on lowering the rate of banned users who come back.",
+points:["If detection of repeat accounts improves, the rate rises and the team looks worse.","If detection gets worse, the rate falls and the team looks better.","A rate hides scale. Violations also differ in severity.","Add a false-positive counter-metric. Wrongly banning someone twice is a real harm."],
+note:["Strong answer","Looks at the metric from at least two angles and names its perverse incentive."],vis:{type:"threshold",label:"model says same person"}},
+
+{cat:"metric",title:"Picking a model threshold",lead:"A model scores how likely two accounts belong to the same person. Where do you cut?",
+points:["Plot the score distribution before choosing a number.","Ask whether the scores are calibrated, meaning 0.9 really means 90%.","The action sets the bar. A permanent ban needs high precision.","Hand-label a sample to estimate precision and recall at each cut."],
+note:["Senior signal","Ties the threshold to the business action, not to a round number."],vis:{type:"threshold",label:"probability same actor"}},
+
+{cat:"product",title:"Success metrics for a feature inside a product",lead:"A communities feature lives inside a much larger social app.",
+points:["Measure its effect on the whole product: share of time, and incremental lift via a holdout.","There are two units: the people using it and the communities themselves.","Community health means active members, posting and retention of the group.","Small family groups and large interest groups need different metrics."],
+note:["Trap","Reporting feature engagement without asking what it took from the rest of the app."],vis:{type:"bubbles"}},
+
+{cat:"metric",title:"A KPI slide for executives",lead:"One slide should tell leadership whether the business is healthy.",
+points:["Use a framework such as acquisition, activation, retention, referral, revenue.","Know the audience: executives want direction at a glance, not every cut.","Every metric on the slide should suggest an action if it moves.","Consumer and business models need different KPIs."],
+note:["Trap","Overloading the slide because the dashboard tool allows it."],vis:{type:"funnel",labels:["Acquire","Activate","Retain","Refer","Revenue"],vals:[1,.62,.41,.18,.12]}},
+
+{cat:"metric",title:"Alert on the parts, not just the rate",lead:"A dashboard tracks an acceptance rate. You need to know when the data breaks.",
+points:["You can lose 90% of events and the rate can stay flat.","Chart numerator and denominator on their own lines.","Compare dashboard numbers to queries run directly on the warehouse.","Use anomaly detection that knows about weekends and holidays."],
+note:["Strong answer","Adds row-count checks and sanity reviews with the people who own each system."],vis:{type:"ratio",num:"accepts",den:"looks",flatRate:true}},
+
+{cat:"causal",title:"Long viewers click more. So what?",lead:"People who watch video ads longer click through more often. Should ads get longer?",
+points:["Selection bias: people who watch longer were already more likely to click.","Estimate the gain from a few more seconds while controlling for how clicky each person is.","If the extra clicks fall toward zero as length grows, longer ads stop paying off.","Advertisers will rework their creative for any new format, so the system shifts."],
+note:["Strong answer","Names all three parties: the platform, the advertisers and the users."],vis:{type:"scatter"}},
+
+{cat:"product",title:"The ads goaling equation",lead:"Choosing between short and long video ad formats.",
+points:["Revenue = active users x time per user x revenue per minute.","Longer ads can raise revenue per minute and lower time spent at the same time.","Advertisers care about return on spend. Users care about the experience.","Watch short-term revenue against long-term engagement."],
+note:["Senior signal","Frames the launch as a trade-off among three terms, not one metric."],vis:{type:"equation"}},
+
+{cat:"causal",title:"When you cannot A/B test: go geographic",lead:"We rank first organically for our brand name. Do we still need to pay for branded search ads?",
+points:["Split similar markets. Turn paid branded search off in the test markets.","A straight before-and-after comparison gets fooled by seasonality.","Difference-in-differences or synthetic control compare against matched markets.","Size the test by simulating how long it takes to see the effect you care about."],
+note:["Trap","Recommending a pre/post comparison as the final answer."],vis:{type:"geo",two:true}},
+
+{cat:"causal",title:"The cheapest channel is not the best one",lead:"One marketing channel has the lowest cost per signup. Move the budget there?",
+points:["Cheap signups can be low-value users. Convert signups to lifetime value.","Marginal cost rises as spend grows. Every channel saturates.","Upper-funnel channels such as video feed branded search later.","Use a marketing mix model with budget constraints, then check it with geo lift tests."],
+note:["Strong answer","Talks about the next dollar, not the average dollar."],vis:{type:"curve"}},
+
+{cat:"causal",title:"Adding a new marketing channel",lead:"The team wants to try a channel it has never used.",
+points:["Size the opportunity first to set a baseline for success.","Start small, around 2 to 5% of the budget.","Measure incremental lift with conversion lift or geo tests.","Check whether it steals conversions from existing channels."],
+note:["Strong answer","Plans the ramp-up and ramp-down rules before spending."],vis:{type:"curve",single:true}},
+
+{cat:"causal",title:"Is brand spend really falling?",lead:"The claim: advertisers are moving brand budgets off social media.",
+points:["Define brand ads (views, engagement) versus direct response (purchases).","Look at the long-run share of spend on each.","Check for mix shift: fewer small advertisers can move the total alone.","Compare with industry benchmarks and prices per thousand impressions."],
+note:["Strong answer","Separates a real behavior change from a change in who is advertising."],vis:{type:"mix"}},
+
+{cat:"product",title:"Proving a pilot worked",lead:"A messaging integration was piloted with a set of retailers.",
+points:["Define success first: lower support costs, happier customers, or both.","Group metrics into product, business and partner categories.","Pick a rollout that gives a comparison: A/B, staggered start, or holdout cohorts.","Before-and-after alone mixes the pilot with everything else that changed."],
+note:["Strong answer","States the hypothesis for why the program would help before choosing metrics."],vis:{type:"stagger"}},
+
+{cat:"product",title:"Should we build it?",lead:"A feed module that recommends restaurants to follow.",
+points:["Start with the objective: discovery, business engagement, feed engagement.","Use history to size demand, such as visits to pages people do not yet follow.","List reasons not to build: feed space, pushing out friends' posts.","Second-order wins: businesses advertise more, users see more content and return."],
+note:["Trap","Jumping to the model before asking why the module should exist."],vis:{type:"cards"}},
+
+{cat:"product",title:"A first recommender can be rules",lead:"How do you pick a few restaurants for each user?",
+points:["Signals: distance, friends' likes, past likes, cuisine, price, ratings.","Weight stronger actions more: reviews over likes over visits.","Collaborative filtering on a user by restaurant matrix is a natural next step.","Hard filters matter. A vegan should never see a steakhouse."],
+note:["Strong answer","Iterates logically from simple rules and explains each step."],vis:{type:"matrix"}},
+
+{cat:"metric",title:"Module CTR is not a test metric",lead:"You want to A/B test the new recommendation module.",
+points:["Control users have no module, so they have no module CTR to compare.","Compare page likes, visits and reviews between arms instead.","Benchmark CTR against similar modules to judge whether 10% is good.","Offline, check predictions on held-out data before any test."],
+note:["Senior signal","Proposes a way to benchmark module CTR at all."],vis:{type:"ratio",num:"module clicks",den:"module views",noCtl:true}},
+
+{cat:"product",title:"Mixed results: ship or not?",lead:"Restaurant posts +5%. Time spent flat. Likes, comments and shares -3%.",
+points:["Ask whose gain it is and whose loss it is.","Novelty effects fade. Watch the trend over several weeks.","Find which users saw the trade-off and whether we want that behavior.","End with crisp launch criteria that you could defend."],
+note:["Strong answer","Suggests how to visualize the trade-off for leadership."],vis:{type:"tradeoff",labels:["Restaurant posts","Time spent","Engagement"],vals:[.05,0,-.03],pct:true}},
+
+{cat:"product",title:"Is there demand for group calls?",lead:"You only have one-to-one call logs.",
+points:["Plot distinct people each caller reaches. Look at the tail.","Check whether those recipients also call each other.","A call graph with large connected components hints at groups.","The maximum group size becomes a parameter to test after launch."],
+note:["Strong answer","Adds outside signals such as meeting links shared in chats."],vis:{type:"network",components:true}},
+
+{cat:"product",title:"Friction versus security",lead:"Two-factor login blocks some attacks and some real users.",
+points:["Put both sides in the same units: prevented takeovers versus lost logins.","The trade-off differs for a bank and a social app.","A tiered approach adds the step only for risky logins: new location, weak password.","Opt-in and opt-out defaults lead to very different adoption."],
+note:["Trap","Discussing only the upside of security."],vis:{type:"frontier"}},
+
+{cat:"metric",title:"The misleading slide",lead:"Engagement per post is compared side by side for three content sources.",
+points:["Impressions per post may differ a lot by source.","The users may differ. Heavy users favor some surfaces.","Normalize, show denominators, and compare the same users.","Ask what decision the slide is meant to support."],
+note:["Strong answer","Spots at least two reasons the comparison is not like for like."],vis:{type:"slide"}},
+
+{cat:"causal",title:"A slow, steady decline",lead:"A rate has drifted down for months. No sudden break.",
+points:["A gradual slope makes a one-day bug less likely.","Split numerator and denominator. More looks can mean the same accepts.","Cut by new versus existing users, surface and market.","Look for a user influx from a campaign or a new market."],
+note:["Strong answer","Uses the shape of the decline to rank hypotheses."],vis:{type:"decline"}},
+
+{cat:"sql",title:"Mirrored pairs need both joins",lead:"A pairs table stores two linked accounts, but either account can sit in either column.",
+points:["Join on both columns, or you miss half the links.","LEFT JOIN keeps accounts with no link in the denominator.","COUNT(DISTINCT ...) removes duplicates from the double join.","Filter the threshold inside the join, not in WHERE."],
+note:["Trap","A WHERE filter on the right table silently turns a LEFT JOIN into an INNER JOIN."],
+code:`SELECT
+  COUNT(DISTINCT CASE
+    WHEN b.user_id1 IS NOT NULL
+      OR c.user_id2 IS NOT NULL
+    THEN a.user_id END) * 1.0
+  / COUNT(DISTINCT a.user_id) AS pct_linked
+FROM user_disables a
+LEFT JOIN same_actor b
+  ON a.user_id = b.user_id1
+ AND b.probability_same_actor > 0.8
+LEFT JOIN same_actor c
+  ON a.user_id = c.user_id2
+ AND c.probability_same_actor > 0.8;`},
+
+{cat:"sql",title:"Share of daily actives on a call",lead:"What percent of yesterday's active users in France made or took a call?",
+points:["Start from the daily-active table so the denominator is complete.","UNION callers and recipients so each person counts once.","Filter the date on both sides of the join.","Divide with a float, not integer division."],
+note:["Trap","Counting only callers and forgetting recipients."],
+code:`WITH dau AS (
+  SELECT user_id FROM dim_all_users
+  WHERE ds = DATE '2019-07-01'
+    AND dau_flag = 1 AND country = 'fr'
+), on_call AS (
+  SELECT caller AS user_id FROM video_calls
+  WHERE ds = DATE '2019-07-01'
+  UNION
+  SELECT recipient FROM video_calls
+  WHERE ds = DATE '2019-07-01'
+)
+SELECT 1.0 * COUNT(c.user_id)
+     / COUNT(d.user_id) AS pct_on_call
+FROM dau d
+LEFT JOIN on_call c
+  ON d.user_id = c.user_id;`},
+
+{cat:"sql",title:"Users who never failed",lead:"For each country, count users with zero failed requests.",
+points:["Aggregate per user first, then per country.","HAVING filters groups after aggregation. WHERE runs before it.","MIN(success) = 1 is a compact way to say never failed.","Know the logical order: FROM, WHERE, GROUP BY, HAVING, SELECT."],
+note:["Strong answer","Uses a CTE to keep each step readable."],
+code:`WITH per_user AS (
+  SELECT r.userid, u.country
+  FROM user_network_requests r
+  JOIN user_country u
+    ON r.userid = u.userid
+  GROUP BY r.userid, u.country
+  HAVING MIN(r.success) = 1
+)
+SELECT country,
+       COUNT(*) AS never_failed
+FROM per_user
+GROUP BY country;`},
+
+{cat:"sql",title:"Week-4 retention for a test",lead:"Did a user accept an alert 28 to 35 days after entering the experiment?",
+points:["The denominator is everyone included in the test, active or not.","LEFT JOIN from the assignment table keeps inactive users.","Put the day-window filter in the join condition.","Count distinct users, since one user can accept many alerts."],
+note:["Trap","Starting from the events table, which drops everyone who never came back."],
+code:`SELECT g.exp_group,
+  1.0 * COUNT(DISTINCT e.user_id)
+      / COUNT(DISTINCT g.user_id) AS wk4_retention
+FROM experiment_group g
+LEFT JOIN event_user_engagement e
+  ON e.user_id = g.user_id
+ AND e.accepted
+ AND e.date_utc BETWEEN g.inclusion_date + 28
+                    AND g.inclusion_date + 35
+WHERE g.experiment_id = '1234'
+GROUP BY g.exp_group;`},
+
+{cat:"sql",title:"Every pair with the same name",lead:"List all pairs of different users who share a name.",
+points:["Self-join the table on name.","a.userid < b.userid keeps each pair once and drops self-matches.","Three people with one name produce three pairs.","Unique names: GROUP BY name HAVING COUNT(*) = 1."],
+note:["Trap","Using != instead of <, which returns every pair twice."],
+code:`SELECT a.userid AS userid_1,
+       b.userid AS userid_2,
+       a.name
+FROM user_names a
+JOIN user_names b
+  ON a.name = b.name
+ AND a.userid < b.userid
+ORDER BY a.name;`}
+];
+
+(()=>{
+const CATS={
+  exp:{name:"Experimentation",bg:"#16245e",ink:"#f3efe6",acc:"#ff7c5c"},
+  stat:{name:"Statistics",bg:"#0c3342",ink:"#eef3ef",acc:"#ffc47e"},
+  metric:{name:"Metrics",bg:"#123d31",ink:"#f2f0e2",acc:"#f4c64f"},
+  causal:{name:"Causal inference",bg:"#46131c",ink:"#f8eae5",acc:"#ffb4a2"},
+  product:{name:"Product sense",bg:"#2d1943",ink:"#f3edf8",acc:"#cbaaff"},
+  sql:{name:"SQL",bg:"#221f3b",ink:"#eeeaf7",acc:"#7fe2ba"}
+};
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $=id=>document.getElementById(id);
+const textEl=$('text'),cv=$('cv'),ctx=cv.getContext('2d'),bar=$('bar');
+
+{const g=document.createElement('canvas');g.width=g.height=160;const c=g.getContext('2d');const im=c.createImageData(160,160);
+ for(let i=0;i<im.data.length;i+=4){const v=Math.random()*255;im.data[i]=im.data[i+1]=im.data[i+2]=v;im.data[i+3]=255;}
+ c.putImageData(im,0,0);document.documentElement.style.setProperty('--grain',`url(${g.toDataURL()})`);}
+
+function rng(seed){let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const eo=x=>1-Math.pow(1-clamp(x,0,1),3);
+function rgba(hex,a){const n=parseInt(hex.slice(1),16);return`rgba(${n>>16&255},${n>>8&255},${n&255},${a})`;}
+function gauss(r){let u=0,v=0;while(!u)u=r();while(!v)v=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+function ncdf(x){const t=1/(1+.2316419*Math.abs(x)),d=.3989423*Math.exp(-x*x/2);const p=d*t*(.3193815+t*(-.3565638+t*(1.781478+t*(-1.821256+t*1.330274))));return x>0?1-p:p;}
+
+let W=0,H=0,DPR=1;
+function size(){const r=cv.getBoundingClientRect();DPR=Math.min(devicePixelRatio||1,2);W=r.width;H=r.height;cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);}
+
+function label(s,x,y,o={}){ctx.save();ctx.font=`${o.italic===false?'':'italic '}${o.w||400} ${o.size||15}px ${o.font||'Newsreader, Georgia, serif'}`;ctx.fillStyle=o.color||P.ink;ctx.globalAlpha=o.alpha??.85;ctx.textAlign=o.align||'left';ctx.textBaseline=o.base||'alphabetic';ctx.fillText(s,x,y);ctx.restore();}
+function polyline(pts,prog=1){if(pts.length<2)return;const n=Math.max(2,Math.floor(pts.length*prog));ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<n;i++)ctx.lineTo(pts[i][0],pts[i][1]);ctx.stroke();}
+function rrect(x,y,w,h,r){ctx.beginPath();ctx.roundRect?ctx.roundRect(x,y,w,h,r):ctx.rect(x,y,w,h);}
+let P=CATS.exp;
+const fs=()=>Math.max(12,Math.min(17,W/34));
+
+const VIS={
+network(t,v,R){
+  const n=v.components?44:40,cx=W/2,cy=H/2,rx=W*.42,ry=H*.38,nodes=[];
+  const centers=v.components?[...Array(6)].map(()=>[cx+(R()-.5)*rx*1.5,cy+(R()-.5)*ry*1.5]):null;
+  for(let i=0;i<n;i++){let x,y,g;if(centers){g=i%6;const c=centers[g];x=c[0]+gauss(R)*W*.05;y=c[1]+gauss(R)*H*.05;}else{const a=R()*Math.PI*2,r=Math.sqrt(R());x=cx+Math.cos(a)*r*rx;y=cy+Math.sin(a)*r*ry;g=R()<.5?1:0;}
+    x+=Math.sin(t*.5+i)*4;y+=Math.cos(t*.43+i*1.7)*4;nodes.push({x,y,g,r:4+R()*5});}
+  const edges=[];nodes.forEach((a,i)=>{const d=nodes.map((b,j)=>[j,(a.x-b.x)**2+(a.y-b.y)**2]).filter(e=>e[0]!==i).sort((p,q)=>p[1]-q[1]);for(let k=0;k<2;k++){const j=d[k][0];if(!edges.some(e=>e[0]===j&&e[1]===i))edges.push([i,j]);}});
+  const p=eo(t/2.6);
+  edges.slice(0,Math.floor(edges.length*p)).forEach(([i,j])=>{const a=nodes[i],b=nodes[j],cross=!v.components&&a.g!==b.g;
+    ctx.strokeStyle=cross?rgba(P.acc,.55+.35*Math.sin(t*2+i)):rgba(P.ink,.28);ctx.lineWidth=cross?1.8:1.1;ctx.setLineDash(cross?[5,5]:[]);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();});
+  ctx.setLineDash([]);
+  nodes.forEach((a,i)=>{const s=eo(t*1.4-i*.03);ctx.fillStyle=v.components?(a.g%2?P.acc:rgba(P.ink,.85)):(a.g?P.acc:rgba(P.ink,.8));ctx.beginPath();ctx.arc(a.x,a.y,a.r*s,0,7);ctx.fill();});
+  const f=fs();
+  if(v.components){label('each dot is a caller, each line a 1:1 call',W*.04,H*.06,{size:f});label('tight clusters hint at groups that want one call',W*.04,H*.96,{size:f,color:P.acc});}
+  else{label('● test',W*.04,H*.06,{size:f,color:P.acc,italic:false});label('● control',W*.04+f*4.5,H*.06,{size:f,italic:false});label('dashed lines: interactions that cross the split',W*.04,H*.96,{size:f,color:P.acc});}
+},
+dist(t,v){
+  const m={l:W*.05,r:W*.95,b:H*.8,top:H*.18},X=x=>m.l+(x+3.6)/9.6*(m.r-m.l),pdf=(x,mu)=>Math.exp(-((x-mu)**2)/2),Y=y=>m.b-y*(m.b-m.top);
+  const d=v.p?1.35+.08*Math.sin(t*.6):2.35+.3*Math.sin(t*.5),crit=1.96,p=eo(t/2);
+  ctx.save();ctx.beginPath();ctx.rect(0,0,W*p,H);ctx.clip();
+  const curve=(mu,fill,stroke,from)=>{ctx.beginPath();ctx.moveTo(X(from??-3.6),Y(0));for(let x=from??-3.6;x<=6;x+=.05)ctx.lineTo(X(x),Y(pdf(x,mu)));ctx.lineTo(X(6),Y(0));ctx.closePath();if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=2.2;ctx.stroke();}};
+  curve(0,rgba(P.ink,.08),rgba(P.ink,.8));curve(d,rgba(P.acc,.1),P.acc);
+  curve(d,rgba(P.acc,.42),null,crit);curve(0,rgba(P.ink,.35),null,crit);
+  ctx.restore();
+  ctx.strokeStyle=rgba(P.ink,.7);ctx.setLineDash([4,5]);ctx.beginPath();ctx.moveTo(X(crit),m.top-10);ctx.lineTo(X(crit),m.b);ctx.stroke();ctx.setLineDash([]);
+  ctx.strokeStyle=rgba(P.ink,.4);ctx.beginPath();ctx.moveTo(m.l,m.b);ctx.lineTo(m.r,m.b);ctx.stroke();
+  const f=fs();label('control',X(-.4),Y(1.06),{size:f,align:'center'});label('treatment',X(d+.3),Y(1.06),{size:f,align:'center',color:P.acc});
+  label(v.p?'the effect you saw':'power: treatment beyond the cutoff',X(crit)+10,Y(.18),{size:f,color:P.acc});
+  label('α',X(crit)+12,m.b-8,{size:f});label('cutoff',X(crit),m.top-16,{size:f,align:'center'});
+  if(v.p)label('p = 0.07 sits just short of the line',m.l,H*.93,{size:f});else label('bigger n narrows both curves and grows the shaded area',m.l,H*.93,{size:f});
+},
+powercurve(t){
+  const m={l:W*.12,r:W*.94,b:H*.84,top:H*.1},X=x=>m.l+x*(m.r-m.l),Y=y=>m.b-y*(m.b-m.top),p=eo(t/2.4),f=fs();
+  ctx.strokeStyle=rgba(P.ink,.35);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(m.l,m.top);ctx.lineTo(m.l,m.b);ctx.lineTo(m.r,m.b);ctx.stroke();
+  ctx.setLineDash([4,5]);ctx.beginPath();ctx.moveTo(m.l,Y(.8));ctx.lineTo(m.r,Y(.8));ctx.stroke();ctx.setLineDash([]);
+  label('80%',m.l-8,Y(.8)+5,{size:f,align:'right'});
+  const ks=[[5,'small MDE',.45],[14,'medium',.7],[40,'large MDE',1]];
+  ks.forEach(([k,name,a],i)=>{const pts=[];for(let x=0;x<=1.0001;x+=.01)pts.push([X(x),Y(ncdf(Math.sqrt(x*k)*1.2-1.96))]);ctx.strokeStyle=i===1?P.acc:rgba(P.ink,a*.8);ctx.lineWidth=i===1?3:1.8;polyline(pts,p);
+    if(p>.95)label(name,pts[60][0]+6,pts[60][1]-8,{size:f*.92,color:i===1?P.acc:P.ink,alpha:.8});});
+  const u=(t*.08)%1,yy=ncdf(Math.sqrt(u*14)*1.2-1.96);ctx.fillStyle=P.acc;ctx.beginPath();ctx.arc(X(u),Y(yy),6,0,7);ctx.fill();
+  label('sample size →',m.r,m.b+f*1.6,{size:f,align:'right'});label('power',m.l,m.top-8,{size:f});
+},
+forest(t,v,R){
+  const names=['US','Europe','Asia','new users','tenured','iOS','Android','web','students','new pro US','teams','free','18-24','55+'];
+  const m={l:W*.3,r:W*.95,top:H*.08,b:H*.9},X=x=>m.l+(x+2.2)/4.8*(m.r-m.l),row=(m.b-m.top)/names.length,f=fs();
+  ctx.strokeStyle=rgba(P.ink,.5);ctx.beginPath();ctx.moveTo(X(0),m.top-6);ctx.lineTo(X(0),m.b);ctx.stroke();
+  names.forEach((n,i)=>{const s=eo(t*1.2-i*.12);if(s<=0)return;const sig=n==='new pro US';const est=sig?1.25:gauss(R)*.35,half=sig?.75:.6+R()*.5,y=m.top+row*(i+.5);
+    const c=sig?P.acc:rgba(P.ink,.75);ctx.strokeStyle=c;ctx.lineWidth=sig?3:1.6;ctx.globalAlpha=s;ctx.beginPath();ctx.moveTo(X(est-half*s),y);ctx.lineTo(X(est+half*s),y);ctx.stroke();
+    ctx.fillStyle=c;ctx.beginPath();ctx.arc(X(est),y,sig?5.5:4,0,7);ctx.fill();ctx.globalAlpha=1;
+    label(n,m.l-14,y+5,{size:f*.95,align:'right',color:sig?P.acc:P.ink,alpha:sig?1:.75});});
+  label('no effect',X(0),m.b+f*1.4,{size:f,align:'center'});label('14 cuts, 95% intervals: one lights up by chance',m.l-W*.26,H*.985,{size:f*.95});
+},
+geo(t,v,R){
+  const cols=Math.round(W/22),rows=Math.round(H/22),cw=W/cols,ch=H/rows,seeds=[...Array(14)].map(()=>[R()*W,R()*H,R()<.5]);
+  const f=fs();let k=0;
+  for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){const x=i*cw,y=j*ch,cxp=x+cw/2,cyp=y+ch/2;
+    const dx=(cxp-W/2)/(W*.47),dy=(cyp-H/2)/(H*.42),rr=dx*dx+dy*dy+.18*Math.sin(i*.7)*Math.cos(j*.6);if(rr>1)continue;
+    let best=0,bd=1e9;seeds.forEach((s,q)=>{const d=(s[0]-cxp)**2+(s[1]-cyp)**2;if(d<bd){bd=d;best=q;}});
+    const test=seeds[best][2],s=eo(t*1.3-(i+j)*.012);if(s<=0)continue;
+    const pulse=test?.75+.25*Math.sin(t*1.6-best):1;ctx.fillStyle=test?rgba(P.acc,.9*pulse):rgba(P.ink,.22);
+    const g=2.2;rrect(x+g,y+g,(cw-2*g)*s,(ch-2*g)*s,3);ctx.fill();k++;}
+  label('■ test markets',W*.03,H*.05,{size:f,color:P.acc,italic:false});label('■ matched control markets',W*.03+f*8,H*.05,{size:f,italic:false});
+  label(v.two?'paid branded search off in test markets only':'one company, one experience: assign whole organizations',W*.03,H*.97,{size:f});
+},
+funnel(t,v){
+  const n=v.labels.length,m={l:W*.28,r:W*.93,top:H*.12,b:H*.88},row=(m.b-m.top)/n,f=fs();
+  v.labels.forEach((lb,i)=>{const s=eo(t*1.2-i*.18),w=(m.r-m.l)*v.vals[i]*s,y=m.top+row*i+row*.18,h=row*.64,last=i===n-1;
+    ctx.fillStyle=last?P.acc:rgba(P.ink,.18+.5*v.vals[i]);rrect(m.l,y,w,h,4);ctx.fill();
+    label(lb,m.l-14,y+h/2+5,{size:f,align:'right'});if(s>.9)label(Math.round(v.vals[i]*100)+'%',m.l+w+10,y+h/2+5,{size:f,italic:false,font:'"Bricolage Grotesque", sans-serif',w:600,color:last?P.acc:P.ink});});
+},
+tradeoff(t,v){
+  const n=v.labels.length,cx=W*.5,max=Math.max(...v.vals.map(Math.abs))||1,half=W*.36,row=H*.72/n,top=H*.16,f=fs();
+  ctx.strokeStyle=rgba(P.ink,.5);ctx.beginPath();ctx.moveTo(cx,top-10);ctx.lineTo(cx,top+row*n);ctx.stroke();
+  v.labels.forEach((lb,i)=>{const s=eo(t*1.1-i*.2),val=v.vals[i],w=val/max*half*s,y=top+row*i+row*.35,h=row*.38;
+    label(lb,W*.04,y-10,{size:f*1.05});
+    if(val===0){ctx.fillStyle=rgba(P.ink,.7);ctx.fillRect(cx-2,y,4,h);}else{ctx.fillStyle=val>0?P.acc:rgba(P.ink,.45);rrect(val>0?cx:cx+w,y,Math.abs(w),h,3);ctx.fill();}
+    const txt=(val>0?'+':val<0?'−':'')+Math.abs(Math.round(val*100))+'%';
+    if(s>.9)label(txt,val>=0?cx+Math.abs(w)+10:cx+w-10,y+h/2+6,{size:f*1.25,italic:false,w:700,font:'"Bricolage Grotesque", sans-serif',align:val>=0?'left':'right',color:val>0?P.acc:P.ink});});
+},
+longtail(t,v,R){
+  const bins=42,m={l:W*.06,r:W*.95,b:H*.84,top:H*.12},bw=(m.r-m.l)/bins,f=fs();const h=[];
+  for(let i=0;i<bins;i++){const x=(i+.5)/bins*5;h.push(Math.exp(-((Math.log(x)+.2)**2)/(2*.55))/x);}
+  const mx=Math.max(...h);
+  h.forEach((v2,i)=>{const s=eo(t*1.4-i*.03),hh=v2/mx*(m.b-m.top)*s;ctx.fillStyle=i>14?rgba(P.acc,.55+.25*Math.sin(t*1.2+i*.3)):rgba(P.ink,.55);ctx.fillRect(m.l+i*bw+1,m.b-hh,bw-2,hh);});
+  const med=m.l+bins*bw*(.8/5),mean=m.l+bins*bw*(1.25/5);
+  [[med,'median',P.ink],[mean,'mean',P.acc]].forEach(([x,n,c],i)=>{ctx.strokeStyle=c;ctx.lineWidth=2;ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(x,m.top-4);ctx.lineTo(x,m.b);ctx.stroke();ctx.setLineDash([]);label(n,x+(i?8:-8),m.top+10+i*f*1.4,{size:f,align:i?'left':'right',color:c});});
+  label('weekly uses per person →',m.r,m.b+f*1.6,{size:f,align:'right'});label('a few heavy users drag the mean',m.r,H*.42,{size:f,align:'right',color:P.acc});
+},
+timeseries(t,v,R){
+  const m={l:W*.06,r:W*.95,b:H*.84,top:H*.14},N=52,X=i=>m.l+i/(N-1)*(m.r-m.l),Y=y=>m.b-(y-.1)/.35*(m.b-m.top),launch=12,p=eo(t/3),f=fs();
+  const a=[],b=[];for(let i=0;i<N;i++){const s=.25+.05*Math.sin(i/52*Math.PI*2+1)+.012*Math.sin(i*1.7);a.push([X(i),Y(s+gauss(R)*.004)]);b.push([X(i),Y(s+(i>launch?Math.min(.07,(i-launch)*.012):0)+gauss(R)*.004)]);}
+  ctx.lineWidth=2;ctx.strokeStyle=rgba(P.ink,.6);polyline(a,p);ctx.strokeStyle=P.acc;ctx.lineWidth=3;polyline(b,p);
+  ctx.strokeStyle=rgba(P.ink,.6);ctx.setLineDash([4,5]);ctx.beginPath();ctx.moveTo(X(launch),m.top);ctx.lineTo(X(launch),m.b);ctx.stroke();ctx.setLineDash([]);
+  label('launch to everyone',X(launch)+8,m.top+4,{size:f});label('last year',X(44),a[44][1]+f*2.2,{size:f});label('this year',X(30),Math.min(b[30][1],b[28][1],b[32][1])-f*1.3,{size:f,color:P.acc});
+  label('4-week retention by signup week',m.l,H*.96,{size:f});
+},
+ratio(t,v){
+  const f=fs(),s=(Math.sin(t*.45)+1)/2,e=eo(t/1.6);
+  const draw=(y0,num,den,title,dim)=>{const maxw=W*.62,x0=W*.3;label(title,W*.04,y0-f*1.4,{size:f*1.05,color:dim?P.ink:P.acc,alpha:dim?.6:1});
+    ctx.fillStyle=rgba(P.ink,dim?.12:.25);rrect(x0,y0+f*2.2,maxw*den*e,f*1.5,4);ctx.fill();ctx.fillStyle=dim?rgba(P.ink,.2):P.acc;rrect(x0,y0,maxw*num*e,f*1.5,4);ctx.fill();
+    label(v.num,x0-12,y0+f*1.1,{size:f,align:'right'});label(v.den,x0-12,y0+f*3.3,{size:f,align:'right'});
+    const r=den>0?num/den:0;label(dim?'—':Math.round(r*100)+'%',W*.95,y0+f*2.4,{size:f*2.4,italic:false,w:700,font:'"Bricolage Grotesque", sans-serif',align:'right',color:dim?P.ink:P.acc,alpha:dim?.5:1});};
+  if(v.noCtl){draw(H*.3,.14,.9,'test: sees the module');draw(H*.66,0,0,'control: no module, no rate',true);return;}
+  if(v.flatRate){const k=1-.85*s;draw(H*.4,.38*k,.95*k,'the rate looks healthy');label(k<.5?'events are vanishing, rate unchanged':'numerator and denominator move together',W*.04,H*.86,{size:f,color:P.acc});return;}
+  const den=.7+.3*s;draw(H*.4,.28,den,'same clicks, more sends');label('a ratio can fall because the bottom grew',W*.04,H*.86,{size:f,color:P.acc});
+},
+drop(t,v,R){
+  const m={l:W*.12,r:W*.93,b:H*.82,top:H*.14},N=31,X=i=>m.l+i/(N-1)*(m.r-m.l),Y=y=>m.b-(y-.26)/.17*(m.b-m.top),p=eo(t/2.8),f=fs();
+  [.3,.35,.4].forEach(g=>{ctx.strokeStyle=rgba(P.ink,.15);ctx.beginPath();ctx.moveTo(m.l,Y(g));ctx.lineTo(m.r,Y(g));ctx.stroke();label(Math.round(g*100)+'%',m.l-10,Y(g)+5,{size:f,align:'right',italic:false});});
+  const pts=[];for(let i=0;i<N;i++){const base=.4-.1*(1/(1+Math.exp(-(i-17)/2.5)));pts.push([X(i),Y(base+gauss(R)*.005)]);}
+  ctx.strokeStyle=P.acc;ctx.lineWidth=3;polyline(pts,p);
+  if(p>.98){[[0,'Jun 15'],[N-1,'Jul 15']].forEach(([i,d])=>{ctx.fillStyle=P.acc;ctx.beginPath();ctx.arc(pts[i][0],pts[i][1],6,0,7);ctx.fill();label(d,pts[i][0],m.b+f*1.7,{size:f,align:'center'});});}
+  label('notification click-through rate',m.l,H*.96,{size:f});
+},
+threshold(t,v,R){
+  const bins=40,m={l:W*.06,r:W*.95,b:H*.8,top:H*.14},bw=(m.r-m.l)/bins,thr=.72+.1*Math.sin(t*.35),f=fs();
+  const h=[];for(let i=0;i<bins;i++){const x=(i+.5)/bins;h.push(2.6*Math.exp(-((x-.12)**2)/.012)+.9*Math.exp(-((x-.9)**2)/.006)+.18);}
+  const mx=Math.max(...h);
+  h.forEach((hv,i)=>{const x=(i+.5)/bins,s=eo(t*1.4-i*.03),hh=hv/mx*(m.b-m.top)*s;ctx.fillStyle=x>thr?P.acc:rgba(P.ink,.35);ctx.fillRect(m.l+i*bw+1,m.b-hh,bw-2,hh);});
+  const tx=m.l+thr*(m.r-m.l);ctx.strokeStyle=P.ink;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(tx,m.top-12);ctx.lineTo(tx,m.b+6);ctx.stroke();
+  label('threshold '+thr.toFixed(2),tx,m.top-20,{size:f,align:'center'});
+  label('0',m.l,m.b+f*1.6,{size:f,italic:false});label('1',m.r,m.b+f*1.6,{size:f,italic:false,align:'right'});label(v.label,(m.l+m.r)/2,m.b+f*1.6,{size:f,align:'center'});
+  label('flagged',tx+10,m.b-(m.b-m.top)*.55,{size:f,color:P.acc});
+},
+bubbles(t,v,R){
+  const f=fs(),items=[];for(let i=0;i<46;i++)items.push({x:R()*W*.9+W*.05,y:R()*H*.72+H*.12,r:i<6?22+R()*30:4+R()*8,big:i<6});
+  items.forEach((b,i)=>{const s=eo(t*1.2-i*.02);const x=b.x+Math.sin(t*.3+i)*6,y=b.y+Math.cos(t*.27+i*1.3)*6;ctx.beginPath();ctx.arc(x,y,b.r*s,0,7);
+    if(b.big){ctx.strokeStyle=P.acc;ctx.lineWidth=2;ctx.stroke();ctx.fillStyle=rgba(P.acc,.12);ctx.fill();const m=Math.round(b.r/3);for(let k=0;k<m;k++){const a=k/m*7+t*.2;ctx.fillStyle=rgba(P.acc,.8);ctx.beginPath();ctx.arc(x+Math.cos(a)*b.r*.6*s,y+Math.sin(a)*b.r*.6*s,2.2,0,7);ctx.fill();}}
+    else{ctx.fillStyle=rgba(P.ink,.55);ctx.fill();}});
+  label('● small family groups',W*.04,H*.06,{size:f,italic:false});label('◯ large interest groups',W*.04,H*.96,{size:f,color:P.acc,italic:false});
+},
+scatter(t,v,R){
+  const m={l:W*.1,r:W*.95,b:H*.84,top:H*.12},X=x=>m.l+x*(m.r-m.l),Y=y=>m.b-y*(m.b-m.top),f=fs(),p=eo(t/2);
+  ctx.strokeStyle=rgba(P.ink,.35);ctx.beginPath();ctx.moveTo(m.l,m.top);ctx.lineTo(m.l,m.b);ctx.lineTo(m.r,m.b);ctx.stroke();
+  const groups=[[.3,.28,P.ink,.55],[.68,.66,P.acc,.9]];
+  groups.forEach(([gx,gy,c,a],g)=>{for(let i=0;i<48;i++){const x=clamp(gx+gauss(R)*.11,.02,.98),y=clamp(gy+gauss(R)*.07,.02,.98);if(i/48>p)continue;ctx.fillStyle=g?rgba(P.acc,.85):rgba(P.ink,.5);ctx.beginPath();ctx.arc(X(x),Y(y),3.6,0,7);ctx.fill();}
+    ctx.strokeStyle=c;ctx.globalAlpha=a;ctx.lineWidth=2.4;ctx.beginPath();ctx.moveTo(X(gx-.2),Y(gy));ctx.lineTo(X(gx+.2),Y(gy));ctx.stroke();ctx.globalAlpha=1;});
+  if(p>.9){ctx.strokeStyle=P.ink;ctx.setLineDash([7,6]);ctx.lineWidth=1.8;ctx.beginPath();ctx.moveTo(X(.1),Y(.08));ctx.lineTo(X(.92),Y(.88));ctx.stroke();ctx.setLineDash([]);}
+  label('pooled trend: looks causal',X(.55),Y(.92),{size:f});label('flat within each kind of viewer',X(.02),Y(.12),{size:f,color:P.acc});
+  label('seconds watched →',m.r,m.b+f*1.6,{size:f,align:'right'});label('click rate',m.l,m.top-8,{size:f});
+},
+equation(t){
+  const f=fs(),s=Math.sin(t*.5),vals=[.72-.04*s,.62-.14*s,.45+.22*s],names=['users','minutes per user','$ per minute'],bw=W*.16,base=H*.78,top=H*.2;
+  vals.forEach((v2,i)=>{const e=eo(t*1.2-i*.2),x=W*.08+i*(bw+W*.1),h=(base-top)*v2*e;ctx.fillStyle=i===2?P.acc:rgba(P.ink,.5);rrect(x,base-h,bw,h,4);ctx.fill();
+    label(names[i],x+bw/2,base+f*1.7,{size:f,align:'center'});if(i<2)label('×',x+bw+W*.05,base-(base-top)*.3,{size:f*2.4,italic:false,align:'center',alpha:.6});});
+  const rev=vals[0]*vals[1]*vals[2]/.2;label('revenue '+(rev>=1?'+':'')+Math.round((rev-1)*100)+'%',W*.95,top-10,{size:f*1.3,italic:false,w:700,font:'"Bricolage Grotesque", sans-serif',align:'right',color:P.acc});
+  label('longer ads: price up, time down',W*.08,H*.96,{size:f});
+},
+curve(t,v){
+  const m={l:W*.1,r:W*.95,b:H*.84,top:H*.12},X=x=>m.l+x*(m.r-m.l),Y=y=>m.b-y*(m.b-m.top),f=fs(),p=eo(t/2.2);
+  ctx.strokeStyle=rgba(P.ink,.35);ctx.beginPath();ctx.moveTo(m.l,m.top);ctx.lineTo(m.l,m.b);ctx.lineTo(m.r,m.b);ctx.stroke();
+  const cs=v.single?[[.95,.35,'new channel',1]]:[[.9,.18,'search',1],[.7,.42,'video',0],[.5,.25,'social',0]];
+  if(v.single){ctx.fillStyle=rgba(P.acc,.14);ctx.fillRect(X(0),m.top,X(.1)-X(0),m.b-m.top);label('start at 2 to 5%',X(.11),m.top+f,{size:f,color:P.acc});}
+  cs.forEach(([a,b,n,hi],i)=>{const fn=x=>a*(1-Math.exp(-x/b)),pts=[];for(let x=0;x<=1.0001;x+=.01)pts.push([X(x),Y(fn(x))]);ctx.strokeStyle=hi?P.acc:rgba(P.ink,.6);ctx.lineWidth=hi?3:2;polyline(pts,p);
+    if(p>.95){label(n,X(1)-4,Y(fn(1))-10,{size:f,align:'right',color:hi?P.acc:P.ink});
+      if(hi){const u=v.single?.05+.04*Math.sin(t*.6):.35+.3*Math.sin(t*.4),y=fn(u),sl=a/b*Math.exp(-u/b);ctx.fillStyle=P.acc;ctx.beginPath();ctx.arc(X(u),Y(y),6,0,7);ctx.fill();
+        ctx.strokeStyle=rgba(P.acc,.7);ctx.setLineDash([5,5]);ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(X(u-.15),Y(y-sl*.15));ctx.lineTo(X(u+.15),Y(y+sl*.15));ctx.stroke();ctx.setLineDash([]);
+        label('slope = value of the next dollar',X(u)+12,Y(y)+f*1.6,{size:f*.95,color:P.acc});}}});
+  label('spend →',m.r,m.b+f*1.6,{size:f,align:'right'});label('conversions',m.l,m.top-8,{size:f});
+},
+mix(t){
+  const m={l:W*.08,r:W*.95,b:H*.84,top:H*.14},N=24,X=i=>m.l+i/(N-1)*(m.r-m.l),Y=y=>m.b-y*(m.b-m.top),p=eo(t/2.6),f=fs();
+  const big=[],small=[],all=[];for(let i=0;i<N;i++){const w=.25+.5*(i/(N-1));big.push([X(i),Y(.3)]);small.push([X(i),Y(.72)]);all.push([X(i),Y(.72*(1-w)+.3*w)]);}
+  ctx.setLineDash([6,6]);ctx.lineWidth=2;ctx.strokeStyle=rgba(P.ink,.55);polyline(big,p);polyline(small,p);ctx.setLineDash([]);ctx.strokeStyle=P.acc;ctx.lineWidth=3.2;polyline(all,p);
+  if(p>.95){label('small advertisers: flat',X(N-1),Y(.72)-10,{size:f,align:'right'});label('large advertisers: flat',X(N-1),Y(.3)+f*1.4,{size:f,align:'right'});label('all advertisers: falling',X(9),all[9][1]-12,{size:f,color:P.acc});}
+  label('brand share of spend, as the mix shifts toward large advertisers',m.l,H*.96,{size:f});
+},
+stagger(t){
+  const rows=7,cols=12,m={l:W*.2,r:W*.96,top:H*.12,b:H*.82},cw=(m.r-m.l)/cols,rh=(m.b-m.top)/rows,f=fs(),sweep=(t*1.6)%(cols+4);
+  for(let r=0;r<rows;r++){const start=2+r;label('wave '+(r+1),m.l-12,m.top+rh*(r+.5)+5,{size:f*.95,align:'right'});
+    for(let c=0;c<cols;c++){const on=c>=start,vis2=c<sweep;ctx.fillStyle=on?rgba(P.acc,vis2?.9:.25):rgba(P.ink,vis2?.2:.08);rrect(m.l+c*cw+2,m.top+r*rh+2,cw-4,rh-4,3);ctx.fill();}}
+  label('month →',m.r,m.b+f*1.6,{size:f,align:'right'});label('staggered starts leave a live comparison every month',W*.04,H*.96,{size:f});
+},
+cards(t){
+  const f=fs(),names=['Dosa House','Ramen Bar','Taquería','Trattoria','Pho Corner','Mezze Room','Bagel Shop','Sushi Counter'],cw=W*.36,ch=H*.5,y=H*.25,off=(t*18)%(cw+W*.05);
+  label('Restaurants you may like',W*.04,y-f*1.4,{size:f*1.2,italic:false,w:650,font:'"Bricolage Grotesque", sans-serif'});
+  names.forEach((n,i)=>{const x=W*.04+i*(cw+W*.05)-off,e=eo(t*1.5-i*.15);if(x>W||x+cw<0)return;ctx.globalAlpha=e;
+    ctx.fillStyle=rgba(P.ink,.1);rrect(x,y,cw,ch,10);ctx.fill();ctx.fillStyle=rgba(P.acc,.35+.15*(i%3));rrect(x+10,y+10,cw-20,ch*.52,7);ctx.fill();
+    label(n,x+14,y+ch*.52+f*2.4,{size:f*1.05,italic:false,w:600,font:'"Bricolage Grotesque", sans-serif'});
+    for(let s=0;s<5;s++){ctx.fillStyle=s<3+(i%3===0?1:0)?P.acc:rgba(P.ink,.25);ctx.beginPath();ctx.arc(x+18+s*14,y+ch*.52+f*3.9,4.2,0,7);ctx.fill();}
+    ctx.fillStyle=rgba(P.ink,.85);rrect(x+cw-80,y+ch-38,66,26,13);ctx.fill();label('Follow',x+cw-47,y+ch-20,{size:13,italic:false,w:600,font:'"Bricolage Grotesque", sans-serif',align:'center',color:P.bg,alpha:1});ctx.globalAlpha=1;});
+  label('a horizontal row in the feed',W*.04,H*.93,{size:f});
+},
+matrix(t,v,R){
+  const rows=11,cols=15,m={l:W*.14,r:W*.95,top:H*.12,b:H*.84},cw=(m.r-m.l)/cols,rh=(m.b-m.top)/rows,f=fs();
+  const known=[],pred=[];for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){const k=R();known.push(k<.28?.35+R()*.6:0);pred.push(k>.94);}
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){const i=r*cols+c,e=eo(t*1.3-(r+c)*.03);ctx.globalAlpha=e;
+    if(known[i]){ctx.fillStyle=rgba(P.ink,known[i]*.8);}else if(pred[i]){ctx.fillStyle=rgba(P.acc,.55+.45*Math.sin(t*2+i));}else{ctx.fillStyle=rgba(P.ink,.06);}
+    rrect(m.l+c*cw+2,m.top+r*rh+2,cw-4,rh-4,3);ctx.fill();ctx.globalAlpha=1;}
+  label('users',m.l-12,(m.top+m.b)/2,{size:f,align:'right'});label('restaurants →',m.r,m.top-10,{size:f,align:'right'});
+  label('filled: liked or visited.  glowing: predicted',m.l,H*.94,{size:f,color:P.acc});
+},
+frontier(t){
+  const m={l:W*.12,r:W*.94,b:H*.84,top:H*.12},X=x=>m.l+x*(m.r-m.l),Y=y=>m.b-y*(m.b-m.top),f=fs(),p=eo(t/2.2);
+  ctx.strokeStyle=rgba(P.ink,.35);ctx.beginPath();ctx.moveTo(m.l,m.top);ctx.lineTo(m.l,m.b);ctx.lineTo(m.r,m.b);ctx.stroke();
+  const fn=x=>Math.pow(x,.32),pts=[];for(let x=0;x<=1.0001;x+=.01)pts.push([X(x),Y(fn(x)*.92)]);ctx.strokeStyle=rgba(P.ink,.75);ctx.lineWidth=2.4;polyline(pts,p);
+  const marks=[[.0,'no 2FA'],[.12,'risky logins only'],[1,'everyone, every login']];
+  if(p>.9)marks.forEach(([x,n],i)=>{const hi=i===1,y=fn(x)*.92,r=hi?7+1.5*Math.sin(t*2):5;ctx.fillStyle=hi?P.acc:P.ink;ctx.beginPath();ctx.arc(X(x),Y(y),r,0,7);ctx.fill();label(n,X(x)+(i===2?-10:12),Y(y)+(i===0?-12:hi?-12:22),{size:f,align:i===2?'right':'left',color:hi?P.acc:P.ink});});
+  label('friction for real users →',m.r,m.b+f*1.6,{size:f,align:'right'});label('attacks blocked',m.l,m.top-8,{size:f});
+},
+slide(t){
+  const f=fs(),norm=Math.floor(t/5)%2===1,names=['Groups','Friends','Pages'],raw=[.92,.48,.3],nv=[.46,.5,.44],m={l:W*.12,r:W*.92,b:H*.78,top:H*.18},bw=(m.r-m.l)/5;
+  ctx.fillStyle=rgba(P.ink,.06);rrect(W*.04,H*.06,W*.92,H*.86,10);ctx.fill();
+  label(norm?'Per impression, same users':'Engagement per post',W*.08,H*.13,{size:f*1.2,italic:false,w:650,font:'"Bricolage Grotesque", sans-serif',color:norm?P.acc:P.ink});
+  names.forEach((n,i)=>{const target=norm?nv[i]:raw[i];const x=m.l+bw*(i*1.6+.3),h=(m.b-m.top)*target*eo((t%5)/1.2+ (t<1?0:.2));ctx.fillStyle=norm?P.acc:rgba(P.ink,.6);rrect(x,m.b-h,bw,h,4);ctx.fill();label(n,x+bw/2,m.b+f*1.6,{size:f,align:'center'});});
+  label(norm?'the gap mostly disappears':'looks like a clear winner',W*.08,H*.9,{size:f,color:P.acc});
+},
+decline(t,v,R){
+  const m={l:W*.08,r:W*.95,b:H*.84,top:H*.14},N=40,X=i=>m.l+i/(N-1)*(m.r-m.l),Y=y=>m.b-y*(m.b-m.top),p=eo(t/2.8),f=fs();
+  const acc=[],looks=[],rate=[];for(let i=0;i<N;i++){const lk=.42+.3*i/(N-1)+gauss(R)*.008,ac=.3+.02*Math.sin(i*.6)+gauss(R)*.006;looks.push([X(i),Y(lk)]);acc.push([X(i),Y(ac)]);rate.push([X(i),Y(ac/lk*.9)]);}
+  ctx.lineWidth=2;ctx.strokeStyle=rgba(P.ink,.55);polyline(looks,p);ctx.setLineDash([6,5]);polyline(acc,p);ctx.setLineDash([]);ctx.strokeStyle=P.acc;ctx.lineWidth=3.2;polyline(rate,p);
+  if(p>.95){label('looks (denominator)',X(N-1),looks[N-1][1]-10,{size:f,align:'right'});label('accepts (numerator)',X(N-1),acc[N-1][1]+f*1.5,{size:f,align:'right'});label('acceptance rate',X(4),rate[4][1]-12,{size:f,color:P.acc});}
+  label('months →',m.r,m.b+f*1.6,{size:f,align:'right'});
+},
+code(t,v){
+  const lines=v.code.split('\n'),maxLen=Math.max(...lines.map(l=>l.length));
+  const size=Math.max(10.5,Math.min(17,(W*.9)/(maxLen*.62),(H*.86)/(lines.length*1.55)));
+  const shown=Math.floor(t*(reduce?999:46));
+  ctx.fillStyle=rgba(P.ink,.06);rrect(0,0,W,H,12);ctx.fill();
+  ctx.font=`400 ${size}px "JetBrains Mono", ui-monospace, Menlo, monospace`;ctx.textBaseline='top';
+  const KW=/\b(SELECT|FROM|WHERE|JOIN|LEFT|INNER|ON|AND|OR|GROUP|BY|HAVING|ORDER|WITH|AS|CASE|WHEN|THEN|END|DISTINCT|COUNT|MIN|UNION|IS|NOT|NULL|BETWEEN|DATE)\b/g;
+  let used=0,x0=W*.05,y0=Math.max(H*.06,(H-lines.length*size*1.55)/2);
+  lines.forEach((ln,i)=>{if(used>shown)return;const vis=ln.slice(0,Math.max(0,shown-used));used+=ln.length+1;let x=x0;const y=y0+i*size*1.55;
+    const parts=vis.split(/(\b(?:SELECT|FROM|WHERE|JOIN|LEFT|INNER|ON|AND|OR|GROUP|BY|HAVING|ORDER|WITH|AS|CASE|WHEN|THEN|END|DISTINCT|COUNT|MIN|UNION|IS|NOT|NULL|BETWEEN|DATE)\b|'[^']*'?|--.*$|\b\d+(?:\.\d+)?\b)/);
+    parts.forEach(pt=>{if(!pt)return;let c=rgba(P.ink,.88);if(/^[A-Z]+$/.test(pt)&&KW.test(pt))c=P.acc;else if(/^'/.test(pt))c='#ffd89a';else if(/^\d/.test(pt))c='#9fc8ff';KW.lastIndex=0;ctx.fillStyle=c;ctx.fillText(pt,x,y);x+=ctx.measureText(pt).width;});
+    if(used>shown&&Math.sin(t*6)>0){ctx.fillStyle=P.acc;ctx.fillRect(x+2,y,size*.55,size*1.15);}});
+}
+};
+
+const order=(()=>{const idx=CARDS.map((_,i)=>i);for(let k=0;k<40;k++){for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}
+  if(idx.every((v,i)=>i===0||CARDS[v].cat!==CARDS[idx[i-1]].cat))break;}return idx;})();
+let pos=0,card=null,cardStart=0,dur=30000,paused=false,pauseAt=0;
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function words(c){return(c.title+' '+c.lead+' '+c.points.join(' ')+' '+c.note[1]).split(/\s+/).length;}
+function render(c,i){
+  const cat=CATS[c.cat];
+  textEl.innerHTML=`<div class="cat"><span class="dot"></span><span>${cat.name}</span><span class="count">${String(i+1).padStart(2,'0')} / ${CARDS.length}</span></div>
+  <h1>${esc(c.title)}</h1><p class="lead">${esc(c.lead)}</p><ul>${c.points.map(p=>`<li>${esc(p)}</li>`).join('')}</ul>
+  <div class="note"><b>${esc(c.note[0])}</b><span>${esc(c.note[1])}</span></div>`;
+  let s=1;textEl.style.setProperty('--fs',s);
+  while(textEl.scrollHeight>textEl.clientHeight+2&&s>.62){s-=.04;textEl.style.setProperty('--fs',s.toFixed(2));}
+}
+function show(i,instant){
+  pos=(i+order.length)%order.length;const c=CARDS[order[pos]];const cat=CATS[c.cat];
+  const apply=()=>{card=c;P=cat;const r=document.documentElement.style;r.setProperty('--bg',cat.bg);r.setProperty('--ink',cat.ink);r.setProperty('--acc',cat.acc);
+    render(c,pos);textEl.classList.remove('out');textEl.classList.add('pre');void textEl.offsetWidth;textEl.classList.remove('pre');
+    cardStart=performance.now();dur=reduce?45000:clamp(20000+words(c)*190,28000,44000);if(c.code)dur+=6000;};
+  if(instant)apply();else{textEl.classList.add('out');setTimeout(apply,650);}
+}
+function frame(now){
+  const t=paused?(pauseAt-cardStart)/1000:(now-cardStart)/1000;
+  if(!paused&&now-cardStart>dur)show(pos+1);
+  if(card){ctx.setTransform(DPR,0,0,DPR,0,0);ctx.clearRect(0,0,W,H);const fade=clamp(Math.min(t/.6,(dur/1000-t)/.6),0,1);ctx.globalAlpha=1;
+    ctx.save();ctx.globalAlpha=fade;const v=card.code?{type:'code',code:card.code}:card.vis;const R=rng(order[pos]*7919+13);
+    try{(VIS[v.type]||VIS.network)(t,v,R);}catch(e){}ctx.restore();
+    bar.style.transform=`scaleX(${clamp(t/(dur/1000),0,1)})`;}
+  requestAnimationFrame(frame);
+}
+function togglePause(){if(paused){cardStart+=performance.now()-pauseAt;paused=false;}else{paused=true;pauseAt=performance.now();}document.body.classList.toggle('paused',paused);}
+addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='PageDown'){show(pos+1);}else if(e.key==='ArrowLeft'||e.key==='PageUp'){show(pos-1);}else if(e.key===' '){e.preventDefault();togglePause();}});
+$('stage').addEventListener('click',e=>{show(e.clientX<innerWidth*.25?pos-1:pos+1);});
+let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{size();if(card)render(card,pos);},120);});
+size();show(0,true);
+(document.fonts?document.fonts.ready:Promise.resolve()).then(()=>{if(card)render(card,pos);});
+setTimeout(()=>$('help').classList.add('on'),1500);setTimeout(()=>$('help').classList.remove('on'),9000);
+window.__deck={go:i=>{const k=order.indexOf(i);show(k,true);cardStart=performance.now()-6000;},order,count:CARDS.length};
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
