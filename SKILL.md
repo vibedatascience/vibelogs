@@ -25,7 +25,7 @@ index.html                 homepage
 about.html
 posts/<slug>/index.html    one folder per post, assets live next to index.html
   dated slug (2026-07-16-topic) for walkthrough posts
-  bare slug (ai-glossary) for living reference pages (stable URL)
+  bare slug (links) for living reference pages (stable URL)
 ```
 
 There is no build step and no shared CSS file. Every page carries its own inline <style> block. When creating a new post, copy the <style> block from an existing post verbatim.
@@ -34,7 +34,7 @@ There is no build step and no shared CSS file. Every page carries its own inline
 
 The homepage has:
 
-- A top-right nav linking to posts/links/ and posts/ai-glossary/.
+- A top-right nav linking to posts/links/.
 - Tag filter buttons.
 - A view toggle (LIST or GALLERY) and a sort toggle (DATE or THEME).
 
