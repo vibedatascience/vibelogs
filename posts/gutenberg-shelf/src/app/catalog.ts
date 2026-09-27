@@ -68,7 +68,7 @@ export const catalog: CatalogBook[] = ([
     "height": 1.93,
     "thickness": 0.29,
     "gutenbergId": 2701,
-    "coverImage": "/vibelogs/posts/gutenberg-shelf/books/moby-dick-or-the-whale-1/cover.webp"
+    "coverImage": "/posts/gutenberg-shelf/books/moby-dick-or-the-whale-1/cover.webp"
   },
   {
     "id": "pride-and-prejudice-2",
@@ -89,7 +89,7 @@ export const catalog: CatalogBook[] = ([
     "height": 2.11,
     "thickness": 0.273,
     "gutenbergId": 1342,
-    "coverImage": "/vibelogs/posts/gutenberg-shelf/books/pride-and-prejudice-2/cover.webp"
+    "coverImage": "/posts/gutenberg-shelf/books/pride-and-prejudice-2/cover.webp"
   },
   {
     "id": "romeo-and-juliet-3",
@@ -110,7 +110,7 @@ export const catalog: CatalogBook[] = ([
     "height": 1.93,
     "thickness": 0.247,
     "gutenbergId": 1513,
-    "coverImage": "/vibelogs/posts/gutenberg-shelf/books/romeo-and-juliet-3/cover.webp"
+    "coverImage": "/posts/gutenberg-shelf/books/romeo-and-juliet-3/cover.webp"
   },
   {
     "id": "a-room-with-a-view-4",
@@ -131,7 +131,7 @@ export const catalog: CatalogBook[] = ([
     "height": 2.14,
     "thickness": 0.246,
     "gutenbergId": 2641,
-    "coverImage": "/vibelogs/posts/gutenberg-shelf/books/a-room-with-a-view-4/cover.webp"
+    "coverImage": "/posts/gutenberg-shelf/books/a-room-with-a-view-4/cover.webp"
   },
   {
     "id": "crime-and-punishment-5",
@@ -152,7 +152,7 @@ export const catalog: CatalogBook[] = ([
     "height": 2.08,
     "thickness": 0.24,
     "gutenbergId": 2554,
-    "coverImage": "/vibelogs/posts/gutenberg-shelf/books/crime-and-punishment-5/cover.webp"
+    "coverImage": "/posts/gutenberg-shelf/books/crime-and-punishment-5/cover.webp"
   },
   {
     "id": "alice-s-adventures-in-wonderland-6",
@@ -173,7 +173,7 @@ export const catalog: CatalogBook[] = ([
     "height": 2.03,
     "thickness": 0.232,
     "gutenbergId": 11,
-    "coverImage": "/vibelogs/posts/gutenberg-shelf/books/alice-s-adventures-in-wonderland-6/cover.webp"
+    "coverImage": "/posts/gutenberg-shelf/books/alice-s-adventures-in-wonderland-6/cover.webp"
   },
   {
     "id": "the-count-of-monte-cristo-7",
@@ -194,7 +194,7 @@ export const catalog: CatalogBook[] = ([
     "height": 2.15,
     "thickness": 0.228,
     "gutenbergId": 1184,
-    "coverImage": "/vibelogs/posts/gutenberg-shelf/books/the-count-of-monte-cristo-7/cover.webp"
+    "coverImage": "/posts/gutenberg-shelf/books/the-count-of-monte-cristo-7/cover.webp"
   },
   {
     "id": "the-love-letters-of-mary-wollstonecraft-8",
@@ -215,7 +215,7 @@ export const catalog: CatalogBook[] = ([
     "height": 2.07,
     "thickness": 0.228,
     "gutenbergId": 34413,
-    "coverImage": "/vibelogs/posts/gutenberg-shelf/books/the-love-letters-of-mary-wollstonecraft-8/cover.webp"
+    "coverImage": "/posts/gutenberg-shelf/books/the-love-letters-of-mary-wollstonecraft-8/cover.webp"
   },
   {
     "id": "carmen-9",
@@ -236,7 +236,7 @@ export const catalog: CatalogBook[] = ([
     "height": 2.0,
     "thickness": 0.228,
     "gutenbergId": 2465,
-    "coverImage": "/vibelogs/posts/gutenberg-shelf/books/carmen-9/cover.webp"
+    "coverImage": "/posts/gutenberg-shelf/books/carmen-9/cover.webp"
   },
   {
     "id": "the-extraordinary-adventures-of-ars-ne-l-10",
@@ -257,7 +257,7 @@ export const catalog: CatalogBook[] = ([
     "height": 1.96,
     "thickness": 0.227,
     "gutenbergId": 6133,
-    "coverImage": "/vibelogs/posts/gutenberg-shelf/books/the-extraordinary-adventures-of-ars-ne-l-10/cover.webp"
+    "coverImage": "/posts/gutenberg-shelf/books/the-extraordinary-adventures-of-ars-ne-l-10/cover.webp"
   },
   {
     "id": "middlemarch-11",
@@ -278,7 +278,7 @@ export const catalog: CatalogBook[] = ([
     "height": 2.02,
     "thickness": 0.227,
     "gutenbergId": 145,
-    "coverImage": "/vibelogs/posts/gutenberg-shelf/books/middlemarch-11/cover.webp"
+    "coverImage": "/posts/gutenberg-shelf/books/middlemarch-11/cover.webp"
   },
   {
     "id": "frankenstein-or-the-modern-prometheus-12",
@@ -299,7 +299,7 @@ export const catalog: CatalogBook[] = ([
     "height": 1.95,
     "thickness": 0.227,
     "gutenbergId": 84,
-    "coverImage": "/vibelogs/posts/gutenberg-shelf/books/frankenstein-or-the-modern-prometheus-12/cover.webp"
+    "coverImage": "/posts/gutenberg-shelf/books/frankenstein-or-the-modern-prometheus-12/cover.webp"
   },
   {
     "id": "the-blue-castle-a-novel-13",
@@ -320,7 +320,7 @@ export const catalog: CatalogBook[] = ([
     "height": 2.12,
     "thickness": 0.226,
     "gutenbergId": 67979,
-    "coverImage": "/vibelogs/posts/gutenberg-shelf/books/the-blue-castle-a-novel-13/cover.webp"
+    "coverImage": "/posts/gutenberg-shelf/books/the-blue-castle-a-novel-13/cover.webp"
   },
   {
     "id": "the-complete-works-of-william-shakespear-14",
@@ -341,7 +341,7 @@ export const catalog: CatalogBook[] = ([
     "height": 2.11,
     "thickness": 0.226,
     "gutenbergId": 100,
-    "coverImage": "/vibelogs/posts/gutenberg-shelf/books/the-complete-works-of-william-shakespear-14/cover.webp"
+    "coverImage": "/posts/gutenberg-shelf/books/the-complete-works-of-william-shakespear-14/cover.webp"
   },
   {
     "id": "sense-and-sensibility-15",
@@ -362,7 +362,7 @@ export const catalog: CatalogBook[] = ([
     "height": 2.15,
     "thickness": 0.225,
     "gutenbergId": 21839,
-    "coverImage": "/vibelogs/posts/gutenberg-shelf/books/sense-and-sensibility-15/cover.webp"
+    "coverImage": "/posts/gutenberg-shelf/books/sense-and-sensibility-15/cover.webp"
   },
   {
     "id": "the-adventures-of-sherlock-holmes-16",
@@ -383,7 +383,7 @@ export const catalog: CatalogBook[] = ([
     "height": 2.06,
     "thickness": 0.223,
     "gutenbergId": 1661,
-    "coverImage": "/vibelogs/posts/gutenberg-shelf/books/the-adventures-of-sherlock-holmes-16/cover.webp"
+    "coverImage": "/posts/gutenberg-shelf/books/the-adventures-of-sherlock-holmes-16/cover.webp"
   },
   {
     "id": "my-life-volume-1-17",
@@ -404,7 +404,7 @@ export const catalog: CatalogBook[] = ([
     "height": 2.05,
     "thickness": 0.222,
     "gutenbergId": 5197,
-    "coverImage": "/vibelogs/posts/gutenberg-shelf/books/my-life-volume-1-17/cover.webp"
+    "coverImage": "/posts/gutenberg-shelf/books/my-life-volume-1-17/cover.webp"
   },
   {
     "id": "jane-eyre-an-autobiography-18",
@@ -425,7 +425,7 @@ export const catalog: CatalogBook[] = ([
     "height": 2.1,
     "thickness": 0.221,
     "gutenbergId": 1260,
-    "coverImage": "/vibelogs/posts/gutenberg-shelf/books/jane-eyre-an-autobiography-18/cover.webp"
+    "coverImage": "/posts/gutenberg-shelf/books/jane-eyre-an-autobiography-18/cover.webp"
   },
   {
     "id": "little-women-or-meg-jo-beth-and-amy-19",
@@ -446,7 +446,7 @@ export const catalog: CatalogBook[] = ([
     "height": 2.0,
     "thickness": 0.22,
     "gutenbergId": 37106,
-    "coverImage": "/vibelogs/posts/gutenberg-shelf/books/little-women-or-meg-jo-beth-and-amy-19/cover.webp"
+    "coverImage": "/posts/gutenberg-shelf/books/little-women-or-meg-jo-beth-and-amy-19/cover.webp"
   },
   {
     "id": "the-lady-of-the-lake-20",
@@ -467,7 +467,7 @@ export const catalog: CatalogBook[] = ([
     "height": 2.06,
     "thickness": 0.219,
     "gutenbergId": 3011,
-    "coverImage": "/vibelogs/posts/gutenberg-shelf/books/the-lady-of-the-lake-20/cover.webp"
+    "coverImage": "/posts/gutenberg-shelf/books/the-lady-of-the-lake-20/cover.webp"
   }
 ] satisfies CatalogBook[]).sort(
   (left, right) => right.height - left.height,

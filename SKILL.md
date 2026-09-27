@@ -6,7 +6,7 @@ description: How to add and edit posts on Rahul's vibelogs site (GitHub Pages bl
 # vibelogs skill
 
 Personal blog of AI walkthroughs and reference pages. Live at
-https://vibedatascience.github.io/vibelogs/
+https://rahulch.site/
 
 ## Repo access
 
