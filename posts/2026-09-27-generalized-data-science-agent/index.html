@@ -25,6 +25,9 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.7rem
 article{padding:32px 0 60px}
 article p{margin:0 0 18px}
 article a{color:var(--cobalt)}
+article h2{font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:1.3rem;margin:36px 0 12px}
+article ol{margin:0 0 18px;padding-left:1.4em}
+article li{margin:0 0 8px}
 </style>
 </head>
 <body>
@@ -41,6 +44,14 @@ article a{color:var(--cobalt)}
 <article>
 <p>With the advent of powerful foundation models, it was inevitable that enterprises would set up their own data agents. But since this is a new field, there isn't a lot of research or guidance out there on what makes a great DS agent or on the best way to set one up. The main goal of this post is to see what research exists and to lay out, in the author's opinion, how a great Data Science Agent should be set up.</p>
 <p>Company posts: <a href="https://builders.ramp.com/post/meet-ramp-research">Ramp</a>, <a href="https://vercel.com/blog/we-removed-80-percent-of-our-agents-tools">Vercel</a>, <a href="https://openai.com/index/inside-our-in-house-data-agent/">OpenAI</a>, <a href="https://medium.com/@AnalyticsAtMeta/inside-metas-home-grown-ai-analytics-agent-4ea6779acfb3">Meta</a>, <a href="https://engineering.block.xyz/blog/building-the-data-foundation-for-automated-analytics">Block</a>, <a href="https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude">Anthropic (Jun)</a>, <a href="https://engineering.atspotify.com/2026/6/encoding-your-domain-expert-the-context-layer-behind-spotifys-data-assistant">Spotify</a>, <a href="https://github.blog/ai-and-ml/github-copilot/how-we-built-an-internal-data-analytics-agent/">GitHub</a>, <a href="https://stripe.dev/blog/meet-stripes-knowledge-ai-platform">Stripe</a>, <a href="https://engineering.grab.com/how-ai-is-transforming-analytics">Grab</a>, <a href="https://claude.com/blog/self-service-data-analytics-in-slack-how-anthropic-deploys-claude-tag-for-ad-hoc-questions">Anthropic (Aug)</a>, <a href="https://eng.snap.com/ds_agent">Snap</a>, <a href="https://careersatdoordash.com/blog/inside-vera-doordashs-data-agent/">DoorDash</a>.</p>
+<h2>Why not just use a general agent?</h2>
+<p>General agents like claude.ai, chatgpt.com, or an internal company assistant can already write SQL and Python. So why build something separate? I see four reasons.</p>
+<ol>
+<li>Data questions are close to deterministic. A given question usually has one correct set of tables, and knowing which tables is mostly tribal knowledge. Missing a single filter produces a number that looks right and is wrong. That demands much stricter quality control than a general agent is built for.</li>
+<li>Data asks are not linear. Often even the question is unclear at the start and only takes shape after a few rounds with the data. The work goes back and forth between clarifying, querying and revising, and a linear chat handles this poorly.</li>
+<li>Every answer has to trace back to its SQL and Python. A reader should be able to see the exact query and transformation behind each number. Most general agent frontends hide this inside collapsed JSON tool calls.</li>
+<li>Analysis is stateful. Data frames need to stay in memory across steps so the agent can keep cutting them and charting them inline, while general agents mostly start fresh on each tool call.</li>
+</ol>
 </article>
 </div>
 </body>
