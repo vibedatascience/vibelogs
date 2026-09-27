@@ -25,7 +25,7 @@ index.html                 homepage
 about.html
 posts/<slug>/index.html    one folder per post, assets live next to index.html
   dated slug (2026-07-16-topic) for walkthrough posts
-  bare slug (ai-slop-detection) for living reference pages (stable URL)
+  bare slug (ai-glossary) for living reference pages (stable URL)
 ```
 
 There is no build step and no shared CSS file. Every page carries its own inline <style> block. When creating a new post, copy the <style> block from an existing post verbatim.
@@ -72,7 +72,7 @@ Inside the post page itself the meta line is: `<span>[YYYY-MM-DD]</span><span>Ra
 
 ## Writing rules (MANDATORY)
 
-All content must pass the site's own reference page: posts/ai-slop-detection/index.html. Read it before writing. Hard rules:
+All content must follow these writing rules. Hard rules:
 
 - No "It's not X, it's Y" constructions.
 - No sentence fragments; full sentences always, except inside bullet points.
