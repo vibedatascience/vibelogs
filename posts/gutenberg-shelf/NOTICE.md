@@ -14,7 +14,7 @@ Changes from upstream, all in src/:
 - app/ProgressLibrary.tsx gains a pointer handler on the canvas, so a tap on a
   volume that is already pulled out opens it, plus Enter on the focused canvas.
 - app/globals.css gains the .rdr styles for the reader.
-- next.config.ts basePath points at /vibelogs/posts/gutenberg-shelf.
+- next.config.ts basePath points at /posts/gutenberg-shelf.
 - Cover images are Project Gutenberg cover scans, resized to 1200px wide webp
   under books/<id>/cover.webp.
 
