@@ -25,14 +25,6 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.7rem
 article{padding:32px 0 60px}
 article p{margin:0 0 18px}
 article a{color:var(--cobalt)}
-article h2{font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:1.3rem;margin:40px 0 14px}
-table.posts{width:100%;border-collapse:collapse;font-size:0.95rem}
-table.posts th{text-align:left;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;font-weight:500;color:var(--muted);text-transform:uppercase;padding:0 16px 8px 0;border-bottom:1px solid var(--rule)}
-table.posts td{padding:9px 16px 9px 0;border-bottom:1px solid var(--rule);vertical-align:top}
-table.posts td:first-child{font-weight:500;white-space:nowrap}
-table.posts td.d{font-family:'IBM Plex Mono',monospace;font-size:0.82rem;color:var(--muted);white-space:nowrap}
-table.posts a{text-decoration:none}
-table.posts a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -48,25 +40,7 @@ table.posts a:hover{text-decoration:underline}
 
 <article>
 <p>With the advent of powerful foundation models, it was inevitable that enterprises would set up their own data agents. But since this is a new field, there isn't a lot of research or guidance out there on what makes a great DS agent or on the best way to set one up. The main goal of this post is to see what research exists and to lay out, in the author's opinion, how a great Data Science Agent should be set up.</p>
-<h2>Company blog posts</h2>
-<table class="posts">
-<thead><tr><th>Company</th><th>Date</th><th>Post</th></tr></thead>
-<tbody>
-<tr><td>Ramp</td><td class="d">2025-09-18</td><td><a href="https://builders.ramp.com/post/meet-ramp-research">Meet Ramp Research: Our Agentic Data Analyst</a></td></tr>
-<tr><td>Vercel</td><td class="d">2025-12-22</td><td><a href="https://vercel.com/blog/we-removed-80-percent-of-our-agents-tools">We removed 80% of our agent's tools</a></td></tr>
-<tr><td>OpenAI</td><td class="d">2026-01-29</td><td><a href="https://openai.com/index/inside-our-in-house-data-agent/">Inside OpenAI's in-house data agent</a></td></tr>
-<tr><td>Meta</td><td class="d">2026-03-30</td><td><a href="https://medium.com/@AnalyticsAtMeta/inside-metas-home-grown-ai-analytics-agent-4ea6779acfb3">Inside Meta's Home Grown AI Analytics Agent</a></td></tr>
-<tr><td>Block</td><td class="d">2026-04-29</td><td><a href="https://engineering.block.xyz/blog/building-the-data-foundation-for-automated-analytics">Building the Data Foundation for Automated Analytics</a></td></tr>
-<tr><td>Anthropic</td><td class="d">2026-06-03</td><td><a href="https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude">How Anthropic enables self-service data analytics with Claude</a></td></tr>
-<tr><td>Spotify</td><td class="d">2026-06-10</td><td><a href="https://engineering.atspotify.com/2026/6/encoding-your-domain-expert-the-context-layer-behind-spotifys-data-assistant">Encoding Your Domain Expert: The Context Layer Behind Spotify's Data Assistant</a></td></tr>
-<tr><td>GitHub</td><td class="d">2026-06-19</td><td><a href="https://github.blog/ai-and-ml/github-copilot/how-we-built-an-internal-data-analytics-agent/">How we built an internal data analytics agent</a></td></tr>
-<tr><td>Stripe</td><td class="d">2026-07-30</td><td><a href="https://stripe.dev/blog/meet-stripes-knowledge-ai-platform">Meet Stripe's Knowledge AI Platform</a></td></tr>
-<tr><td>Grab</td><td class="d">2026-08-01</td><td><a href="https://engineering.grab.com/how-ai-is-transforming-analytics">How AI is transforming analytics at Grab</a></td></tr>
-<tr><td>Anthropic</td><td class="d">2026-08-13</td><td><a href="https://claude.com/blog/self-service-data-analytics-in-slack-how-anthropic-deploys-claude-tag-for-ad-hoc-questions">Self-service data analytics in Slack: how Anthropic deploys Claude Tag for ad-hoc questions</a></td></tr>
-<tr><td>Snap</td><td class="d">2026-09-10</td><td><a href="https://eng.snap.com/ds_agent">DS Agent: Snap's AI Data Scientist</a></td></tr>
-<tr><td>DoorDash</td><td class="d">2026-09-16</td><td><a href="https://careersatdoordash.com/blog/inside-vera-doordashs-data-agent/">Inside Vera, DoorDash's Data Agent</a></td></tr>
-</tbody>
-</table>
+<p>Company posts: <a href="https://builders.ramp.com/post/meet-ramp-research">Ramp</a>, <a href="https://vercel.com/blog/we-removed-80-percent-of-our-agents-tools">Vercel</a>, <a href="https://openai.com/index/inside-our-in-house-data-agent/">OpenAI</a>, <a href="https://medium.com/@AnalyticsAtMeta/inside-metas-home-grown-ai-analytics-agent-4ea6779acfb3">Meta</a>, <a href="https://engineering.block.xyz/blog/building-the-data-foundation-for-automated-analytics">Block</a>, <a href="https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude">Anthropic (Jun)</a>, <a href="https://engineering.atspotify.com/2026/6/encoding-your-domain-expert-the-context-layer-behind-spotifys-data-assistant">Spotify</a>, <a href="https://github.blog/ai-and-ml/github-copilot/how-we-built-an-internal-data-analytics-agent/">GitHub</a>, <a href="https://stripe.dev/blog/meet-stripes-knowledge-ai-platform">Stripe</a>, <a href="https://engineering.grab.com/how-ai-is-transforming-analytics">Grab</a>, <a href="https://claude.com/blog/self-service-data-analytics-in-slack-how-anthropic-deploys-claude-tag-for-ad-hoc-questions">Anthropic (Aug)</a>, <a href="https://eng.snap.com/ds_agent">Snap</a>, <a href="https://careersatdoordash.com/blog/inside-vera-doordashs-data-agent/">DoorDash</a>.</p>
 </article>
 </div>
 </body>
