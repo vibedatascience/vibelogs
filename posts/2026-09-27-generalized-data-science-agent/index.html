@@ -26,6 +26,7 @@ article{padding:32px 0 60px}
 article p{margin:0 0 18px}
 article a{color:var(--cobalt)}
 article h2{font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:1.3rem;margin:36px 0 12px}
+article ul{margin:0 0 18px;padding-left:1.4em}
 article ol{margin:0 0 18px;padding-left:1.4em}
 article li{margin:0 0 8px}
 </style>
@@ -52,6 +53,19 @@ article li{margin:0 0 8px}
 <li>Every answer has to trace back to its SQL and Python. A reader should be able to see the exact query and transformation behind each number. Most general agent frontends hide this inside collapsed JSON tool calls.</li>
 <li>Analysis is stateful. Data frames need to stay in memory across steps so the agent can keep cutting them and charting them inline, while general agents mostly start fresh on each tool call.</li>
 </ol>
+<h2>Should you build your own harness?</h2>
+<p>The harness is everything around the model: the loop that plans and calls tools, the tools themselves, how context gets loaded, where code runs, and the interface people see. The company posts split into two camps on whether to build one.</p>
+<p>The first camp uses the harness the labs ship. Vercel spent months on a text-to-SQL agent with 17 specialized tools, then deleted most of them and kept two: one that runs bash over their semantic layer files and one that executes SQL. Success went from 80% to 100% on their test queries, with 3.5x faster answers and 37% fewer tokens. Snap tried a hand-built pipeline of purpose-built agents in mid-2025 and it didn't scale. Their agent is now a git repo that data scientists open in Claude Code, Codex or Cursor, because "any orchestration we hand-rolled would be obsolete by the next model release." Anthropic runs its data agent on Claude Code and Claude Tag and puts its effort into skills.</p>
+<p>The second camp owns the harness. DoorDash gave Claude Code the same model, the same SQL tools and the same skills as their in-house agent Vera. On 100 questions, Vera passed 73% and Claude Code passed 48%. They also saw the gains from new model releases flatten out between March and September, and concluded that the harness is now where most of the improvement comes from. Stripe built its own on LangChain's deepagents because it needed per-session sandboxes, sessions that run to hundreds of turns, and a rule that data from two unrelated customers can never meet in one session.</p>
+<p>The two camps are closer than they look. DoorDash says Claude Code lost mainly because it couldn't query their modeled tables well, and the fix for that is a data layer: a catalog of modeled tables, join heuristics, and retrieval over both. None of these companies won by writing a better agent loop than the labs. The wins came from context, guardrails and evals.</p>
+<p>My view is to rent the loop and own everything around it. The model and the core loop (planning, tool calls, sub-agents, context compaction) improve every few months and are not worth rebuilding. What a data science agent needs on top of that is specific enough that you have to own it:</p>
+<ul>
+<li>Context retrieval over your tables, metrics and business docs.</li>
+<li>Guardrails enforced in code. Snap puts it as "instructions in markdown shape behavior; they don't bound it."</li>
+<li>A stateful execution environment where data frames stay in memory across steps.</li>
+<li>An interface that shows the SQL and Python behind every number and renders charts inline.</li>
+<li>An eval set, so you can swap in the next model on evidence. DoorDash re-runs its benchmark on every release.</li>
+</ul>
 </article>
 </div>
 </body>
