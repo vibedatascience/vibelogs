@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="author" content="Rahul">
+<title>Loud Streets, Warm Homes | vibelogs</title>
+<meta name="description" content="Part 3 of a visual stats series: correlation, regression and confounding, told with every day of 2025 in New York.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,100..900&family=IBM+Plex+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;700&display=swap">
+<style>
+/* Layout: full-bleed isometric cube stage; chrome pinned to the four edges; one caption slot low and centered, like a slide narrator */
+:root{
+  --field:#E9EEF4; --ink:#0A3069; --accent:#E60023; --teal:#0D9488; --muted:#B9C4D2; --white:#FFFFFF; --truth:#64748B; --deep:#0A3069; --t0:#0A3069; --t1:#3D6A9E; --t2:#94A3B8; --t3:#F2798A; --t4:#E60023;
+  --text:#0A3069; --chrome:#0A3069; --cap-bg:#0A3069; --cap-fg:#FFFFFF; --on-accent:#FFFFFF;
+  --f-display:"Anybody","Arial Narrow","Helvetica Neue",sans-serif;
+  --f-body:"Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --field:#0B1424; --ink:#C7D4E6; --accent:#FF2E4F; --teal:#2DD4BF; --muted:#26344A; --white:#F4F7FB; --truth:#94A3B8; --deep:#0B1424; --t0:#9CC3F5; --t1:#5E86B8; --t2:#64748B; --t3:#E8667A; --t4:#FF2E4F;
+  --text:#E3EAF3; --chrome:#E3EAF3; --cap-bg:#E3EAF3; --cap-fg:#0B1424; --on-accent:#FFFFFF; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --field:#0B1424; --ink:#C7D4E6; --accent:#FF2E4F; --teal:#2DD4BF; --muted:#26344A; --white:#F4F7FB; --truth:#94A3B8; --deep:#0B1424; --t0:#9CC3F5; --t1:#5E86B8; --t2:#64748B; --t3:#E8667A; --t4:#FF2E4F;
+  --text:#E3EAF3; --chrome:#E3EAF3; --cap-bg:#E3EAF3; --cap-fg:#0B1424; --on-accent:#FFFFFF; color-scheme:dark}
+
+html,body{height:100%}
+body{margin:0;overflow:hidden;background:var(--field);color:var(--text);font-family:var(--f-body);-webkit-tap-highlight-color:transparent;user-select:none}
+body.on-accent{--chrome:var(--on-accent)}
+a.brand{color:inherit;text-decoration:none;pointer-events:auto}
+a.brand:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+#stage{position:fixed;inset:0;width:100%;height:100%;display:block;cursor:pointer}
+
+.bar{position:fixed;left:0;right:0;display:flex;justify-content:space-between;align-items:center;gap:16px;padding-inline:clamp(16px,3vw,32px);color:var(--chrome);transition:color .6s ease;pointer-events:none;z-index:3}
+.bar.top{top:0;padding-top:calc(env(safe-area-inset-top,0px) + 18px)}
+.bar.bottom{bottom:0;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 16px)}
+.brand{font-family:var(--f-display);font-variation-settings:"wdth" 70;font-weight:800;font-size:18px;letter-spacing:.04em;text-transform:uppercase}
+.count{font-family:var(--f-mono);font-size:13px;font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.nav{pointer-events:auto;font:500 13px/1 var(--f-mono);letter-spacing:.04em;color:inherit;background:none;border:0;padding:10px 4px;cursor:pointer}
+.nav:focus-visible,.panel button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+.nav[aria-disabled="true"]{opacity:.35;cursor:default}
+.ticks{display:flex;align-items:flex-end;gap:5px;height:16px;min-width:0;flex:1;justify-content:center}
+.ticks i{display:block;width:2px;height:7px;background:currentColor;opacity:.45;transition:height .3s ease,opacity .3s ease}
+.ticks i.done{opacity:.8}
+.ticks i.on{height:16px;width:3px;opacity:1}
+
+.caption{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 74px);transform:translateX(-50%);width:min(600px,calc(100% - 32px));text-align:center;z-index:2;pointer-events:none;margin:0;font-size:clamp(16px,1.9vw,19px);line-height:1.62;opacity:0;transition:opacity .25s ease}
+.caption.show{opacity:1}
+.caption span,.hero span,.panel .cap{background:var(--cap-bg);color:var(--cap-fg);padding:.14em .42em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.caption b,.panel b{font-family:var(--f-mono);font-weight:500;font-size:.92em;white-space:nowrap}
+
+.hero{position:fixed;left:clamp(16px,6vw,88px);right:16px;top:calc(env(safe-area-inset-top,0px) + 17vh);z-index:2;pointer-events:none;transition:opacity .5s ease,transform .7s ease}
+.hero.off{opacity:0;transform:translateY(-24px)}
+.hero .eyebrow{font:500 13px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;margin:0 0 18px}
+.hero h1{margin:0;font-family:var(--f-display);font-weight:880;font-variation-settings:"wdth" 58;font-size:clamp(58px,12.5vw,168px);line-height:.94;letter-spacing:-.005em;text-transform:uppercase;text-wrap:balance}
+.hero h1 span{padding:0 .1em;display:inline-block;margin-bottom:.06em}
+.hero h1 .accent{background:var(--accent);color:var(--on-accent)}
+.hero .lede{max-width:34ch;margin:22px 0 0;font-size:clamp(16px,1.8vw,19px);line-height:1.62}
+.hero .hint{margin:26px 0 0;font:500 13px/1.6 var(--f-mono);letter-spacing:.03em}
+
+.lab{position:fixed;left:0;top:0;z-index:1;pointer-events:none;white-space:nowrap;font:500 12px/1 var(--f-mono);font-variant-numeric:tabular-nums;opacity:0;transition:opacity .35s ease;will-change:transform}
+.lab.on{opacity:1}
+.lab.pill{background:var(--cap-bg);color:var(--cap-fg);padding:5px 7px;border-radius:2px}
+.lab.axis{color:var(--chrome);font-size:11px;opacity:0}
+.lab.axis.on{opacity:.8}
+
+.defcard{position:fixed;left:clamp(16px,3vw,32px);top:calc(env(safe-area-inset-top,0px) + 62px);width:min(400px,calc(100% - 32px));box-sizing:border-box;z-index:3;background:var(--cap-bg);color:var(--cap-fg);padding:18px 20px 16px;opacity:0;transform:translateY(-8px);transition:opacity .45s ease,transform .6s ease;pointer-events:none}
+.defcard.on{opacity:1;transform:none}
+.defcard .k{margin:0 0 8px;font-family:var(--f-display);font-weight:850;font-variation-settings:"wdth" 62;font-size:26px;line-height:1;text-transform:uppercase;letter-spacing:.01em}
+.defcard .d{margin:0;font-size:15px;line-height:1.55}
+.defcard .f{margin:12px 0 0;padding-top:10px;border-top:1px solid currentColor;font:500 13.5px/1.5 var(--f-mono);font-variant-numeric:tabular-nums}
+@media (max-width:560px){.defcard{padding:12px 14px}.defcard .k{font-size:21px}.defcard .d{font-size:13.5px}.defcard .f{font-size:12px;margin-top:8px;padding-top:7px}}
+.panel{position:fixed;left:50%;top:50%;transform:translate(-50%,-46%);width:min(640px,calc(100% - 32px));max-height:calc(100% - 150px);overflow:auto;z-index:4;background:var(--cap-bg);color:var(--cap-fg);padding:clamp(20px,4vw,36px);opacity:0;pointer-events:none;transition:opacity .45s ease,transform .6s ease;box-sizing:border-box;user-select:text}
+.panel.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+.panel h2{margin:0 0 6px;font-family:var(--f-display);font-weight:850;font-variation-settings:"wdth" 62;font-size:clamp(30px,4.6vw,44px);line-height:1;text-transform:uppercase;letter-spacing:.01em;text-wrap:balance}
+.panel .sub{margin:0 0 22px;font-size:15px;opacity:.8}
+.panel dl{display:grid;grid-template-columns:minmax(0,11.5em) minmax(0,1fr);gap:14px 20px;margin:0}
+.panel dt{font:500 13px/1.5 var(--f-mono);letter-spacing:.02em;padding-top:2px}
+.panel dd{margin:0;font-size:15.5px;line-height:1.55;min-width:0}
+.panel .foot{margin:22px 0 0;font:400 12px/1.6 var(--f-mono);opacity:.75}
+.panel button{margin-top:20px;font:500 13px/1 var(--f-mono);letter-spacing:.04em;background:var(--accent);color:var(--on-accent);border:0;padding:12px 16px;cursor:pointer;border-radius:2px}
+@media (max-width:560px){
+  .panel dl{grid-template-columns:minmax(0,1fr);gap:4px}
+  .panel dd{margin-bottom:12px}
+  .ticks{gap:3px}
+  .caption{bottom:calc(env(safe-area-inset-bottom,0px) + 66px)}
+  .brand{font-size:15px}
+}
+.ds{pointer-events:auto;font:500 12px/1 var(--f-mono);letter-spacing:.03em;color:inherit;background:transparent;border:1px solid currentColor;border-radius:2px;padding:7px 26px 7px 9px;max-width:46vw;appearance:none;-webkit-appearance:none;cursor:pointer;
+  background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);background-position:calc(100% - 13px) 50%,calc(100% - 8px) 50%;background-size:5px 5px;background-repeat:no-repeat}
+.ds option{color:#0A3069;background:#fff}
+.ds:focus-visible,.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.top-r{display:flex;align-items:center;gap:14px;min-width:0}
+.chips{pointer-events:auto;display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 0;max-width:640px}
+.chips button{display:flex;flex-direction:column;align-items:flex-start;gap:4px;background:var(--cap-bg);color:var(--cap-fg);border:2px solid var(--cap-bg);border-radius:2px;padding:9px 12px;cursor:pointer;text-align:left}
+.chips button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.chips .cl{font:500 14px/1.1 var(--f-body)}
+.chips .ck{font:500 10.5px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;opacity:.8}
+.hero .pick{margin:26px 0 0;font:500 12px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase}
+@media (max-width:560px){ .count{display:none} .chips button{padding:7px 9px} .chips .cl{font-size:13px} .hero .pick{margin-top:18px} .chips{margin-top:10px} }
+@media (prefers-reduced-motion: reduce){.caption,.hero,.panel,.lab,.ticks i{transition:none}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.legend{position:fixed;right:clamp(16px,3vw,32px);top:calc(env(safe-area-inset-top,0px) + 58px);z-index:3;display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100% - 32px);font:500 11px/1 var(--f-mono);color:var(--chrome);opacity:0;transition:opacity .4s ease;pointer-events:none}
+.legend.on{opacity:1}
+.legend i{display:inline-block;width:11px;height:11px;margin-right:5px;vertical-align:-1px}
+@media (max-width:560px){.legend{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 150px);right:16px;gap:8px}}
+</style>
+</head>
+<body>
+<canvas id="stage" aria-hidden="true"></canvas>
+
+<header class="bar top">
+  <a class="brand" href="../../" aria-label="vibelogs home">Loud Streets, Warm Homes</a>
+  <div class="top-r"><div class="count" id="count">01 / 15</div></div>
+</header>
+
+<section class="hero" id="hero">
+  <p class="eyebrow"><span>Basics of statistics &middot; Part 3</span></p>
+  <h1><span>Loud streets,</span><br><span class="accent">warm homes?</span></h1>
+  <p class="lede"><span>A strong correlation, a line of best fit, and the third variable hiding behind both, told with every day of 2025 in New York.</span></p>
+  <p class="hint"><span>Tap the right side or press &rarr; to start</span></p>
+</section>
+
+<div class="legend" id="legend" aria-label="Daily high temperature">
+  <span><i style="background:var(--t0)"></i>&lt;40°F</span><span><i style="background:var(--t1)"></i>40–55</span><span><i style="background:var(--t2)"></i>55–70</span><span><i style="background:var(--t3)"></i>70–82</span><span><i style="background:var(--t4)"></i>82+</span>
+</div>
+
+<p class="caption" id="caption" aria-live="polite"></p>
+
+<aside class="defcard" id="defcard" aria-live="polite"><p class="k"></p><p class="d"></p><p class="f"></p></aside>
+
+<section class="panel" id="panel" aria-hidden="true">
+  <h2>Six ideas, one year of days</h2>
+  <p class="sub">Everything in this walk-through comes back to these. Earlier parts: <a href="https://rahulch.site/posts/2026-09-30-averages-of-averages/" style="color:inherit">Averages of Averages</a> and <a href="https://rahulch.site/posts/2026-09-30-could-it-be-chance/" style="color:inherit">Could It Be Chance?</a></p>
+  <dl id="recap"></dl>
+  <p class="foot" id="foot"></p>
+  <button type="button" id="restart">Start over</button>
+</section>
+
+<footer class="bar bottom">
+  <button class="nav" id="prev" type="button" aria-label="Previous step">&larr; Back</button>
+  <div class="ticks" id="ticks" aria-hidden="true"></div>
+  <button class="nav" id="next" type="button" aria-label="Next step">Next &rarr;</button>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+"use strict";
+const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const RAW = {"days":["2025-01-01","2025-01-02","2025-01-03","2025-01-04","2025-01-05","2025-01-06","2025-01-07","2025-01-08","2025-01-09","2025-01-10","2025-01-11","2025-01-12","2025-01-13","2025-01-14","2025-01-15","2025-01-16","2025-01-17","2025-01-18","2025-01-19","2025-01-20","2025-01-21","2025-01-22","2025-01-23","2025-01-24","2025-01-25","2025-01-26","2025-01-27","2025-01-28","2025-01-29","2025-01-30","2025-01-31","2025-02-01","2025-02-02","2025-02-03","2025-02-04","2025-02-05","2025-02-06","2025-02-07","2025-02-08","2025-02-09","2025-02-10","2025-02-11","2025-02-12","2025-02-13","2025-02-14","2025-02-15","2025-02-16","2025-02-17","2025-02-18","2025-02-19","2025-02-20","2025-02-21","2025-02-22","2025-02-23","2025-02-24","2025-02-25","2025-02-26","2025-02-27","2025-02-28","2025-03-01","2025-03-02","2025-03-03","2025-03-04","2025-03-05","2025-03-06","2025-03-07","2025-03-08","2025-03-09","2025-03-10","2025-03-11","2025-03-12","2025-03-13","2025-03-14","2025-03-15","2025-03-16","2025-03-17","2025-03-18","2025-03-19","2025-03-20","2025-03-21","2025-03-22","2025-03-23","2025-03-24","2025-03-25","2025-03-26","2025-03-27","2025-03-28","2025-03-29","2025-03-30","2025-03-31","2025-04-01","2025-04-02","2025-04-03","2025-04-04","2025-04-05","2025-04-06","2025-04-07","2025-04-08","2025-04-09","2025-04-10","2025-04-11","2025-04-12","2025-04-13","2025-04-14","2025-04-15","2025-04-16","2025-04-17","2025-04-18","2025-04-19","2025-04-20","2025-04-21","2025-04-22","2025-04-23","2025-04-24","2025-04-25","2025-04-26","2025-04-27","2025-04-28","2025-04-29","2025-04-30","2025-05-01","2025-05-02","2025-05-03","2025-05-04","2025-05-05","2025-05-06","2025-05-07","2025-05-08","2025-05-09","2025-05-10","2025-05-11","2025-05-12","2025-05-13","2025-05-14","2025-05-15","2025-05-16","2025-05-17","2025-05-18","2025-05-19","2025-05-20","2025-05-21","2025-05-22","2025-05-23","2025-05-24","2025-05-25","2025-05-26","2025-05-27","2025-05-28","2025-05-29","2025-05-30","2025-05-31","2025-06-01","2025-06-02","2025-06-03","2025-06-04","2025-06-05","2025-06-06","2025-06-07","2025-06-08","2025-06-09","2025-06-10","2025-06-11","2025-06-12","2025-06-13","2025-06-14","2025-06-15","2025-06-16","2025-06-17","2025-06-18","2025-06-19","2025-06-20","2025-06-21","2025-06-22","2025-06-23","2025-06-24","2025-06-25","2025-06-26","2025-06-27","2025-06-28","2025-06-29","2025-06-30","2025-07-01","2025-07-02","2025-07-03","2025-07-04","2025-07-05","2025-07-06","2025-07-07","2025-07-08","2025-07-09","2025-07-10","2025-07-11","2025-07-12","2025-07-13","2025-07-14","2025-07-15","2025-07-16","2025-07-17","2025-07-18","2025-07-19","2025-07-20","2025-07-21","2025-07-22","2025-07-23","2025-07-24","2025-07-25","2025-07-26","2025-07-27","2025-07-28","2025-07-29","2025-07-30","2025-07-31","2025-08-01","2025-08-02","2025-08-03","2025-08-04","2025-08-05","2025-08-06","2025-08-07","2025-08-08","2025-08-09","2025-08-10","2025-08-11","2025-08-12","2025-08-13","2025-08-14","2025-08-15","2025-08-16","2025-08-17","2025-08-18","2025-08-19","2025-08-20","2025-08-21","2025-08-22","2025-08-23","2025-08-24","2025-08-25","2025-08-26","2025-08-27","2025-08-28","2025-08-29","2025-08-30","2025-08-31","2025-09-01","2025-09-02","2025-09-03","2025-09-04","2025-09-05","2025-09-06","2025-09-07","2025-09-08","2025-09-09","2025-09-10","2025-09-11","2025-09-12","2025-09-13","2025-09-14","2025-09-15","2025-09-16","2025-09-17","2025-09-18","2025-09-19","2025-09-20","2025-09-21","2025-09-22","2025-09-23","2025-09-24","2025-09-25","2025-09-26","2025-09-27","2025-09-28","2025-09-29","2025-09-30","2025-10-01","2025-10-02","2025-10-03","2025-10-04","2025-10-05","2025-10-06","2025-10-07","2025-10-08","2025-10-09","2025-10-10","2025-10-11","2025-10-12","2025-10-13","2025-10-14","2025-10-15","2025-10-16","2025-10-17","2025-10-18","2025-10-19","2025-10-20","2025-10-21","2025-10-22","2025-10-23","2025-10-24","2025-10-25","2025-10-26","2025-10-27","2025-10-28","2025-10-29","2025-10-30","2025-10-31","2025-11-01","2025-11-02","2025-11-03","2025-11-04","2025-11-05","2025-11-06","2025-11-07","2025-11-08","2025-11-09","2025-11-10","2025-11-11","2025-11-12","2025-11-13","2025-11-14","2025-11-15","2025-11-16","2025-11-17","2025-11-18","2025-11-19","2025-11-20","2025-11-21","2025-11-22","2025-11-23","2025-11-24","2025-11-25","2025-11-26","2025-11-27","2025-11-28","2025-11-29","2025-11-30","2025-12-01","2025-12-02","2025-12-03","2025-12-04","2025-12-05","2025-12-06","2025-12-07","2025-12-08","2025-12-09","2025-12-10","2025-12-11","2025-12-12","2025-12-13","2025-12-14","2025-12-15","2025-12-16","2025-12-17","2025-12-18","2025-12-19","2025-12-20","2025-12-21","2025-12-22","2025-12-23","2025-12-24","2025-12-25","2025-12-26","2025-12-27","2025-12-28","2025-12-29","2025-12-30","2025-12-31"],"tmax":[51.0,43.0,39.0,33.0,33.0,30.0,33.0,30.0,33.0,39.0,36.0,42.0,42.0,35.0,32.0,30.0,42.0,46.0,41.0,26.0,19.0,20.0,28.0,33.0,33.0,43.0,40.0,42.0,52.0,38.0,48.0,48.0,31.0,49.0,47.0,36.0,38.0,43.0,35.0,36.0,37.0,35.0,36.0,46.0,36.0,35.0,47.0,36.0,27.0,30.0,29.0,35.0,40.0,46.0,49.0,57.0,56.0,54.0,51.0,64.0,33.0,39.0,52.0,54.0,55.0,50.0,45.0,53.0,66.0,65.0,55.0,50.0,57.0,49.0,61.0,59.0,61.0,63.0,52.0,51.0,64.0,48.0,50.0,58.0,53.0,53.0,63.0,81.0,48.0,73.0,58.0,49.0,73.0,73.0,59.0,56.0,50.0,45.0,49.0,51.0,46.0,40.0,58.0,66.0,69.0,50.0,64.0,68.0,85.0,73.0,57.0,82.0,76.0,77.0,77.0,74.0,59.0,76.0,79.0,73.0,71.0,84.0,85.0,69.0,61.0,64.0,74.0,78.0,60.0,72.0,77.0,72.0,69.0,62.0,69.0,72.0,82.0,73.0,69.0,67.0,59.0,51.0,63.0,64.0,66.0,73.0,74.0,65.0,67.0,75.0,67.0,66.0,71.0,79.0,83.0,87.0,84.0,76.0,76.0,64.0,73.0,81.0,87.0,78.0,68.0,64.0,69.0,67.0,84.0,88.0,82.0,86.0,88.0,96.0,99.0,96.0,85.0,72.0,83.0,89.0,90.0,89.0,84.0,88.0,83.0,84.0,87.0,87.0,93.0,90.0,84.0,84.0,83.0,83.0,85.0,86.0,87.0,90.0,82.0,81.0,88.0,85.0,81.0,80.0,87.0,95.0,85.0,84.0,94.0,97.0,95.0,89.0,73.0,80.0,84.0,89.0,86.0,79.0,81.0,82.0,85.0,90.0,89.0,91.0,89.0,89.0,89.0,84.0,91.0,75.0,77.0,70.0,72.0,83.0,82.0,80.0,86.0,79.0,75.0,78.0,78.0,76.0,79.0,78.0,79.0,79.0,77.0,82.0,86.0,69.0,73.0,73.0,73.0,79.0,78.0,77.0,81.0,79.0,74.0,70.0,83.0,84.0,73.0,71.0,73.0,83.0,80.0,77.0,82.0,79.0,83.0,78.0,81.0,69.0,66.0,71.0,82.0,84.0,80.0,80.0,72.0,59.0,62.0,64.0,63.0,58.0,61.0,68.0,61.0,63.0,65.0,70.0,68.0,66.0,62.0,60.0,59.0,58.0,59.0,55.0,54.0,56.0,63.0,58.0,58.0,59.0,59.0,59.0,66.0,57.0,61.0,65.0,63.0,59.0,41.0,50.0,51.0,51.0,50.0,56.0,44.0,45.0,47.0,47.0,52.0,52.0,49.0,52.0,58.0,59.0,49.0,43.0,42.0,47.0,43.0,40.0,41.0,41.0,32.0,42.0,43.0,38.0,35.0,47.0,41.0,35.0,41.0,33.0,29.0,32.0,47.0,50.0,58.0,38.0,46.0,39.0,40.0,46.0,49.0,29.0,31.0,39.0,49.0,33.0,33.0],"noise":[395,121,148,131,141,60,58,64,49,131,163,214,115,91,57,99,136,208,164,58,55,55,66,92,138,148,128,134,134,79,125,190,152,142,102,153,107,178,175,125,105,78,90,102,164,147,122,105,53,67,72,87,195,253,165,184,207,182,179,301,128,116,123,79,110,186,231,230,361,345,203,250,319,333,345,157,329,334,161,215,432,363,177,284,257,203,420,658,433,237,211,167,370,588,403,385,213,149,165,170,131,154,511,424,307,144,422,483,1254,1243,325,549,484,537,694,566,722,663,572,513,460,922,1232,704,230,209,506,448,314,1251,1870,710,268,165,547,634,1398,1481,385,385,193,143,341,829,1173,1443,597,267,430,702,633,1094,588,588,640,853,959,1105,1108,358,403,603,687,925,892,1117,473,339,585,477,820,1485,1429,648,819,694,511,644,1197,1431,609,316,502,623,1456,1926,1260,401,308,340,397,661,1272,1488,311,299,475,505,747,1223,1359,687,491,490,464,634,1220,1741,562,499,384,246,637,1442,1580,558,410,427,521,784,1365,1585,611,442,323,388,730,1179,1097,490,492,235,422,855,1535,1462,491,513,460,558,724,1347,1542,1300,498,442,366,625,836,709,494,430,401,539,838,1165,1237,453,386,301,483,792,1273,1078,429,416,326,268,705,1076,952,537,444,400,410,655,1213,1019,492,382,324,332,454,730,435,214,311,399,323,564,880,1080,376,423,349,372,427,714,685,299,317,289,245,425,648,619,392,339,371,359,377,678,554,253,185,238,267,379,420,339,213,274,245,266,397,371,369,228,140,250,252,157,212,213,161,110,147,136,127,230,295,114,116,115,144,142,209,192,107,137,150,237,143,200,169,125,173,183,220,106,110,102,115,92,180],"heat":[951,1704,1638,2339,2205,2498,3659,3845,3599,2094,1440,1346,1494,1916,2228,2070,1579,1305,1526,2775,4810,4905,3237,2144,2058,1370,1484,1375,1188,1439,1008,1347,2044,1328,1344,1644,1524,1131,1552,1281,1404,1576,1570,1265,1282,1382,1191,1941,2526,2383,2119,1949,1428,1109,1154,877,777,792,779,861,1830,1594,915,923,936,967,824,801,589,653,857,946,769,912,312,1177,896,647,828,863,585,1035,943,594,801,891,564,425,885,453,749,1089,506,292,766,626,996,1158,1183,847,830,909,651,537,460,856,527,415,241,211,536,342,266,216,206,213,429,312,240,215,184,150,148,158,221,206,174,155,220,210,143,208,188,198,191,136,148,142,197,253,509,853,635,367,293,229,221,207,175,178,166,165,197,197,191,159,150,122,116,174,134,129,82,137,111,109,117,106,107,104,110,103,96,189,251,222,140,126,123,124,126,125,139,89,63,63,84,114,108,103,82,92,73,89,109,147,101,104,96,71,64,115,106,97,88,82,96,97,99,118,111,83,95,68,78,98,102,79,75,79,71,84,97,94,106,94,84,69,76,101,101,95,115,85,99,99,113,140,109,95,108,80,140,128,126,126,106,118,92,137,124,114,139,122,102,84,80,133,117,139,137,134,89,100,118,116,128,117,173,114,109,133,140,181,242,227,165,158,177,139,184,612,887,469,641,1288,1236,952,2432,2028,975,511,634,908,798,1668,1729,1582,1412,2582,2462,1569,1378,1632,1438,1150,1328,1494,1243,2033,1378,683,630,2476,3896,2520,1795,1445,1305,1381,2521,1933,1669,1648,1251,1083,1264,1259,997,761,1386,2222,2092,1665,1987,1927,2195,2268,3585,1900,1753,3019,3657,2042,1992,2238,1751,2316,3569,2627,1712,1170,1260,1511,1325,1820,1291,1184,1073,2267,2366,2025,1717,2393,1962]};
+const ND=RAW.days.length, N=ND, M=ND, T=N+M;
+let S=[], rank=new Int32Array(N), llnPos=new Int32Array(N).fill(-1), C=null;
+const J=new Float32Array(T), SC=new Float32Array(T*3);
+{ const R=mulberry32(33); for(let i=0;i<T;i++) J[i]=R(); for(let i=0;i<T;i++){ SC[i*3]=(R()-.5)*72; SC[i*3+1]=-8+R()*36; SC[i*3+2]=(R()-.5)*72; } }
+const avg=a=>{ let s=0; for(const v of a) s+=v; return s/a.length; };
+const cor=(a,b)=>{ const ma=avg(a), mb=avg(b); let sab=0,saa=0,sbb=0; for(let i=0;i<a.length;i++){ const da=a[i]-ma, db=b[i]-mb; sab+=da*db; saa+=da*da; sbb+=db*db; } return sab/Math.sqrt(saa*sbb); };
+const fit=(x,y)=>{ const mx=avg(x), my=avg(y); let sxy=0,sxx=0; for(let i=0;i<x.length;i++){ sxy+=(x[i]-mx)*(y[i]-my); sxx+=(x[i]-mx)**2; } const b=sxy/sxx; return {a:my-b*mx,b}; };
+function residQuad(y,t){ const X=t.map(v=>[1,v,v*v]); const A=[[0,0,0],[0,0,0],[0,0,0]], r=[0,0,0];
+  for(let i=0;i<y.length;i++) for(let p=0;p<3;p++){ r[p]+=X[i][p]*y[i]; for(let q=0;q<3;q++) A[p][q]+=X[i][p]*X[i][q]; }
+  for(let p=0;p<3;p++){ const piv=A[p][p]; for(let q=p;q<3;q++) A[p][q]/=piv; r[p]/=piv; for(let k=0;k<3;k++) if(k!==p){ const f=A[k][p]; for(let q=p;q<3;q++) A[k][q]-=f*A[p][q]; r[k]-=f*r[p]; } }
+  return y.map((v,i)=>v-(r[0]+r[1]*t[i]+r[2]*t[i]*t[i])); }
+const fmtN=x=>Math.round(x).toLocaleString("en-US");
+const sg2=x=>(x>=0?"+":"−")+Math.abs(x).toFixed(2);
+
+function build(){
+  const days=RAW.days, x=RAW.noise, y=RAW.heat, tp=RAW.tmax;
+  rank=new Int32Array(N); days.forEach((d,i)=>rank[i]=i);
+  const r1=cor(x,y), f1=fit(x,y), R2=r1*r1, rTH=cor(tp,y), rTN=cor(tp,x);
+  const rx=residQuad(x,tp), ry=residQuad(y,tp), r2=cor(rx,ry), f2=fit(rx,ry);
+  const mx=avg(x), my=avg(y), totH=y.reduce((a,b)=>a+b,0), totN=x.reduce((a,b)=>a+b,0);
+  const loud=x.indexOf(Math.max(...x)), cold=y.indexOf(Math.max(...y));
+  const agree=x.filter((v,i)=>(v-mx)*(y[i]-my)>0).length;
+  const dd=d=>new Date(d+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric"});
+
+  /* calendar */
+  const first=new Date(days[0]+"T12:00:00"), off=(first.getDay()+6)%7;
+  const cal=i=>{ const k=i+off, w=Math.floor(k/7), wd=k%7; return [(w-26)*1.05, (wd-3)*1.05]; };
+  const skyH=(v,max)=>.25+14*v/max;
+  const XMAX=2000, YMAX=5000, WX=v=>(v/XMAX-.5)*28, WY=v=>v/YMAX*20, CS=.42;
+  const TX=v=>((v-15)/90-.5)*28, NY=v=>v/XMAX*20;
+  const RXs=v=>v/1400*14, RYs=v=>10+v/2400*10;
+  const tRole=t=> t<40?"t0": t<55?"t1": t<70?"t2": t<82?"t3":"t4";
+
+  const hideS=i=>[WX(x[i]),WY(y[i]),-.3,0,0,0,"muted"];
+  const pt=(X,Y,role,z=0)=>[X,Y,z,CS,CS,CS,role];
+  const scat=role=>i=> i<N ? pt(WX(x[i]),WY(y[i]),typeof role==="function"?role(i):role) : hideS(i-N);
+  const yhat=v=>f1.a+f1.b*v;
+  const sticks=j=>{ const yh=WY(yhat(x[j])), yy=WY(y[j]); return [WX(x[j]),(yh+yy)/2,-.15,.07,Math.max(.02,Math.abs(yy-yh)),.07,"muted"]; };
+
+  /* markers */
+  const axX={axis:{p:[0,-.05,-.3],s:[28,.06,.06],role:"ink"}}, axY={axis2:{p:[-14,10,-.3],s:[.06,20,.06],role:"ink"}};
+  const cross={meanS:{p:[WX(mx),10,-.25],s:[.07,20,.07],role:"truth"},medS:{p:[0,WY(my),-.25],s:[28,.07,.07],role:"truth"}};
+  const xl=[0,500,1000,1500,2000].map((v,k)=>({id:"xl"+k,kind:"axis",p:[WX(v),-.2,0],text:k===4?"2,000 noise complaints":fmtN(v),below:true}));
+  const yl=[0,1000,2000,3000,4000,5000].map((v,k)=>({id:"yl"+k,kind:"axis",left:true,p:[-14.3,WY(v),0],text:k===5?"5,000 heat complaints":fmtN(v)}));
+  const tl=[20,40,60,80,100].map((v,k)=>({id:"tl"+k,kind:"axis",p:[TX(v),-.2,0],text:k===4?"100°F high":v+"°",below:true}));
+  const nyl=[0,500,1000,1500,2000].map((v,k)=>({id:"ny"+k,kind:"axis",left:true,p:[-14.3,NY(v),0],text:k===4?"2,000 noise":fmtN(v)}));
+  const rl=[{id:"rxL",kind:"axis",p:[-13,9.2,0],text:"← quieter than usual for the weather",below:true},{id:"rxR",kind:"axis",p:[13,9.2,0],text:"louder →",below:true},
+            {id:"ryT",kind:"axis",left:true,p:[-1,19.5,0],text:"more heat complaints than usual ↑"},{id:"ryB",kind:"axis",left:true,p:[-1,.8,0],text:"fewer ↓"}];
+  const calL=[{id:"jan",kind:"axis",p:[cal(0)[0],-.2,4.3],text:"Jan",below:true},{id:"jul",kind:"axis",p:[cal(181)[0],-.2,4.3],text:"Jul",below:true},{id:"dec",kind:"axis",p:[cal(ND-1)[0],-.2,4.3],text:"Dec",below:true}];
+
+  /* curves: fitted lines */
+  const line=(fn,x0,x1,z=.25)=>{ const pts=[]; for(let k=0;k<=40;k++){ const v=x0+(x1-x0)*k/40; pts.push(fn(v).concat([z])); } return pts; };
+  const curveSpec=[
+    {key:"c1",pts:line(v=>[WX(v),WY(yhat(v))],0,XMAX)},
+    {key:"c2",pts:line(v=>[RXs(v),RYs(f2.a+f2.b*v)],-1400,1400)} ];
+
+  const cam={ hero:{t:[0,6,0],az:40,el:26,w:70,h:52}, cal:{t:[0,3,0],az:32,el:34,w:62,h:34}, sky:{t:[0,4.5,0],az:32,el:28,w:62,h:36},
+    wall:{t:[0,9.2,0],az:12,el:7,w:36,h:30}, wallLow:{t:[0,7.4,0],az:12,el:7,w:36,h:34} };
+  const sh=c=>Object.assign({},c,{sh:-7});
+
+  const St=[], add=o=>St.push(Object.assign({delay:"random",spread:.8,field:"field",marks:{},labels:[],cap:""},o));
+  add({ hero:true, cam:cam.hero, spread:.6, inst:i=> i<N ? [SC[i*3],SC[i*3+1],SC[i*3+2],.8,.8,.8, i%3?"ink":"teal"] : [SC[i*3],SC[i*3+1],SC[i*3+2],.5,.5,.5,i%4?"muted":"accent"] });
+  add({ cam:cam.cal, delay:"rank", spread:1.2, labels:calL, inst:i=> i<N ? (()=>{ const [a,b]=cal(i); return [a,.4,b,.8,.8,.8,"ink"]; })() : hideS(i-N),
+    cap:`Here is 2025 in New York, one cube per day, laid out like a calendar: weeks run left to right, Monday to Sunday front to back.` });
+  add({ cam:cam.sky, delay:"x", labels:[...calL,{id:"pk",text:`${dd(days[cold])}: ${fmtN(y[cold])}`,p:[cal(cold)[0],skyH(y[cold],y[cold])+.6,cal(cold)[1]]}],
+    inst:i=> i<N ? (()=>{ const [a,b]=cal(i), h=skyH(y[i],y[cold]); return [a,h/2,b,.8,h,.8,"ink"]; })() : hideS(i-N),
+    cap:`Each tower is the number of heat and hot-water complaints filed with 311 that day, <b>${fmtN(totH)}</b> in all. Winter towers. Summer goes flat.` });
+  add({ cam:cam.sky, delay:"x", labels:[...calL,{id:"pk2",text:`${dd(days[loud])}: ${fmtN(x[loud])}`,p:[cal(loud)[0],skyH(x[loud],x[loud])+.6,cal(loud)[1]]}],
+    inst:i=> i<N ? (()=>{ const [a,b]=cal(i), h=skyH(x[i],x[loud]); return [a,h/2,b,.8,h,.8,"teal"]; })() : hideS(i-N),
+    cap:`Now swap in complaints about noise on streets and sidewalks, <b>${fmtN(totN)}</b> in all. The towers move to summer, and to weekends.` });
+  add({ cam:cam.wall, delay:"x", spread:1.2, inst:scat("ink"), marks:Object.assign({},axX,axY), labels:[...xl,...yl],
+    cap:`Put both on one chart. Each cube is one day: across is street-noise complaints, up is heat complaints.` });
+  add({ cam:cam.wall, delay:"x", inst:scat(i=>(x[i]-mx)*(y[i]-my)>0?"teal":"accent"), marks:Object.assign({},axX,axY,cross), labels:[...xl,...yl,{id:"avg",text:"averages",p:[WX(mx),20.3,0]}],
+    cap:`Draw a line at each average. <b>${N-agree}</b> of ${N} days land top-left or bottom-right (red): when one count is high, the other tends to be low.` });
+  add({ cam:sh(cam.wall), inst:scat(i=>(x[i]-mx)*(y[i]-my)>0?"teal":"accent"), marks:Object.assign({},axX,axY,cross), labels:[...xl,...yl],
+    card:{k:"Correlation", d:"The correlation coefficient r measures how tightly two things move together along a straight line. It runs from −1 (perfectly opposite) through 0 (no straight-line pattern) to +1 (perfectly together).", f:`r = ${sg2(r1)}`},
+    cap:`Here <b>r = ${sg2(r1)}</b>: a strong negative correlation. Loud days are low-heat days.` });
+  add({ cam:cam.wallLow, curves:{c1:"accent"}, inst:scat("ink"), marks:Object.assign({},axX,axY), labels:[...xl,...yl],
+    cap:`The line of best fit: <b>heat ≈ ${fmtN(f1.a)} − ${Math.abs(f1.b).toFixed(2)} × noise</b>. Each extra 100 noise complaints goes with about ${fmtN(Math.abs(f1.b)*100)} fewer heat complaints.` });
+  add({ cam:cam.wallLow, curves:{c1:"accent"}, delay:"x", inst:i=> i<N ? pt(WX(x[i]),WY(y[i]),"ink") : sticks(i-N), marks:Object.assign({},axX,axY), labels:[...xl,...yl],
+    cap:`Each gray stick is a residual: how far a day sits from the line. Least squares picks the one line that makes the sum of the squared sticks as small as possible.` });
+  add({ cam:sh(cam.wallLow), curves:{c1:"accent"}, inst:i=> i<N ? pt(WX(x[i]),WY(y[i]),"ink") : sticks(i-N), marks:Object.assign({},axX,axY), labels:[...xl,...yl],
+    card:{k:"R²", d:`The share of the ups and downs in heat complaints that the line accounts for. The rest is scatter around it. Note the line dips below zero on the loudest days, predicting negative complaints. A straight line is a simplification.`, f:`R² = r² = ${R2.toFixed(2)}  (${Math.round(R2*100)}%)`},
+    cap:`The line explains <b>${Math.round(R2*100)}%</b> of the swing in heat complaints. So does street noise warm apartments?` });
+  add({ cam:cam.wall, delay:"x", inst:scat(i=>tRole(tp[i])), marks:Object.assign({},axX,axY), labels:[...xl,...yl],
+    legend:true, cap:`Obviously not. Color each day by its high temperature in Central Park, from navy (below 40°F) to red (82°F and up). Cold days sit top-left. Hot days sit bottom-right.` });
+  add({ cam:cam.wall, delay:"x", inst:i=> i<N ? pt(TX(tp[i]),WY(y[i]),tRole(tp[i])) : hideS(i-N), marks:Object.assign({},axX,axY), labels:[...tl,...yl], legend:true,
+    cap:`Slide every day across by temperature instead. Heat complaints collapse as it warms up: <b>r = ${sg2(rTH)}</b>.` });
+  add({ cam:sh(cam.wall), delay:"x", inst:i=> i<N ? pt(TX(tp[i]),NY(x[i]),tRole(tp[i])) : hideS(i-N), marks:Object.assign({},axX,axY), labels:[...tl,...nyl], legend:true,
+    card:{k:"Confounder", d:"A third variable that drives both things you're comparing. Warm weather pushes heat complaints down and street noise up, which makes the two look linked even though neither affects the other.", f:`temp → heat r = ${sg2(rTH)}   temp → noise r = ${sg2(rTN)}`},
+    cap:`And street noise climbs as it warms up: <b>r = ${sg2(rTN)}</b>. Temperature is pulling both strings.` });
+  add({ cam:cam.wall, delay:"x", spread:1.2, curves:{c2:"accent"}, inst:i=> i<N ? pt(RXs(rx[i]),RYs(ry[i]),tRole(tp[i])) : hideS(i-N),
+    marks:{axis:{p:[0,10,-.3],s:[28,.06,.06],role:"ink"},axis2:{p:[0,10,-.3],s:[.06,20,.06],role:"ink"}}, labels:rl, legend:true,
+    cap:`Now compare each day to what its temperature predicts, for both counts, and plot what's left over. The colors mix, the line goes flat, and <b>r = ${sg2(r2)}</b>. Once temperature is accounted for, there is no link.` });
+  add({ cam:{t:[0,7,0],az:36,el:18,w:46,h:36}, end:true, delay:"x", inst:scat(i=>tRole(tp[i])) });
+
+  const recap=[
+    ["Correlation r", `How tightly two things move together in a straight line, from −1 to +1. Street noise vs heat complaints: ${sg2(r1)}.`],
+    ["Line of best fit", `The straight line through the cloud: heat ≈ ${fmtN(f1.a)} − ${Math.abs(f1.b).toFixed(2)} × noise.`],
+    ["Residuals and least squares", "Residuals are the gaps between points and the line. Least squares picks the line with the smallest total of squared gaps."],
+    ["R²", `The share of the variation the line accounts for: ${Math.round(R2*100)}% here. A line can fit well and still predict nonsense at the edges.`],
+    ["Confounder", `A third variable driving both. Temperature: ${sg2(rTH)} with heat complaints, ${sg2(rTN)} with street noise.`],
+    ["Controlling for it", `Compare like with like. After removing what temperature predicts, r drops to ${sg2(r2)}.`]
+  ];
+  const source=`Data: NYC 311 Service Requests (NYC Open Data), 2025 daily counts of "HEAT/HOT WATER" and "Noise - Street/Sidewalk" complaints; daily high temperature at Central Park (NOAA station USW00094728). Temperature adjustment uses a quadratic fit.`;
+  return {S:St, recap, source, curveSpec};
+}
+
+/* ---------- three.js stage ---------- */
+const canvas=document.getElementById("stage");
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+const scene=new THREE.Scene();
+const camera=new THREE.OrthographicCamera(-1,1,1,-1,-500,1000);
+scene.add(new THREE.AmbientLight(0xffffff,.62));
+const sun=new THREE.DirectionalLight(0xffffff,.48); sun.position.set(.35,1,.55); scene.add(sun);
+
+const mesh=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshLambertMaterial({color:0xffffff}),T);
+mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+mesh.instanceColor=new THREE.InstancedBufferAttribute(new Float32Array(T*3),3);
+mesh.instanceColor.setUsage(THREE.DynamicDrawUsage);
+mesh.frustumCulled=false; scene.add(mesh);
+const IM=mesh.instanceMatrix.array, IC=mesh.instanceColor.array;
+
+const cssVar=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const ROLE={};
+function readRoles(){ ["ink","accent","teal","muted","white","truth","deep","field","t0","t1","t2","t3","t4"].forEach(r=>{ const c=new THREE.Color(cssVar("--"+r)||"#888"); ROLE[r]=[c.r,c.g,c.b]; }); }
+readRoles();
+
+const cur=new Float32Array(T*3), from=new Float32Array(T*3), to=new Float32Array(T*3);
+const sc=new Float32Array(T*3), sFrom=new Float32Array(T*3), sTo=new Float32Array(T*3);
+const cc=new Float32Array(T*3), cFrom=new Float32Array(T*3), cTo=new Float32Array(T*3);
+const delay=new Float32Array(T), roleNow=new Array(T);
+const DUR = RM ? .001 : .95;
+
+const MNAMES=["axis","axis2","meanS","medS","obsS","truS","sdB","sdL","sdR","seB","seL","seR","ciB","ciL","ciR"];
+const MK={};
+MNAMES.forEach(n=>{ const m=new THREE.Mesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0,depthWrite:false}));
+  m.renderOrder=2; scene.add(m); MK[n]={m,cur:{p:[0,0,0],s:[1,1,1],c:[1,1,1],o:0},from:null,to:null,role:"ink"}; });
+
+let CURV={};
+function makeCurves(spec){ for(const k in CURV){ scene.remove(CURV[k].m); CURV[k].m.geometry.dispose(); CURV[k].m.material.dispose(); }
+  CURV={}; spec.forEach(({key,pts})=>{ const geo=new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map(p=>new THREE.Vector3(p[0],p[1],p[2]))),260,.11,6,false);
+    const me=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0,depthTest:false}));
+    me.renderOrder=3; me.visible=false; scene.add(me);
+    CURV[key]={m:me,total:geo.index.count,prog:0,pFrom:0,pTo:0,o:0,oFrom:0,oTo:0,role:"ink"}; }); }
+let camCur=null, camFrom=null, camTo=null, fieldCur=ROLE.field.slice(), fieldFrom=null, fieldTo=null, fieldRole="field";
+let instStart=0, instDur=.95, instAnim=false, stepStart=0, phaseQ=[], bobAmp=RM?0:1;
+
+const lerp=(a,b,t)=>a+(b-a)*t;
+const eio=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+const eout=t=>1-Math.pow(1-t,3);
+let easeFn=eio;
+
+function retarget(p,instant){
+  const now=performance.now()/1000, spread=p.spread??.8, mode=p.delay||"random";
+  from.set(cur); sFrom.set(sc); cFrom.set(cc);
+  for(let i=0;i<T;i++){ const o=p.inst(i), q=i*3;
+    to[q]=o[0]; to[q+1]=o[1]; to[q+2]=o[2]; sTo[q]=o[3]; sTo[q+1]=o[4]; sTo[q+2]=o[5];
+    roleNow[i]=o[6]; const c=ROLE[o[6]]; cTo[q]=c[0]; cTo[q+1]=c[1]; cTo[q+2]=c[2];
+    let key;
+    if(mode==="x") key=.85*Math.min(1,Math.max(0,(to[q]+16)/32))+.15*J[i];
+    else if(mode==="rank") key= i<N ? rank[i]/N : (i-N)/M;
+    else if(mode==="index") key= i<N ? 0 : (i-N)/M;
+    else if(mode==="none") key=0;
+    else if(mode==="lln") key= i<N ? (llnPos[i]>=0?llnPos[i]/M:0) : (i-N)/M;
+    else key=J[i];
+    delay[i]=RM?0:key*spread;
+  }
+  easeFn = p.ease==="out" ? eout : eio;
+  instDur = RM ? .001 : (p.dur||DUR); instStart = instant ? now-100 : now; instAnim=true;
+  if(p.labels) setLabels(p.labels);
+}
+function runPhases(now,instant){ while(phaseQ.length && phaseQ[0].t<=now){ retarget(phaseQ.shift(),instant); } }
+
+function setState(k,instant){
+  const st=S[k], now=performance.now()/1000;
+  for(const n of MNAMES){ const mk=MK[n], spec=st.marks[n];
+    mk.from={p:mk.cur.p.slice(),s:mk.cur.s.slice(),c:mk.cur.c.slice(),o:mk.cur.o};
+    if(spec){ mk.role=spec.role; const c=ROLE[spec.role];
+      mk.to={p:spec.p.slice(),s:spec.s.slice(),c:c.slice(),o:1};
+      if(mk.cur.o<.02){ mk.from.p=spec.p.slice(); mk.from.s=spec.s.slice(); mk.from.c=c.slice(); }
+    } else mk.to={p:mk.cur.p.slice(),s:mk.cur.s.slice(),c:mk.cur.c.slice(),o:0};
+  }
+  camFrom = camCur ? JSON.parse(JSON.stringify(camCur)) : JSON.parse(JSON.stringify(st.cam));
+  camTo = JSON.parse(JSON.stringify(st.cam));
+  if(!camCur) camCur=JSON.parse(JSON.stringify(st.cam));
+  for(const key in CURV){ const c=CURV[key], spec=st.curves&&st.curves[key]; c.pFrom=c.prog; c.oFrom=c.o;
+    if(spec){ c.role=spec; c.oTo=1; c.pTo=1; if(c.o<.02){ c.pFrom=0; c.prog=0; } } else { c.oTo=0; c.pTo=c.prog; } }
+  fieldFrom=fieldCur.slice(); fieldRole=st.field; fieldTo=ROLE[st.field].slice();
+  document.body.classList.toggle("on-accent", st.field==="accent");
+  stepStart = instant ? now-100 : now;
+  setLabels(st.labels||[]);
+  const ph = st.phases || [st];
+  phaseQ = (RM||instant) ? [Object.assign({},ph[ph.length-1],{t:now})] : ph.map(p=>Object.assign({},p,{t:now+(p.at||0)}));
+  runPhases(now,instant);
+}
+
+function updateInstances(now){
+  runPhases(now,false);
+  let moving=false;
+  if(instAnim){ const e=now-instStart; let done=true;
+    for(let i=0;i<T;i++){ let t=(e-delay[i])/instDur; if(t<1) done=false; t=t<0?0:t>1?1:t; t=easeFn(t); const q=i*3;
+      cur[q]=lerp(from[q],to[q],t); cur[q+1]=lerp(from[q+1],to[q+1],t); cur[q+2]=lerp(from[q+2],to[q+2],t);
+      sc[q]=lerp(sFrom[q],sTo[q],t); sc[q+1]=lerp(sFrom[q+1],sTo[q+1],t); sc[q+2]=lerp(sFrom[q+2],sTo[q+2],t);
+      cc[q]=lerp(cFrom[q],cTo[q],t); cc[q+1]=lerp(cFrom[q+1],cTo[q+1],t); cc[q+2]=lerp(cFrom[q+2],cTo[q+2],t); }
+    if(done) instAnim=false; moving=true; }
+  const e=now-stepStart;
+  const g=Math.min(1,e/(RM?.001:1.25)), ge=eio(g);
+  for(const n of MNAMES){ const mk=MK[n]; if(!mk.to) continue; const c=mk.cur;
+    for(let a=0;a<3;a++){ c.p[a]=lerp(mk.from.p[a],mk.to.p[a],ge); c.s[a]=lerp(mk.from.s[a],mk.to.s[a],ge); c.c[a]=lerp(mk.from.c[a],mk.to.c[a],ge); }
+    c.o=lerp(mk.from.o,mk.to.o,ge);
+    mk.m.position.set(c.p[0],c.p[1],c.p[2]); mk.m.scale.set(Math.max(1e-4,c.s[0]),Math.max(1e-4,c.s[1]),Math.max(1e-4,c.s[2]));
+    mk.m.material.color.setRGB(c.c[0],c.c[1],c.c[2]); mk.m.material.opacity=c.o; mk.m.visible=c.o>.01; }
+  const ce=eio(Math.min(1,e/(RM?.001:1.5)));
+  for(const k of ["az","el","w","h","sh"]) camCur[k]=lerp(camFrom[k]??0,camTo[k]??0,ce);
+  for(const key in CURV){ const c=CURV[key]; c.prog=lerp(c.pFrom,c.pTo,eio(Math.min(1,Math.max(0,(e-.5)/(RM?.001:1.8)))));
+    c.o=lerp(c.oFrom,c.oTo,Math.min(1,e/(RM?.001:.5))); const col=ROLE[c.role];
+    c.m.material.color.setRGB(col[0],col[1],col[2]); c.m.material.opacity=c.o; c.m.visible=c.o>.01;
+    c.m.geometry.setDrawRange(0,Math.floor(c.total*c.prog/3)*3); }
+  for(let a=0;a<3;a++) camCur.t[a]=lerp(camFrom.t[a],camTo.t[a],ce);
+  for(let a=0;a<3;a++) fieldCur[a]=lerp(fieldFrom[a],fieldTo[a],Math.min(1,e/.8));
+  return moving;
+}
+
+function writeMatrices(now){
+  const b=bobAmp>.002;
+  for(let i=0;i<T;i++){ const o=i*16,q=i*3; let y=cur[q+1];
+    if(b) y+=Math.sin(now*.8+J[i]*6.283)*1.3*bobAmp;
+    IM[o]=sc[q]; IM[o+5]=sc[q+1]; IM[o+10]=sc[q+2]; IM[o+12]=cur[q]; IM[o+13]=y; IM[o+14]=cur[q+2]; IM[o+15]=1; }
+  IC.set(cc); mesh.instanceMatrix.needsUpdate=true; mesh.instanceColor.needsUpdate=true;
+}
+
+function placeCamera(now){
+  const w=innerWidth,h=innerHeight,asp=w/h;
+  let az=camCur.az; if(bobAmp>.002) az+=Math.sin(now*.12)*9*bobAmp;
+  const A=az*Math.PI/180, E=camCur.el*Math.PI/180, sh=(innerWidth>=760?(camCur.sh||0):0), t=[camCur.t[0]+sh*Math.cos(A),camCur.t[1],camCur.t[2]-sh*Math.sin(A)];
+  camera.position.set(t[0]+Math.cos(E)*Math.sin(A)*300, t[1]+Math.sin(E)*300, t[2]+Math.cos(E)*Math.cos(A)*300);
+  camera.up.set(0,1,0); camera.lookAt(t[0],t[1],t[2]);
+  const hh=Math.max(camCur.h/2, camCur.w/2/asp);
+  camera.top=hh; camera.bottom=-hh; camera.left=-hh*asp; camera.right=hh*asp; camera.updateProjectionMatrix();
+}
+
+/* ---------- labels ---------- */
+const labEls=new Map(); let labSpecs=[];
+function setLabels(list){
+  const ids=new Set(list.map(l=>l.id));
+  labEls.forEach((el,id)=>{ if(!ids.has(id)) el.classList.remove("on"); });
+  list.forEach(l=>{ let el=labEls.get(l.id);
+    if(!el){ el=document.createElement("div"); el.className="lab "+(l.kind==="axis"?"axis":"pill"); document.body.appendChild(el); labEls.set(l.id,el); }
+    if(el.textContent!==l.text){ el.textContent=l.text; }
+    requestAnimationFrame(()=>{ if(labSpecs.some(s=>s.id===l.id)) el.classList.add("on"); }); });
+  labSpecs=list;
+}
+const v3=new THREE.Vector3();
+function placeLabels(){
+  const w=innerWidth,h=innerHeight;
+  labSpecs.forEach(l=>{ const el=labEls.get(l.id); v3.set(l.p[0],l.p[1],l.p[2]).project(camera);
+    const x=(v3.x+1)/2*w, y=(1-v3.y)/2*h;
+    el.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px) ${l.left?"translate(calc(-100% - 8px),-50%)":`translate(-50%,${l.below?"6px":"-100%"})`}`; });
+}
+
+/* ---------- navigation ---------- */
+let step=0;
+const capEl=document.getElementById("caption"), heroEl=document.getElementById("hero"), panelEl=document.getElementById("panel");
+const countEl=document.getElementById("count"), ticksEl=document.getElementById("ticks");
+const prevB=document.getElementById("prev"), nextB=document.getElementById("next");
+let capTimer=null;
+function go(k,instant,force){
+  k=Math.max(0,Math.min(S.length-1,k)); if(k===step && !instant && !force) return; step=k; const st=S[k];
+  setState(k,instant);
+  heroEl.classList.toggle("off",!st.hero);
+  const dc=document.getElementById("defcard");
+  if(st.card){ dc.querySelector(".k").textContent=st.card.k; dc.querySelector(".d").textContent=st.card.d; dc.querySelector(".f").textContent=st.card.f; }
+  dc.classList.toggle("on",!!st.card);
+  document.getElementById("legend").classList.toggle("on",!!st.legend);
+  panelEl.classList.toggle("on",!!st.end); panelEl.setAttribute("aria-hidden",st.end?"false":"true");
+  capEl.classList.remove("show"); clearTimeout(capTimer);
+  capTimer=setTimeout(()=>{ capEl.innerHTML= st.cap ? `<span>${st.cap}</span>` : ""; if(st.cap) capEl.classList.add("show"); }, instant||RM?0:260);
+  countEl.textContent=String(k+1).padStart(2,"0")+" / "+String(S.length).padStart(2,"0");
+  [...ticksEl.children].forEach((t,i)=>{ t.className= i===k?"on":(i<k?"done":""); });
+  prevB.setAttribute("aria-disabled",k===0?"true":"false"); nextB.setAttribute("aria-disabled",k===S.length-1?"true":"false");
+  nextB.innerHTML = k===0 ? "Start &rarr;" : "Next &rarr;";
+}
+const next=()=>go(step+1), prev=()=>go(step-1);
+prevB.addEventListener("click",e=>{e.stopPropagation();prev();});
+nextB.addEventListener("click",e=>{e.stopPropagation();next();});
+document.getElementById("restart").addEventListener("click",e=>{e.stopPropagation();go(0);});
+panelEl.addEventListener("click",e=>e.stopPropagation());
+window.addEventListener("click",e=>{ if(e.target.closest("button,a,.panel,select,label,.chips")) return; (e.clientX>innerWidth/2?next:prev)(); });
+window.addEventListener("keydown",e=>{
+  if(e.target.closest&&e.target.closest("select")) return;
+  if(["ArrowRight","PageDown"," "].includes(e.key)){ e.preventDefault(); next(); }
+  else if(["ArrowLeft","PageUp"].includes(e.key)){ e.preventDefault(); prev(); }
+  else if(e.key==="Home"){ go(0); } else if(e.key==="End"){ go(S.length-1); } });
+
+/* ---------- theme ---------- */
+function retheme(){ readRoles();
+  for(let i=0;i<T;i++){ const c=ROLE[roleNow[i]]||ROLE.ink, q=i*3; for(let a=0;a<3;a++){ cc[q+a]=cTo[q+a]=cFrom[q+a]=c[a]; } }
+  for(const n of MNAMES){ const mk=MK[n], c=ROLE[mk.role]; for(let a=0;a<3;a++){ mk.cur.c[a]=c[a]; if(mk.to) mk.to.c[a]=c[a]; if(mk.from) mk.from.c[a]=c[a]; } }
+  fieldCur=ROLE[fieldRole].slice(); fieldTo=fieldCur.slice(); fieldFrom=fieldCur.slice(); writeMatrices(performance.now()/1000); }
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",retheme);
+new MutationObserver(retheme).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+
+function resize(){ renderer.setSize(innerWidth,innerHeight,false); }
+window.addEventListener("resize",resize); resize();
+
+C=build(); S=C.S; makeCurves(C.curveSpec);
+document.getElementById("recap").innerHTML=C.recap.map(([t,d])=>`<dt>${t}</dt><dd>${d}</dd>`).join("");
+document.getElementById("foot").textContent=C.source;
+ticksEl.innerHTML=S.map(()=>"<i></i>").join("");
+
+/* ---------- boot ---------- */
+for(let i=0;i<T;i++){ const o=S[0].inst(i), q=i*3; cur[q]=o[0];cur[q+1]=o[1];cur[q+2]=o[2]; sc[q]=o[3];sc[q+1]=o[4];sc[q+2]=o[5]; const c=ROLE[o[6]]; cc[q]=c[0];cc[q+1]=c[1];cc[q+2]=c[2]; roleNow[i]=o[6]; }
+step=-1; go(0,true);
+const bg=new THREE.Color();
+function frame(ms){
+  const now=ms/1000;
+  bobAmp += ((S[step].hero&&!RM?1:0)-bobAmp)*.04;
+  const moving=updateInstances(now);
+  if(moving || bobAmp>.002) writeMatrices(now);
+  bg.setRGB(fieldCur[0],fieldCur[1],fieldCur[2]); scene.background=bg;
+  placeCamera(now); placeLabels();
+  renderer.render(scene,camera);
+  requestAnimationFrame(frame);
+}
+writeMatrices(0);
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
