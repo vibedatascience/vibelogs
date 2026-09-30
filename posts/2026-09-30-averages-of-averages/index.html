@@ -12,17 +12,17 @@
 <style>
 /* Layout: full-bleed isometric cube stage; chrome pinned to the four edges; one caption slot low and centered, like a slide narrator */
 :root{
-  --field:#E9EEF4; --ink:#0A3069; --accent:#E60023; --teal:#0D9488; --muted:#B9C4D2; --white:#FFFFFF;
+  --field:#E9EEF4; --ink:#0A3069; --accent:#E60023; --teal:#0D9488; --muted:#B9C4D2; --white:#FFFFFF; --truth:#64748B;
   --text:#0A3069; --chrome:#0A3069; --cap-bg:#0A3069; --cap-fg:#FFFFFF; --on-accent:#FFFFFF;
   --f-display:"Anybody","Arial Narrow","Helvetica Neue",sans-serif;
   --f-body:"Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --field:#0B1424; --ink:#C7D4E6; --accent:#FF2E4F; --teal:#2DD4BF; --muted:#26344A; --white:#F4F7FB;
+  --field:#0B1424; --ink:#C7D4E6; --accent:#FF2E4F; --teal:#2DD4BF; --muted:#26344A; --white:#F4F7FB; --truth:#94A3B8;
   --text:#E3EAF3; --chrome:#E3EAF3; --cap-bg:#E3EAF3; --cap-fg:#0B1424; --on-accent:#FFFFFF; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --field:#0B1424; --ink:#C7D4E6; --accent:#FF2E4F; --teal:#2DD4BF; --muted:#26344A; --white:#F4F7FB;
+  --field:#0B1424; --ink:#C7D4E6; --accent:#FF2E4F; --teal:#2DD4BF; --muted:#26344A; --white:#F4F7FB; --truth:#94A3B8;
   --text:#E3EAF3; --chrome:#E3EAF3; --cap-bg:#E3EAF3; --cap-fg:#0B1424; --on-accent:#FFFFFF; color-scheme:dark}
 
 html,body{height:100%}
@@ -142,7 +142,7 @@ const pool=[...Array(N).keys()];
 function draw(n){ for(let k=0;k<n;k++){ const j=k+Math.floor(R()*(N-k)); const t=pool[k]; pool[k]=pool[j]; pool[j]=t; } return pool.slice(0,n); }
 const meanOf = a => a.reduce((s,i)=>s+vals[i],0)/a.length;
 const demo=[], m10=new Float64Array(M), m40=new Float64Array(M);
-for(let j=0;j<M;j++){ const s=draw(10); if(j<2) demo.push(s); m10[j]=meanOf(s); }
+for(let j=0;j<M;j++){ const s=draw(10); if(j<7) demo.push(s); m10[j]=meanOf(s); }
 for(let j=0;j<M;j++){ m40[j]=meanOf(draw(40)); }
 const avg = a => a.reduce((x,y)=>x+y,0)/a.length;
 const sdOf = a => { const m=avg(a); return Math.sqrt(a.reduce((s,v)=>s+(v-m)*(v-m),0)/a.length); };
@@ -175,7 +175,7 @@ for(let i=0;i<T;i++){ SC[i*3]=(R()-.5)*72; SC[i*3+1]=-8+R()*36; SC[i*3+2]=(R()-.
 const LIFT = popTop+5;
 function liftPos(s){ const m=new Map(), p=new Map(); s.forEach(i=>{ const b=Math.min(23,Math.floor(vals[i]/5)); const o=m.get(b)||0; m.set(b,o+1); p.set(i,[HIST[i*3],LIFT+o*G,ZP]); }); return p; }
 function clusterPos(s){ const x0=xw(meanOf(s)), p=new Map(); s.forEach((i,k)=>p.set(i,[x0+((k%5)-2)*G, LIFT+Math.floor(k/5)*G, ZP])); return p; }
-const liftA=liftPos(demo[0]), clusA=clusterPos(demo[0]), liftB=liftPos(demo[1]), clusB=clusterPos(demo[1]);
+const DEMO=demo.map(s=>({set:new Set(s),lift:liftPos(s),clus:clusterPos(s),m:meanOf(s),c:[xw(meanOf(s)),LIFT+.5*G,ZP]}));
 
 /* ---------- instance helpers ---------- */
 const pop = (i,role) => [HIST[i*3],HIST[i*3+1],HIST[i*3+2],U,U,U,role];
@@ -202,6 +202,7 @@ const camHist={t:[0,11.5,-6],az:30,el:19,w:38,h:45};
 const camLift={t:[0,15.5,-6],az:30,el:19,w:40,h:52};
 const camS10 ={t:[-2.5,9.5,0],az:24,el:19,w:36,h:41};
 const camS40 ={t:[-2.5,10,0],az:24,el:19,w:36,h:41};
+const camMont={t:[-1.5,13,-1],az:26,el:19,w:40,h:50};
 const camEnd ={t:[0,10,-2],az:52,el:26,w:52,h:52};
 const medCube=order[500];
 
@@ -216,38 +217,53 @@ add({ cam:camSky, delay:"x", cap:`Everyone has a daily commute, measured in minu
   inst:i=> i<N ? sky(i,i,"ink") : meanHidden(i-N,L10) });
 add({ cam:camSky, delay:"rank", spread:1.1, cap:`A crowd is hard to read. So line everyone up, from the shortest commute to the longest.`,
   inst:i=> i<N ? sky(i,rank[i],"ink") : meanHidden(i-N,L10) });
+function story(o){ const sm=o.sample, D=sm?DEMO[sm.j]:null, k=o.slots||0;
+  return i=>{ if(i<N){ if(D&&D.set.has(i)){ if(sm.mode==="lift") return at(D.lift.get(i),"teal"); if(sm.mode==="cluster") return at(D.clus.get(i),"teal"); return [D.c[0],D.c[1],D.c[2],0,0,0,"teal"]; } return pop(i,"ink"); }
+    const j=i-N; if(D&&sm.mode==="merged"&&j===sm.j) return at(D.c,"accent",1.35);
+    return j<k ? mean(j,L10,"accent") : meanHidden(j,L10); }; }
+const truthM = () => Object.assign(axisM(Z1+.8),{meanS:slab(xw(mu),popTop+1.2,Z0,Z1,"truth")});
+const truthL = () => [...axisL(Z1+.8),{id:"popM",text:`true mean ${f1(mu)}`,p:[xw(mu),popTop+1.4,Z1+.35]}];
+const atCenter = (j,id,text) => ({id,text,p:[DEMO[j].c[0],DEMO[j].c[1]+.8,ZP]});
+const atSlot = (j,id,text) => ({id,text,p:[L10.pos[j*3],L10.pos[j*3+1]+.6,L10.pos[j*3+2]]});
+
 add({ cam:camSky, cap:`The median is the person in the middle of that line. Half the crowd commutes less than <b>${fm(med)} min</b> and half commutes more.`,
-  inst:i=> i<N ? sky(i,rank[i],(rank[i]===499||rank[i]===500)?"accent":"ink") : meanHidden(i-N,L10),
+  inst:i=> i<N ? sky(i,rank[i],(rank[i]===499||rank[i]===500)?"teal":"ink") : meanHidden(i-N,L10),
   labels:[(()=>{const [x,z]=gridXZ(500); return {id:"med",text:`median ${fm(med)} min`,p:[x,vals[medCube]/9+.6,z]};})()] });
 add({ cam:camHist, delay:"x", spread:1.1, cap:`Now drop everyone into 5-minute buckets. Each stack counts the people in that range. Together the stacks form a histogram.`,
   inst:i=> i<N ? pop(i,"ink") : meanHidden(i-N,L10), marks:axisM(Z1+.8), labels:axisL(Z1+.8) });
 add({ cam:camHist, delay:"x", cap:`The pile leans. Most trips are short, but a long right tail of <b>${tailN} people</b> travel an hour or more.`,
-  inst:i=> i<N ? pop(i,vals[i]>=60?"accent":"ink") : meanHidden(i-N,L10), marks:axisM(Z1+.8),
+  inst:i=> i<N ? pop(i,vals[i]>=60?"teal":"ink") : meanHidden(i-N,L10), marks:axisM(Z1+.8),
   labels:[...axisL(Z1+.8),{id:"tail",text:`${tailN} people, 60+ min`,p:[xw(82),binTop(12)+2.4,ZP]}] });
 add({ cam:camHist, cap:`The mean is the pile's balance point. The long tail drags it up to <b>${f1(mu)} min</b>, above the median of <b>${fm(med)} min</b>.`,
   inst:i=> i<N ? pop(i,"ink") : meanHidden(i-N,L10),
-  marks:Object.assign(axisM(Z1+.8),{meanS:slab(xw(mu),popTop+4.2,Z0,Z1,"accent"),medS:slab(xw(med),popTop+1.2,Z0,Z1,"teal")}),
+  marks:Object.assign(axisM(Z1+.8),{meanS:slab(xw(mu),popTop+4.2,Z0,Z1,"truth"),medS:slab(xw(med),popTop+1.2,Z0,Z1,"teal")}),
   labels:[...axisL(Z1+.8),{id:"meanL",text:`mean ${f1(mu)}`,p:[xw(mu),popTop+4.4,Z1+.35]},{id:"medL",text:`median ${fm(med)}`,p:[xw(med),popTop+1.4,Z1+.35]}] });
 add({ cam:camHist, delay:"x", cap:`Spread gets its own number. The standard deviation, <b>σ = ${f1(sd)} min</b>, is roughly the typical distance from the mean. Here ${Math.round(inSd/10)}% of people sit within one σ of it.`,
   inst:i=> i<N ? pop(i,Math.abs(vals[i]-mu)<=sd?"ink":"muted") : meanHidden(i-N,L10),
-  marks:Object.assign(axisM(Z1+.8),{meanS:slab(xw(mu),popTop+1.2,Z0,Z1,"accent")},bracket("sd",xw(mu-sd),xw(mu+sd),popTop+3.4,ZP,"accent")),
+  marks:Object.assign(axisM(Z1+.8),{meanS:slab(xw(mu),popTop+1.2,Z0,Z1,"truth")},bracket("sd",xw(mu-sd),xw(mu+sd),popTop+3.4,ZP,"truth")),
   labels:[...axisL(Z1+.8),{id:"sdL",text:`± σ = ${f1(sd)} min`,p:[xw(mu),popTop+3.7,ZP]}] });
-add({ cam:camLift, cap:`In practice you rarely get to ask everyone. You ask a sample. Here are 10 people picked at random.`,
-  inst:i=> i<N ? (liftA.has(i)?at(liftA.get(i),"accent"):pop(i,"ink")) : meanHidden(i-N,L10),
-  marks:Object.assign(axisM(Z1+.8),{meanS:slab(xw(mu),popTop+1.2,Z0,Z1,"accent")}), labels:[...axisL(Z1+.8),{id:"popM",text:`population mean ${f1(mu)}`,p:[xw(mu),popTop+1.4,Z1+.35]}] });
-add({ cam:camLift, delay:"x", cap:`Average their 10 commutes and you get <b>${f1(mA)} min</b>. Close to the true ${f1(mu)}, but a little off. That estimate drops down front as one small cube.`,
-  inst:i=> i<N ? (clusA.has(i)?at(clusA.get(i),"accent"):pop(i,"ink")) : (i-N===0?mean(0,L10,"accent"):meanHidden(i-N,L10)),
-  marks:Object.assign(axisM(Z1+.8),{meanS:slab(xw(mu),popTop+1.2,Z0,Z1,"accent")}),
-  labels:[...axisL(Z1+.8),{id:"popM",text:`population mean ${f1(mu)}`,p:[xw(mu),popTop+1.4,Z1+.35]},{id:"smA",text:`sample mean ${f1(mA)}`,p:[xw(mA),LIFT+2*G+.3,ZP]}] });
-add({ cam:camLift, cap:`Pick 10 other people and you get a different set of trips.`,
-  inst:i=> i<N ? (liftB.has(i)?at(liftB.get(i),"accent"):pop(i,"ink")) : (i-N===0?mean(0,L10,"accent"):meanHidden(i-N,L10)),
-  marks:Object.assign(axisM(Z1+.8),{meanS:slab(xw(mu),popTop+1.2,Z0,Z1,"accent")}), labels:[...axisL(Z1+.8),{id:"popM",text:`population mean ${f1(mu)}`,p:[xw(mu),popTop+1.4,Z1+.35]}] });
-add({ cam:camLift, delay:"x", cap:`This sample averages <b>${f1(mB)} min</b>. Every sample gives its own answer. So what do all those answers look like together?`,
-  inst:i=> i<N ? (clusB.has(i)?at(clusB.get(i),"accent"):pop(i,"ink")) : (i-N<2?mean(i-N,L10,"accent"):meanHidden(i-N,L10)),
-  marks:Object.assign(axisM(Z1+.8),{meanS:slab(xw(mu),popTop+1.2,Z0,Z1,"accent")}),
-  labels:[...axisL(Z1+.8),{id:"popM",text:`population mean ${f1(mu)}`,p:[xw(mu),popTop+1.4,Z1+.35]},{id:"smB",text:`sample mean ${f1(mB)}`,p:[xw(mB),LIFT+2*G+.3,ZP]}] });
-add({ cam:camS10, delay:"index", spread:2.8, ease:"out", cap:`Repeat that 600 times. Each small cube is the mean of one random sample of 10 people.`,
-  inst:i=> i<N ? pop(i,"ink") : mean(i-N,L10,"accent"), marks:axisM(ZF), labels:[...axisL(ZF),{id:"n10",text:`600 sample means, n = 10`,p:[xw(mm10),L10.top+1.3,ZS+SS*2]}] });
+add({ cam:camLift, cap:`In practice you rarely get to ask everyone. You ask a sample. The 10 people in teal were picked at random.`,
+  inst:story({sample:{j:0,mode:"lift"}}), marks:truthM(), labels:truthL() });
+add({ cam:camLift, marks:truthM(), labels:truthL(),
+  cap:`Average their 10 commutes and the ten trips collapse into one number, <b>${f1(DEMO[0].m)} min</b>. That red cube is a sample mean. From here on, red marks an estimate.`,
+  phases:[ {inst:story({sample:{j:0,mode:"cluster"}}),delay:"x",spread:.5},
+           {at:1.5,inst:story({sample:{j:0,mode:"merged"}}),delay:"none",spread:0,dur:.8,labels:[...truthL(),atCenter(0,"sm0",`sample mean ${f1(DEMO[0].m)}`)]} ] });
+add({ cam:camLift, delay:"random", spread:.5, marks:truthM(),
+  cap:`The sample mean drops down front, where the estimates will pile up. The true mean is ${f1(mu)}, so this one is off by ${f1(Math.abs(DEMO[0].m-mu))} min.`,
+  inst:story({slots:1}), labels:[...truthL(),atSlot(0,"sm0",`sample mean ${f1(DEMO[0].m)}`)] });
+add({ cam:camLift, marks:truthM(), labels:truthL(),
+  cap:`Pick 10 other people and run the same routine: lift, average, collapse, drop. This sample's mean is <b>${f1(DEMO[1].m)} min</b>, a different answer from the same crowd.`,
+  phases:[ {inst:story({slots:1,sample:{j:1,mode:"lift"}}),delay:"random",spread:.4},
+           {at:1.3,inst:story({slots:1,sample:{j:1,mode:"cluster"}}),delay:"x",spread:.4},
+           {at:2.5,inst:story({slots:1,sample:{j:1,mode:"merged"}}),delay:"none",spread:0,dur:.7},
+           {at:3.5,inst:story({slots:2}),delay:"random",spread:.4,labels:[...truthL(),atSlot(1,"sm1",`sample mean ${f1(DEMO[1].m)}`)]} ] });
+const montage=[]; { let t0=0; [.95,.8,.65,.5,.4].forEach((d,q)=>{ const j=2+q;
+  montage.push({at:t0,inst:story({slots:j,sample:{j,mode:"lift"}}),delay:"random",spread:.2,dur:d*.8});
+  montage.push({at:t0+d,inst:story({slots:j,sample:{j,mode:"merged"}}),delay:"none",spread:0,dur:d*.75});
+  t0+=d*2; });
+  montage.push({at:t0,inst:story({slots:M}),delay:"index",spread:2.6,ease:"out",labels:[...axisL(ZF),{id:"n10",text:`600 sample means, n = 10`,p:[xw(mm10),L10.top+1.3,ZS+SS*2]}]}); }
+add({ cam:camMont, marks:axisM(ZF), labels:axisL(ZF), phases:montage,
+  cap:`Now repeat it, faster. After 600 rounds, each small red cube is the mean of one random sample of 10 people.` });
 add({ cam:camS10, field:"accent", cap:`The crowd is lopsided, yet the sample means pile up into a symmetric bell. That pattern is the central limit theorem, and it shows up for most populations once samples are big enough.`,
   inst:i=> i<N ? pop(i,"ink") : mean(i-N,L10,"white"), marks:axisM(ZF,"white"), labels:[...axisL(ZF),{id:"n10",text:`600 sample means, n = 10`,p:[xw(mm10),L10.top+1.3,ZS+SS*2]}] });
 add({ cam:camS10, field:"accent", cap:`The bell is centered on the truth. The 600 sample means average <b>${f1(mm10)} min</b>, against a population mean of <b>${f1(mu)} min</b>.`,
@@ -295,7 +311,7 @@ const IM=mesh.instanceMatrix.array, IC=mesh.instanceColor.array;
 
 const cssVar=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const ROLE={};
-function readRoles(){ ["ink","accent","teal","muted","white","field"].forEach(r=>{ const c=new THREE.Color(cssVar("--"+r)||"#888"); ROLE[r]=[c.r,c.g,c.b]; }); }
+function readRoles(){ ["ink","accent","teal","muted","white","truth","field"].forEach(r=>{ const c=new THREE.Color(cssVar("--"+r)||"#888"); ROLE[r]=[c.r,c.g,c.b]; }); }
 readRoles();
 
 const cur=new Float32Array(T*3), from=new Float32Array(T*3), to=new Float32Array(T*3);
@@ -310,27 +326,35 @@ MNAMES.forEach(n=>{ const m=new THREE.Mesh(new THREE.BoxGeometry(1,1,1),new THRE
   m.renderOrder=2; scene.add(m); MK[n]={m,cur:{p:[0,0,0],s:[1,1,1],c:[1,1,1],o:0},from:null,to:null,role:"ink"}; });
 
 let camCur=null, camFrom=null, camTo=null, fieldCur=ROLE.field.slice(), fieldFrom=null, fieldTo=null, fieldRole="field";
-let animStart=0, animLen=0, animating=false, gStart=0, bobAmp=RM?0:1;
+let instStart=0, instDur=.95, instAnim=false, stepStart=0, phaseQ=[], bobAmp=RM?0:1;
 
 const lerp=(a,b,t)=>a+(b-a)*t;
 const eio=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
 const eout=t=>1-Math.pow(1-t,3);
 let easeFn=eio;
 
-function setState(k,instant){
-  const st=S[k], now=performance.now()/1000;
+function retarget(p,instant){
+  const now=performance.now()/1000, spread=p.spread??.8, mode=p.delay||"random";
   from.set(cur); sFrom.set(sc); cFrom.set(cc);
-  for(let i=0;i<T;i++){ const o=st.inst(i), q=i*3;
+  for(let i=0;i<T;i++){ const o=p.inst(i), q=i*3;
     to[q]=o[0]; to[q+1]=o[1]; to[q+2]=o[2]; sTo[q]=o[3]; sTo[q+1]=o[4]; sTo[q+2]=o[5];
     roleNow[i]=o[6]; const c=ROLE[o[6]]; cTo[q]=c[0]; cTo[q+1]=c[1]; cTo[q+2]=c[2];
     let key;
-    if(st.delay==="x") key=.85*Math.min(1,Math.max(0,(to[q]+16)/32))+.15*J[i];
-    else if(st.delay==="rank") key= i<N ? rank[i]/N : (i-N)/M;
-    else if(st.delay==="index") key= i<N ? 0 : (i-N)/M;
+    if(mode==="x") key=.85*Math.min(1,Math.max(0,(to[q]+16)/32))+.15*J[i];
+    else if(mode==="rank") key= i<N ? rank[i]/N : (i-N)/M;
+    else if(mode==="index") key= i<N ? 0 : (i-N)/M;
+    else if(mode==="none") key=0;
     else key=J[i];
-    delay[i]=RM?0:key*st.spread;
+    delay[i]=RM?0:key*spread;
   }
-  easeFn = st.ease==="out" ? eout : eio;
+  easeFn = p.ease==="out" ? eout : eio;
+  instDur = RM ? .001 : (p.dur||DUR); instStart = instant ? now-100 : now; instAnim=true;
+  if(p.labels) setLabels(p.labels);
+}
+function runPhases(now,instant){ while(phaseQ.length && phaseQ[0].t<=now){ retarget(phaseQ.shift(),instant); } }
+
+function setState(k,instant){
+  const st=S[k], now=performance.now()/1000;
   for(const n of MNAMES){ const mk=MK[n], spec=st.marks[n];
     mk.from={p:mk.cur.p.slice(),s:mk.cur.s.slice(),c:mk.cur.c.slice(),o:mk.cur.o};
     if(spec){ mk.role=spec.role; const c=ROLE[spec.role];
@@ -343,30 +367,34 @@ function setState(k,instant){
   if(!camCur) camCur=JSON.parse(JSON.stringify(st.cam));
   fieldFrom=fieldCur.slice(); fieldRole=st.field; fieldTo=ROLE[st.field].slice();
   document.body.classList.toggle("on-accent", st.field==="accent");
-  animStart=now; animLen=RM?.001:Math.max(1.3, st.spread+DUR); animating=true;
-  if(instant){ animStart=now-100; }
+  stepStart = instant ? now-100 : now;
+  setLabels(st.labels||[]);
+  const ph = st.phases || [st];
+  phaseQ = (RM||instant) ? [Object.assign({},ph[ph.length-1],{t:now})] : ph.map(p=>Object.assign({},p,{t:now+(p.at||0)}));
+  runPhases(now,instant);
 }
 
 function updateInstances(now){
-  const e=now-animStart; let done=true;
-  if(animating){
-    for(let i=0;i<T;i++){ let t=(e-delay[i])/DUR; if(t<1) done=false; t=t<0?0:t>1?1:t; t=easeFn(t); const q=i*3;
+  runPhases(now,false);
+  let moving=false;
+  if(instAnim){ const e=now-instStart; let done=true;
+    for(let i=0;i<T;i++){ let t=(e-delay[i])/instDur; if(t<1) done=false; t=t<0?0:t>1?1:t; t=easeFn(t); const q=i*3;
       cur[q]=lerp(from[q],to[q],t); cur[q+1]=lerp(from[q+1],to[q+1],t); cur[q+2]=lerp(from[q+2],to[q+2],t);
       sc[q]=lerp(sFrom[q],sTo[q],t); sc[q+1]=lerp(sFrom[q+1],sTo[q+1],t); sc[q+2]=lerp(sFrom[q+2],sTo[q+2],t);
       cc[q]=lerp(cFrom[q],cTo[q],t); cc[q+1]=lerp(cFrom[q+1],cTo[q+1],t); cc[q+2]=lerp(cFrom[q+2],cTo[q+2],t); }
-  }
-  const g=Math.min(1,e/Math.max(.001,RM?.001:1.25)), ge=eio(g);
+    if(done) instAnim=false; moving=true; }
+  const e=now-stepStart;
+  const g=Math.min(1,e/(RM?.001:1.25)), ge=eio(g);
   for(const n of MNAMES){ const mk=MK[n]; if(!mk.to) continue; const c=mk.cur;
     for(let a=0;a<3;a++){ c.p[a]=lerp(mk.from.p[a],mk.to.p[a],ge); c.s[a]=lerp(mk.from.s[a],mk.to.s[a],ge); c.c[a]=lerp(mk.from.c[a],mk.to.c[a],ge); }
     c.o=lerp(mk.from.o,mk.to.o,ge);
     mk.m.position.set(c.p[0],c.p[1],c.p[2]); mk.m.scale.set(Math.max(1e-4,c.s[0]),Math.max(1e-4,c.s[1]),Math.max(1e-4,c.s[2]));
     mk.m.material.color.setRGB(c.c[0],c.c[1],c.c[2]); mk.m.material.opacity=c.o; mk.m.visible=c.o>.01; }
-  const cg=Math.min(1,e/(RM?.001:1.5)), ce=eio(cg);
+  const ce=eio(Math.min(1,e/(RM?.001:1.5)));
   for(const k of ["az","el","w","h"]) camCur[k]=lerp(camFrom[k],camTo[k],ce);
   for(let a=0;a<3;a++) camCur.t[a]=lerp(camFrom.t[a],camTo.t[a],ce);
   for(let a=0;a<3;a++) fieldCur[a]=lerp(fieldFrom[a],fieldTo[a],Math.min(1,e/.8));
-  if(done && cg>=1 && g>=1) animating=false;
-  return !done;
+  return moving;
 }
 
 function writeMatrices(now){
@@ -420,7 +448,6 @@ function go(k,instant){
   panelEl.classList.toggle("on",!!st.end); panelEl.setAttribute("aria-hidden",st.end?"false":"true");
   capEl.classList.remove("show"); clearTimeout(capTimer);
   capTimer=setTimeout(()=>{ capEl.innerHTML= st.cap ? `<span>${st.cap}</span>` : ""; if(st.cap) capEl.classList.add("show"); }, instant||RM?0:260);
-  setLabels(st.labels||[]);
   countEl.textContent=String(k+1).padStart(2,"0")+" / "+String(S.length).padStart(2,"0");
   [...ticksEl.children].forEach((t,i)=>{ t.className= i===k?"on":(i<k?"done":""); });
   prevB.setAttribute("aria-disabled",k===0?"true":"false"); nextB.setAttribute("aria-disabled",k===S.length-1?"true":"false");
