@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="author" content="Rahul">
 <title>Averages of Averages | vibelogs</title>
-<meta name="description" content="A click-through 3D walk through mean, median, standard deviation, sampling, the central limit theorem and the law of large numbers, told with 1,600 cubes.">
+<meta name="description" content="A click-through 3D walk through mean, median, spread, sampling, the central limit theorem and the law of large numbers. Run it on simulated commuters, a Gallup-anchored poll, NYC street trees or Hacker News titles.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,100..900&family=IBM+Plex+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;700&display=swap">
@@ -87,6 +87,18 @@ a.brand:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
   .caption{bottom:calc(env(safe-area-inset-bottom,0px) + 66px)}
   .brand{font-size:15px}
 }
+.ds{pointer-events:auto;font:500 12px/1 var(--f-mono);letter-spacing:.03em;color:inherit;background:transparent;border:1px solid currentColor;border-radius:2px;padding:7px 26px 7px 9px;max-width:46vw;appearance:none;-webkit-appearance:none;cursor:pointer;
+  background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);background-position:calc(100% - 13px) 50%,calc(100% - 8px) 50%;background-size:5px 5px;background-repeat:no-repeat}
+.ds option{color:#0A3069;background:#fff}
+.ds:focus-visible,.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.top-r{display:flex;align-items:center;gap:14px;min-width:0}
+.chips{pointer-events:auto;display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 0;max-width:640px}
+.chips button{display:flex;flex-direction:column;align-items:flex-start;gap:4px;background:var(--cap-bg);color:var(--cap-fg);border:2px solid var(--cap-bg);border-radius:2px;padding:9px 12px;cursor:pointer;text-align:left}
+.chips button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.chips .cl{font:500 14px/1.1 var(--f-body)}
+.chips .ck{font:500 10.5px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;opacity:.8}
+.hero .pick{margin:26px 0 0;font:500 12px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase}
+@media (max-width:560px){ .count{display:none} .chips button{padding:7px 9px} .chips .cl{font-size:13px} .hero .pick{margin-top:18px} .chips{margin-top:10px} }
 @media (prefers-reduced-motion: reduce){.caption,.hero,.panel,.lab,.ticks i{transition:none}}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 </style>
@@ -96,14 +108,19 @@ a.brand:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
 <header class="bar top">
   <a class="brand" href="../../" aria-label="vibelogs home">Averages of Averages</a>
-  <div class="count" id="count">01 / 20</div>
+  <div class="top-r">
+    <label class="sr" for="ds">Dataset</label>
+    <select class="ds" id="ds"></select>
+    <div class="count" id="count">01 / 23</div>
+  </div>
 </header>
 
 <section class="hero" id="hero">
   <p class="eyebrow"><span>Basics of statistics</span></p>
   <h1><span>Averages</span><br><span class="accent">of averages</span></h1>
   <p class="lede"><span>How a lopsided crowd, a few random samples and one theorem turn a guess into an estimate.</span></p>
-  <p class="hint"><span>Tap the right side or press &rarr; to start</span></p>
+  <p class="pick"><span>Pick a crowd, then press &rarr;</span></p>
+  <div class="chips" id="chips"></div>
 </section>
 
 <p class="caption" id="caption" aria-live="polite"></p>
@@ -112,7 +129,7 @@ a.brand:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
 <section class="panel" id="panel" aria-hidden="true">
   <h2>Six ideas, one pile of cubes</h2>
-  <p class="sub">Everything in this walk-through comes back to these.</p>
+  <p class="sub">Everything in this walk-through comes back to these. Switch the crowd at the top and run it again.</p>
   <dl id="recap"></dl>
   <p class="foot" id="foot"></p>
   <button type="button" id="restart">Start over</button>
@@ -130,204 +147,312 @@ a.brand:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 "use strict";
 const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-/* ---------- data: seeded simulation ---------- */
+/* ---------- datasets ---------- */
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-const R = mulberry32(20260930);
-const N=1000, M=600, T=N+M, G=1.15, SS=0.575, ZP=-6, ZS=3, U=0.87, US=0.5;
-const xw = m => (m-60)*0.23;
+const EMBED = {"trees":[10,15,4,4,3,12,15,4,15,20,15,2,2,3,18,17,4,5,2,6,21,7,10,11,17,9,31,13,13,18,13,15,4,15,12,2,4,18,5,10,4,11,30,11,3,7,10,12,2,20,30,7,10,8,4,15,16,7,23,10,2,15,7,7,15,10,22,14,8,22,7,4,4,13,3,4,2,25,12,26,31,4,2,7,13,3,2,5,2,7,4,15,11,2,6,8,6,16,15,2,20,6,6,7,31,13,10,13,13,9,5,4,2,5,9,4,8,4,22,4,6,13,32,4,16,13,13,10,28,4,3,4,3,26,7,4,15,10,6,22,5,13,13,5,5,13,10,12,12,3,8,4,30,3,18,12,9,17,26,11,22,13,7,14,27,10,3,5,11,10,28,16,6,7,18,12,7,8,5,3,13,12,32,11,6,19,18,3,10,10,11,4,7,4,4,16,15,13,3,10,9,4,5,15,14,11,3,1,16,5,11,23,9,36,12,7,37,8,24,25,6,14,11,10,6,11,17,12,12,14,24,22,6,6,9,5,10,7,8,9,28,4,25,8,2,8,9,5,5,8,12,4,21,23,6,4,9,11,8,14,11,5,7,9,11,7,22,6,8,13,10,4,11,2,16,17,15,22,9,18,17,26,6,12,7,26,18,10,25,33,25,9,5,5,15,26,3,33,5,37,5,4,8,19,11,2,4,5,14,13,19,40,11,11,3,2,18,4,14,4,3,7,6,20,9,6,11,4,5,8,6,8,7,15,3,4,2,3,10,17,4,17,30,5,2,7,11,18,6,4,15,13,3,23,33,11,9,22,4,18,7,9,3,9,16,16,15,6,5,11,8,9,6,5,25,5,8,7,18,2,2,29,32,28,15,15,11,8,8,18,24,11,14,8,4,13,16,8,2,10,11,3,8,4,5,46,10,29,7,4,10,5,11,18,12,10,2,4,3,25,18,5,4,10,33,15,23,14,5,14,12,2,27,3,16,4,17,28,13,12,10,17,6,14,22,32,11,6,3,4,5,4,25,11,5,17,21,8,3,8,4,4,15,13,25,6,16,2,22,4,13,4,3,24,10,8,2,8,2,3,9,26,5,9,4,2,17,14,33,14,4,8,24,5,8,17,2,10,10,5,9,31,5,18,10,8,16,28,3,8,14,20,10,18,3,9,5,6,5,12,6,30,3,13,14,11,7,19,4,7,5,11,9,17,2,4,16,11,13,22,17,3,3,13,9,2,22,5,6,4,3,4,15,7,9,17,8,4,7,45,3,23,23,4,4,3,9,8,2,27,15,20,11,20,13,5,11,3,30,5,27,4,5,9,3,7,24,6,2,2,23,3,11,3,11,16,10,5,8,6,1,20,2,5,9,3,4,4,15,31,11,7,20,15,6,33,40,16,8,5,10,15,6,27,3,4,8,13,41,11,24,25,12,14,11,2,24,18,5,11,16,10,21,26,12,14,5,8,10,19,4,3,10,6,20,4,23,4,18,2,13,11,10,24,4,12,6,3,7,3,10,12,3,3,4,15,4,7,13,32,4,36,5,13,3,9,4,16,4,13,9,6,3,24,10,12,5,3,17,2,2,13,3,23,6,4,11,27,5,8,4,10,7,9,33,4,5,8,6,11,25,10,5,13,5,16,12,15,4,1,12,16,15,7,2,8,8,13,4,4,27,11,3,4,30,1,25,13,4,14,10,23,2,16,2,7,6,11,6,7,11,11,12,6,9,8,5,10,8,6,16,14,7,15,25,8,22,9,20,6,22,20,4,4,16,4,20,7,31,7,9,11,4,3,3,4,16,6,17,16,13,3,3,5,4,12,5,17,16,4,14,28,8,23,16,26,14,5,4,24,6,13,13,24,5,12,9,11,8,8,10,7,25,7,4,4,10,11,35,17,6,14,9,2,5,23,12,5,12,18,35,36,23,5,12,13,6,7,14,6,6,10,6,11,13,2,15,5,5,3,3,5,4,12,16,18,17,6,7,15,24,27,4,14,9,16,10,2,19,17,4,18,33,8,5,11,15,11,4,6,12,9,10,3,26,10,8,31,5,4,4,3,11,13,16,13,20,6,4,19,6,14,11,13,6,2,33,7,7,6,11,15,3,4,3,16,7,17,4,14,18,6,3,15,21,5,3,8,5,30,6,26,8,16,21,7,13,5,17,3,5,16,8,25,11,18,23,11,12,32,7,4,16,7,17,3,2,5,13,17,6,3,5,14,11,3,5,3,8,9,6,30,10,2,8,8,8,4,18,14],"hn":[45,31,52,64,38,47,66,74,62,78,55,63,54,73,28,66,76,45,73,40,54,65,24,64,58,37,78,66,31,50,78,74,77,29,46,59,16,36,6,45,55,71,80,60,47,69,15,56,41,63,27,13,59,69,46,77,71,51,78,56,71,78,79,74,64,40,69,59,75,48,59,69,34,54,59,62,37,32,14,80,66,34,78,43,43,79,55,77,50,18,80,48,62,63,44,68,66,63,67,51,29,63,58,18,54,74,21,53,77,74,15,58,56,34,80,52,37,71,43,18,31,80,33,43,74,50,39,71,30,33,40,22,51,71,69,35,69,34,44,28,39,40,71,77,79,56,33,66,53,60,49,63,49,41,32,42,53,69,47,15,11,46,58,71,44,41,80,42,41,66,54,26,56,61,52,53,57,41,36,55,24,67,55,80,35,50,69,75,73,17,58,35,60,65,18,38,68,54,23,52,47,52,69,17,27,31,39,67,28,67,44,72,58,25,65,88,30,9,58,66,75,46,67,25,27,57,62,41,27,29,76,44,65,52,38,78,38,71,75,43,58,50,80,52,76,66,30,71,49,72,62,70,43,35,80,65,51,51,33,68,31,72,58,26,45,25,65,52,51,79,60,77,12,70,53,54,36,40,31,22,42,29,76,66,59,41,72,30,70,55,78,58,56,79,33,48,47,58,68,37,49,68,60,47,59,47,69,72,27,75,34,44,42,67,72,52,56,41,50,80,13,36,29,38,34,70,68,69,55,11,56,53,83,36,58,43,61,21,50,65,38,37,79,51,13,79,33,62,37,50,56,62,10,38,61,78,80,55,25,72,52,52,61,51,66,73,60,58,77,63,60,13,13,70,42,73,56,77,38,29,79,75,67,70,45,61,24,54,49,39,32,75,69,42,15,67,61,80,68,38,44,65,44,18,25,43,76,75,59,65,67,14,59,72,25,66,35,52,5,28,14,72,43,22,63,19,61,80,78,22,51,23,46,73,58,66,73,56,25,41,30,12,63,9,72,80,9,39,76,69,62,46,33,74,52,30,39,79,23,62,67,53,58,75,51,36,14,44,55,8,26,47,67,73,80,71,36,68,25,45,75,43,70,59,23,30,29,77,15,48,47,16,67,49,73,51,56,73,56,77,72,51,60,29,30,53,29,80,62,76,75,64,20,54,33,33,56,61,56,29,69,64,38,47,68,67,73,65,66,77,39,47,45,21,43,61,72,44,27,65,58,75,58,58,27,71,78,56,76,57,77,69,33,29,33,34,78,17,44,47,76,20,79,40,71,25,75,68,26,80,63,39,42,41,80,54,27,58,50,51,30,14,80,67,67,32,36,53,69,22,64,29,21,22,75,50,11,70,13,74,35,65,33,28,58,73,68,72,67,56,12,40,37,40,25,61,25,41,38,40,57,62,52,28,49,59,36,76,70,55,46,66,79,41,21,72,65,69,43,79,27,23,60,33,28,49,53,53,72,65,69,73,37,17,43,39,68,45,79,65,58,14,54,46,59,15,78,35,66,50,44,48,49,79,52,76,72,69,17,79,22,20,60,52,62,78,68,78,66,49,61,63,67,80,72,41,24,65,48,34,44,32,51,56,13,79,78,45,63,42,22,23,76,69,47,47,49,24,14,55,57,59,69,58,59,53,62,57,53,60,23,61,62,61,73,25,26,77,35,48,21,40,41,27,47,26,45,42,74,68,59,17,24,33,74,80,71,65,24,31,72,60,48,63,73,59,50,29,73,29,40,34,27,53,32,64,45,79,63,52,64,64,79,58,67,39,53,51,71,73,51,64,66,61,71,61,55,76,22,69,79,29,31,55,72,13,36,85,23,19,44,21,52,42,66,63,33,66,58,39,49,72,75,49,56,79,54,28,74,40,30,52,5,60,47,33,69,54,31,13,38,72,69,50,33,25,80,59,37,49,60,64,54,48,33,73,50,54,73,62,29,67,38,61,54,74,80,22,61,41,27,22,79,55,33,64,67,48,50,21,74,53,54,83,80,71,41,78,70,40,35,66,26,73,47,47,42,56,29,63,51,38,63,55,80,51,43,28,72,69,59,19,74,66,77,71,68,44,31,39,59,58,13,9,63,49,74,72,56,37,51,59,80,44,8,12,42,15,67,75,17,42,38,52,58,39,44,18,79,33,80,80,39,51,39,77,41,58,31,34,50,86,47,61,31,22,73,51,65,35,47,59,59,50,69,59,13,26,4,57,50,68,51,11,55,74,12,75,78,61,74,24,19,48,34,60,77,71,43,57]};
+const N=1000, M=600, T=N+M, XW=27.6, SS=0.575, ZP=-6;
 
-const vals = new Float64Array(N);
-for(let i=0;i<N;i++){ const v=-17*(Math.log(1-R())+Math.log(1-R())); vals[i]=Math.max(2,Math.round(v)); }
-const order=[...Array(N).keys()].sort((a,b)=>vals[a]-vals[b]||a-b);
-const rank=new Int32Array(N); order.forEach((i,r)=>rank[i]=r);
-const mu = vals.reduce((a,b)=>a+b,0)/N;
-const med = (vals[order[499]]+vals[order[500]])/2;
-const sd = Math.sqrt(vals.reduce((a,v)=>a+(v-mu)*(v-mu),0)/N);
-const tailN = vals.filter(v=>v>=60).length;
-const inSd = vals.filter(v=>Math.abs(v-mu)<=sd).length;
+const DATASETS = [
+  { id:"commute", label:"Commuters", kind:"simulated", noun:"people", one:"person", unit:"min", unitSing:"minute",
+    intro:"Meet 1,000 commuters. Each cube is one person. They're simulated, so you get the same crowd on every visit.",
+    sky:"Everyone has a daily commute, measured in minutes. The taller the cube, the longer the trip.",
+    tailWord:"travel", n1:10, n2:40,
+    source:"Data: 1,000 simulated commute times from a gamma distribution (shape 2, scale 17 min), fixed seed.",
+    values(){ const R=mulberry32(20260930), v=new Float64Array(N); for(let i=0;i<N;i++){ const x=-17*(Math.log(1-R())+Math.log(1-R())); v[i]=Math.max(2,Math.round(x)); } return v; } },
+  { id:"poll", label:"Poll", kind:"yes / no", binary:true, noun:"people", one:"person", yes:"end it", no:"keep it", n1:25, n2:100,
+    intro:"Meet 1,000 adults, each asked one question: should the U.S. stop changing the clocks? This crowd is built to match Gallup's January 2025 poll, where 54% said yes.",
+    sky:"Tall cubes want to end the clock changes. Short cubes want to keep them.",
+    source:"Data: 1,000 illustrative respondents built to match Gallup's Jan 21-27, 2025 poll (54% want to end daylight saving time; n = 1,001).",
+    values(){ const R=mulberry32(54), v=new Float64Array(N); for(let i=0;i<N;i++) v[i]=i<540?1:0;
+      for(let k=N-1;k>0;k--){ const j=Math.floor(R()*(k+1)); const t=v[k]; v[k]=v[j]; v[j]=t; } return v; } },
+  { id:"trees", label:"NYC street trees", kind:"real", noun:"trees", one:"tree", unit:"in", unitSing:"inch",
+    intro:"Meet 1,000 real New York City street trees from the city's 2015 tree census. Each cube is one tree.",
+    sky:"Every tree has a trunk diameter, measured in inches at chest height. The taller the cube, the thicker the trunk.",
+    tailWord:"measure", n1:10, n2:40,
+    source:"Data: 1,000 living street trees sampled from NYC Parks' 2015 Street Tree Census (NYC Open Data), trunk diameter at breast height.",
+    values(){ return Float64Array.from(EMBED.trees); } },
+  { id:"hn", label:"Hacker News titles", kind:"real", noun:"stories", one:"story", unit:"chars", unitSing:"character",
+    intro:"Meet 1,000 real Hacker News stories posted in the last week of September 2026. Each cube is one story.",
+    sky:"Every story has a title length, counted in characters. The taller the cube, the longer the title.",
+    tailWord:"come in", tailNote:" Hacker News caps titles at 80 characters, which squeezes the top end.", n1:10, n2:40,
+    source:"Data: 1,000 story titles sampled from 6,000 Hacker News stories posted Sep 24-30, 2026 (HN Algolia API).",
+    values(){ return Float64Array.from(EMBED.hn); } }
+];
 
-const pool=[...Array(N).keys()];
-function draw(n){ for(let k=0;k<n;k++){ const j=k+Math.floor(R()*(N-k)); const t=pool[k]; pool[k]=pool[j]; pool[j]=t; } return pool.slice(0,n); }
-const meanOf = a => a.reduce((s,i)=>s+vals[i],0)/a.length;
-const demo=[], m10=new Float64Array(M), m40=new Float64Array(M);
-for(let j=0;j<M;j++){ const s=draw(10); if(j<7) demo.push(s); m10[j]=meanOf(s); }
-for(let j=0;j<M;j++){ m40[j]=meanOf(draw(40)); }
-const llnOrder=[...Array(N).keys()]; for(let k=N-1;k>0;k--){ const j=Math.floor(R()*(k+1)); const t=llnOrder[k]; llnOrder[k]=llnOrder[j]; llnOrder[j]=t; }
-const run=new Float64Array(M); { let acc=0; for(let k=0;k<M;k++){ acc+=vals[llnOrder[k]]; run[k]=acc/(k+1); } }
-const llnPos=new Int32Array(N).fill(-1); for(let k=0;k<M;k++) llnPos[llnOrder[k]]=k;
-const avg = a => a.reduce((x,y)=>x+y,0)/a.length;
-const sdOf = a => { const m=avg(a); return Math.sqrt(a.reduce((s,v)=>s+(v-m)*(v-m),0)/a.length); };
-const mm10=avg(m10), obs10=sdOf(m10), se10=sd/Math.sqrt(10), se40=sd/Math.sqrt(40), ci=1.96*se40;
-const inCI = m40.filter(v=>Math.abs(v-mu)<=ci).length;
-const mA=meanOf(demo[0]), mB=meanOf(demo[1]);
+/* ---------- helpers ---------- */
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+function niceStep(x,isInt){ const e=Math.floor(Math.log10(x)), b=Math.pow(10,e); let best=null,bd=1e9;
+  for(const m of [1,2,2.5,5,10]){ const s=m*b; if(isInt && (s<1 || (m===2.5 && e<=0))) continue; const d=Math.abs(Math.log(s/x)); if(d<bd){bd=d;best=s;} }
+  return best||1; }
+const avg=a=>{ let s=0; for(const v of a) s+=v; return s/a.length; };
+const sdOf=a=>{ const m=avg(a); let s=0; for(const v of a) s+=(v-m)*(v-m); return Math.sqrt(s/a.length); };
 
-const f1 = x => x.toFixed(1);
-const fm = x => Number.isInteger(x) ? String(x) : x.toFixed(1);
+/* ---------- mutable per-dataset state (read by the engine) ---------- */
+let S=[], rank=new Int32Array(N), llnPos=new Int32Array(N), C=null;
+const J=new Float32Array(T), SC=new Float32Array(T*3);
+{ const R=mulberry32(4242); for(let i=0;i<T;i++) J[i]=R(); for(let i=0;i<T;i++){ SC[i*3]=(R()-.5)*72; SC[i*3+1]=-8+R()*36; SC[i*3+2]=(R()-.5)*72; } }
+const gridXZ = s => [((s%40)-19.5)*1.15, (Math.floor(s/40)-12)*1.15];
 
-/* ---------- layouts ---------- */
-const J = new Float32Array(T); for(let i=0;i<T;i++) J[i]=R();
-const gridXZ = s => [((s%40)-19.5)*G, (Math.floor(s/40)-12)*G];
-const HIST=new Float32Array(N*3), bc=new Int32Array(24);
-for(let i=0;i<N;i++){ const b=Math.min(23,Math.floor(vals[i]/5)); const k=bc[b]++; HIST[i*3]=(b-11.5)*G; HIST[i*3+1]=Math.floor(k/5)*G+0.5; HIST[i*3+2]=ZP+(k%5-2)*G; }
-const popTop = Math.ceil(Math.max(...bc)/5)*G;
-const binTop = b => Math.ceil(bc[b]/5)*G;
+function build(D){
+  const vals=D.values(), bin=!!D.binary, RS=mulberry32(7+D.id.length*977);
+  const sorted=Float64Array.from(vals).sort();
+  const q=p=>sorted[Math.min(N-1,Math.floor(p*(N-1)))];
+  const order=[...Array(N).keys()].sort((a,b)=>vals[a]-vals[b]||a-b);
+  rank=new Int32Array(N); order.forEach((i,r)=>rank[i]=r);
+  const mu=avg(vals), med=(vals[order[499]]+vals[order[500]])/2, sd=sdOf(vals);
+  const isInt=vals.every(v=>Number.isInteger(v));
+  const s3=bin?0:3*(mu-med)/sd, shape=bin?"binary":(s3>.25?"right":(s3<-.25?"left":"sym"));
 
-function sampLayout(ms){
-  const pos=new Float32Array(M*3), c={}; let top=0;
-  for(let j=0;j<M;j++){ const sb=Math.floor(ms[j]/2.5); const k=c[sb]||0; c[sb]=k+1;
-    pos[j*3]=xw(sb*2.5+1.25); pos[j*3+1]=Math.floor(k/5)*SS+SS/2; pos[j*3+2]=ZS+(k%5)*SS; top=Math.max(top,(Math.floor(k/5)+1)*SS); }
-  return {pos,top};
+  /* number formatting */
+  const u=D.unit;
+  const num=(x,d=1)=> bin ? `${(x*100).toFixed(d===1?0:d)}%` : (Number.isInteger(x)&&d<=1?String(x):x.toFixed(d));
+  const fv=(x,d=1)=> bin ? num(x,d) : `${num(x,d)} ${u}`;
+  const fdiff=x=> bin ? `${(x*100).toFixed(1)} points` : `${x.toFixed(1)} ${u}`;
+  const fse=x=> bin ? `${(x*100).toFixed(1)} points` : `${x.toFixed(1)} ${u}`;
+  const EST=bin?"poll result":"sample mean", ESTS=bin?"poll results":"sample means", TRUTH=bin?"true share":"true mean";
+
+  /* axis and bins */
+  let lo,hi,binW,nb;
+  if(bin){ lo=-.5; binW=1; nb=2; hi=1.5; }
+  else { lo=sorted[0]>=0?0:Math.floor(q(.005)); const hr=q(.995); binW=niceStep((hr-lo)/24,isInt); nb=Math.max(2,Math.floor((hr-lo)/binW)+1); hi=lo+nb*binW; }
+  const xw=v=>((clamp(v,lo,hi)-lo)/(hi-lo)-.5)*XW;
+  const binOf=v=> bin ? (v>=.5?1:0) : clamp(Math.floor((v-lo)/binW),0,nb-1);
+  const binSlot=XW/nb, g=Math.min(1.15,binSlot), subcols=Math.max(1,Math.floor(binSlot/g+1e-6)-(binSlot/g>3?1:0)), U=g*.76;
+  const bc=new Int32Array(nb); for(const v of vals) bc[binOf(v)]++;
+  const DP=clamp(Math.ceil(Math.max(...bc)/(subcols*22)),5,12), per=subcols*DP;
+  const pad=(binSlot-subcols*g)/2, left=b=>xw(lo+b*binW)+pad;
+  const HIST=new Float32Array(N*3), kc=new Int32Array(nb);
+  for(const i of order){ const b=binOf(vals[i]), k=kc[b]++, w=k%per;
+    HIST[i*3]=left(b)+((w%subcols)+.5)*g; HIST[i*3+1]=Math.floor(k/per)*g+g/2; HIST[i*3+2]=ZP+(Math.floor(w/subcols)-(DP-1)/2)*g; }
+  const binTop=b=>Math.ceil(bc[b]/per)*g, popTop=Math.max(...[...bc.keys()].map(binTop));
+  const Z0=ZP-DP*g/2-.3, Z1=ZP+DP*g/2+.3, ZS=Z1+6;
+
+  /* samples */
+  const n1=D.n1, n2=D.n2, pool=[...Array(N).keys()];
+  const draw=n=>{ for(let k=0;k<n;k++){ const j=k+Math.floor(RS()*(N-k)); const t=pool[k]; pool[k]=pool[j]; pool[j]=t; } return pool.slice(0,n); };
+  const meanOf=a=>a.reduce((s,i)=>s+vals[i],0)/a.length;
+  const demo=[], m1=new Float64Array(M), m2=new Float64Array(M);
+  for(let j=0;j<M;j++){ const s=draw(n1); if(j<7) demo.push(s); m1[j]=meanOf(s); }
+  for(let j=0;j<M;j++){ m2[j]=meanOf(draw(n2)); }
+  const se1=sd/Math.sqrt(n1), se2=sd/Math.sqrt(n2), ci=1.96*se2;
+  const mm1=avg(m1), obs1=sdOf(m1), inCI=m2.filter(v=>Math.abs(v-mu)<=ci).length;
+
+  const sbW = bin ? 1/n1 : niceStep(se1/3,false), sOff = bin ? .5 : 0;
+  const sbin=m=>Math.floor(m/sbW+sOff+1e-9), scen=b=> bin ? b*sbW : (b+.5)*sbW;
+  const sbSlot=sbW/(hi-lo)*XW, US=Math.min(.5,sbSlot*.87);
+  const cnt2={}; for(const m of m2){ const b=sbin(m); cnt2[b]=(cnt2[b]||0)+1; }
+  const DS=clamp(Math.ceil(Math.max(...Object.values(cnt2))/26),5,12);
+  function sampLayout(ms){ const pos=new Float32Array(M*3), c={}; let top=0;
+    for(let j=0;j<M;j++){ const b=sbin(ms[j]), k=c[b]||0; c[b]=k+1;
+      pos[j*3]=xw(scen(b)); pos[j*3+1]=Math.floor(k/DS)*SS+SS/2; pos[j*3+2]=ZS+(k%DS)*SS; top=Math.max(top,(Math.floor(k/DS)+1)*SS); }
+    return {pos,top}; }
+  const L1=sampLayout(m1), L2=sampLayout(m2), ZF=ZS+DS*SS+.6, ZM=ZS+DS*SS/2;
+
+  /* LLN */
+  const llnPick=new Int32Array(M); for(let k=0;k<M;k++) llnPick[k]=Math.floor(RS()*N);
+  const run=new Float64Array(M); { let acc=0; for(let k=0;k<M;k++){ acc+=vals[llnPick[k]]; run[k]=acc/(k+1); } }
+  llnPos=new Int32Array(N).fill(-1); for(let k=M-1;k>=0;k--) llnPos[llnPick[k]]=k;
+
+  /* lift and cluster */
+  const LIFT=popTop+5, crow=Math.ceil(n1/5);
+  function liftPos(s){ const m=new Map(), p=new Map(); let rows=0; s.forEach(i=>{ const b=binOf(vals[i]), o=m.get(b)||0; m.set(b,o+1);
+      rows=Math.max(rows,Math.floor(o/subcols)+1); p.set(i,[left(b)+((o%subcols)+.5)*g, LIFT+Math.floor(o/subcols)*g, ZP]); }); p.rows=rows; return p; }
+  function clusterPos(s){ const x0=xw(meanOf(s)), p=new Map(); s.forEach((i,k)=>p.set(i,[x0+((k%5)-2)*g, LIFT+Math.floor(k/5)*g, ZP])); return p; }
+  const DEMO=demo.map(s=>{ const L=liftPos(s); return {set:new Set(s),lift:L,rows:L.rows,clus:clusterPos(s),m:meanOf(s),c:[xw(meanOf(s)),LIFT+(crow-1)/2*g,ZP]}; });
+  const liftTop=LIFT+Math.max(crow,...DEMO.map(d=>d.rows))*g;
+
+  /* instance helpers */
+  const pop=(i,role)=>[HIST[i*3],HIST[i*3+1],HIST[i*3+2],U,U,U,role];
+  const at=(p,role,s=U)=>[p[0],p[1],p[2],s,s,s,role];
+  const mean=(j,L,role)=>[L.pos[j*3],L.pos[j*3+1],L.pos[j*3+2],US,US,US,role];
+  const meanHidden=j=>[L1.pos[j*3],L1.pos[j*3+1]+32,L1.pos[j*3+2],0,0,0,"accent"];
+  const skyH=v=> bin ? (v?4.6:.5) : .3+11.5*clamp((v-lo)/(hi-lo),0,1);
+  function sky(i,slot,role){ const [x,z]=gridXZ(slot), h=skyH(vals[i]); return [x,h/2,z,.87,h,.87,role]; }
+
+  /* markers and labels */
+  const slab=(x,h,z1,role)=>({p:[x,h/2,z1+.35],s:[.2,h,.2],role});
+  function bracket(name,x1,x2,y,z,role){ const o={};
+    o[name+"B"]={p:[(x1+x2)/2,y,z],s:[x2-x1,.12,.12],role};
+    o[name+"L"]={p:[x1,y-.35,z],s:[.12,.82,.12],role};
+    o[name+"R"]={p:[x2,y-.35,z],s:[.12,.82,.12],role}; return o; }
+  const axisM=(z,role="ink")=>({axis:{p:[0,.03,z],s:[XW,.06,.06],role}});
+  let ticks;
+  if(bin) ticks=[[0,`0% · ${D.no}`],[.5,"50%"],[1,`100% · ${D.yes}`]];
+  else { const st=niceStep((hi-lo)/4.5,isInt), t=[]; for(let v=Math.ceil(lo/st)*st; v<=hi+1e-9; v+=st) t.push(v);
+    ticks=t.map((v,k)=>[v, k===t.length-1 ? `${num(+v.toFixed(6))} ${u}` : num(+v.toFixed(6))]); }
+  const axisL=z=>ticks.map(([v,txt],k)=>({id:"ax"+k,kind:"axis",p:[xw(v),-.1,z],text:txt,below:true}));
+
+  /* cameras */
+  const k1=Math.max(popTop,L2.top+3), tx=xw(mu)*.4;
+  const cam={
+    hero:{t:[0,6,0],az:40,el:26,w:70,h:52},
+    grid:{t:[0,-4,0],az:45,el:34,w:62,h:36},
+    sky:{t:[0,-1,0],az:45,el:30,w:62,h:40},
+    hist:{t:[0,popTop*.46,ZP],az:30,el:19,w:38,h:Math.max(26,popTop*1.8)},
+    lift:{t:[0,liftTop*.48,ZP],az:30,el:19,w:40,h:Math.max(34,liftTop*1.62)},
+    s1:{t:[tx,popTop*.38,0],az:24,el:19,w:36,h:Math.max(30,popTop*1.64)},
+    s2:{t:[tx,k1*.4,0],az:24,el:19,w:36,h:Math.max(30,k1*1.64)},
+    mont:{t:[tx*.6,liftTop*.42,-1],az:26,el:19,w:40,h:Math.max(34,liftTop*1.55)},
+    L:{t:[xw(mu)+1,14.5,ZF+3],az:24,el:14,w:30,h:40},
+    end:{t:[0,popTop*.4,-2],az:52,el:26,w:52,h:Math.max(40,popTop*2.1)}
+  };
+  cam.card=Object.assign({},cam.s1,{sh:-7}); cam.LC=Object.assign({},cam.L,{sh:-7});
+
+  /* story */
+  const St=[];
+  const add=o=>St.push(Object.assign({delay:"random",spread:.8,field:"field",marks:{},labels:[],cap:""},o));
+  function story(o){ const sm=o.sample, Dm=sm?DEMO[sm.j]:null, k=o.slots||0;
+    return i=>{ if(i<N){ if(Dm&&Dm.set.has(i)){ if(sm.mode==="lift") return at(Dm.lift.get(i),"teal"); if(sm.mode==="cluster") return at(Dm.clus.get(i),"teal"); return [Dm.c[0],Dm.c[1],Dm.c[2],0,0,0,"teal"]; } return pop(i,"ink"); }
+      const j=i-N; if(Dm&&sm.mode==="merged"&&j===sm.j) return at(Dm.c,"accent",g*1.2);
+      return j<k ? mean(j,L1,"accent") : meanHidden(j); }; }
+  const truthM=()=>Object.assign(axisM(Z1+.8),{meanS:slab(xw(mu),popTop+1.2,Z1,"truth")});
+  const truthL=()=>[...axisL(Z1+.8),{id:"popM",text:`${TRUTH} ${num(mu)}`,p:[xw(mu),popTop+1.4,Z1+.35]}];
+  const atCenter=(j,id,text)=>({id,text,p:[DEMO[j].c[0],DEMO[j].c[1]+.8,ZP]});
+  const atSlot=(j,id,text)=>({id,text,p:[L1.pos[j*3],L1.pos[j*3+1]+.6,L1.pos[j*3+2]]});
+  const popHidden=i=> i<N ? pop(i,"ink") : meanHidden(i-N);
+
+  add({ hero:true, cam:cam.hero, spread:.6,
+    inst:i=> i<N ? [SC[i*3],SC[i*3+1],SC[i*3+2],.87,.87,.87,"ink"] : (i-N<150 ? [SC[i*3],SC[i*3+1],SC[i*3+2],.5,.5,.5,"accent"] : meanHidden(i-N)) });
+  add({ cam:cam.grid, cap:D.intro, inst:i=> i<N ? (()=>{const [x,z]=gridXZ(i); return [x,.44,z,.87,.87,.87,"ink"];})() : meanHidden(i-N) });
+  add({ cam:cam.sky, delay:"x", cap:D.sky, inst:i=> i<N ? sky(i,i,"ink") : meanHidden(i-N) });
+  const nYes=bin?vals.reduce((a,b)=>a+b,0):0;
+  add({ cam:cam.sky, delay:"rank", spread:1.1,
+    cap: bin ? `Line them up and the crowd splits in two: <b>${nYes}</b> want to ${D.yes} and <b>${N-nYes}</b> want to ${D.no}.`
+             : `A crowd is hard to read. So line them all up, from the smallest value to the largest.`,
+    inst:i=> i<N ? sky(i,rank[i],"ink") : meanHidden(i-N) });
+  { const [mx,mz]=gridXZ(bin?Math.min(999,N-nYes+Math.floor(nYes/2)):500);
+    add({ cam:cam.sky,
+      cap: bin ? `With yes/no answers, the middle person tells you little. The number that matters is the share who said yes: <b>${num(mu)}</b>.`
+               : `The median is the ${D.one} in the middle of that line. Half sit below <b>${fv(med)}</b> and half sit above.`,
+      inst:i=> i<N ? sky(i,rank[i],(!bin&&(rank[i]===499||rank[i]===500))?"teal":"ink") : meanHidden(i-N),
+      labels:[{id:"med",text: bin?`${num(mu)} say ${D.yes}`:`median ${fv(med)}`,p:[mx, bin?5.2:skyH(vals[order[500]])+.6, mz]}] }); }
+  add({ cam:cam.hist, delay:"x", spread:1.1,
+    cap: bin ? `Stacked by answer, the crowd becomes two piles. For yes/no data, that's the whole histogram.`
+             : `Now drop everyone into ${num(binW)}-${D.unitSing} buckets. Each stack counts the ${D.noun} in that range, and together the stacks form a histogram.`,
+    inst:popHidden, marks:axisM(Z1+.8), labels:axisL(Z1+.8) });
+  if(bin){
+    add({ cam:cam.hist, delay:"x", cap:`Now turn the answers into numbers: ${D.yes} = 1, ${D.no} = 0. Every tool in the rest of this story works on those 1s and 0s.`,
+      inst:i=> i<N ? pop(i,vals[i]===1?"teal":"ink") : meanHidden(i-N), marks:axisM(Z1+.8),
+      labels:[...axisL(Z1+.8),{id:"one",text:"coded as 1",p:[xw(1),binTop(1)+.8,ZP]},{id:"zero",text:"coded as 0",p:[xw(0),binTop(0)+.8,ZP]}] });
+  } else {
+    let cap,hl,lab;
+    if(shape==="right"){ const cut=Math.ceil(q(.9)/binW)*binW, n=vals.filter(v=>v>=cut).length;
+      cap=`The pile leans. Most ${D.noun} sit low, but a long right tail of <b>${n} ${D.noun}</b> ${D.tailWord} ${fv(cut)} or more.${D.tailNote||""}`;
+      hl=v=>v>=cut; lab={id:"tail",text:`${n} ${D.noun}, ${num(cut)}+ ${u}`,p:[xw((cut+hi)/2),binTop(binOf(cut))+2.4,ZP]}; }
+    else if(shape==="left"){ const cut=Math.floor(q(.1)/binW)*binW, n=vals.filter(v=>v<cut).length;
+      cap=`The pile leans left. Most ${D.noun} bunch toward the top, with a tail of <b>${n} ${D.noun}</b> under ${fv(cut)}.${D.tailNote||""}`;
+      hl=v=>v<cut; lab={id:"tail",text:`${n} ${D.noun} under ${num(cut)} ${u}`,p:[xw((lo+cut)/2),binTop(binOf(lo))+2.4,ZP]}; }
+    else { cap=`This pile is close to symmetric: about as many ${D.noun} sit far above the middle as far below it.${D.tailNote||""}`;
+      hl=v=>Math.abs(v-mu)>1.5*sd; lab=null; }
+    add({ cam:cam.hist, delay:"x", cap, inst:i=> i<N ? pop(i,hl(vals[i])?"teal":"ink") : meanHidden(i-N), marks:axisM(Z1+.8), labels:[...axisL(Z1+.8),...(lab?[lab]:[])] });
+  }
+  if(bin){
+    add({ cam:cam.hist, cap:`The mean of those 1s and 0s is the balance point between the piles, and it lands at <b>${(mu).toFixed(2)}</b>: exactly the share who said ${D.yes}.`,
+      inst:popHidden, marks:Object.assign(axisM(Z1+.8),{meanS:slab(xw(mu),popTop+4.2,Z1,"truth")}),
+      labels:[...axisL(Z1+.8),{id:"meanL",text:`mean ${mu.toFixed(2)} = ${num(mu)}`,p:[xw(mu),popTop+4.4,Z1+.35]}] });
+  } else {
+    const dir = shape==="right" ? `The long tail drags it up to <b>${fv(mu)}</b>, above the median of <b>${fv(med)}</b>.`
+              : shape==="left" ? `The left tail drags it down to <b>${fv(mu)}</b>, below the median of <b>${fv(med)}</b>.`
+              : `With no long tail, it sits close to the median: <b>${fv(mu)}</b> against <b>${fv(med)}</b>.`;
+    const hiM=xw(mu)>=xw(med);
+    add({ cam:cam.hist, cap:`The mean is the pile's balance point. ${dir}`, inst:popHidden,
+      marks:Object.assign(axisM(Z1+.8),{meanS:slab(xw(mu),popTop+(hiM?4.2:1.2),Z1,"truth"),medS:slab(xw(med),popTop+(hiM?1.2:4.2),Z1,"teal")}),
+      labels:[...axisL(Z1+.8),{id:"meanL",text:`mean ${num(mu)}`,p:[xw(mu),popTop+(hiM?4.4:1.4),Z1+.35]},{id:"medL",text:`median ${num(med)}`,p:[xw(med),popTop+(hiM?1.4:4.4),Z1+.35]}] });
+  }
+  const inSd=vals.filter(v=>Math.abs(v-mu)<=sd).length;
+  add({ cam:cam.hist, delay:"x",
+    cap: bin ? `Spread follows from the share: <b>σ = √(p(1−p)) = √(${mu.toFixed(2)} × ${(1-mu).toFixed(2)}) ≈ ${sd.toFixed(2)}</b>. Yes/no data is about as spread out as data gets.`
+             : `Spread gets its own number. The standard deviation, <b>σ = ${fv(sd)}</b>, is roughly the typical distance from the mean. Here ${Math.round(inSd/10)}% of ${D.noun} sit within one σ of it.`,
+    inst:i=> i<N ? pop(i,(bin||Math.abs(vals[i]-mu)<=sd)?"ink":"muted") : meanHidden(i-N),
+    marks:Object.assign(axisM(Z1+.8),{meanS:slab(xw(mu),popTop+1.2,Z1,"truth")},bracket("sd",xw(mu-sd),xw(mu+sd),popTop+3.4,ZP,"truth")),
+    labels:[...axisL(Z1+.8),{id:"sdL",text: bin?`± σ = ${sd.toFixed(2)}`:`± σ = ${fv(sd)}`,p:[xw(mu),popTop+3.7,ZP]}] });
+  add({ cam:cam.lift, inst:story({sample:{j:0,mode:"lift"}}), marks:truthM(), labels:truthL(),
+    cap: bin ? `You can't ask everyone, so you run a poll. The ${n1} people in teal were picked at random.`
+             : `In practice you rarely get to ask everyone. You take a sample. The ${n1} ${D.noun} in teal were picked at random.` });
+  const k0=bin?Math.round(DEMO[0].m*n1):0;
+  add({ cam:cam.lift, marks:truthM(), labels:truthL(),
+    cap: bin ? `${k0} of the ${n1} want to ${D.yes}, so the poll says <b>${num(DEMO[0].m)}</b>. The ${n1} answers collapse into that one number. From here on, red marks an estimate.`
+             : `Average their ${n1} values and the cubes collapse into one number, <b>${fv(DEMO[0].m)}</b>. That red cube is a sample mean. From here on, red marks an estimate.`,
+    phases:[ {inst:story({sample:{j:0,mode:"cluster"}}),delay:"x",spread:.5},
+             {at:1.5,inst:story({sample:{j:0,mode:"merged"}}),delay:"none",spread:0,dur:.8,labels:[...truthL(),atCenter(0,"sm0",`${EST} ${num(DEMO[0].m)}`)]} ] });
+  add({ cam:cam.lift, delay:"random", spread:.5, marks:truthM(), inst:story({slots:1}), labels:[...truthL(),atSlot(0,"sm0",`${EST} ${num(DEMO[0].m)}`)],
+    cap:`The ${EST} drops down front, where the estimates will pile up. The ${TRUTH} is ${fv(mu)}, so this one is off by ${fdiff(Math.abs(DEMO[0].m-mu))}.` });
+  add({ cam:cam.lift, marks:truthM(), labels:truthL(),
+    cap:`Pick ${n1} other ${D.noun} and run the same routine: lift, average, collapse, drop. This ${bin?"poll":"sample"} gives <b>${fv(DEMO[1].m)}</b>, a different answer from the same crowd.`,
+    phases:[ {inst:story({slots:1,sample:{j:1,mode:"lift"}}),delay:"random",spread:.4},
+             {at:1.3,inst:story({slots:1,sample:{j:1,mode:"cluster"}}),delay:"x",spread:.4},
+             {at:2.5,inst:story({slots:1,sample:{j:1,mode:"merged"}}),delay:"none",spread:0,dur:.7},
+             {at:3.5,inst:story({slots:2}),delay:"random",spread:.4,labels:[...truthL(),atSlot(1,"sm1",`${EST} ${num(DEMO[1].m)}`)]} ] });
+  const nLab={id:"n1",text:`600 ${ESTS}, n = ${n1}`,p:[xw(mm1),L1.top+1.3,ZM]};
+  const montage=[]; { let t0=0; [.95,.8,.65,.5,.4].forEach((d,qq)=>{ const j=2+qq;
+    montage.push({at:t0,inst:story({slots:j,sample:{j,mode:"lift"}}),delay:"random",spread:.2,dur:d*.8});
+    montage.push({at:t0+d,inst:story({slots:j,sample:{j,mode:"merged"}}),delay:"none",spread:0,dur:d*.75});
+    t0+=d*2; });
+    montage.push({at:t0,inst:story({slots:M}),delay:"index",spread:2.6,ease:"out",labels:[...axisL(ZF),nLab]}); }
+  add({ cam:cam.mont, marks:axisM(ZF), labels:axisL(ZF), phases:montage,
+    cap: bin ? `Now repeat it, faster. After 600 polls, each small red cube is the result of one poll of ${n1} random people.`
+             : `Now repeat it, faster. After 600 rounds, each small red cube is the mean of one random sample of ${n1} ${D.noun}.` });
+  const white=i=> i<N ? pop(i,"ink") : mean(i-N,L1,"white");
+  add({ cam:cam.s1, field:"accent", inst:white, marks:axisM(ZF,"white"), labels:[...axisL(ZF),nLab],
+    cap: bin ? `The crowd is just two blocks, yes and no. Yet the poll results pile up into a symmetric bell. That pattern has a name.`
+         : shape==="sym" ? `The crowd was already fairly even, and the ${ESTS} pile up into a much narrower bell. That pattern has a name.`
+         : `The crowd is lopsided, yet the ${ESTS} pile up into a symmetric bell. That pattern has a name.` });
+  add({ cam:cam.card, field:"accent", curves:{c1:"deep"}, inst:white, marks:axisM(ZF,"white"), labels:axisL(ZF),
+    card: bin ? {k:"Central limit theorem", d:"Run many polls of the same size n. Their results form a normal curve centered on the true share p, with spread √(p(1−p)/n). The yes/no shape of the crowd stops mattering once n is large enough.", f:`p̂ ≈ Normal( p, √(p(1−p)/n) ) = Normal( ${num(mu)}, ${(se1*100).toFixed(1)} pts )`}
+              : {k:"Central limit theorem", d:"Take many random samples of the same size n and average each one. Those averages form a normal curve centered on the true mean μ, with spread σ / √n. The shape of the population stops mattering once n is large enough.", f:`x̄ ≈ Normal( μ, σ / √n ) = Normal( ${num(mu)}, ${se1.toFixed(1)} )`},
+    cap:`The dark curve is the theorem's prediction. The white cubes are 600 simulated ${bin?"polls":"samples"}. They agree.` });
+  add({ cam:cam.s1, field:"accent", inst:white,
+    marks:Object.assign(axisM(ZF,"white"),{meanS:slab(xw(mu),popTop+1.2,ZF-.35,"white")}),
+    labels:[...axisL(ZF),{id:"popM",text:`${TRUTH} ${num(mu)}`,p:[xw(mu),popTop+1.4,ZF]}],
+    cap:`The bell is centered on the truth. The 600 ${ESTS} average <b>${fv(mm1)}</b>, against a ${TRUTH} of <b>${fv(mu)}</b>.` });
+  add({ cam:cam.s1, field:"accent", inst:white,
+    marks:Object.assign(axisM(ZF,"white"),bracket("se",xw(mu-se1),xw(mu+se1),L1.top+1.4,ZM,"white")),
+    labels:[...axisL(ZF),{id:"seL",text:`± 1 SE = ${fse(se1)}`,p:[xw(mu),L1.top+1.7,ZM]}],
+    cap: bin ? `Its width is the standard error: <b>√(p(1−p)/n) = √(${mu.toFixed(2)} × ${(1-mu).toFixed(2)} / ${n1}) ≈ ${fse(se1)}</b>. The 600 simulated polls spread by ${fse(obs1)}.`
+             : `Its width is the standard error: <b>σ / √n = ${sd.toFixed(1)} / √${n1} ≈ ${fse(se1)}</b>. The 600 simulated means spread by ${fse(obs1)}.` });
+  add({ cam:cam.s2, delay:"x", spread:1.2, curves:{c2:"ink"}, inst:i=> i<N ? pop(i,"ink") : mean(i-N,L2,"accent"),
+    marks:Object.assign(axisM(ZF),bracket("se",xw(mu-se2),xw(mu+se2),L2.top+1.4,ZM,"ink")),
+    labels:[...axisL(ZF),{id:"seL",text:`n = ${n2}, ± 1 SE = ${fse(se2)}`,p:[xw(mu),L2.top+1.7,ZM]}],
+    cap:`Ask ${n2} ${D.noun} instead of ${n1} and the bell grows taller and thinner. Four times the sample size halves the standard error, to <b>${fse(se2)}</b>.` });
+  const bigMoe=1.96*Math.sqrt(mu*(1-mu)/1001);
+  add({ cam:cam.s2, delay:"x", inst:i=> i<N ? pop(i,"ink") : mean(i-N,L2,Math.abs(m2[i-N]-mu)<=ci?"accent":"muted"),
+    marks:Object.assign(axisM(ZF),bracket("ci",xw(mu-ci),xw(mu+ci),L2.top+1.4,ZM,"accent")),
+    labels:[...axisL(ZF),{id:"ciL",text: bin?`margin of error ± ${(ci*100).toFixed(1)} pts`:`95% band, ± ${fse(ci)}`,p:[xw(mu),L2.top+1.7,ZM]}],
+    cap: bin ? `This is a poll's margin of error. With ${n2} people, the result ± ${(ci*100).toFixed(1)} points covers the truth about 95% of the time; here <b>${inCI} of 600</b> polls did. With Gallup's 1,001 people, the pure sampling margin is about ± ${(bigMoe*100).toFixed(1)} points.`
+             : `That's why one sample is useful. Its mean ± 1.96 standard errors (± ${fse(ci)}) covers the true mean about 95% of the time. Here, <b>${inCI} of 600</b> samples did.` });
+  const ZL=ZF+3;
+  const pathP=k=>[xw(run[k]), 1.4+30*Math.log(1+k)/Math.log(M), ZL];
+  function llnInst(all){ return i=>{ if(i<N){ const k=llnPos[i]; return pop(i,k===0?"teal":"muted"); }
+    const j=i-N, p=pathP(j); if(j===0) return [p[0],p[1],p[2],all?.5:.95,all?.5:.95,all?.5:.95,"accent"];
+    return all?[p[0],p[1],p[2],.5,.5,.5,"accent"]:[p[0],p[1],p[2],0,0,0,"accent"]; }; }
+  const llnM=()=>Object.assign(axisM(ZL),{meanS:{p:[xw(mu),16.5,ZL],s:[.12,33,.12],role:"truth"}});
+  const llnTruth={id:"llnT",text:`${TRUTH} ${num(mu)}`,p:[xw(mu),33.2,ZL]};
+  const first={id:"l1",text:`1 ${D.one}: ${bin?(run[0]?D.yes:D.no):fv(run[0])}`,p:[pathP(0)[0],pathP(0)[1]+.9,ZL]};
+  add({ cam:cam.L, marks:llnM(), labels:[...axisL(ZL),llnTruth],
+    cap:`A second big idea. Grow one sample a ${D.one} at a time, drawn at random with replacement, and track its running ${bin?"share":"average"}. Each red cube marks the ${bin?"share":"average"} so far, climbing on a log scale.`,
+    phases:[ {inst:llnInst(false),delay:"x",spread:.6,labels:[...axisL(ZL),llnTruth,first]},
+             {at:1.8,inst:llnInst(true),delay:"lln",spread:3.4,ease:"out",dur:.5,labels:[...axisL(ZL),llnTruth,first]} ] });
+  const llnTag=(k,id)=>({id,text:`n = ${k+1}: ${num(run[k])}`,p:[xw(mu)+7.5,pathP(k)[1],ZL]});
+  add({ cam:cam.LC, marks:llnM(), inst:llnInst(true),
+    card:{k:"Law of large numbers", d:`As a sample grows, its ${bin?"share":"average"} closes in on the ${bin?"true share p":"true mean μ"}. This law says where the estimate ends up. The central limit theorem describes how it scatters on the way there.`, f: bin?"p̂ₙ → p  as  n → ∞":"x̄ₙ → μ  as  n → ∞"},
+    cap:`Early on, one ${D.one} can yank the ${bin?"share":"average"} around. After 10 ${D.noun} it is off by ${fdiff(Math.abs(run[9]-mu))}. After 100 it is off by ${fdiff(Math.abs(run[99]-mu))}, and after 600 by ${fdiff(Math.abs(run[599]-mu))}.${Math.abs(run[599]-mu)>Math.abs(run[99]-mu)?" The path still wobbles, but the swings keep shrinking as n grows.":""}`,
+    labels:[...axisL(ZL),llnTruth,llnTag(9,"t10"),llnTag(99,"t100"),llnTag(599,"t600")] });
+  add({ cam:cam.end, end:true, delay:"x", inst:i=> i<N ? pop(i,"ink") : mean(i-N,L2,"accent") });
+
+  const recap=[
+    bin ? ["Mean as a share", `Code yes as 1 and no as 0, and the mean is the share of yes: ${num(mu)} here.`]
+        : ["Mean and median", `Two ways to find the center. The median is the middle ${D.one} (${fv(med)}). The mean is the balance point (${fv(mu)}), pulled toward long tails.`],
+    ["Standard deviation σ", bin ? `For yes/no data it follows from the share: √(p(1−p)) ≈ ${sd.toFixed(2)}.` : `How spread out individuals are: the typical distance from the mean (${fv(sd)} here).`],
+    ["Sampling distribution", `The pattern your estimate would make across many random samples. For means, it tends toward a bell, whatever the crowd looks like.`],
+    ["Standard error", `The spread of that pattern. It shrinks as samples grow: ${fse(se1)} at n = ${n1}, ${fse(se2)} at n = ${n2}.`],
+    ["Central limit theorem", `Averages of random samples follow a normal curve centered on the truth, with spread σ / √n, whatever shape the population has.`],
+    ["Law of large numbers", `A growing sample's ${bin?"share":"average"} settles on the truth. Here it went from ${bin?(run[0]?"100%":"0%"):fv(run[0])} after one ${D.one} to ${fv(run[599])} after 600.`]
+  ];
+  const curveSpec=[["c1",se1],["c2",se2]].map(([key,se])=>{ const pts=[];
+    for(let m=mu-4.2*se;m<=mu+4.2*se;m+=se/14){ const d=(m-mu)/se; pts.push([xw(m), M*sbW*Math.exp(-.5*d*d)/(se*Math.sqrt(2*Math.PI))/DS*SS+.06, ZS+DS*SS+.1]); }
+    return {key,pts}; });
+  return {S:St, recap, source:D.source+` 600 samples drawn at n = ${n1} and n = ${n2}.`, curveSpec};
 }
-const L10=sampLayout(m10), L40=sampLayout(m40);
-
-const SC=new Float32Array(T*3);
-for(let i=0;i<T;i++){ SC[i*3]=(R()-.5)*72; SC[i*3+1]=-8+R()*36; SC[i*3+2]=(R()-.5)*72; }
-
-const LIFT = popTop+5;
-function liftPos(s){ const m=new Map(), p=new Map(); s.forEach(i=>{ const b=Math.min(23,Math.floor(vals[i]/5)); const o=m.get(b)||0; m.set(b,o+1); p.set(i,[HIST[i*3],LIFT+o*G,ZP]); }); return p; }
-function clusterPos(s){ const x0=xw(meanOf(s)), p=new Map(); s.forEach((i,k)=>p.set(i,[x0+((k%5)-2)*G, LIFT+Math.floor(k/5)*G, ZP])); return p; }
-const DEMO=demo.map(s=>({set:new Set(s),lift:liftPos(s),clus:clusterPos(s),m:meanOf(s),c:[xw(meanOf(s)),LIFT+.5*G,ZP]}));
-
-/* ---------- instance helpers ---------- */
-const pop = (i,role) => [HIST[i*3],HIST[i*3+1],HIST[i*3+2],U,U,U,role];
-const at = (p,role,s=U) => [p[0],p[1],p[2],s,s,s,role];
-const mean = (j,L,role) => [L.pos[j*3],L.pos[j*3+1],L.pos[j*3+2],US,US,US,role];
-const meanHidden = (j,L) => [L.pos[j*3],L.pos[j*3+1]+32,L.pos[j*3+2],0,0,0,"accent"];
-function sky(i,slot,role){ const [x,z]=gridXZ(slot); const h=Math.max(.3,vals[i]/9); return [x,h/2,z,U,h,U,role]; }
-
-/* ---------- markers ---------- */
-const slab = (x,h,z0,z1,role) => ({p:[x,h/2,z1+.35], s:[.2,h,.2], role});
-function bracket(name,x1,x2,y,z,role){ const o={};
-  o[name+"B"]={p:[(x1+x2)/2,y,z],s:[x2-x1,.12,.12],role};
-  o[name+"L"]={p:[x1,y-.35,z],s:[.12,.82,.12],role};
-  o[name+"R"]={p:[x2,y-.35,z],s:[.12,.82,.12],role}; return o; }
-const axisM = (z,role="ink") => ({axis:{p:[0,.03,z],s:[27.6,.06,.06],role}});
-const axisL = z => [0,30,60,90,120].map((m,k)=>({id:"ax"+k,kind:"axis",p:[xw(m),-.1,z],text:k===4?"120 min":String(m),below:true}));
-const Z0=ZP-2.9, Z1=ZP+2.9, ZF=ZS+SS*5+.6;
-
-/* ---------- the story ---------- */
-const camHero={t:[0,6,0],az:40,el:26,w:70,h:52};
-const camGrid={t:[0,-4,0],az:45,el:34,w:62,h:36};
-const camSky ={t:[0,-1,0],az:45,el:30,w:62,h:40};
-const camHist={t:[0,11.5,-6],az:30,el:19,w:38,h:45};
-const camLift={t:[0,15.5,-6],az:30,el:19,w:40,h:52};
-const camS10 ={t:[-2.5,9.5,0],az:24,el:19,w:36,h:41};
-const camS40 ={t:[-2.5,10,0],az:24,el:19,w:36,h:41};
-const camMont={t:[-1.5,13,-1],az:26,el:19,w:40,h:50};
-const camCard={t:[-2.5,9.5,0],az:24,el:19,w:36,h:41,sh:-7};
-const camEnd ={t:[0,10,-2],az:52,el:26,w:52,h:52};
-const medCube=order[500];
-
-const S=[];
-const add = o => S.push(Object.assign({delay:"random",spread:.8,field:"field",marks:{},labels:[],cap:""},o));
-
-add({ hero:true, cam:camHero, spread:.6,
-  inst:i=> i<N ? [SC[i*3],SC[i*3+1],SC[i*3+2],U,U,U,"ink"] : (i-N<150 ? [SC[i*3],SC[i*3+1],SC[i*3+2],US,US,US,"accent"] : meanHidden(i-N,L10)) });
-add({ cam:camGrid, cap:`Meet 1,000 commuters. Each cube is one person. They're simulated, so you get the same crowd on every visit.`,
-  inst:i=> i<N ? (()=>{const [x,z]=gridXZ(i); return [x,.44,z,U,U,U,"ink"];})() : meanHidden(i-N,L10) });
-add({ cam:camSky, delay:"x", cap:`Everyone has a daily commute, measured in minutes. The taller the cube, the longer the trip.`,
-  inst:i=> i<N ? sky(i,i,"ink") : meanHidden(i-N,L10) });
-add({ cam:camSky, delay:"rank", spread:1.1, cap:`A crowd is hard to read. So line everyone up, from the shortest commute to the longest.`,
-  inst:i=> i<N ? sky(i,rank[i],"ink") : meanHidden(i-N,L10) });
-function story(o){ const sm=o.sample, D=sm?DEMO[sm.j]:null, k=o.slots||0;
-  return i=>{ if(i<N){ if(D&&D.set.has(i)){ if(sm.mode==="lift") return at(D.lift.get(i),"teal"); if(sm.mode==="cluster") return at(D.clus.get(i),"teal"); return [D.c[0],D.c[1],D.c[2],0,0,0,"teal"]; } return pop(i,"ink"); }
-    const j=i-N; if(D&&sm.mode==="merged"&&j===sm.j) return at(D.c,"accent",1.35);
-    return j<k ? mean(j,L10,"accent") : meanHidden(j,L10); }; }
-const truthM = () => Object.assign(axisM(Z1+.8),{meanS:slab(xw(mu),popTop+1.2,Z0,Z1,"truth")});
-const truthL = () => [...axisL(Z1+.8),{id:"popM",text:`true mean ${f1(mu)}`,p:[xw(mu),popTop+1.4,Z1+.35]}];
-const atCenter = (j,id,text) => ({id,text,p:[DEMO[j].c[0],DEMO[j].c[1]+.8,ZP]});
-const atSlot = (j,id,text) => ({id,text,p:[L10.pos[j*3],L10.pos[j*3+1]+.6,L10.pos[j*3+2]]});
-
-add({ cam:camSky, cap:`The median is the person in the middle of that line. Half the crowd commutes less than <b>${fm(med)} min</b> and half commutes more.`,
-  inst:i=> i<N ? sky(i,rank[i],(rank[i]===499||rank[i]===500)?"teal":"ink") : meanHidden(i-N,L10),
-  labels:[(()=>{const [x,z]=gridXZ(500); return {id:"med",text:`median ${fm(med)} min`,p:[x,vals[medCube]/9+.6,z]};})()] });
-add({ cam:camHist, delay:"x", spread:1.1, cap:`Now drop everyone into 5-minute buckets. Each stack counts the people in that range. Together the stacks form a histogram.`,
-  inst:i=> i<N ? pop(i,"ink") : meanHidden(i-N,L10), marks:axisM(Z1+.8), labels:axisL(Z1+.8) });
-add({ cam:camHist, delay:"x", cap:`The pile leans. Most trips are short, but a long right tail of <b>${tailN} people</b> travel an hour or more.`,
-  inst:i=> i<N ? pop(i,vals[i]>=60?"teal":"ink") : meanHidden(i-N,L10), marks:axisM(Z1+.8),
-  labels:[...axisL(Z1+.8),{id:"tail",text:`${tailN} people, 60+ min`,p:[xw(82),binTop(12)+2.4,ZP]}] });
-add({ cam:camHist, cap:`The mean is the pile's balance point. The long tail drags it up to <b>${f1(mu)} min</b>, above the median of <b>${fm(med)} min</b>.`,
-  inst:i=> i<N ? pop(i,"ink") : meanHidden(i-N,L10),
-  marks:Object.assign(axisM(Z1+.8),{meanS:slab(xw(mu),popTop+4.2,Z0,Z1,"truth"),medS:slab(xw(med),popTop+1.2,Z0,Z1,"teal")}),
-  labels:[...axisL(Z1+.8),{id:"meanL",text:`mean ${f1(mu)}`,p:[xw(mu),popTop+4.4,Z1+.35]},{id:"medL",text:`median ${fm(med)}`,p:[xw(med),popTop+1.4,Z1+.35]}] });
-add({ cam:camHist, delay:"x", cap:`Spread gets its own number. The standard deviation, <b>σ = ${f1(sd)} min</b>, is roughly the typical distance from the mean. Here ${Math.round(inSd/10)}% of people sit within one σ of it.`,
-  inst:i=> i<N ? pop(i,Math.abs(vals[i]-mu)<=sd?"ink":"muted") : meanHidden(i-N,L10),
-  marks:Object.assign(axisM(Z1+.8),{meanS:slab(xw(mu),popTop+1.2,Z0,Z1,"truth")},bracket("sd",xw(mu-sd),xw(mu+sd),popTop+3.4,ZP,"truth")),
-  labels:[...axisL(Z1+.8),{id:"sdL",text:`± σ = ${f1(sd)} min`,p:[xw(mu),popTop+3.7,ZP]}] });
-add({ cam:camLift, cap:`In practice you rarely get to ask everyone. You ask a sample. The 10 people in teal were picked at random.`,
-  inst:story({sample:{j:0,mode:"lift"}}), marks:truthM(), labels:truthL() });
-add({ cam:camLift, marks:truthM(), labels:truthL(),
-  cap:`Average their 10 commutes and the ten trips collapse into one number, <b>${f1(DEMO[0].m)} min</b>. That red cube is a sample mean. From here on, red marks an estimate.`,
-  phases:[ {inst:story({sample:{j:0,mode:"cluster"}}),delay:"x",spread:.5},
-           {at:1.5,inst:story({sample:{j:0,mode:"merged"}}),delay:"none",spread:0,dur:.8,labels:[...truthL(),atCenter(0,"sm0",`sample mean ${f1(DEMO[0].m)}`)]} ] });
-add({ cam:camLift, delay:"random", spread:.5, marks:truthM(),
-  cap:`The sample mean drops down front, where the estimates will pile up. The true mean is ${f1(mu)}, so this one is off by ${f1(Math.abs(DEMO[0].m-mu))} min.`,
-  inst:story({slots:1}), labels:[...truthL(),atSlot(0,"sm0",`sample mean ${f1(DEMO[0].m)}`)] });
-add({ cam:camLift, marks:truthM(), labels:truthL(),
-  cap:`Pick 10 other people and run the same routine: lift, average, collapse, drop. This sample's mean is <b>${f1(DEMO[1].m)} min</b>, a different answer from the same crowd.`,
-  phases:[ {inst:story({slots:1,sample:{j:1,mode:"lift"}}),delay:"random",spread:.4},
-           {at:1.3,inst:story({slots:1,sample:{j:1,mode:"cluster"}}),delay:"x",spread:.4},
-           {at:2.5,inst:story({slots:1,sample:{j:1,mode:"merged"}}),delay:"none",spread:0,dur:.7},
-           {at:3.5,inst:story({slots:2}),delay:"random",spread:.4,labels:[...truthL(),atSlot(1,"sm1",`sample mean ${f1(DEMO[1].m)}`)]} ] });
-const montage=[]; { let t0=0; [.95,.8,.65,.5,.4].forEach((d,q)=>{ const j=2+q;
-  montage.push({at:t0,inst:story({slots:j,sample:{j,mode:"lift"}}),delay:"random",spread:.2,dur:d*.8});
-  montage.push({at:t0+d,inst:story({slots:j,sample:{j,mode:"merged"}}),delay:"none",spread:0,dur:d*.75});
-  t0+=d*2; });
-  montage.push({at:t0,inst:story({slots:M}),delay:"index",spread:2.6,ease:"out",labels:[...axisL(ZF),{id:"n10",text:`600 sample means, n = 10`,p:[xw(mm10),L10.top+1.3,ZS+SS*2]}]}); }
-add({ cam:camMont, marks:axisM(ZF), labels:axisL(ZF), phases:montage,
-  cap:`Now repeat it, faster. After 600 rounds, each small red cube is the mean of one random sample of 10 people.` });
-add({ cam:camS10, field:"accent", cap:`The crowd is lopsided, yet the sample means pile up into a symmetric bell. That pattern has a name.`,
-  inst:i=> i<N ? pop(i,"ink") : mean(i-N,L10,"white"), marks:axisM(ZF,"white"), labels:[...axisL(ZF),{id:"n10",text:`600 sample means, n = 10`,p:[xw(mm10),L10.top+1.3,ZS+SS*2]}] });
-add({ cam:camCard, field:"accent", curves:{c10:"deep"},
-  card:{k:"Central limit theorem", d:"Take many random samples of the same size n and average each one. Those averages form a normal curve centered on the true mean μ, with spread σ / √n. The shape of the population stops mattering once n is large enough.", f:`x̄ ≈ Normal( μ, σ / √n ) = Normal( ${f1(mu)}, ${f1(se10)} )`},
-  cap:`The dark curve is the theorem's prediction. The white cubes are 600 simulated samples. They agree.`,
-  inst:i=> i<N ? pop(i,"ink") : mean(i-N,L10,"white"), marks:axisM(ZF,"white"), labels:axisL(ZF) });
-add({ cam:camS10, field:"accent", cap:`The bell is centered on the truth. The 600 sample means average <b>${f1(mm10)} min</b>, against a population mean of <b>${f1(mu)} min</b>.`,
-  inst:i=> i<N ? pop(i,"ink") : mean(i-N,L10,"white"),
-  marks:Object.assign(axisM(ZF,"white"),{meanS:slab(xw(mu),popTop+1.2,Z0,ZF-.35,"white")}),
-  labels:[...axisL(ZF),{id:"popM",text:`population mean ${f1(mu)}`,p:[xw(mu),popTop+1.4,ZF]}] });
-add({ cam:camS10, field:"accent", cap:`Its width is the standard error: <b>σ / √n = ${f1(sd)} / √10 ≈ ${f1(se10)} min</b>. The 600 simulated means spread by ${f1(obs10)}.`,
-  inst:i=> i<N ? pop(i,"ink") : mean(i-N,L10,"white"),
-  marks:Object.assign(axisM(ZF,"white"),bracket("se",xw(mu-se10),xw(mu+se10),L10.top+1.4,ZS+SS*2,"white")),
-  labels:[...axisL(ZF),{id:"seL",text:`± 1 SE = ${f1(se10)} min`,p:[xw(mu),L10.top+1.7,ZS+SS*2]}] });
-add({ cam:camS40, delay:"x", spread:1.2, curves:{c40:"ink"}, cap:`Ask 40 people instead of 10 and the bell grows taller and thinner. Four times the sample size halves the standard error, to <b>${f1(se40)} min</b>.`,
-  inst:i=> i<N ? pop(i,"ink") : mean(i-N,L40,"accent"),
-  marks:Object.assign(axisM(ZF),bracket("se",xw(mu-se40),xw(mu+se40),L40.top+1.4,ZS+SS*2,"ink")),
-  labels:[...axisL(ZF),{id:"seL",text:`n = 40, ± 1 SE = ${f1(se40)} min`,p:[xw(mu),L40.top+1.7,ZS+SS*2]}] });
-add({ cam:camS40, delay:"x", cap:`That's why one sample is useful. Its mean ± 1.96 standard errors (± ${f1(ci)} min) covers the true mean about 95% of the time. Here, <b>${inCI} of 600</b> samples did.`,
-  inst:i=> i<N ? pop(i,"ink") : mean(i-N,L40,Math.abs(m40[i-N]-mu)<=ci?"accent":"muted"),
-  marks:Object.assign(axisM(ZF),bracket("ci",xw(mu-ci),xw(mu+ci),L40.top+1.4,ZS+SS*2,"accent")),
-  labels:[...axisL(ZF),{id:"ciL",text:`95% band, ± ${f1(ci)} min`,p:[xw(mu),L40.top+1.7,ZS+SS*2]}] });
-const ZL=ZF+3;
-const pathP = k => [Math.max(xw(2),Math.min(xw(118),xw(run[k]))), 1.4+30*Math.log(1+k)/Math.log(M), ZL];
-function llnInst(all){ return i=>{ if(i<N){ const k=llnPos[i]; return pop(i,k===0?"teal":"muted"); }
-  const j=i-N, q=pathP(j); if(j===0) return [q[0],q[1],q[2],all?.5:.95,all?.5:.95,all?.5:.95,"accent"];
-  return all?[q[0],q[1],q[2],.5,.5,.5,"accent"]:[q[0],q[1],q[2],0,0,0,"accent"]; }; }
-const llnM = () => Object.assign(axisM(ZL),{meanS:{p:[xw(mu),16.5,ZL],s:[.12,33,.12],role:"truth"}});
-const llnTruth = {id:"llnT",text:`true mean ${f1(mu)}`,p:[xw(mu),33.2,ZL]};
-const camL ={t:[xw(mu)+1,14.5,ZL],az:24,el:14,w:30,h:40};
-const camLC={t:[xw(mu)+1,14.5,ZL],az:24,el:14,w:30,h:40,sh:-7};
-add({ cam:camL, marks:llnM(), labels:[...axisL(ZL),llnTruth],
-  cap:`A second big idea. Grow one sample a person at a time and track its running average. Each red cube marks the average so far, climbing on a log scale of people.`,
-  phases:[ {inst:llnInst(false),delay:"x",spread:.6,labels:[...axisL(ZL),llnTruth,{id:"l1",text:`1 person: ${fm(run[0])} min`,p:[pathP(0)[0],pathP(0)[1]+.9,ZL]}]},
-           {at:1.8,inst:llnInst(true),delay:"lln",spread:3.4,ease:"out",dur:.5,labels:[...axisL(ZL),llnTruth,{id:"l1",text:`1 person: ${fm(run[0])} min`,p:[pathP(0)[0],pathP(0)[1]+.9,ZL]}]} ] });
-const llnTag=(k,id)=>({id,text:`n = ${k+1}: ${f1(run[k])} min`,p:[xw(mu)+7.5,pathP(k)[1],ZL]});
-add({ cam:camLC, marks:llnM(), inst:llnInst(true),
-  card:{k:"Law of large numbers", d:"As a sample grows, its average closes in on the true mean μ. This law says where the average ends up. The central limit theorem describes how it scatters on the way there.", f:"x̄ₙ → μ  as  n → ∞"},
-  cap:`Early on, one long commute yanks the average around. After 100 people it is ${f1(Math.abs(run[99]-mu))} min from the truth, and after 600 it is ${f1(Math.abs(run[599]-mu))} min away.`,
-  labels:[...axisL(ZL),llnTruth,llnTag(9,"t10"),llnTag(99,"t100"),llnTag(599,"t600")] });
-add({ cam:camEnd, end:true, delay:"x",
-  inst:i=> i<N ? pop(i,"ink") : mean(i-N,L40,"accent") });
-
-document.getElementById("recap").innerHTML = [
-  ["Mean and median", `Two ways to find the center. The median is the middle person (${fm(med)} min). The mean is the balance point (${f1(mu)} min), pulled by long tails.`],
-  ["Standard deviation σ", `How spread out individuals are: the typical distance from the mean (${f1(sd)} min here).`],
-  ["Sampling distribution", `The pattern your estimate would make across many random samples. For means, it tends toward a bell, whatever the crowd looks like.`],
-  ["Standard error σ / √n", `The spread of that pattern. It shrinks as samples grow: ${f1(se10)} min at n = 10, ${f1(se40)} min at n = 40.`],
-  ["Central limit theorem", `Averages of random samples follow a normal curve centered on μ with spread σ / √n, whatever shape the population has.`],
-  ["Law of large numbers", `A growing sample's average settles on the true mean. Here it went from ${fm(run[0])} min after one person to ${f1(run[599])} after 600.`]
-].map(([t,d])=>`<dt>${t}</dt><dd>${d}</dd>`).join("");
-document.getElementById("foot").textContent = `Data: 1,000 simulated commute times from a gamma distribution (shape 2, scale 17 min), fixed seed. 600 samples drawn at each sample size.`;
 
 /* ---------- three.js stage ---------- */
 const canvas=document.getElementById("stage");
@@ -361,13 +486,12 @@ const MK={};
 MNAMES.forEach(n=>{ const m=new THREE.Mesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0,depthWrite:false}));
   m.renderOrder=2; scene.add(m); MK[n]={m,cur:{p:[0,0,0],s:[1,1,1],c:[1,1,1],o:0},from:null,to:null,role:"ink"}; });
 
-const npdf=(x,m,v)=>Math.exp(-.5*((x-m)/v)*((x-m)/v))/(v*Math.sqrt(2*Math.PI));
-function curveMesh(se){ const pts=[]; for(let m=mu-4.2*se;m<=mu+4.2*se;m+=se/14){ pts.push(new THREE.Vector3(xw(m),M*2.5*npdf(m,mu,se)/5*SS+.06,ZS+SS*5+.1)); }
-  const geo=new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),260,.11,6,false);
-  const me=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0,depthTest:false}));
-  me.renderOrder=3; me.visible=false; scene.add(me);
-  return {m:me,total:geo.index.count,prog:0,pFrom:0,pTo:0,o:0,oFrom:0,oTo:0,role:"ink"}; }
-const CURV={c10:curveMesh(se10),c40:curveMesh(se40)};
+let CURV={};
+function makeCurves(spec){ for(const k in CURV){ scene.remove(CURV[k].m); CURV[k].m.geometry.dispose(); CURV[k].m.material.dispose(); }
+  CURV={}; spec.forEach(({key,pts})=>{ const geo=new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map(p=>new THREE.Vector3(p[0],p[1],p[2]))),260,.11,6,false);
+    const me=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0,depthTest:false}));
+    me.renderOrder=3; me.visible=false; scene.add(me);
+    CURV[key]={m:me,total:geo.index.count,prog:0,pFrom:0,pTo:0,o:0,oFrom:0,oTo:0,role:"ink"}; }); }
 let camCur=null, camFrom=null, camTo=null, fieldCur=ROLE.field.slice(), fieldFrom=null, fieldTo=null, fieldRole="field";
 let instStart=0, instDur=.95, instAnim=false, stepStart=0, phaseQ=[], bobAmp=RM?0:1;
 
@@ -473,7 +597,7 @@ function setLabels(list){
   list.forEach(l=>{ let el=labEls.get(l.id);
     if(!el){ el=document.createElement("div"); el.className="lab "+(l.kind==="axis"?"axis":"pill"); document.body.appendChild(el); labEls.set(l.id,el); }
     if(el.textContent!==l.text){ el.textContent=l.text; }
-    requestAnimationFrame(()=>el.classList.add("on")); });
+    requestAnimationFrame(()=>{ if(labSpecs.some(s=>s.id===l.id)) el.classList.add("on"); }); });
   labSpecs=list;
 }
 const v3=new THREE.Vector3();
@@ -489,10 +613,9 @@ let step=0;
 const capEl=document.getElementById("caption"), heroEl=document.getElementById("hero"), panelEl=document.getElementById("panel");
 const countEl=document.getElementById("count"), ticksEl=document.getElementById("ticks");
 const prevB=document.getElementById("prev"), nextB=document.getElementById("next");
-ticksEl.innerHTML=S.map(()=>"<i></i>").join("");
 let capTimer=null;
-function go(k,instant){
-  k=Math.max(0,Math.min(S.length-1,k)); if(k===step && !instant) return; step=k; const st=S[k];
+function go(k,instant,force){
+  k=Math.max(0,Math.min(S.length-1,k)); if(k===step && !instant && !force) return; step=k; const st=S[k];
   setState(k,instant);
   heroEl.classList.toggle("off",!st.hero);
   const dc=document.getElementById("defcard");
@@ -511,8 +634,9 @@ prevB.addEventListener("click",e=>{e.stopPropagation();prev();});
 nextB.addEventListener("click",e=>{e.stopPropagation();next();});
 document.getElementById("restart").addEventListener("click",e=>{e.stopPropagation();go(0);});
 panelEl.addEventListener("click",e=>e.stopPropagation());
-window.addEventListener("click",e=>{ if(e.target.closest("button,a,.panel")) return; (e.clientX>innerWidth/2?next:prev)(); });
+window.addEventListener("click",e=>{ if(e.target.closest("button,a,.panel,select,label,.chips")) return; (e.clientX>innerWidth/2?next:prev)(); });
 window.addEventListener("keydown",e=>{
+  if(e.target.closest&&e.target.closest("select")) return;
   if(["ArrowRight","PageDown"," "].includes(e.key)){ e.preventDefault(); next(); }
   else if(["ArrowLeft","PageUp"].includes(e.key)){ e.preventDefault(); prev(); }
   else if(e.key==="Home"){ go(0); } else if(e.key==="End"){ go(S.length-1); } });
@@ -527,6 +651,26 @@ new MutationObserver(retheme).observe(document.documentElement,{attributes:true,
 
 function resize(){ renderer.setSize(innerWidth,innerHeight,false); }
 window.addEventListener("resize",resize); resize();
+
+/* ---------- datasets ---------- */
+const dsSel=document.getElementById("ds"), chips=document.getElementById("chips");
+dsSel.innerHTML=DATASETS.map(d=>`<option value="${d.id}">${d.label} (${d.kind})</option>`).join("");
+chips.innerHTML=DATASETS.map(d=>`<button type="button" data-ds="${d.id}"><span class="cl">${d.label}</span><span class="ck">${d.kind}</span></button>`).join("");
+let curDS=null;
+function setDataset(id,boot){
+  const D=DATASETS.find(d=>d.id===id)||DATASETS[0]; if(curDS===D.id && !boot) return; curDS=D.id;
+  C=build(D); S=C.S; makeCurves(C.curveSpec);
+  document.getElementById("recap").innerHTML=C.recap.map(([t,d])=>`<dt>${t}</dt><dd>${d}</dd>`).join("");
+  document.getElementById("foot").textContent=C.source;
+  ticksEl.innerHTML=S.map(()=>"<i></i>").join("");
+  dsSel.value=D.id; [...chips.children].forEach(b=>b.setAttribute("aria-pressed",b.dataset.ds===D.id?"true":"false"));
+  try{ history.replaceState(null,"","#"+D.id); }catch(_){}
+  if(!boot){ const k=Math.min(step,S.length-1); step=-1; go(k,false,true); }
+}
+dsSel.addEventListener("change",()=>setDataset(dsSel.value));
+chips.addEventListener("click",e=>{ const b=e.target.closest("button[data-ds]"); if(!b) return; e.stopPropagation(); setDataset(b.dataset.ds); });
+const hashId=(location.hash||"").replace("#","");
+setDataset(DATASETS.some(d=>d.id===hashId)?hashId:"commute",true);
 
 /* ---------- boot ---------- */
 for(let i=0;i<T;i++){ const o=S[0].inst(i), q=i*3; cur[q]=o[0];cur[q+1]=o[1];cur[q+2]=o[2]; sc[q]=o[3];sc[q+1]=o[4];sc[q+2]=o[5]; const c=ROLE[o[6]]; cc[q]=c[0];cc[q+1]=c[1];cc[q+2]=c[2]; roleNow[i]=o[6]; }
