@@ -112,7 +112,7 @@ a.brand:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
 <header class="bar top">
   <a class="brand" href="../../" aria-label="vibelogs home">Loud Streets, Warm Homes</a>
-  <div class="top-r"><div class="count" id="count">01 / 17</div></div>
+  <div class="top-r"><div class="count" id="count">01 / 19</div></div>
 </header>
 
 <section class="hero" id="hero">
@@ -203,6 +203,19 @@ function build(){
   const STK=new Array(M); { const neg=[],pos=[]; prod.forEach((p,j)=>(p<0?neg:pos).push(j));
     [[neg,XR],[pos,XT]].forEach(([L,bx])=>{ L.sort((a,b)=>areaW(b)-areaW(a)); let yb=BASE; L.forEach(j=>{ const h=Math.max(.012,areaW(j)*KB); STK[j]=[bx,yb+h/2,-.2,BW,h,.5,prod[j]>0?"teal":"accent"]; yb+=h; }); }); }
   const posTop=BASE+posZ/negZ*14.5;
+  const lineF=(a,b)=>v=>a+b*v, kS=1.8;
+  const Lflat=lineF(my,0), Lbest=lineF(f1.a,f1.b), Lsteep=lineF(my-kS*f1.b*mx,kS*f1.b);
+  const sqL=(L,role)=>j=>{ const yp=WY(y[j]), yl=WY(L(x[j])), s2=Math.abs(yp-yl); return [WX(x[j])+s2/2,(yp+yl)/2,-.5-(j%60)*.004,Math.max(.03,s2),Math.max(.03,s2),.03,role]; };
+  const stickL=L=>j=>{ const yp=WY(y[j]), yl=WY(L(x[j])); return [WX(x[j]),(yp+yl)/2,-.15,.07,Math.max(.02,Math.abs(yp-yl)),.07,"muted"]; };
+  const ssW=L=>{ let t=0; for(let j=0;j<N;j++){ const d=WY(y[j])-WY(L(x[j])); t+=d*d; } return t; };
+  const SSf=ssW(Lflat), SSs=ssW(Lsteep), SSb=ssW(Lbest), score=v=>Math.round(v/SSf*100);
+  const HB=14, BWb=2.2, BB=3.6, BX=[5.4,8.6,11.8], BR=["truth","teal","accent"], BN=["flat","too steep","best"], LL=[Lflat,Lsteep,Lbest];
+  const barStack=bi=>{ const L=LL[bi], out=new Array(N); let yb=BB;
+    [...Array(N).keys()].map(j=>{ const d=WY(y[j])-WY(L(x[j])); return [j,d*d]; }).sort((a,b)=>b[1]-a[1]).forEach(([j,a])=>{ const h=Math.max(.01,a/SSf*HB); out[j]=[BX[bi],yb+h/2,-.2,BWb,h,.5,BR[bi]]; yb+=h; }); return out; };
+  const STB=[barStack(0),barStack(1),barStack(2)];
+  const barH=bi=>ssW(LL[bi])/SSf*HB;
+  const barM=bis=>{ const o={}; bis.forEach(bi=>{ o["bar"+"ABC"[bi]]={p:[BX[bi],BB+barH(bi)/2,-.2],s:[BWb,barH(bi),.5],role:BR[bi]}; }); return o; };
+  const barLab=bis=>bis.map(bi=>({id:"bl"+bi,text:`${BN[bi]}: ${score(ssW(LL[bi]))}`,p:[BX[bi],BB+barH(bi)+.5,-.2]}));
   const sticks=j=>{ const yh=WY(yhat(x[j])), yy=WY(y[j]); return [WX(x[j]),(yh+yy)/2,-.15,.07,Math.max(.02,Math.abs(yy-yh)),.07,"muted"]; };
 
   /* markers */
@@ -220,6 +233,8 @@ function build(){
   const line=(fn,x0,x1,z=.25)=>{ const pts=[]; for(let k=0;k<=40;k++){ const v=x0+(x1-x0)*k/40; pts.push(fn(v).concat([z])); } return pts; };
   const curveSpec=[
     {key:"c1",pts:line(v=>[WX(v),WY(yhat(v))],0,XMAX)},
+    {key:"c0",pts:line(v=>[WX(v),WY(my)],0,XMAX)},
+    {key:"c3",pts:line(v=>[WX(v),WY(Lsteep(v))],0,XMAX)},
     {key:"c2",pts:line(v=>[RXs(v),RYs(f2.a+f2.b*v)],-1400,1400)} ];
 
   const cam={ hero:{t:[0,6,0],az:40,el:26,w:70,h:52}, cal:{t:[0,3,0],az:32,el:34,w:62,h:34}, sky:{t:[0,4.5,0],az:32,el:28,w:62,h:36},
@@ -253,13 +268,24 @@ function build(){
   add({ cam:sh(cam.wall), inst:i=> i<N ? pt(WX(x[i]),WY(y[i]),qd(i)) : STK[i-N], marks:Object.assign({},axX,axY,cross), labels:[...xl,...yl,...stackL],
     card:{k:"Correlation", d:"r is the average of those signed rectangles, measured in standard deviations. Mostly teal pushes it toward +1, mostly red toward −1, and a balance lands near 0. It only sees straight-line patterns.", f:`r = (teal − red) ÷ days = (${posZ.toFixed(1)} − ${negZ.toFixed(1)}) ÷ ${N} = ${sg2(r1)}`},
     cap:`Here <b>r = ${sg2(r1)}</b>: a strong negative correlation. Loud days are low-heat days.` });
-  add({ cam:cam.wallLow, curves:{c1:"accent"}, inst:scat("ink"), marks:Object.assign({},axX,axY), labels:[...xl,...yl],
-    cap:`The line of best fit: <b>heat ≈ ${fmtN(f1.a)} − ${Math.abs(f1.b).toFixed(2)} × noise</b>. Each extra 100 noise complaints goes with about ${fmtN(Math.abs(f1.b)*100)} fewer heat complaints.` });
-  add({ cam:cam.wallLow, curves:{c1:"accent"}, delay:"x", inst:i=> i<N ? pt(WX(x[i]),WY(y[i]),"ink") : sticks(i-N), marks:Object.assign({},axX,axY), labels:[...xl,...yl],
-    cap:`Each gray stick is a residual: how far a day sits from the line. Least squares picks the one line that makes the sum of the squared sticks as small as possible.` });
-  add({ cam:sh(cam.wallLow), curves:{c1:"accent"}, inst:i=> i<N ? pt(WX(x[i]),WY(y[i]),"ink") : sticks(i-N), marks:Object.assign({},axX,axY), labels:[...xl,...yl],
-    card:{k:"R²", d:`The share of the ups and downs in heat complaints that the line accounts for. The rest is scatter around it. Note the line dips below zero on the loudest days, predicting negative complaints. A straight line is a simplification.`, f:`R² = r² = ${R2.toFixed(2)}  (${Math.round(R2*100)}%)`},
-    cap:`The line explains <b>${Math.round(R2*100)}%</b> of the swing in heat complaints. So does street noise warm apartments?` });
+  const ptI=i=>pt(WX(x[i]),WY(y[i]),"ink");
+  add({ cam:cam.wallLow, curves:{c0:"truth"}, delay:"x", inst:i=> i<N ? ptI(i) : stickL(Lflat)(i-N), marks:Object.assign({},axX,axY), labels:[...xl,...yl,{id:"fl",text:`flat guess: ${fmtN(my)}`,p:[WX(1900),WY(my)+.5,0]}],
+    cap:`Now the line. Start with the laziest prediction: every day gets the average, <b>${fmtN(my)}</b> heat complaints. Each gray stick is how far that guess misses.` });
+  add({ cam:cam.wallLow, curves:{c0:"truth"}, marks:Object.assign({},axX,axY), labels:[...xl,...yl],
+    cap:`Turn every miss into a square. A miss twice as long makes a square four times as big, so big misses dominate. Stack the squares into one pile: that's the flat line's score. Call it 100.`,
+    phases:[ {inst:i=> i<N ? ptI(i) : sqL(Lflat,"truth")(i-N),delay:"random",spread:1.2,dur:.7},
+             {at:3.4,inst:i=> i<N ? ptI(i) : STB[0][i-N],delay:"random",spread:1.2,dur:.8,labels:[...xl,...yl,...barLab([0])]} ] });
+  add({ cam:cam.wallLow, curves:{c3:"teal"}, marks:Object.assign({},axX,axY,barM([0])), labels:[...xl,...yl,...barLab([0])],
+    cap:`Tilt the line and the squares change. This one is too steep: some misses shrink, others balloon. Its pile scores <b>${score(SSs)}</b>.`,
+    phases:[ {inst:i=> i<N ? ptI(i) : sqL(Lsteep,"teal")(i-N),delay:"random",spread:1,dur:.7},
+             {at:3.2,inst:i=> i<N ? ptI(i) : STB[1][i-N],delay:"random",spread:1.2,dur:.8,labels:[...xl,...yl,...barLab([0,1])]} ] });
+  add({ cam:cam.wallLow, curves:{c1:"accent"}, marks:Object.assign({},axX,axY,barM([0,1])), labels:[...xl,...yl,...barLab([0,1])],
+    cap:`Least squares is the one tilt with the smallest pile, score <b>${score(SSb)}</b>. That's the line of best fit: <b>heat ≈ ${fmtN(f1.a)} − ${Math.abs(f1.b).toFixed(2)} × noise</b>.`,
+    phases:[ {inst:i=> i<N ? ptI(i) : sqL(Lbest,"accent")(i-N),delay:"random",spread:1,dur:.7},
+             {at:3.2,inst:i=> i<N ? ptI(i) : STB[2][i-N],delay:"random",spread:1.2,dur:.8,labels:[...xl,...yl,...barLab([0,1,2])]} ] });
+  add({ cam:sh(cam.wallLow), curves:{c1:"accent"}, inst:i=> i<N ? ptI(i) : STB[2][i-N], marks:Object.assign({},axX,axY,barM([0,1])), labels:[...xl,...yl,...barLab([0,1,2])],
+    card:{k:"R²", d:`How much of the flat line's pile the best line removes. Here the pile drops from 100 to ${score(SSb)}, so the line accounts for ${Math.round(R2*100)}% of the swing in heat complaints. It equals r². The line still predicts negative complaints on the loudest days: a straight line is a simplification.`, f:`R² = 1 − ${score(SSb)} ÷ 100 = ${R2.toFixed(2)} = (${sg2(r1)})²`},
+    cap:`The best line removes <b>${Math.round(R2*100)}%</b> of the squared misses. So does street noise warm apartments?` });
   add({ cam:cam.wall, delay:"x", inst:scat(i=>tRole(tp[i])), marks:Object.assign({},axX,axY), labels:[...xl,...yl],
     legend:true, cap:`Obviously not. Color each day by its high temperature in Central Park, from navy (below 40°F) to red (82°F and up). Cold days sit top-left. Hot days sit bottom-right.` });
   add({ cam:cam.wall, delay:"x", inst:i=> i<N ? pt(TX(tp[i]),WY(y[i]),tRole(tp[i])) : hideS(i-N), marks:Object.assign({},axX,axY), labels:[...tl,...yl], legend:true,
@@ -275,8 +301,8 @@ function build(){
   const recap=[
     ["Correlation r", `How tightly two things move together in a straight line, from −1 to +1. Street noise vs heat complaints: ${sg2(r1)}.`],
     ["Line of best fit", `The straight line through the cloud: heat ≈ ${fmtN(f1.a)} − ${Math.abs(f1.b).toFixed(2)} × noise.`],
-    ["Residuals and least squares", "Residuals are the gaps between points and the line. Least squares picks the line with the smallest total of squared gaps."],
-    ["R²", `The share of the variation the line accounts for: ${Math.round(R2*100)}% here. A line can fit well and still predict nonsense at the edges.`],
+    ["Residuals and least squares", "Residuals are each point's miss from the line. Square them and pile them up: least squares picks the line with the smallest pile."],
+    ["R²", `How much of the flat average's pile of squared misses the line removes: ${Math.round(R2*100)}% here, equal to r². A line can fit well and still predict nonsense at the edges.`],
     ["Confounder", `A third variable driving both. Temperature: ${sg2(rTH)} with heat complaints, ${sg2(rTN)} with street noise.`],
     ["Controlling for it", `Compare like with like. After removing what temperature predicts, r drops to ${sg2(r2)}.`]
   ];
@@ -311,7 +337,7 @@ const cc=new Float32Array(T*3), cFrom=new Float32Array(T*3), cTo=new Float32Arra
 const delay=new Float32Array(T), roleNow=new Array(T);
 const DUR = RM ? .001 : .95;
 
-const MNAMES=["axis","axis2","meanS","medS","obsS","truS","sdB","sdL","sdR","seB","seL","seR","ciB","ciL","ciR"];
+const MNAMES=["axis","axis2","meanS","medS","obsS","truS","sdB","sdL","sdR","seB","seL","seR","ciB","ciL","ciR","barA","barB","barC"];
 const MK={};
 MNAMES.forEach(n=>{ const m=new THREE.Mesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0,depthWrite:false}));
   m.renderOrder=2; scene.add(m); MK[n]={m,cur:{p:[0,0,0],s:[1,1,1],c:[1,1,1],o:0},from:null,to:null,role:"ink"}; });
