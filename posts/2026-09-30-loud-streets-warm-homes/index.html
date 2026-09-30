@@ -112,7 +112,7 @@ a.brand:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
 <header class="bar top">
   <a class="brand" href="../../" aria-label="vibelogs home">Loud Streets, Warm Homes</a>
-  <div class="top-r"><div class="count" id="count">01 / 15</div></div>
+  <div class="top-r"><div class="count" id="count">01 / 17</div></div>
 </header>
 
 <section class="hero" id="hero">
@@ -188,6 +188,21 @@ function build(){
   const pt=(X,Y,role,z=0)=>[X,Y,z,CS,CS,CS,role];
   const scat=role=>i=> i<N ? pt(WX(x[i]),WY(y[i]),typeof role==="function"?role(i):role) : hideS(i-N);
   const yhat=v=>f1.a+f1.b*v;
+  const sdx=Math.sqrt(avg(x.map(v=>(v-mx)**2))), sdy=Math.sqrt(avg(y.map(v=>(v-my)**2)));
+  const prod=x.map((v,i)=>((v-mx)/sdx)*((y[i]-my)/sdy));
+  let posZ=0,negZ=0; prod.forEach(p=>{ if(p>0) posZ+=p; else negZ-=p; });
+  const rectW=j=>{ const x0=WX(mx),y0=WY(my),x1=WX(x[j]),y1=WY(y[j]); return {cx:(x0+x1)/2,cy:(y0+y1)/2,w:Math.abs(x1-x0),h:Math.abs(y1-y0)}; };
+  const rect=j=>{ const R=rectW(j); return [R.cx,R.cy,-.45-(j%60)*.004,Math.max(.03,R.w),Math.max(.03,R.h),.03,prod[j]>0?"teal":"accent"]; };
+  const exPos=prod.indexOf(Math.max(...prod));
+  const pickQ=(f,q)=>{ const c=[...Array(N).keys()].filter(f).sort((a,b)=>Math.abs(prod[a])-Math.abs(prod[b])); return c[Math.floor(q*(c.length-1))]; };
+  const exTL=pickQ(i=>prod[i]<0&&y[i]>my,.7), exBR=pickQ(i=>prod[i]<0&&x[i]>mx,.8), exP=pickQ(i=>prod[i]>0&&x[i]>mx,.9);
+  const EX=[exTL,exBR,exP];
+  const areaW=j=>{ const R=rectW(j); return R.w*R.h; };
+  let aNeg=0; prod.forEach((p,j)=>{ if(p<0) aNeg+=areaW(j); });
+  const KB=14.5/aNeg, BW=2.4, BASE=3.6, XR=7.4, XT=11;
+  const STK=new Array(M); { const neg=[],pos=[]; prod.forEach((p,j)=>(p<0?neg:pos).push(j));
+    [[neg,XR],[pos,XT]].forEach(([L,bx])=>{ L.sort((a,b)=>areaW(b)-areaW(a)); let yb=BASE; L.forEach(j=>{ const h=Math.max(.012,areaW(j)*KB); STK[j]=[bx,yb+h/2,-.2,BW,h,.5,prod[j]>0?"teal":"accent"]; yb+=h; }); }); }
+  const posTop=BASE+posZ/negZ*14.5;
   const sticks=j=>{ const yh=WY(yhat(x[j])), yy=WY(y[j]); return [WX(x[j]),(yh+yy)/2,-.15,.07,Math.max(.02,Math.abs(yy-yh)),.07,"muted"]; };
 
   /* markers */
@@ -208,7 +223,7 @@ function build(){
     {key:"c2",pts:line(v=>[RXs(v),RYs(f2.a+f2.b*v)],-1400,1400)} ];
 
   const cam={ hero:{t:[0,6,0],az:40,el:26,w:70,h:52}, cal:{t:[0,3,0],az:32,el:34,w:62,h:34}, sky:{t:[0,4.5,0],az:32,el:28,w:62,h:36},
-    wall:{t:[0,9.2,0],az:12,el:7,w:36,h:30}, wallLow:{t:[0,7.4,0],az:12,el:7,w:36,h:34} };
+    wall:{t:[0,8.0,0],az:12,el:7,w:36,h:31.5}, wallLow:{t:[0,7.4,0],az:12,el:7,w:36,h:34} };
   const sh=c=>Object.assign({},c,{sh:-7});
 
   const St=[], add=o=>St.push(Object.assign({delay:"random",spread:.8,field:"field",marks:{},labels:[],cap:""},o));
@@ -225,8 +240,18 @@ function build(){
     cap:`Put both on one chart. Each cube is one day: across is street-noise complaints, up is heat complaints.` });
   add({ cam:cam.wall, delay:"x", inst:scat(i=>(x[i]-mx)*(y[i]-my)>0?"teal":"accent"), marks:Object.assign({},axX,axY,cross), labels:[...xl,...yl,{id:"avg",text:"averages",p:[WX(mx),20.3,0]}],
     cap:`Draw a line at each average. <b>${N-agree}</b> of ${N} days land top-left or bottom-right (red): when one count is high, the other tends to be low.` });
-  add({ cam:sh(cam.wall), inst:scat(i=>(x[i]-mx)*(y[i]-my)>0?"teal":"accent"), marks:Object.assign({},axX,axY,cross), labels:[...xl,...yl],
-    card:{k:"Correlation", d:"The correlation coefficient r measures how tightly two things move together along a straight line. It runs from −1 (perfectly opposite) through 0 (no straight-line pattern) to +1 (perfectly together).", f:`r = ${sg2(r1)}`},
+  const qd=i=>(x[i]-mx)*(y[i]-my)>0?"teal":"accent";
+  const exLab=[{id:"ex0",text:`${dd(days[exTL])}: quiet, many heat complaints`,p:[WX(x[exTL]),WY(y[exTL])+.6,0]},{id:"ex1",text:`${dd(days[exBR])}: loud, few heat complaints`,p:[WX(x[exBR]),WY(y[exBR])+.8,0]},{id:"ex2",text:`${dd(days[exP])}: loud and many`,p:[WX(x[exP]),WY(y[exP])+.6,0]}];
+  const stackL=[{id:"sN",text:`red: −${negZ.toFixed(1)}`,p:[XR,BASE+14.5+.5,-.2]},{id:"sP",text:`teal: +${posZ.toFixed(1)}`,p:[XT,posTop+.5,-.2]}];
+  add({ cam:cam.wall, marks:Object.assign({},axX,axY,cross), labels:[...xl,...yl,...exLab],
+    cap:`How is r worked out? Each day draws a rectangle from where the averages cross to its own spot. Teal rectangles, where both counts sit on the same side of average, push r up. Red ones, where one is high and the other low, push it down.`,
+    phases:[ {inst:i=> i<N ? pt(WX(x[i]),WY(y[i]),qd(i)) : (EX.includes(i-N)?rect(i-N):hideS(i-N)),delay:"none",spread:0,dur:1.1},
+             {at:3.2,inst:i=> i<N ? pt(WX(x[i]),WY(y[i]),qd(i)) : rect(i-N),delay:"random",spread:1.6,dur:.7,labels:[...xl,...yl]} ] });
+  add({ cam:cam.wall, delay:"random", spread:1.4, inst:i=> i<N ? pt(WX(x[i]),WY(y[i]),qd(i)) : STK[i-N], marks:Object.assign({},axX,axY,cross),
+    labels:[...xl,...yl,...stackL],
+    cap:`Now stack the rectangles by color, after putting both counts on a common scale (each distance measured in standard deviations). Red outweighs teal, <b>${negZ.toFixed(1)}</b> to <b>${posZ.toFixed(1)}</b>. Split the difference across ${N} days and you get r.` });
+  add({ cam:sh(cam.wall), inst:i=> i<N ? pt(WX(x[i]),WY(y[i]),qd(i)) : STK[i-N], marks:Object.assign({},axX,axY,cross), labels:[...xl,...yl,...stackL],
+    card:{k:"Correlation", d:"r is the average of those signed rectangles, measured in standard deviations. Mostly teal pushes it toward +1, mostly red toward −1, and a balance lands near 0. It only sees straight-line patterns.", f:`r = (teal − red) ÷ days = (${posZ.toFixed(1)} − ${negZ.toFixed(1)}) ÷ ${N} = ${sg2(r1)}`},
     cap:`Here <b>r = ${sg2(r1)}</b>: a strong negative correlation. Loud days are low-heat days.` });
   add({ cam:cam.wallLow, curves:{c1:"accent"}, inst:scat("ink"), marks:Object.assign({},axX,axY), labels:[...xl,...yl],
     cap:`The line of best fit: <b>heat ≈ ${fmtN(f1.a)} − ${Math.abs(f1.b).toFixed(2)} × noise</b>. Each extra 100 noise complaints goes with about ${fmtN(Math.abs(f1.b)*100)} fewer heat complaints.` });
