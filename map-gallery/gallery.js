@@ -1,33 +1,45 @@
 (() => {
   'use strict';
   const $ = id => document.getElementById(id);
-  const catalog = window.GalleryCatalog, CACHE = 'nrennie-maps-catalog-v1', HOUR = 3600000;
-  let rows = window.GALLERY_SNAPSHOT, visible = [], year = 'all', language = 'all';
+  const catalog = window.GalleryCatalog, HOUR = 3600000, CHECKED = 'maps-checked-v2';
+  const cacheKey = id => `maps-${id}-v2`;
+  let rows = window.GALLERY_SNAPSHOT, visible = [], year = 'all', maker = 'all', tool = 'all';
   let checked = 0, busy = false, current = null, codeRequest = null, generation = 0;
   const codes = new Map();
+  const maker$ = id => catalog.SOURCES.find(s => s.id === id)?.name || id;
   const label = x => `Day ${x.n} · ${x.y}`;
   const escape = text => String(text).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  try {
-    const saved = JSON.parse(localStorage.getItem(CACHE));
-    if (saved && typeof saved.csv === 'string') {
-      rows = catalog.merge(rows, catalog.parse(saved.csv, window.Papa));
-      if (Number.isFinite(saved.checked) && saved.checked <= Date.now()) checked = saved.checked;
-    }
-  } catch { /* Storage may be disabled or contain an older format. */ }
+  const read = k => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } };
+  const write = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* Refresh still works without storage. */ } };
+  for (const src of catalog.SOURCES) {
+    try {
+      const saved = read(cacheKey(src.id));
+      if (saved && typeof saved.text === 'string') rows = catalog.merge(rows, catalog.parse(src.id, saved.text, window.Papa));
+    } catch { /* Storage may hold an older format. */ }
+  }
+  const c0 = read(CHECKED);
+  if (Number.isFinite(c0) && c0 <= Date.now()) checked = c0;
+
+  function chip(kind, value, text, on) {
+    return `<button class="chip ${kind} ${on?'on':''}" data-${kind}="${escape(value)}" aria-pressed="${on}">${escape(text)}</button>`;
+  }
   function filters() {
     const years = [...new Set(rows.map(x => x.y))].sort().reverse();
-    const languages = [...new Set(rows.map(x => x.l))].sort();
-    $('filters').innerHTML = [['all','All years'], ...years.map(y => [y,y])].map(([y,label]) => `<button class="chip ${year===y?'on':''}" data-y="${escape(y)}" aria-pressed="${year===y}">${escape(label)}</button>`).join('') + languages.map(l => `<button class="chip lang ${language===l?'on':''}" data-l="${escape(l)}" aria-pressed="${language===l}">${escape(l)}</button>`).join('');
+    const makers = catalog.SOURCES.filter(s => rows.some(x => x.m === s.id));
+    const tools = [...new Set(rows.map(x => x.l))].sort();
+    $('filters').innerHTML = chip('y','all','All years',year==='all') + years.map(y => chip('y',y,y,year===y)).join('') +
+      '<span class="sep" aria-hidden="true"></span>' + makers.map(s => chip('m',s.id,s.name,maker===s.id)).join('') +
+      '<span class="sep" aria-hidden="true"></span>' + tools.map(l => chip('l',l,l,tool===l)).join('');
   }
   function render() {
-    visible = catalog.filter(rows, year, language, $('search').value);
+    visible = catalog.filter(rows, {year, maker, tool, query:$('search').value});
     $('count').textContent = `${visible.length} of ${rows.length} maps`;
     $('surprise').disabled = !visible.length;
     $('empty').hidden = !!visible.length;
-    $('grid').innerHTML = visible.map(x => `<button class="card" data-date="${x.d}" aria-label="${escape(x.t)}, ${label(x)}"><img loading="lazy" src="${escape(x.i)}" alt="${escape(x.t)}"><span class="meta"><span><span class="tag">${escape(x.l)}</span><span class="t" style="display:block">${escape(x.t)}</span></span><span class="d">${label(x)}</span></span></button>`).join('');
+    $('grid').innerHTML = visible.map(x => `<button class="card" data-key="${escape(x.d)}" aria-label="${escape(x.t)}, ${label(x)}, by ${escape(maker$(x.m))}"><img loading="lazy" src="${escape(x.i)}" alt="${escape(x.t)}${x.s ? ': '+escape(x.s) : ''}"><span class="meta"><span><span class="tag">${escape(maker$(x.m))} · ${escape(x.l)}</span><span class="t" style="display:block">${escape(x.t)}</span>${x.s ? `<span class="s">${escape(x.s)}</span>` : ''}</span><span class="d">${label(x)}</span></span></button>`).join('');
   }
   function status(message) {
-    $('status').textContent = `${message} · Latest map ${label(rows[0])}`;
+    $('status').textContent = message;
   }
   async function refresh(force = false) {
     if (busy) return;
@@ -35,28 +47,28 @@
     busy = true;
     $('refresh').disabled = true;
     status('Checking for new maps…');
-    try {
-      const response = await fetch(catalog.URL, {cache:'no-cache', signal:AbortSignal.timeout(15000)});
-      if (!response.ok) throw Error(`HTTP ${response.status}`);
-      const csv = await response.text(), incoming = catalog.parse(csv, window.Papa);
-      // A malformed/truncated upstream export must never erase the saved gallery.
-      if (incoming.length < 60) throw Error('Incomplete catalogue');
-      const old = rows, updated = catalog.merge(rows, incoming), added = updated.length-old.length;
-      rows = updated;
-      checked = Date.now();
-      try { localStorage.setItem(CACHE, JSON.stringify({csv,checked})); } catch { /* Refresh still works without storage. */ }
-      if (JSON.stringify(old) !== JSON.stringify(rows)) { filters(); render(); }
-      status(added ? `${added} new maps added` : 'Up to date');
-    } catch {
-      status('Couldn’t check for updates. Showing saved maps');
-    } finally {
-      busy = false;
-      $('refresh').disabled = false;
+    const old = rows, failed = [];
+    for (const src of catalog.SOURCES) {
+      try {
+        const response = await fetch(src.url, {cache:'no-cache', signal:AbortSignal.timeout(15000)});
+        if (!response.ok) throw Error(`HTTP ${response.status}`);
+        const text = await response.text(), incoming = catalog.parse(src.id, text, window.Papa);
+        // A malformed or truncated upstream index must never erase the saved gallery.
+        if (incoming.length < src.min) throw Error('Incomplete catalogue');
+        rows = catalog.merge(rows, incoming);
+        write(cacheKey(src.id), {text});
+      } catch { failed.push(src.name); }
     }
+    const added = rows.length-old.length;
+    if (failed.length < catalog.SOURCES.length) { checked = Date.now(); write(CHECKED, checked); }
+    if (JSON.stringify(old) !== JSON.stringify(rows)) { filters(); render(); }
+    status(failed.length ? `Couldn’t check ${failed.join(' and ')}. Showing saved maps` : added ? `${added} new maps added` : 'Up to date');
+    busy = false;
+    $('refresh').disabled = false;
   }
   function setCode(text, item) {
     $('mc').textContent = text;
-    $('mc').className = 'language-'+(item.l==='R'?'r':item.l==='Python'?'python':item.l==='Svelte'?'xml':'javascript');
+    $('mc').className = 'language-'+(item.l==='R'?'r':item.l==='Python'?'python':'javascript');
     $('mc').removeAttribute('data-highlighted');
     if (window.hljs) window.hljs.highlightElement($('mc'));
   }
@@ -84,12 +96,12 @@
     codeRequest?.abort();
     current = item;
     $('mt').textContent = item.t;
-    $('md').textContent = label(item);
+    $('md').textContent = `${label(item)} · ${maker$(item.m)}`;
     $('mi').src = item.i;
-    $('mi').alt = item.t;
+    $('mi').alt = item.s ? `${item.t}: ${item.s}` : item.t;
     $('mg').href = item.g;
-    $('packages').textContent = item.p || '';
-    $('packages').hidden = !item.p;
+    $('packages').textContent = [item.s, item.p].filter(Boolean).join(' · ');
+    $('packages').hidden = !item.p && !item.s;
     $('mdet').open = false;
     $('mdet').hidden = !item.c;
     $('msum').textContent = 'Show code ('+decodeURIComponent(item.c?.split('/').pop() || '')+')';
@@ -109,19 +121,20 @@
     const b = e.target.closest('button');
     if (!b) return;
     if (b.dataset.y) year = b.dataset.y;
-    if (b.dataset.l) language = language === b.dataset.l ? 'all' : b.dataset.l;
+    if (b.dataset.m) maker = maker === b.dataset.m ? 'all' : b.dataset.m;
+    if (b.dataset.l) tool = tool === b.dataset.l ? 'all' : b.dataset.l;
     // Preserve keyboard focus while updating the pressed state.
     $('filters').querySelectorAll('button').forEach(c => {
-      const on = c.dataset.y ? c.dataset.y === year : c.dataset.l === language;
+      const on = c.dataset.y ? c.dataset.y === year : c.dataset.m ? c.dataset.m === maker : c.dataset.l === tool;
       c.classList.toggle('on',on); c.setAttribute('aria-pressed',on);
     });
     render();
   });
   $('search').addEventListener('input', render);
-  $('clear').addEventListener('click', () => { year = language = 'all'; $('search').value=''; filters(); render(); $('search').focus(); });
+  $('clear').addEventListener('click', () => { year = maker = tool = 'all'; $('search').value=''; filters(); render(); $('search').focus(); });
   $('refresh').addEventListener('click', () => refresh(true));
   $('surprise').addEventListener('click', () => { if (visible.length) open(visible[Math.floor(Math.random()*visible.length)]); });
-  $('grid').addEventListener('click', e => { const card=e.target.closest('[data-date]'); if (card) open(visible.find(x => x.d === card.dataset.date)); });
+  $('grid').addEventListener('click', e => { const card=e.target.closest('[data-key]'); if (card) open(visible.find(x => x.d === card.dataset.key)); });
   $('mdet').addEventListener('toggle',loadCode);
   $('prev').addEventListener('click', () => move(-1));
   $('next').addEventListener('click', () => move(1));
