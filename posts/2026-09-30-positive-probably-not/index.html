@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="author" content="Rahul">
 <title>Positive, Probably Not | vibelogs</title>
-<meta name="description" content="Part 4 of a visual stats series: conditional probability, Bayes theorem, and precision vs recall, told with 10,000 cubes.">
+<meta name="description" content="Part 4 of a visual stats series: conditional probability, Bayes theorem, and precision vs recall, using national mammography screening benchmarks.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,100..900&family=IBM+Plex+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;700&display=swap">
@@ -113,18 +113,18 @@ a.brand:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
 <header class="bar top">
   <a class="brand" href="../../" aria-label="vibelogs home">Positive, Probably Not</a>
-  <div class="top-r"><div class="count" id="count">01 / 16</div></div>
+  <div class="top-r"><div class="count" id="count">01 / 17</div></div>
 </header>
 
 <section class="hero" id="hero">
   <p class="eyebrow"><span>Basics of statistics &middot; Part 4</span></p>
   <h1><span>Positive,</span><br><span class="accent">probably not</span></h1>
-  <p class="lede"><span>Conditional probability, Bayes' theorem and precision vs recall, or why a 95%-accurate test can be wrong most of the time.</span></p>
+  <p class="lede"><span>Conditional probability, Bayes' theorem and precision vs recall, or why most women called back after a mammogram don't have cancer.</span></p>
   <p class="hint"><span>Tap the right side or press &rarr; to start</span></p>
 </section>
 
 <div class="legend" id="legend" aria-label="Legend">
-  <span><i style="background:var(--accent)"></i>sick</span><span><i style="background:var(--ink)"></i>healthy</span>
+  <span><i style="background:var(--accent)"></i>cancer</span><span><i style="background:var(--ink)"></i>no cancer</span>
 </div>
 
 <p class="caption" id="caption" aria-live="polite"></p>
@@ -132,7 +132,7 @@ a.brand:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 <aside class="defcard" id="defcard" aria-live="polite"><p class="k"></p><p class="d"></p><p class="f"></p></aside>
 
 <section class="panel" id="panel" aria-hidden="true">
-  <h2>Six ideas, ten thousand people</h2>
+  <h2>Six ideas, ten thousand screens</h2>
   <p class="sub">Everything in this walk-through comes back to these. Earlier parts: <a href="https://rahulch.site/posts/2026-09-30-averages-of-averages/" style="color:inherit">Averages of Averages</a>, <a href="https://rahulch.site/posts/2026-09-30-could-it-be-chance/" style="color:inherit">Could It Be Chance?</a> and <a href="https://rahulch.site/posts/2026-09-30-loud-streets-warm-homes/" style="color:inherit">Loud Streets, Warm Homes</a>.</p>
   <dl id="recap"></dl>
   <p class="foot" id="foot"></p>
@@ -160,24 +160,25 @@ const fmtN=x=>Math.round(x).toLocaleString("en-US");
 
 function build(){
   const R=mulberry32(4242), shuffle=a=>{ for(let k=a.length-1;k>0;k--){ const j=Math.floor(R()*(k+1)); const t=a[k]; a[k]=a[j]; a[j]=t; } return a; };
-  const PREV=.005, SENS=.9, FPR=.05, PREV2=.10;
+  /* published benchmarks (BCSC): screening digital mammography, and diagnostic mammograms for a breast lump */
+  const SENS=.869, SPEC=.889, CDR=5.1, AIR=.116, PPV2=.256;
+  const L_SENS=.878, L_CDR=64.5, L_AIR=.187, US_MAMMO=45025781;
   const order=shuffle([...Array(N).keys()]);
   rank=new Int32Array(N); order.forEach((i,r)=>rank[i]=r);
 
-  /* scenario A: 0.5% prevalence */
-  const nS=Math.round(N*PREV), sickA=order.slice(0,nS), healthyA=order.slice(nS);
-  const nTP=Math.round(nS*SENS), nFP=Math.round((N-nS)*FPR);
+  /* screening world */
+  const nS=Math.round(CDR/SENS*N/1000), nTP=Math.round(nS*SENS), nPos=Math.round(AIR*N), nFP=nPos-nTP, nFN=nS-nTP;
+  const sickA=order.slice(0,nS), healthyA=order.slice(nS);
   const TP=sickA.slice(0,nTP), FN=sickA.slice(nTP), FP=shuffle(healthyA.slice()).slice(0,nFP);
   const sickSet=new Set(sickA), tpSet=new Set(TP), fpSet=new Set(FP), posSet=new Set([...TP,...FP]);
-  const nPos=nTP+nFP, nTN=N-nS-nFP, post=nTP/nPos;
-  const exact=SENS*PREV/(SENS*PREV+FPR*(1-PREV)), pPos=SENS*PREV+FPR*(1-PREV);
-  /* retest */
-  const TP2=TP.slice(0,Math.round(nTP*SENS)), FP2=FP.slice(0,Math.round(nFP*FPR)), pos2=new Set([...TP2,...FP2]);
-  const post2=TP2.length/(TP2.length+FP2.length);
-  /* scenario B: 10% prevalence */
-  const nS2=Math.round(N*PREV2), sickB=order.slice(0,nS2), sickBSet=new Set(sickB);
-  const tpB=sickB.slice(0,Math.round(nS2*SENS)), fpB=shuffle(order.slice(nS2)).slice(0,Math.round((N-nS2)*FPR));
-  const posB=new Set([...tpB,...fpB]), postB=tpB.length/(tpB.length+fpB.length);
+  const nTN=N-nS-nFP, post=nTP/nPos, prev=nS/N;
+  const exact=SENS*prev/(SENS*prev+(1-SPEC)*(1-prev)), pPos=SENS*prev+(1-SPEC)*(1-prev);
+  /* follow-up: biopsy recommended */
+  const nB=Math.round(nTP/PPV2), BIO=[...TP,...FP.slice(0,nB-nTP)], bioSet=new Set(BIO);
+  /* lump world */
+  const nSL=Math.round(L_CDR/L_SENS*N/1000), nTPL=Math.round(nSL*L_SENS), nPosL=Math.round(L_AIR*N), nFPL=nPosL-nTPL;
+  const sickL=order.slice(0,nSL), sickLSet=new Set(sickL), tpL=sickL.slice(0,nTPL), fpL=shuffle(order.slice(nSL)).slice(0,nFPL);
+  const posL=new Set([...tpL,...fpL]), postL=nTPL/nPosL;
 
   /* layout */
   const G=.55, CU=.45, gp=s=>[((s%100)-49.5)*G,((Math.floor(s/100))-49.5)*G];
@@ -189,88 +190,88 @@ function build(){
   const SBX=-37.5, SBZ=-2;
   const split=i=> sickSet.has(i) ? block(sIdx.get(i),10,SBX,SBZ) : gp(hIdx.get(i));
   const posList=[...TP,...FP], pIdx=new Map(); posList.forEach((i,k)=>pIdx.set(i,k));
-  const PCOLS=30, PBX=-(PCOLS-1)*G/2, PBZ=31;
+  const PCOLS=40, PBX=-(PCOLS-1)*G/2, PBZ=31, posRows=Math.ceil(nPos/PCOLS);
   const posBlock=i=>block(pIdx.get(i),PCOLS,PBX,PBZ);
-  const posRows=Math.ceil(nPos/PCOLS);
-  /* confusion matrix blocks */
-  const MX={TP:[-40,-12],FN:[-40,0],FP:[-30,-12],TN:[-30,0]}, MC={TP:9,FN:9,FP:40,TN:130};
+  const MX={TP:[-40,-12],FN:[-40,6],FP:[-30,-12],TN:[-30,6]}, MC={TP:9,FN:9,FP:40,TN:130};
   const lists={TP,FN,FP,TN:healthyA.filter(i=>!fpSet.has(i))}, mIdx=new Map(), mKey=new Map();
   for(const k in lists) lists[k].forEach((i,n)=>{ mIdx.set(i,n); mKey.set(i,k); });
   const mat=i=>{ const k=mKey.get(i); return block(mIdx.get(i),MC[k],MX[k][0],MX[k][1]); };
-  /* scenario B positives block */
-  const posListB=[...tpB,...fpB], pIdxB=new Map(); posListB.forEach((i,k)=>pIdxB.set(i,k));
-  const PCB=50, PBXB=-(PCB-1)*G/2;
-  /* retest */
-  const RCOLS=11, RBX=PBX+PCOLS*G+3, RBZ=PBZ;
-  const re=[...TP2,...FP2], rIdx=new Map(); re.forEach((i,k)=>rIdx.set(i,k));
+  const posListL=[...tpL,...fpL], pIdxL=new Map(); posListL.forEach((i,k)=>pIdxL.set(i,k));
+  const PCL=50, PBXL=-(PCL-1)*G/2;
+  const BCOLS=15, BBX=PBX+PCOLS*G+3, BBZ=PBZ, bIdx=new Map(); BIO.forEach((i,k)=>bIdx.set(i,k));
 
   const truth=i=>sickSet.has(i)?"accent":"ink";
   const L=(id,text,p)=>({id,text,p});
   const cam={ hero:{t:[0,6,0],az:40,el:26,w:80,h:56}, grid:{t:[-2,0,0],az:40,el:42,w:78,h:46}, lift:{t:[-2,2,0],az:40,el:34,w:78,h:48},
-    pos:{t:[0,1,PBZ+posRows*G/2],az:36,el:40,w:26,h:18}, matrix:{t:[2,0,11],az:0,el:64,w:96,h:68},
-    both:{t:[0,1,12],az:38,el:38,w:80,h:56}, re:{t:[RBX+3,1,PBZ+3],az:30,el:42,w:38,h:22} };
+    pos:{t:[0,1,PBZ+posRows*G/2],az:36,el:42,w:32,h:22}, matrix:{t:[2,0,14],az:0,el:64,w:96,h:72},
+    both:{t:[2,1,21],az:38,el:40,w:88,h:70}, bio:{t:[BBX+2,1,PBZ+6],az:30,el:42,w:40,h:26} };
   const sh=c=>Object.assign({},c,{sh:-7});
   const legend=true;
+  const mLab=(k,txt)=>{ const off={TP:[2.2,-1],FN:[2.2,-1],FP:[11,-1],TN:[35,-1]}[k]; return L("m"+k,txt,[MX[k][0]+off[0],1,MX[k][1]+off[1]]); };
 
   const St=[], add=o=>St.push(Object.assign({delay:"random",spread:.8,field:"field",marks:{},labels:[],cap:""},o));
   add({ hero:true, cam:cam.hero, spread:.6, inst:i=> i<2500 ? [SC[i*3],SC[i*3+1],SC[i*3+2],.6,.6,.6, i%40===0?"accent":"ink"] : [SC[i*3],-20,SC[i*3+2],0,0,0,"ink"] });
   add({ cam:cam.grid, delay:"rank", spread:1.4, inst:i=>cube(grid(i),"ink"),
-    cap:`Picture <b>10,000 people</b>, one cube each. The set of every possible person is the sample space. Picking one at random, each has the same 1-in-10,000 chance.` });
+    cap:`US facilities report about <b>${(US_MAMMO/1e6).toFixed(0)} million</b> mammograms a year. Take a slice of <b>10,000 routine screenings</b>, one cube per woman. These 10,000 are the sample space for everything that follows.` });
   add({ cam:cam.grid, inst:i=>cube(grid(i),truth(i)), legend,
-    cap:`A rare disease affects <b>0.5%</b> of them: ${nS} red cubes. The red cubes form an event, and its probability is ${nS} ÷ 10,000. The navy ones are its complement.` });
+    cap:`About 5.9 in every 1,000 women screened are diagnosed with breast cancer within the following year: <b>${nS}</b> red cubes. That's the base rate, P(cancer) = ${pct(prev,2)}.` });
   add({ cam:cam.grid, delay:"x", inst:i=>cube(split(i),truth(i)), legend,
-    labels:[L("sk",`${nS} sick`,[SBX+2.5,1.2,SBZ-1]),L("hl",`${fmtN(N-nS)} healthy`,[0,1.2,-28])],
-    cap:`Split by the truth: ${nS} sick, ${fmtN(N-nS)} healthy. Everyone takes a screening test that is right about 9 times in 10 for sick people and 19 times in 20 for healthy ones.` });
+    labels:[L("sk",`${nS} with cancer`,[SBX+2.5,1.2,SBZ-1]),L("hl",`${fmtN(N-nS)} without`,[0,1.2,-28])],
+    cap:`Split by the truth. U.S. digital mammography, measured on 1.7 million real screens, catches <b>86.9%</b> of cancers and correctly clears <b>88.9%</b> of women without one.` });
   add({ cam:cam.lift, inst:i=>cube(split(i),truth(i),tpSet.has(i)?3:0), legend,
-    labels:[L("tp",`${nTP} test positive`,[SBX+2.5,4.6,SBZ-1]),L("fn",`${nS-nTP} missed`,[SBX+2.5,1,SBZ+3.6])],
-    cap:`Among the sick, the test catches <b>90%</b>: ${nTP} light up and rise. ${nS-nTP} slip through as false negatives.` });
+    labels:[L("tp",`${nTP} flagged`,[SBX+2.5,4.6,SBZ-1]),L("fn",`${nFN} missed`,[SBX+2.5,1,SBZ+3.6])],
+    cap:`Among the ${nS} cancers, the mammogram flags <b>${nTP}</b> and they rise. ${nFN} are missed, false negatives that often surface later.` });
   add({ cam:cam.lift, inst:i=>cube(split(i),truth(i),posSet.has(i)?3:0), legend,
-    labels:[L("tp",`${nTP} true positives`,[SBX+2.5,4.6,SBZ-1]),L("fp",`${nFP} false alarms`,[0,4.6,-28])],
-    cap:`Among the healthy, it wrongly flags <b>5%</b>. That sounds small, but 5% of ${fmtN(N-nS)} is <b>${nFP}</b> false alarms, floating over the navy crowd.` });
+    labels:[L("tp",`${nTP} true positives`,[SBX+2.5,4.6,SBZ-1]),L("fp",`${fmtN(nFP)} false alarms`,[0,4.6,-28])],
+    cap:`Among the ${fmtN(N-nS)} without cancer, 11.1% get flagged anyway: <b>${fmtN(nFP)}</b> women called back for more imaging, floating over the navy crowd.` });
   add({ cam:cam.pos, delay:"x", spread:1.2, inst:i=> posSet.has(i) ? cube(posBlock(i),truth(i)) : cube(split(i),"muted"), legend,
-    labels:[L("pa",`${nPos} tested positive`,[0,1,PBZ-1.2]),L("pb",`${nTP} are sick`,[PBX+ (Math.min(nTP,PCOLS)-1)*G/2,1,PBZ+Math.ceil(nTP/PCOLS)*G+.6])],
-    cap:`Now keep only the ${nPos} people who tested positive. Only <b>${nTP}</b> of them are sick. A positive result means sick just <b>${pct(post)}</b> of the time.` });
+    labels:[L("pa",`${fmtN(nPos)} called back`,[0,1,PBZ-1.2])],
+    cap:`Keep only the <b>${fmtN(nPos)}</b> women called back. Only ${nTP} have cancer. A callback means cancer <b>${pct(post)}</b> of the time, the same 4.4% the national study measured directly.` });
   add({ cam:sh(cam.pos), inst:i=> posSet.has(i) ? cube(posBlock(i),truth(i)) : cube(split(i),"muted"), legend,
-    card:{k:"Conditional probability", d:"Extra information shrinks the sample space. Once you know the test came back positive, only the positive cubes count, and the question becomes what share of them are sick.", f:`P(sick | positive) = ${nTP} ÷ ${nPos} = ${pct(post)}`},
-    cap:`Knowing the result changes the question: out of <b>these ${nPos}</b>, how many are sick?` });
+    card:{k:"Conditional probability", d:"Extra information shrinks the sample space. Once you know the result was abnormal, only the called-back cubes count, and the question becomes what share of them have cancer.", f:`P(cancer | callback) = ${nTP} ÷ ${fmtN(nPos)} = ${pct(post)}`},
+    cap:`The callback letter changes the question: out of <b>these ${fmtN(nPos)}</b>, how many have cancer?` });
   add({ cam:sh(cam.pos), inst:i=> posSet.has(i) ? cube(posBlock(i),truth(i)) : cube(split(i),"muted"), legend,
-    card:{k:"Bayes' theorem", d:`The same answer without counting cubes. The top is the red cubes that rose, the bottom is every cube that rose (the law of total probability). The bottom alone, P(positive) = ${pPos.toFixed(5)}, is not the answer.`, f:`P(S|+) = P(+|S)·P(S) ÷ P(+) = (0.9 × 0.005) ÷ (0.9 × 0.005 + 0.05 × 0.995) = ${pct(exact)}`},
-    cap:`Bayes' theorem is the cube count written as a formula. The rare disease gets swamped by false alarms from the huge healthy crowd.` });
+    card:{k:"Bayes' theorem", d:`The same answer from the published rates alone. The top counts true callbacks, the bottom counts every callback (the law of total probability). The bottom by itself, P(callback) = ${pct(pPos)}, is not the answer.`, f:`P(C|+) = 0.869 × ${prev.toFixed(4)} ÷ (0.869 × ${prev.toFixed(4)} + 0.111 × ${(1-prev).toFixed(4)}) = ${pct(exact)}`},
+    cap:`Bayes' theorem is this cube count written as a formula. Cancer is rare among women screened, so its true positives get swamped by false alarms from the much larger healthy group.` });
   add({ cam:cam.matrix, delay:"x", spread:1.2, inst:i=>cube(mat(i),truth(i)), legend,
-    labels:[L("mTP",`true positive ${nTP}`,[MX.TP[0]+2.2,1,MX.TP[1]-1]),L("mFN",`false negative ${nS-nTP}`,[MX.FN[0]+2.2,1,MX.FN[1]-1]),L("mFP",`false positive ${nFP}`,[MX.FP[0]+11,1,MX.FP[1]-1]),L("mTN",`true negative ${fmtN(nTN)}`,[MX.TN[0]+35,1,MX.TN[1]-1])],
-    marks:{}, cap:`Every test outcome falls into one of four boxes, the confusion matrix. Back row: tested positive. Front row: tested negative. Left: sick. Right: healthy.` });
+    labels:[mLab("TP",`true positive ${nTP}`),mLab("FN",`false negative ${nFN}`),mLab("FP",`false positive ${fmtN(nFP)}`),mLab("TN",`true negative ${fmtN(nTN)}`)],
+    cap:`Every screen lands in one of four boxes, the confusion matrix. Top row: called back. Bottom row: cleared. Left: cancer. Right: no cancer.` });
   const hl=(num,rest)=>i=>{ const k=mKey.get(i); return cube(mat(i), num.includes(k)?truth(i):rest.includes(k)?"teal":"muted"); };
-  const mLabs=[L("mTP",`TP ${nTP}`,[MX.TP[0]+2.2,1,MX.TP[1]-1]),L("mFN",`FN ${nS-nTP}`,[MX.FN[0]+2.2,1,MX.FN[1]-1]),L("mFP",`FP ${nFP}`,[MX.FP[0]+11,1,MX.FP[1]-1]),L("mTN",`TN ${fmtN(nTN)}`,[MX.TN[0]+35,1,MX.TN[1]-1])];
+  const mLabs=[mLab("TP",`TP ${nTP}`),mLab("FN",`FN ${nFN}`),mLab("FP",`FP ${fmtN(nFP)}`),mLab("TN",`TN ${fmtN(nTN)}`)];
   add({ cam:cam.matrix, inst:hl(["TP"],["FN"]), labels:mLabs,
-    cap:`<b>Recall</b> (also called sensitivity): of everyone who is sick, how many did the test catch? ${nTP} ÷ (${nTP} + ${nS-nTP}) = <b>${pct(nTP/nS,0)}</b>. Teal marks the ones it missed.` });
+    cap:`<b>Recall</b> (sensitivity): of women with cancer, how many did screening catch? ${nTP} ÷ (${nTP} + ${nFN}) = <b>${pct(nTP/nS)}</b>. Teal marks the misses.` });
   add({ cam:cam.matrix, inst:hl(["TN"],["FP"]), labels:mLabs,
-    cap:`<b>Specificity</b>: of everyone who is healthy, how many did the test clear? ${fmtN(nTN)} ÷ (${fmtN(nTN)} + ${nFP}) = <b>${pct(nTN/(N-nS),0)}</b>. Teal marks the false alarms.` });
+    cap:`<b>Specificity</b>: of women without cancer, how many were cleared? ${fmtN(nTN)} ÷ (${fmtN(nTN)} + ${fmtN(nFP)}) = <b>${pct(nTN/(N-nS))}</b>. Teal marks the false alarms.` });
   add({ cam:cam.matrix, cardRight:true, inst:hl(["TP"],["FP"]), labels:mLabs,
-    card:{k:"Three different questions", d:"Recall and specificity describe the test. Precision describes what a positive result means for you, and it depends on how common the disease is. A great test can still have terrible precision.", f:`recall ${pct(nTP/nS,0)} · specificity ${pct(nTN/(N-nS),0)} · precision ${pct(post)}`},
-    cap:`<b>Precision</b>: of everyone who tested positive, how many are sick? ${nTP} ÷ (${nTP} + ${nFP}) = <b>${pct(post)}</b>. Same test, very different number.` });
+    card:{k:"Three different questions", d:"Recall and specificity describe the test. Precision describes what an abnormal result means for the woman holding it, and it depends on how common cancer is in the group being tested.", f:`recall ${pct(nTP/nS)} · specificity ${pct(nTN/(N-nS))} · precision ${pct(post)}`},
+    cap:`<b>Precision</b> (positive predictive value): of women called back, how many have cancer? ${nTP} ÷ (${nTP} + ${fmtN(nFP)}) = <b>${pct(post)}</b>.` });
+  const mLabsM=[mLab("TP",`${fmtN(nTP*100)} cancers found`),mLab("FN",`${fmtN(nFN*100)} missed`),mLab("FP",`${fmtN(nFP*100)} false alarms`),mLab("TN",`${fmtN(nTN*100)} cleared`)];
+  add({ cam:cam.matrix, cardRight:true, inst:i=>cube(mat(i),truth(i)), labels:mLabsM,
+    card:{k:"From cubes to the country", d:"Each cube stands for 100 women once you scale the slice up to 1 million screening mammograms. The rates stay the same, so the story does too: for every cancer found, about 22 women without cancer get a callback.", f:`per 1,000,000 screens: ${fmtN(nTP*100)} found · ${fmtN(nFP*100)} false alarms`},
+    cap:`Scale the 10,000 up to <b>1 million</b> screening mammograms and multiply every box by 100. Most women called back in the U.S. every year do not have cancer, and that is what a low base rate does.` });
   add({ cam:cam.both, legend,
-    cap:`Precision depends on the base rate. Make the disease 20 times more common, <b>10%</b> of people, and run the same test. Now ${fmtN(tpB.length+fpB.length)} test positive and ${fmtN(tpB.length)} of them are sick: <b>${pct(postB)}</b>.`,
-    phases:[ {inst:i=>cube(grid(i),sickBSet.has(i)?"accent":"ink"),delay:"random",spread:.8},
-             {at:1.6,inst:i=>cube(grid(i),sickBSet.has(i)?"accent":"ink",posB.has(i)?3:0),delay:"random",spread:.8},
-             {at:3.4,inst:i=> posB.has(i) ? cube(block(pIdxB.get(i),PCB,PBXB,PBZ),sickBSet.has(i)?"accent":"ink") : cube(grid(i),"muted"),delay:"x",spread:1,
-               labels:[L("pB",`${fmtN(tpB.length+fpB.length)} positive · ${pct(postB,0)} sick`,[0,1,PBZ-1.2])]} ] });
-  add({ cam:sh(cam.re), legend,
-    card:{k:"Bayesian updating", d:"Your belief after the first test becomes the starting point for the second. Retest the positives from the 0.5% world: the prior is no longer 0.5%, it is 8.3%, so a second positive means far more.", f:`prior ${pct(post)} → second positive → ${pct(post2,0)} sick`},
-    cap:`Back to the rare disease. Retest the ${nPos} positives. <b>${TP2.length+FP2.length}</b> come back positive again, and ${TP2.length} of those are sick: <b>${pct(post2,0)}</b>.`,
+    cap:`Now a different group: women getting a mammogram because they <b>felt a lump</b>. Cancer is far more common here, about ${pct(nSL/N)}. An abnormal result now means cancer about <b>${pct(postL,0)}</b> of the time (64.5 cancers per 187 abnormal results in BCSC's diagnostic benchmarks).`,
+    phases:[ {inst:i=>cube(grid(i),sickLSet.has(i)?"accent":"ink"),delay:"random",spread:.8},
+             {at:1.6,inst:i=>cube(grid(i),sickLSet.has(i)?"accent":"ink",posL.has(i)?3:0),delay:"random",spread:.8},
+             {at:3.4,inst:i=> posL.has(i) ? cube(block(pIdxL.get(i),PCL,PBXL,PBZ),sickLSet.has(i)?"accent":"ink") : cube(grid(i),"muted"),delay:"x",spread:1,
+               labels:[L("pL",`${fmtN(nPosL)} abnormal · ${pct(postL,0)} cancer`,[0,1,PBZ-1.2])]} ] });
+  add({ cam:sh(cam.bio), legend,
+    card:{k:"Bayesian updating", d:"Each test's answer becomes the starting point for the next. A callback raises the chance from 0.6% to 4.4%. Extra imaging narrows it again: women sent on to biopsy have cancer about a quarter of the time. The biopsy settles it.", f:`0.6% → callback 4.4% → biopsy recommended 25.6% → biopsy: yes or no`},
+    cap:`Back to screening. The ${fmtN(nPos)} called back get more imaging, and <b>${nB}</b> are sent for a biopsy. ${nTP} of those have cancer: <b>${pct(nTP/nB)}</b>, matching the published figure.`,
     phases:[ {inst:i=> posSet.has(i) ? cube(posBlock(i),truth(i)) : cube(split(i),"muted"),delay:"x",spread:.8},
-             {at:1.8,inst:i=> pos2.has(i) ? cube(block(rIdx.get(i),RCOLS,RBX,RBZ),truth(i)) : posSet.has(i) ? cube(posBlock(i),"muted") : cube(split(i),"muted"),delay:"x",spread:.8,
-               labels:[L("r2",`${TP2.length+FP2.length} positive twice`,[RBX+2.7,1,RBZ-1.2])]} ] });
-  add({ cam:{t:[1,0,13],az:0,el:64,w:92,h:58}, end:true, delay:"x", inst:i=>cube(mat(i),truth(i)) });
+             {at:1.8,inst:i=> bioSet.has(i) ? cube(block(bIdx.get(i),BCOLS,BBX,BBZ),truth(i)) : posSet.has(i) ? cube(posBlock(i),"muted") : cube(split(i),"muted"),delay:"x",spread:.8,
+               labels:[L("b2",`${nB} biopsies recommended`,[BBX+4,1,BBZ-1.2])]} ] });
+  add({ cam:cam.matrix, end:true, delay:"x", inst:i=>cube(mat(i),truth(i)) });
 
   const recap=[
-    ["Sample space and events", "The sample space is every possible outcome, here 10,000 people. An event is a subset, like the red cubes. Its complement is everything else."],
-    ["Conditional probability", `New information shrinks the sample space. P(sick | positive) only counts positive cubes: ${nTP} ÷ ${nPos} = ${pct(post)}.`],
-    ["Bayes' theorem", `P(S|+) = P(+|S)·P(S) ÷ P(+). The denominator P(+) = ${pPos.toFixed(4)} comes from the law of total probability and is not the answer.`],
-    ["Recall and specificity", `Properties of the test: ${pct(nTP/nS,0)} of sick people caught, ${pct(nTN/(N-nS),0)} of healthy people cleared.`],
-    ["Precision and base rates", `What a positive result means: ${pct(post)} at 0.5% prevalence, ${pct(postB)} at 10%. Rare conditions drown in false alarms.`],
-    ["Bayesian updating", `Yesterday's posterior is today's prior: ${pct(post)} after one positive, ${pct(post2,0)} after two.`]
+    ["Sample space and events", "The sample space is every possible outcome, here 10,000 women screened. An event is a subset, like the red cubes with cancer. Its complement is everyone else."],
+    ["Conditional probability", `New information shrinks the sample space. P(cancer | callback) only counts the called-back cubes: ${nTP} ÷ ${fmtN(nPos)} = ${pct(post)}.`],
+    ["Bayes' theorem", `P(C|+) = P(+|C)·P(C) ÷ P(+). The denominator, P(callback) = ${pct(pPos)}, comes from the law of total probability and is not the answer.`],
+    ["Recall and specificity", `Properties of the test: ${pct(nTP/nS)} of cancers caught, ${pct(nTN/(N-nS))} of healthy women cleared.`],
+    ["Precision and base rates", `What an abnormal result means: ${pct(post)} in routine screening, about ${pct(postL,0)} for women who felt a lump.`],
+    ["Bayesian updating", `Each result becomes the next prior: 0.6% → 4.4% after a callback → 25.6% when a biopsy is recommended.`]
   ];
-  const source="A thought experiment, not a dataset: 10,000 people, 0.5% prevalence, a test with 90% sensitivity and a 5% false positive rate (the classic screening example). Counts are exact expected values, assigned to cubes at random with a fixed seed.";
+  const source="Data: Breast Cancer Surveillance Consortium national benchmarks for digital mammography (Lehman et al., Radiology 2017: 1,682,504 screening exams; Sprague et al., Radiology 2017: 401,548 diagnostic exams, lump subgroup), and FDA MQSA national statistics (45,025,781 annual mammography procedures, all types). Counts are the published rates applied to 10,000 cubes and rounded to whole people. This page is about how probabilities work, not medical advice.";
   return {S:St, recap, source, curveSpec:[]};
 }
 
