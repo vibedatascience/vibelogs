@@ -1,6 +1,38 @@
 /* Official #30DayMapChallenge daily themes, from tjukanovt/30DayMapChallenge includes/themes-YYYY.md. Index 0 is day 1. */
 (function(root) {
   const THEMES = {
+ "2019": [
+  "Points",
+  "Lines",
+  "Polygons",
+  "Hexagons",
+  "Raster",
+  "Blue",
+  "Red",
+  "Green",
+  "Yellow",
+  "Black & White",
+  "Elevation",
+  "Movement",
+  "Tracks",
+  "Boundaries",
+  "Names",
+  "Places",
+  "Zones",
+  "Globe",
+  "Urban",
+  "Rural",
+  "Environment",
+  "Built Environment",
+  "Population",
+  "Statistics",
+  "Climate",
+  "Hydrology",
+  "Resources",
+  "Funny",
+  "Experimental",
+  "Home"
+ ],
  "2020": [
   "Points",
   "Lines",

@@ -6,12 +6,13 @@
   let rows = window.GALLERY_SNAPSHOT, visible = [], year = 'all', maker = 'all', tool = 'all';
   let checked = 0, busy = false, current = null, codeRequest = null, generation = 0;
   const codes = new Map();
-  const maker$ = id => catalog.SOURCES.find(s => s.id === id)?.name || id;
+  const maker$ = catalog.makerName;
+  const live = catalog.SOURCES.filter(s => s.live);
   const label = x => `Day ${x.n} · ${x.y}`;
   const escape = text => String(text).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const read = k => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } };
   const write = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* Refresh still works without storage. */ } };
-  for (const src of catalog.SOURCES) {
+  for (const src of live) {
     try {
       const saved = read(cacheKey(src.id));
       if (saved && typeof saved.text === 'string') rows = catalog.merge(rows, catalog.parse(src.id, saved.text, window.Papa));
@@ -25,10 +26,10 @@
   }
   function filters() {
     const years = [...new Set(rows.map(x => x.y))].sort().reverse();
-    const makers = catalog.SOURCES.filter(s => rows.some(x => x.m === s.id));
+    const makers = [...new Map(catalog.SOURCES.map(s => [s.maker, s.name]))].filter(([m]) => rows.some(x => x.m === m));
     const tools = [...new Set(rows.map(x => x.l))].sort();
     $('filters').innerHTML = chip('y','all','All years',year==='all') + years.map(y => chip('y',y,y,year===y)).join('') +
-      '<span class="sep" aria-hidden="true"></span>' + makers.map(s => chip('m',s.id,s.name,maker===s.id)).join('') +
+      '<span class="sep" aria-hidden="true"></span>' + makers.map(([m, name]) => chip('m',m,name,maker===m)).join('') +
       '<span class="sep" aria-hidden="true"></span>' + tools.map(l => chip('l',l,l,tool===l)).join('');
   }
   function render() {
@@ -48,7 +49,7 @@
     $('refresh').disabled = true;
     status('Checking for new maps…');
     const old = rows, failed = [];
-    for (const src of catalog.SOURCES) {
+    for (const src of live) {
       try {
         const response = await fetch(src.url, {cache:'no-cache', signal:AbortSignal.timeout(15000)});
         if (!response.ok) throw Error(`HTTP ${response.status}`);
@@ -60,11 +61,17 @@
       } catch { failed.push(src.name); }
     }
     const added = rows.length-old.length;
-    if (failed.length < catalog.SOURCES.length) { checked = Date.now(); write(CHECKED, checked); }
+    if (failed.length < live.length) { checked = Date.now(); write(CHECKED, checked); }
     if (JSON.stringify(old) !== JSON.stringify(rows)) { filters(); render(); }
     status(failed.length ? `Couldn’t check ${failed.join(' and ')}. Showing saved maps` : added ? `${added} new maps added` : 'Up to date');
     busy = false;
     $('refresh').disabled = false;
+  }
+  function notebook(text) {
+    try {
+      const cells = JSON.parse(text).cells || [];
+      return cells.filter(c => c.cell_type === 'code').map(c => [].concat(c.source).join('')).filter(Boolean).join('\n\n# ----\n\n');
+    } catch { return text; }
   }
   function setCode(text, item) {
     $('mc').textContent = text;
@@ -84,7 +91,9 @@
     try {
       const response = await fetch(item.c, {signal:controller.signal});
       if (!response.ok) throw Error(`HTTP ${response.status}`);
-      const text = await response.text();
+      let text = await response.text();
+      // Notebooks arrive as JSON; show just their code cells.
+      if (/\.ipynb$/i.test(item.c)) text = notebook(text);
       codes.set(item.c, text);
       if (ticket === generation && $('dlg').open) setCode(text, item);
     } catch {
