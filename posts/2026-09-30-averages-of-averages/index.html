@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="author" content="Rahul">
+<title>Averages of Averages | vibelogs</title>
+<meta name="description" content="A click-through 3D walk through mean, median, standard deviation, sampling and the central limit theorem, told with 1,600 cubes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,100..900&family=IBM+Plex+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;700&display=swap">
+<style>
+/* Layout: full-bleed isometric cube stage; chrome pinned to the four edges; one caption slot low and centered, like a slide narrator */
+:root{
+  --field:#E9EEF4; --ink:#0A3069; --accent:#E60023; --teal:#0D9488; --muted:#B9C4D2; --white:#FFFFFF;
+  --text:#0A3069; --chrome:#0A3069; --cap-bg:#0A3069; --cap-fg:#FFFFFF; --on-accent:#FFFFFF;
+  --f-display:"Anybody","Arial Narrow","Helvetica Neue",sans-serif;
+  --f-body:"Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --field:#0B1424; --ink:#C7D4E6; --accent:#FF2E4F; --teal:#2DD4BF; --muted:#26344A; --white:#F4F7FB;
+  --text:#E3EAF3; --chrome:#E3EAF3; --cap-bg:#E3EAF3; --cap-fg:#0B1424; --on-accent:#FFFFFF; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --field:#0B1424; --ink:#C7D4E6; --accent:#FF2E4F; --teal:#2DD4BF; --muted:#26344A; --white:#F4F7FB;
+  --text:#E3EAF3; --chrome:#E3EAF3; --cap-bg:#E3EAF3; --cap-fg:#0B1424; --on-accent:#FFFFFF; color-scheme:dark}
+
+html,body{height:100%}
+body{margin:0;overflow:hidden;background:var(--field);color:var(--text);font-family:var(--f-body);-webkit-tap-highlight-color:transparent;user-select:none}
+body.on-accent{--chrome:var(--on-accent)}
+a.brand{color:inherit;text-decoration:none;pointer-events:auto}
+a.brand:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+#stage{position:fixed;inset:0;width:100%;height:100%;display:block;cursor:pointer}
+
+.bar{position:fixed;left:0;right:0;display:flex;justify-content:space-between;align-items:center;gap:16px;padding-inline:clamp(16px,3vw,32px);color:var(--chrome);transition:color .6s ease;pointer-events:none;z-index:3}
+.bar.top{top:0;padding-top:calc(env(safe-area-inset-top,0px) + 18px)}
+.bar.bottom{bottom:0;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 16px)}
+.brand{font-family:var(--f-display);font-variation-settings:"wdth" 70;font-weight:800;font-size:18px;letter-spacing:.04em;text-transform:uppercase}
+.count{font-family:var(--f-mono);font-size:13px;font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.nav{pointer-events:auto;font:500 13px/1 var(--f-mono);letter-spacing:.04em;color:inherit;background:none;border:0;padding:10px 4px;cursor:pointer}
+.nav:focus-visible,.panel button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+.nav[aria-disabled="true"]{opacity:.35;cursor:default}
+.ticks{display:flex;align-items:flex-end;gap:5px;height:16px;min-width:0;flex:1;justify-content:center}
+.ticks i{display:block;width:2px;height:7px;background:currentColor;opacity:.45;transition:height .3s ease,opacity .3s ease}
+.ticks i.done{opacity:.8}
+.ticks i.on{height:16px;width:3px;opacity:1}
+
+.caption{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 74px);transform:translateX(-50%);width:min(600px,calc(100% - 32px));text-align:center;z-index:2;pointer-events:none;margin:0;font-size:clamp(16px,1.9vw,19px);line-height:1.62;opacity:0;transition:opacity .25s ease}
+.caption.show{opacity:1}
+.caption span,.hero span,.panel .cap{background:var(--cap-bg);color:var(--cap-fg);padding:.14em .42em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.caption b,.panel b{font-family:var(--f-mono);font-weight:500;font-size:.92em;white-space:nowrap}
+
+.hero{position:fixed;left:clamp(16px,6vw,88px);right:16px;top:calc(env(safe-area-inset-top,0px) + 17vh);z-index:2;pointer-events:none;transition:opacity .5s ease,transform .7s ease}
+.hero.off{opacity:0;transform:translateY(-24px)}
+.hero .eyebrow{font:500 13px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;margin:0 0 18px}
+.hero h1{margin:0;font-family:var(--f-display);font-weight:880;font-variation-settings:"wdth" 58;font-size:clamp(58px,12.5vw,168px);line-height:.94;letter-spacing:-.005em;text-transform:uppercase;text-wrap:balance}
+.hero h1 span{padding:0 .1em;display:inline-block;margin-bottom:.06em}
+.hero h1 .accent{background:var(--accent);color:var(--on-accent)}
+.hero .lede{max-width:34ch;margin:22px 0 0;font-size:clamp(16px,1.8vw,19px);line-height:1.62}
+.hero .hint{margin:26px 0 0;font:500 13px/1.6 var(--f-mono);letter-spacing:.03em}
+
+.lab{position:fixed;left:0;top:0;z-index:1;pointer-events:none;white-space:nowrap;font:500 12px/1 var(--f-mono);font-variant-numeric:tabular-nums;opacity:0;transition:opacity .35s ease;will-change:transform}
+.lab.on{opacity:1}
+.lab.pill{background:var(--cap-bg);color:var(--cap-fg);padding:5px 7px;border-radius:2px}
+.lab.axis{color:var(--chrome);font-size:11px;opacity:0}
+.lab.axis.on{opacity:.8}
+
+.panel{position:fixed;left:50%;top:50%;transform:translate(-50%,-46%);width:min(640px,calc(100% - 32px));max-height:calc(100% - 150px);overflow:auto;z-index:4;background:var(--cap-bg);color:var(--cap-fg);padding:clamp(20px,4vw,36px);opacity:0;pointer-events:none;transition:opacity .45s ease,transform .6s ease;box-sizing:border-box;user-select:text}
+.panel.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+.panel h2{margin:0 0 6px;font-family:var(--f-display);font-weight:850;font-variation-settings:"wdth" 62;font-size:clamp(30px,4.6vw,44px);line-height:1;text-transform:uppercase;letter-spacing:.01em;text-wrap:balance}
+.panel .sub{margin:0 0 22px;font-size:15px;opacity:.8}
+.panel dl{display:grid;grid-template-columns:minmax(0,11.5em) minmax(0,1fr);gap:14px 20px;margin:0}
+.panel dt{font:500 13px/1.5 var(--f-mono);letter-spacing:.02em;padding-top:2px}
+.panel dd{margin:0;font-size:15.5px;line-height:1.55;min-width:0}
+.panel .foot{margin:22px 0 0;font:400 12px/1.6 var(--f-mono);opacity:.75}
+.panel button{margin-top:20px;font:500 13px/1 var(--f-mono);letter-spacing:.04em;background:var(--accent);color:var(--on-accent);border:0;padding:12px 16px;cursor:pointer;border-radius:2px}
+@media (max-width:560px){
+  .panel dl{grid-template-columns:minmax(0,1fr);gap:4px}
+  .panel dd{margin-bottom:12px}
+  .ticks{gap:3px}
+  .caption{bottom:calc(env(safe-area-inset-bottom,0px) + 66px)}
+  .brand{font-size:15px}
+}
+@media (prefers-reduced-motion: reduce){.caption,.hero,.panel,.lab,.ticks i{transition:none}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+</head>
+<body>
+<canvas id="stage" aria-hidden="true"></canvas>
+
+<header class="bar top">
+  <a class="brand" href="../../" aria-label="vibelogs home">Averages of Averages</a>
+  <div class="count" id="count">01 / 20</div>
+</header>
+
+<section class="hero" id="hero">
+  <p class="eyebrow"><span>Basics of statistics</span></p>
+  <h1><span>Averages</span><br><span class="accent">of averages</span></h1>
+  <p class="lede"><span>How a lopsided crowd, a few random samples and one theorem turn a guess into an estimate.</span></p>
+  <p class="hint"><span>Tap the right side or press &rarr; to start</span></p>
+</section>
+
+<p class="caption" id="caption" aria-live="polite"></p>
+
+<section class="panel" id="panel" aria-hidden="true">
+  <h2>Four ideas, one pile of cubes</h2>
+  <p class="sub">Everything in this walk-through comes back to these.</p>
+  <dl id="recap"></dl>
+  <p class="foot" id="foot"></p>
+  <button type="button" id="restart">Start over</button>
+</section>
+
+<footer class="bar bottom">
+  <button class="nav" id="prev" type="button" aria-label="Previous step">&larr; Back</button>
+  <div class="ticks" id="ticks" aria-hidden="true"></div>
+  <button class="nav" id="next" type="button" aria-label="Next step">Next &rarr;</button>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+"use strict";
+const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------- data: seeded simulation ---------- */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const R = mulberry32(20260930);
+const N=1000, M=600, T=N+M, G=1.15, SS=0.575, ZP=-6, ZS=3, U=0.87, US=0.5;
+const xw = m => (m-60)*0.23;
+
+const vals = new Float64Array(N);
+for(let i=0;i<N;i++){ const v=-17*(Math.log(1-R())+Math.log(1-R())); vals[i]=Math.max(2,Math.round(v)); }
+const order=[...Array(N).keys()].sort((a,b)=>vals[a]-vals[b]||a-b);
+const rank=new Int32Array(N); order.forEach((i,r)=>rank[i]=r);
+const mu = vals.reduce((a,b)=>a+b,0)/N;
+const med = (vals[order[499]]+vals[order[500]])/2;
+const sd = Math.sqrt(vals.reduce((a,v)=>a+(v-mu)*(v-mu),0)/N);
+const tailN = vals.filter(v=>v>=60).length;
+const inSd = vals.filter(v=>Math.abs(v-mu)<=sd).length;
+
+const pool=[...Array(N).keys()];
+function draw(n){ for(let k=0;k<n;k++){ const j=k+Math.floor(R()*(N-k)); const t=pool[k]; pool[k]=pool[j]; pool[j]=t; } return pool.slice(0,n); }
+const meanOf = a => a.reduce((s,i)=>s+vals[i],0)/a.length;
+const demo=[], m10=new Float64Array(M), m40=new Float64Array(M);
+for(let j=0;j<M;j++){ const s=draw(10); if(j<2) demo.push(s); m10[j]=meanOf(s); }
+for(let j=0;j<M;j++){ m40[j]=meanOf(draw(40)); }
+const avg = a => a.reduce((x,y)=>x+y,0)/a.length;
+const sdOf = a => { const m=avg(a); return Math.sqrt(a.reduce((s,v)=>s+(v-m)*(v-m),0)/a.length); };
+const mm10=avg(m10), obs10=sdOf(m10), se10=sd/Math.sqrt(10), se40=sd/Math.sqrt(40), ci=1.96*se40;
+const inCI = m40.filter(v=>Math.abs(v-mu)<=ci).length;
+const mA=meanOf(demo[0]), mB=meanOf(demo[1]);
+
+const f1 = x => x.toFixed(1);
+const fm = x => Number.isInteger(x) ? String(x) : x.toFixed(1);
+
+/* ---------- layouts ---------- */
+const J = new Float32Array(T); for(let i=0;i<T;i++) J[i]=R();
+const gridXZ = s => [((s%40)-19.5)*G, (Math.floor(s/40)-12)*G];
+const HIST=new Float32Array(N*3), bc=new Int32Array(24);
+for(let i=0;i<N;i++){ const b=Math.min(23,Math.floor(vals[i]/5)); const k=bc[b]++; HIST[i*3]=(b-11.5)*G; HIST[i*3+1]=Math.floor(k/5)*G+0.5; HIST[i*3+2]=ZP+(k%5-2)*G; }
+const popTop = Math.ceil(Math.max(...bc)/5)*G;
+const binTop = b => Math.ceil(bc[b]/5)*G;
+
+function sampLayout(ms){
+  const pos=new Float32Array(M*3), c={}; let top=0;
+  for(let j=0;j<M;j++){ const sb=Math.floor(ms[j]/2.5); const k=c[sb]||0; c[sb]=k+1;
+    pos[j*3]=xw(sb*2.5+1.25); pos[j*3+1]=Math.floor(k/5)*SS+SS/2; pos[j*3+2]=ZS+(k%5)*SS; top=Math.max(top,(Math.floor(k/5)+1)*SS); }
+  return {pos,top};
+}
+const L10=sampLayout(m10), L40=sampLayout(m40);
+
+const SC=new Float32Array(T*3);
+for(let i=0;i<T;i++){ SC[i*3]=(R()-.5)*72; SC[i*3+1]=-8+R()*36; SC[i*3+2]=(R()-.5)*72; }
+
+const LIFT = popTop+5;
+function liftPos(s){ const m=new Map(), p=new Map(); s.forEach(i=>{ const b=Math.min(23,Math.floor(vals[i]/5)); const o=m.get(b)||0; m.set(b,o+1); p.set(i,[HIST[i*3],LIFT+o*G,ZP]); }); return p; }
+function clusterPos(s){ const x0=xw(meanOf(s)), p=new Map(); s.forEach((i,k)=>p.set(i,[x0+((k%5)-2)*G, LIFT+Math.floor(k/5)*G, ZP])); return p; }
+const liftA=liftPos(demo[0]), clusA=clusterPos(demo[0]), liftB=liftPos(demo[1]), clusB=clusterPos(demo[1]);
+
+/* ---------- instance helpers ---------- */
+const pop = (i,role) => [HIST[i*3],HIST[i*3+1],HIST[i*3+2],U,U,U,role];
+const at = (p,role,s=U) => [p[0],p[1],p[2],s,s,s,role];
+const mean = (j,L,role) => [L.pos[j*3],L.pos[j*3+1],L.pos[j*3+2],US,US,US,role];
+const meanHidden = (j,L) => [L.pos[j*3],L.pos[j*3+1]+32,L.pos[j*3+2],0,0,0,"accent"];
+function sky(i,slot,role){ const [x,z]=gridXZ(slot); const h=Math.max(.3,vals[i]/9); return [x,h/2,z,U,h,U,role]; }
+
+/* ---------- markers ---------- */
+const slab = (x,h,z0,z1,role) => ({p:[x,h/2,z1+.35], s:[.2,h,.2], role});
+function bracket(name,x1,x2,y,z,role){ const o={};
+  o[name+"B"]={p:[(x1+x2)/2,y,z],s:[x2-x1,.12,.12],role};
+  o[name+"L"]={p:[x1,y-.35,z],s:[.12,.82,.12],role};
+  o[name+"R"]={p:[x2,y-.35,z],s:[.12,.82,.12],role}; return o; }
+const axisM = (z,role="ink") => ({axis:{p:[0,.03,z],s:[27.6,.06,.06],role}});
+const axisL = z => [0,30,60,90,120].map((m,k)=>({id:"ax"+k,kind:"axis",p:[xw(m),-.1,z],text:k===4?"120 min":String(m),below:true}));
+const Z0=ZP-2.9, Z1=ZP+2.9, ZF=ZS+SS*5+.6;
+
+/* ---------- the story ---------- */
+const camHero={t:[0,6,0],az:40,el:26,w:70,h:52};
+const camGrid={t:[0,-4,0],az:45,el:34,w:62,h:36};
+const camSky ={t:[0,-1,0],az:45,el:30,w:62,h:40};
+const camHist={t:[0,11.5,-6],az:30,el:19,w:38,h:45};
+const camLift={t:[0,15.5,-6],az:30,el:19,w:40,h:52};
+const camS10 ={t:[-2.5,9.5,0],az:24,el:19,w:36,h:41};
+const camS40 ={t:[-2.5,10,0],az:24,el:19,w:36,h:41};
+const camEnd ={t:[0,10,-2],az:52,el:26,w:52,h:52};
+const medCube=order[500];
+
+const S=[];
+const add = o => S.push(Object.assign({delay:"random",spread:.8,field:"field",marks:{},labels:[],cap:""},o));
+
+add({ hero:true, cam:camHero, spread:.6,
+  inst:i=> i<N ? [SC[i*3],SC[i*3+1],SC[i*3+2],U,U,U,"ink"] : (i-N<150 ? [SC[i*3],SC[i*3+1],SC[i*3+2],US,US,US,"accent"] : meanHidden(i-N,L10)) });
+add({ cam:camGrid, cap:`Meet 1,000 commuters. Each cube is one person. They're simulated, so you get the same crowd on every visit.`,
+  inst:i=> i<N ? (()=>{const [x,z]=gridXZ(i); return [x,.44,z,U,U,U,"ink"];})() : meanHidden(i-N,L10) });
+add({ cam:camSky, delay:"x", cap:`Everyone has a daily commute, measured in minutes. The taller the cube, the longer the trip.`,
+  inst:i=> i<N ? sky(i,i,"ink") : meanHidden(i-N,L10) });
+add({ cam:camSky, delay:"rank", spread:1.1, cap:`A crowd is hard to read. So line everyone up, from the shortest commute to the longest.`,
+  inst:i=> i<N ? sky(i,rank[i],"ink") : meanHidden(i-N,L10) });
+add({ cam:camSky, cap:`The median is the person in the middle of that line. Half the crowd commutes less than <b>${fm(med)} min</b> and half commutes more.`,
+  inst:i=> i<N ? sky(i,rank[i],(rank[i]===499||rank[i]===500)?"accent":"ink") : meanHidden(i-N,L10),
+  labels:[(()=>{const [x,z]=gridXZ(500); return {id:"med",text:`median ${fm(med)} min`,p:[x,vals[medCube]/9+.6,z]};})()] });
+add({ cam:camHist, delay:"x", spread:1.1, cap:`Now drop everyone into 5-minute buckets. Each stack counts the people in that range. Together the stacks form a histogram.`,
+  inst:i=> i<N ? pop(i,"ink") : meanHidden(i-N,L10), marks:axisM(Z1+.8), labels:axisL(Z1+.8) });
+add({ cam:camHist, delay:"x", cap:`The pile leans. Most trips are short, but a long right tail of <b>${tailN} people</b> travel an hour or more.`,
+  inst:i=> i<N ? pop(i,vals[i]>=60?"accent":"ink") : meanHidden(i-N,L10), marks:axisM(Z1+.8),
+  labels:[...axisL(Z1+.8),{id:"tail",text:`${tailN} people, 60+ min`,p:[xw(82),binTop(12)+2.4,ZP]}] });
+add({ cam:camHist, cap:`The mean is the pile's balance point. The long tail drags it up to <b>${f1(mu)} min</b>, above the median of <b>${fm(med)} min</b>.`,
+  inst:i=> i<N ? pop(i,"ink") : meanHidden(i-N,L10),
+  marks:Object.assign(axisM(Z1+.8),{meanS:slab(xw(mu),popTop+4.2,Z0,Z1,"accent"),medS:slab(xw(med),popTop+1.2,Z0,Z1,"teal")}),
+  labels:[...axisL(Z1+.8),{id:"meanL",text:`mean ${f1(mu)}`,p:[xw(mu),popTop+4.4,Z1+.35]},{id:"medL",text:`median ${fm(med)}`,p:[xw(med),popTop+1.4,Z1+.35]}] });
+add({ cam:camHist, delay:"x", cap:`Spread gets its own number. The standard deviation, <b>σ = ${f1(sd)} min</b>, is roughly the typical distance from the mean. Here ${Math.round(inSd/10)}% of people sit within one σ of it.`,
+  inst:i=> i<N ? pop(i,Math.abs(vals[i]-mu)<=sd?"ink":"muted") : meanHidden(i-N,L10),
+  marks:Object.assign(axisM(Z1+.8),{meanS:slab(xw(mu),popTop+1.2,Z0,Z1,"accent")},bracket("sd",xw(mu-sd),xw(mu+sd),popTop+3.4,ZP,"accent")),
+  labels:[...axisL(Z1+.8),{id:"sdL",text:`± σ = ${f1(sd)} min`,p:[xw(mu),popTop+3.7,ZP]}] });
+add({ cam:camLift, cap:`In practice you rarely get to ask everyone. You ask a sample. Here are 10 people picked at random.`,
+  inst:i=> i<N ? (liftA.has(i)?at(liftA.get(i),"accent"):pop(i,"ink")) : meanHidden(i-N,L10),
+  marks:Object.assign(axisM(Z1+.8),{meanS:slab(xw(mu),popTop+1.2,Z0,Z1,"accent")}), labels:[...axisL(Z1+.8),{id:"popM",text:`population mean ${f1(mu)}`,p:[xw(mu),popTop+1.4,Z1+.35]}] });
+add({ cam:camLift, delay:"x", cap:`Average their 10 commutes and you get <b>${f1(mA)} min</b>. Close to the true ${f1(mu)}, but a little off. That estimate drops down front as one small cube.`,
+  inst:i=> i<N ? (clusA.has(i)?at(clusA.get(i),"accent"):pop(i,"ink")) : (i-N===0?mean(0,L10,"accent"):meanHidden(i-N,L10)),
+  marks:Object.assign(axisM(Z1+.8),{meanS:slab(xw(mu),popTop+1.2,Z0,Z1,"accent")}),
+  labels:[...axisL(Z1+.8),{id:"popM",text:`population mean ${f1(mu)}`,p:[xw(mu),popTop+1.4,Z1+.35]},{id:"smA",text:`sample mean ${f1(mA)}`,p:[xw(mA),LIFT+2*G+.3,ZP]}] });
+add({ cam:camLift, cap:`Pick 10 other people and you get a different set of trips.`,
+  inst:i=> i<N ? (liftB.has(i)?at(liftB.get(i),"accent"):pop(i,"ink")) : (i-N===0?mean(0,L10,"accent"):meanHidden(i-N,L10)),
+  marks:Object.assign(axisM(Z1+.8),{meanS:slab(xw(mu),popTop+1.2,Z0,Z1,"accent")}), labels:[...axisL(Z1+.8),{id:"popM",text:`population mean ${f1(mu)}`,p:[xw(mu),popTop+1.4,Z1+.35]}] });
+add({ cam:camLift, delay:"x", cap:`This sample averages <b>${f1(mB)} min</b>. Every sample gives its own answer. So what do all those answers look like together?`,
+  inst:i=> i<N ? (clusB.has(i)?at(clusB.get(i),"accent"):pop(i,"ink")) : (i-N<2?mean(i-N,L10,"accent"):meanHidden(i-N,L10)),
+  marks:Object.assign(axisM(Z1+.8),{meanS:slab(xw(mu),popTop+1.2,Z0,Z1,"accent")}),
+  labels:[...axisL(Z1+.8),{id:"popM",text:`population mean ${f1(mu)}`,p:[xw(mu),popTop+1.4,Z1+.35]},{id:"smB",text:`sample mean ${f1(mB)}`,p:[xw(mB),LIFT+2*G+.3,ZP]}] });
+add({ cam:camS10, delay:"index", spread:2.8, ease:"out", cap:`Repeat that 600 times. Each small cube is the mean of one random sample of 10 people.`,
+  inst:i=> i<N ? pop(i,"ink") : mean(i-N,L10,"accent"), marks:axisM(ZF), labels:[...axisL(ZF),{id:"n10",text:`600 sample means, n = 10`,p:[xw(mm10),L10.top+1.3,ZS+SS*2]}] });
+add({ cam:camS10, field:"accent", cap:`The crowd is lopsided, yet the sample means pile up into a symmetric bell. That pattern is the central limit theorem, and it shows up for most populations once samples are big enough.`,
+  inst:i=> i<N ? pop(i,"ink") : mean(i-N,L10,"white"), marks:axisM(ZF,"white"), labels:[...axisL(ZF),{id:"n10",text:`600 sample means, n = 10`,p:[xw(mm10),L10.top+1.3,ZS+SS*2]}] });
+add({ cam:camS10, field:"accent", cap:`The bell is centered on the truth. The 600 sample means average <b>${f1(mm10)} min</b>, against a population mean of <b>${f1(mu)} min</b>.`,
+  inst:i=> i<N ? pop(i,"ink") : mean(i-N,L10,"white"),
+  marks:Object.assign(axisM(ZF,"white"),{meanS:slab(xw(mu),popTop+1.2,Z0,ZF-.35,"white")}),
+  labels:[...axisL(ZF),{id:"popM",text:`population mean ${f1(mu)}`,p:[xw(mu),popTop+1.4,ZF]}] });
+add({ cam:camS10, field:"accent", cap:`Its width is the standard error: <b>σ / √n = ${f1(sd)} / √10 ≈ ${f1(se10)} min</b>. The 600 simulated means spread by ${f1(obs10)}.`,
+  inst:i=> i<N ? pop(i,"ink") : mean(i-N,L10,"white"),
+  marks:Object.assign(axisM(ZF,"white"),bracket("se",xw(mu-se10),xw(mu+se10),L10.top+1.4,ZS+SS*2,"white")),
+  labels:[...axisL(ZF),{id:"seL",text:`± 1 SE = ${f1(se10)} min`,p:[xw(mu),L10.top+1.7,ZS+SS*2]}] });
+add({ cam:camS40, delay:"x", spread:1.2, cap:`Ask 40 people instead of 10 and the bell grows taller and thinner. Four times the sample size halves the standard error, to <b>${f1(se40)} min</b>.`,
+  inst:i=> i<N ? pop(i,"ink") : mean(i-N,L40,"accent"),
+  marks:Object.assign(axisM(ZF),bracket("se",xw(mu-se40),xw(mu+se40),L40.top+1.4,ZS+SS*2,"ink")),
+  labels:[...axisL(ZF),{id:"seL",text:`n = 40, ± 1 SE = ${f1(se40)} min`,p:[xw(mu),L40.top+1.7,ZS+SS*2]}] });
+add({ cam:camS40, delay:"x", cap:`That's why one sample is useful. Its mean ± 1.96 standard errors (± ${f1(ci)} min) covers the true mean about 95% of the time. Here, <b>${inCI} of 600</b> samples did.`,
+  inst:i=> i<N ? pop(i,"ink") : mean(i-N,L40,Math.abs(m40[i-N]-mu)<=ci?"accent":"muted"),
+  marks:Object.assign(axisM(ZF),bracket("ci",xw(mu-ci),xw(mu+ci),L40.top+1.4,ZS+SS*2,"accent")),
+  labels:[...axisL(ZF),{id:"ciL",text:`95% band, ± ${f1(ci)} min`,p:[xw(mu),L40.top+1.7,ZS+SS*2]}] });
+add({ cam:camEnd, end:true, delay:"x",
+  inst:i=> i<N ? pop(i,"ink") : mean(i-N,L40,"accent") });
+
+document.getElementById("recap").innerHTML = [
+  ["Mean and median", `Two ways to find the center. The median is the middle person (${fm(med)} min). The mean is the balance point (${f1(mu)} min), pulled by long tails.`],
+  ["Standard deviation σ", `How spread out individuals are: the typical distance from the mean (${f1(sd)} min here).`],
+  ["Sampling distribution", `The pattern your estimate would make across many random samples. For means, it tends toward a bell, whatever the crowd looks like.`],
+  ["Standard error σ / √n", `The spread of that pattern. It shrinks as samples grow: ${f1(se10)} min at n = 10, ${f1(se40)} min at n = 40.`]
+].map(([t,d])=>`<dt>${t}</dt><dd>${d}</dd>`).join("");
+document.getElementById("foot").textContent = `Data: 1,000 simulated commute times from a gamma distribution (shape 2, scale 17 min), fixed seed. 600 samples drawn at each sample size.`;
+
+/* ---------- three.js stage ---------- */
+const canvas=document.getElementById("stage");
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+const scene=new THREE.Scene();
+const camera=new THREE.OrthographicCamera(-1,1,1,-1,-500,1000);
+scene.add(new THREE.AmbientLight(0xffffff,.62));
+const sun=new THREE.DirectionalLight(0xffffff,.48); sun.position.set(.35,1,.55); scene.add(sun);
+
+const mesh=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshLambertMaterial({color:0xffffff}),T);
+mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+mesh.instanceColor=new THREE.InstancedBufferAttribute(new Float32Array(T*3),3);
+mesh.instanceColor.setUsage(THREE.DynamicDrawUsage);
+mesh.frustumCulled=false; scene.add(mesh);
+const IM=mesh.instanceMatrix.array, IC=mesh.instanceColor.array;
+
+const cssVar=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const ROLE={};
+function readRoles(){ ["ink","accent","teal","muted","white","field"].forEach(r=>{ const c=new THREE.Color(cssVar("--"+r)||"#888"); ROLE[r]=[c.r,c.g,c.b]; }); }
+readRoles();
+
+const cur=new Float32Array(T*3), from=new Float32Array(T*3), to=new Float32Array(T*3);
+const sc=new Float32Array(T*3), sFrom=new Float32Array(T*3), sTo=new Float32Array(T*3);
+const cc=new Float32Array(T*3), cFrom=new Float32Array(T*3), cTo=new Float32Array(T*3);
+const delay=new Float32Array(T), roleNow=new Array(T);
+const DUR = RM ? .001 : .95;
+
+const MNAMES=["axis","meanS","medS","sdB","sdL","sdR","seB","seL","seR","ciB","ciL","ciR"];
+const MK={};
+MNAMES.forEach(n=>{ const m=new THREE.Mesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0,depthWrite:false}));
+  m.renderOrder=2; scene.add(m); MK[n]={m,cur:{p:[0,0,0],s:[1,1,1],c:[1,1,1],o:0},from:null,to:null,role:"ink"}; });
+
+let camCur=null, camFrom=null, camTo=null, fieldCur=ROLE.field.slice(), fieldFrom=null, fieldTo=null, fieldRole="field";
+let animStart=0, animLen=0, animating=false, gStart=0, bobAmp=RM?0:1;
+
+const lerp=(a,b,t)=>a+(b-a)*t;
+const eio=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+const eout=t=>1-Math.pow(1-t,3);
+let easeFn=eio;
+
+function setState(k,instant){
+  const st=S[k], now=performance.now()/1000;
+  from.set(cur); sFrom.set(sc); cFrom.set(cc);
+  for(let i=0;i<T;i++){ const o=st.inst(i), q=i*3;
+    to[q]=o[0]; to[q+1]=o[1]; to[q+2]=o[2]; sTo[q]=o[3]; sTo[q+1]=o[4]; sTo[q+2]=o[5];
+    roleNow[i]=o[6]; const c=ROLE[o[6]]; cTo[q]=c[0]; cTo[q+1]=c[1]; cTo[q+2]=c[2];
+    let key;
+    if(st.delay==="x") key=.85*Math.min(1,Math.max(0,(to[q]+16)/32))+.15*J[i];
+    else if(st.delay==="rank") key= i<N ? rank[i]/N : (i-N)/M;
+    else if(st.delay==="index") key= i<N ? 0 : (i-N)/M;
+    else key=J[i];
+    delay[i]=RM?0:key*st.spread;
+  }
+  easeFn = st.ease==="out" ? eout : eio;
+  for(const n of MNAMES){ const mk=MK[n], spec=st.marks[n];
+    mk.from={p:mk.cur.p.slice(),s:mk.cur.s.slice(),c:mk.cur.c.slice(),o:mk.cur.o};
+    if(spec){ mk.role=spec.role; const c=ROLE[spec.role];
+      mk.to={p:spec.p.slice(),s:spec.s.slice(),c:c.slice(),o:1};
+      if(mk.cur.o<.02){ mk.from.p=spec.p.slice(); mk.from.s=spec.s.slice(); mk.from.c=c.slice(); }
+    } else mk.to={p:mk.cur.p.slice(),s:mk.cur.s.slice(),c:mk.cur.c.slice(),o:0};
+  }
+  camFrom = camCur ? JSON.parse(JSON.stringify(camCur)) : JSON.parse(JSON.stringify(st.cam));
+  camTo = JSON.parse(JSON.stringify(st.cam));
+  if(!camCur) camCur=JSON.parse(JSON.stringify(st.cam));
+  fieldFrom=fieldCur.slice(); fieldRole=st.field; fieldTo=ROLE[st.field].slice();
+  document.body.classList.toggle("on-accent", st.field==="accent");
+  animStart=now; animLen=RM?.001:Math.max(1.3, st.spread+DUR); animating=true;
+  if(instant){ animStart=now-100; }
+}
+
+function updateInstances(now){
+  const e=now-animStart; let done=true;
+  if(animating){
+    for(let i=0;i<T;i++){ let t=(e-delay[i])/DUR; if(t<1) done=false; t=t<0?0:t>1?1:t; t=easeFn(t); const q=i*3;
+      cur[q]=lerp(from[q],to[q],t); cur[q+1]=lerp(from[q+1],to[q+1],t); cur[q+2]=lerp(from[q+2],to[q+2],t);
+      sc[q]=lerp(sFrom[q],sTo[q],t); sc[q+1]=lerp(sFrom[q+1],sTo[q+1],t); sc[q+2]=lerp(sFrom[q+2],sTo[q+2],t);
+      cc[q]=lerp(cFrom[q],cTo[q],t); cc[q+1]=lerp(cFrom[q+1],cTo[q+1],t); cc[q+2]=lerp(cFrom[q+2],cTo[q+2],t); }
+  }
+  const g=Math.min(1,e/Math.max(.001,RM?.001:1.25)), ge=eio(g);
+  for(const n of MNAMES){ const mk=MK[n]; if(!mk.to) continue; const c=mk.cur;
+    for(let a=0;a<3;a++){ c.p[a]=lerp(mk.from.p[a],mk.to.p[a],ge); c.s[a]=lerp(mk.from.s[a],mk.to.s[a],ge); c.c[a]=lerp(mk.from.c[a],mk.to.c[a],ge); }
+    c.o=lerp(mk.from.o,mk.to.o,ge);
+    mk.m.position.set(c.p[0],c.p[1],c.p[2]); mk.m.scale.set(Math.max(1e-4,c.s[0]),Math.max(1e-4,c.s[1]),Math.max(1e-4,c.s[2]));
+    mk.m.material.color.setRGB(c.c[0],c.c[1],c.c[2]); mk.m.material.opacity=c.o; mk.m.visible=c.o>.01; }
+  const cg=Math.min(1,e/(RM?.001:1.5)), ce=eio(cg);
+  for(const k of ["az","el","w","h"]) camCur[k]=lerp(camFrom[k],camTo[k],ce);
+  for(let a=0;a<3;a++) camCur.t[a]=lerp(camFrom.t[a],camTo.t[a],ce);
+  for(let a=0;a<3;a++) fieldCur[a]=lerp(fieldFrom[a],fieldTo[a],Math.min(1,e/.8));
+  if(done && cg>=1 && g>=1) animating=false;
+  return !done;
+}
+
+function writeMatrices(now){
+  const b=bobAmp>.002;
+  for(let i=0;i<T;i++){ const o=i*16,q=i*3; let y=cur[q+1];
+    if(b) y+=Math.sin(now*.8+J[i]*6.283)*1.3*bobAmp;
+    IM[o]=sc[q]; IM[o+5]=sc[q+1]; IM[o+10]=sc[q+2]; IM[o+12]=cur[q]; IM[o+13]=y; IM[o+14]=cur[q+2]; IM[o+15]=1; }
+  IC.set(cc); mesh.instanceMatrix.needsUpdate=true; mesh.instanceColor.needsUpdate=true;
+}
+
+function placeCamera(now){
+  const w=innerWidth,h=innerHeight,asp=w/h;
+  let az=camCur.az; if(bobAmp>.002) az+=Math.sin(now*.12)*9*bobAmp;
+  const A=az*Math.PI/180, E=camCur.el*Math.PI/180, t=camCur.t;
+  camera.position.set(t[0]+Math.cos(E)*Math.sin(A)*300, t[1]+Math.sin(E)*300, t[2]+Math.cos(E)*Math.cos(A)*300);
+  camera.up.set(0,1,0); camera.lookAt(t[0],t[1],t[2]);
+  const hh=Math.max(camCur.h/2, camCur.w/2/asp);
+  camera.top=hh; camera.bottom=-hh; camera.left=-hh*asp; camera.right=hh*asp; camera.updateProjectionMatrix();
+}
+
+/* ---------- labels ---------- */
+const labEls=new Map(); let labSpecs=[];
+function setLabels(list){
+  const ids=new Set(list.map(l=>l.id));
+  labEls.forEach((el,id)=>{ if(!ids.has(id)) el.classList.remove("on"); });
+  list.forEach(l=>{ let el=labEls.get(l.id);
+    if(!el){ el=document.createElement("div"); el.className="lab "+(l.kind==="axis"?"axis":"pill"); document.body.appendChild(el); labEls.set(l.id,el); }
+    if(el.textContent!==l.text){ el.textContent=l.text; }
+    requestAnimationFrame(()=>el.classList.add("on")); });
+  labSpecs=list;
+}
+const v3=new THREE.Vector3();
+function placeLabels(){
+  const w=innerWidth,h=innerHeight;
+  labSpecs.forEach(l=>{ const el=labEls.get(l.id); v3.set(l.p[0],l.p[1],l.p[2]).project(camera);
+    const x=(v3.x+1)/2*w, y=(1-v3.y)/2*h;
+    el.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px) translate(-50%,${l.below?"6px":"-100%"})`; });
+}
+
+/* ---------- navigation ---------- */
+let step=0;
+const capEl=document.getElementById("caption"), heroEl=document.getElementById("hero"), panelEl=document.getElementById("panel");
+const countEl=document.getElementById("count"), ticksEl=document.getElementById("ticks");
+const prevB=document.getElementById("prev"), nextB=document.getElementById("next");
+ticksEl.innerHTML=S.map(()=>"<i></i>").join("");
+let capTimer=null;
+function go(k,instant){
+  k=Math.max(0,Math.min(S.length-1,k)); if(k===step && !instant) return; step=k; const st=S[k];
+  setState(k,instant);
+  heroEl.classList.toggle("off",!st.hero);
+  panelEl.classList.toggle("on",!!st.end); panelEl.setAttribute("aria-hidden",st.end?"false":"true");
+  capEl.classList.remove("show"); clearTimeout(capTimer);
+  capTimer=setTimeout(()=>{ capEl.innerHTML= st.cap ? `<span>${st.cap}</span>` : ""; if(st.cap) capEl.classList.add("show"); }, instant||RM?0:260);
+  setLabels(st.labels||[]);
+  countEl.textContent=String(k+1).padStart(2,"0")+" / "+String(S.length).padStart(2,"0");
+  [...ticksEl.children].forEach((t,i)=>{ t.className= i===k?"on":(i<k?"done":""); });
+  prevB.setAttribute("aria-disabled",k===0?"true":"false"); nextB.setAttribute("aria-disabled",k===S.length-1?"true":"false");
+  nextB.innerHTML = k===0 ? "Start &rarr;" : "Next &rarr;";
+}
+const next=()=>go(step+1), prev=()=>go(step-1);
+prevB.addEventListener("click",e=>{e.stopPropagation();prev();});
+nextB.addEventListener("click",e=>{e.stopPropagation();next();});
+document.getElementById("restart").addEventListener("click",e=>{e.stopPropagation();go(0);});
+panelEl.addEventListener("click",e=>e.stopPropagation());
+window.addEventListener("click",e=>{ if(e.target.closest("button,a,.panel")) return; (e.clientX>innerWidth/2?next:prev)(); });
+window.addEventListener("keydown",e=>{
+  if(["ArrowRight","PageDown"," "].includes(e.key)){ e.preventDefault(); next(); }
+  else if(["ArrowLeft","PageUp"].includes(e.key)){ e.preventDefault(); prev(); }
+  else if(e.key==="Home"){ go(0); } else if(e.key==="End"){ go(S.length-1); } });
+
+/* ---------- theme ---------- */
+function retheme(){ readRoles();
+  for(let i=0;i<T;i++){ const c=ROLE[roleNow[i]]||ROLE.ink, q=i*3; for(let a=0;a<3;a++){ cc[q+a]=cTo[q+a]=cFrom[q+a]=c[a]; } }
+  for(const n of MNAMES){ const mk=MK[n], c=ROLE[mk.role]; for(let a=0;a<3;a++){ mk.cur.c[a]=c[a]; if(mk.to) mk.to.c[a]=c[a]; if(mk.from) mk.from.c[a]=c[a]; } }
+  fieldCur=ROLE[fieldRole].slice(); fieldTo=fieldCur.slice(); fieldFrom=fieldCur.slice(); writeMatrices(performance.now()/1000); }
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",retheme);
+new MutationObserver(retheme).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+
+function resize(){ renderer.setSize(innerWidth,innerHeight,false); }
+window.addEventListener("resize",resize); resize();
+
+/* ---------- boot ---------- */
+for(let i=0;i<T;i++){ const o=S[0].inst(i), q=i*3; cur[q]=o[0];cur[q+1]=o[1];cur[q+2]=o[2]; sc[q]=o[3];sc[q+1]=o[4];sc[q+2]=o[5]; const c=ROLE[o[6]]; cc[q]=c[0];cc[q+1]=c[1];cc[q+2]=c[2]; roleNow[i]=o[6]; }
+step=-1; go(0,true);
+const bg=new THREE.Color();
+function frame(ms){
+  const now=ms/1000;
+  bobAmp += ((S[step].hero&&!RM?1:0)-bobAmp)*.04;
+  const moving=updateInstances(now);
+  if(moving || bobAmp>.002) writeMatrices(now);
+  bg.setRGB(fieldCur[0],fieldCur[1],fieldCur[2]); scene.background=bg;
+  placeCamera(now); placeLabels();
+  renderer.render(scene,camera);
+  requestAnimationFrame(frame);
+}
+writeMatrices(0);
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
