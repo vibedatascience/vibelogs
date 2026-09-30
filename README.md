@@ -1,2 +1,2 @@
 # vibelogs
-AI walkthroughs and learning logs. Live at https://rahulch.site/
+Rahul's Site. Live at https://rahulch.site/
