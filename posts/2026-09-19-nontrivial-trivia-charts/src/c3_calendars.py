@@ -6,12 +6,12 @@ f, ax = fig(14,9.5)
 y = np.arange(len(cal))[::-1]
 for i,(n,v,why) in enumerate(cal):
     c = RED if n=="Gregorian" else MUTE if v<2026 else INK
-    ax.hlines(y[i],0,v,color=c,lw=2 if n=="Gregorian" else 1.2,alpha=.7,zorder=2); ax.scatter(v,y[i],s=120,color=c,zorder=3)
-    ax.text(v+90,y[i],f"{v:,}",va="center",font=SERIF,size=13,weight="bold",color=c)
+    ax.hlines(y[i],0,v,color=c,lw=2 if n=="Gregorian" else 1.2,alpha=.7,zorder=2); ax.scatter(v,y[i],s=90,color=c,zorder=3)
+    ax.annotate(f"{v:,}",(v,y[i]),xytext=(9,0),textcoords="offset points",va="center",font=SERIF,size=13,weight="bold",color=c,zorder=5,bbox=dict(fc=BG,ec="none",pad=0.5))
     ax.text(-90,y[i]+0.18,n,ha="right",va="center",font=SANS,size=11.5,weight="bold",color=c); ax.text(-90,y[i]-0.22,why,ha="right",va="center",font=SANS,size=8.6,color=MUTE)
 ax.axvline(2026,color=RED,lw=.7,ls=(0,(3,3)),zorder=1)
-ax.set_xlim(0,8300); ax.set_ylim(-0.7,len(cal)-0.3); ax.set_yticks([]); ax.set_xticks([0,2000,4000,6000,8000]); ax.set_xticklabels(["year 0","2,000","4,000","6,000","8,000"],font=SANS,size=10,color=MUTE)
+ax.set_xlim(0,8300); ax.set_ylim(-0.7,len(cal)-0.3); ax.set_yticks([]); ax.set_xticks([0,2000,4000,6000,8000]); ax.set_xticklabels(["0","2,000","4,000","6,000","8,000"],font=SANS,size=10,color=MUTE)
 ax.text(2100,9.4,"where the Gregorian calendar puts us",font=SANS,size=9,style="italic",color=RED)
-ax.text(5400,2.2,"Every calendar picks a moment and counts from it.\nThree start at the creation of the world and\nstill disagree by 1,748 years. Holocene, not\nshown, starts at 10000 BCE: it is 12026 HE.",font=SERIF,size=10.5,style="italic",color=INK,linespacing=1.5)
+ax.text(3000,3.3,"Every calendar picks a moment and counts\nfrom it. Three start at the creation of the\nworld and still disagree by 1,748 years.\nHolocene, not shown, starts at 10000 BCE:\nit is 12026 HE.",font=SERIF,size=10,color=INK,linespacing=1.45,va="top")
 head(f,"What year is it? Depends who you ask","The current year in ten calendars, as of June 2026, with the epoch each one counts from. Anything to the left of the red line\nstarted counting after Christ; anything to the right started counting before.")
-plt.subplots_adjust(left=0.30,right=0.96,top=0.83,bottom=0.08); save("c3_calendars")
+plt.subplots_adjust(left=0.43,right=0.97,top=0.83,bottom=0.08); save("c3_calendars")

@@ -64,7 +64,7 @@ for i,(n,a,b_) in enumerate(s4):
     ax.text(a-0.06,y[i],f"${a:.2f}bn",ha="right",va="center",font=SANS,size=10,color=INK); ax.text(b_+0.06,y[i],f"${b_:.1f}bn  (+{(b_/a-1):.0%})",ha="left",va="center",font=SANS,size=10,weight="bold",color=RED)
     ax.text(1.55,y[i],n,ha="right",va="center",font=SANS,size=11.5,color=INK)
 ax.set_xlim(1.5,5.0); ax.set_ylim(-0.6,4.1); ax.set_yticks([]); ax.set_xticks([2,3,4,5]); ax.set_xticklabels(["$2bn","$3bn","$4bn","$5bn"],font=SANS,size=10,color=MUTE); ax.grid(axis="x",color=LINE,lw=.6,zorder=0)
-ax.scatter(3.9,3.75,s=110,color=BG,edgecolor=INK,lw=2); ax.text(3.97,3.75,"nominal, May 2025",va="center",font=SANS,size=9.5,color=MUTE); ax.scatter(4.5,3.75,s=110,color=RED); ax.text(4.57,3.75,"2023 dollars",va="center",font=SANS,size=9.5,color=MUTE)
+f.text(0.05,0.85,"Hollow: nominal, May 2025",font=SANS,size=10.5,weight="bold",color=INK); f.text(0.3,0.85,"Filled: 2023 dollars",font=SANS,size=10.5,weight="bold",color=RED)
 head(f,"What inflation does to the four films on both lists","Worldwide gross as reported, and restated in 2023 dollars, for the four films that appear in both top tens. Titanic gains\nthe most, 66 percent, because it is the oldest.",top=0.93,sub_y=0.86)
 plt.subplots_adjust(left=0.28,right=0.96,top=0.76,bottom=0.1); save("c7b_dumbbell")
 # ---------- ch7c: US share ----------
@@ -73,23 +73,23 @@ f, ax = fig(14,8.5); y=np.arange(len(us))[::-1]
 for i,(n,p) in enumerate(us):
     c = RED if p<10 else BLUE
     ax.barh(y[i],p,color=c,height=0.6,zorder=3); ax.barh(y[i],100-p,left=p,color=LINE,height=0.6,zorder=2)
-    ax.text(-1.2,y[i],n,ha="right",va="center",font=SANS,size=11,color=INK); ax.text(p+1.2 if p>10 else p+1.2,y[i],f"{p}% US",va="center",font=SANS,size=10,weight="bold",color=c)
-ax.axvline(50,color=INK,lw=.7,ls=(0,(3,3)),zorder=4); ax.text(50.8,9.55,"half",font=SANS,size=9,color=MUTE)
+    ax.text(-1.2,y[i],n,ha="right",va="center",font=SANS,size=11,color=INK); ax.text(p+1.2,y[i],f"{p}% US",va="center",font=SANS,size=10,weight="bold",color=c,zorder=5)
+ax.axvline(50,color=INK,lw=.7,ls=(0,(3,3)),zorder=2.5); ax.text(50.8,9.55,"half",font=SANS,size=9,color=MUTE)
 ax.set_xlim(0,100); ax.set_ylim(-0.7,len(us)-0.3); ax.set_yticks([]); ax.set_xticks([0,25,50,75,100]); ax.set_xticklabels(["0%","25%","50%","75%","100%"],font=SANS,size=10,color=MUTE)
-ax.text(62,1.2,"Ne Zha 2 took $1.97bn,\n$17m of it in the US.",font=SERIF,size=11,style="italic",color=RED,linespacing=1.5)
+ax.text(13,9,"Ne Zha 2 took \\$1.97bn, \\$17m of it in the US",va="center",font=SERIF,size=10,color=RED,zorder=5)
 head(f,"None of the ten biggest films made most of its money in the US","US share of worldwide gross for the ten highest-grossing films as of May 2025. The Force Awakens is the most American\nat 46 percent; the Chinese animation Ne Zha 2 is at 1 percent.")
 plt.subplots_adjust(left=0.27,right=0.96,top=0.83,bottom=0.07); save("c7c_usshare")
 # ---------- ch5b: timeline ----------
 q = [("Valdivia, Chile",1960,9.5,1655),("Alaska",1964,9.2,131),("Sumatra",2004,9.1,283100),("Tohoku, Japan",2011,9.1,15703),("Kamchatka",1952,9.0,12500),("Maule, Chile",2010,8.8,523),("Ecuador",1906,8.8,1000),("Rat Islands, Alaska",1965,8.7,0),("Assam-Tibet",1950,8.6,780),("Sumatra",2012,8.6,10)]
-f, ax = fig(14,7)
+f, ax = fig(14,8.2)
 for n,yr,m,d in q:
     ax.vlines(yr,8.5,m,color=LINE,lw=1,zorder=1); ax.scatter(yr,m,s=90+(np.log10(d+1))**2*22,color=RED if d>=10000 else MUTE,zorder=3,edgecolor=BG,lw=1.5)
-    off = {("Sumatra",2004):(-8,12),("Tohoku, Japan",2011):(8,12),("Kamchatka",1952):(-8,8),("Assam-Tibet",1950):(0,-16),("Alaska",1964):(8,8),("Rat Islands, Alaska",1965):(6,-14),("Valdivia, Chile",1960):(0,14),("Maule, Chile",2010):(0,-16),("Sumatra",2012):(8,-6),("Ecuador",1906):(0,14)}[(n,yr)]
+    off = {("Sumatra",2004):(-8,12),("Tohoku, Japan",2011):(8,12),("Kamchatka",1952):(-8,8),("Assam-Tibet",1950):(-10,-2),("Alaska",1964):(8,8),("Rat Islands, Alaska",1965):(6,-14),("Valdivia, Chile",1960):(0,14),("Maule, Chile",2010):(0,-16),("Sumatra",2012):(8,-6),("Ecuador",1906):(0,14)}[(n,yr)]
     ax.annotate(f"{n} {yr}",(yr,m),xytext=off,textcoords="offset points",ha="center" if off[0]==0 else "left" if off[0]>0 else "right",va="center",font=SANS,size=9.2,color=INK)
-ax.axvspan(1950,1965,color=AMBER,alpha=.18,zorder=0); ax.text(1957.5,9.62,"1950 to 1965: six of the ten",ha="center",font=SERIF,size=10.5,style="italic",color=INK)
-ax.set_xlim(1898,2020); ax.set_ylim(8.5,9.75); ax.set_yticks([8.6,8.8,9.0,9.2,9.4]); ax.set_yticklabels(["M 8.6","8.8","9.0","9.2","9.4"],font=SANS,size=10,color=MUTE); ax.grid(axis="y",color=LINE,lw=.6,zorder=0)
+ax.axvspan(1950,1965,color=AMBER,alpha=.18,zorder=0); ax.text(1957.5,9.8,"1950 to 1965: six of the ten",ha="center",va="top",font=SERIF,size=10.5,color=INK)
+ax.set_xlim(1898,2020); ax.set_ylim(8.5,9.85); ax.set_yticks([8.6,8.8,9.0,9.2,9.4]); ax.set_yticklabels(["M 8.6","8.8","9.0","9.2","9.4"],font=SANS,size=10,color=MUTE); ax.grid(axis="y",color=LINE,lw=.6,zorder=0)
 ax.set_xticks([1900,1920,1940,1960,1980,2000,2020]); ax.set_xticklabels([str(v) for v in [1900,1920,1940,1960,1980,2000,2020]],font=SANS,size=10,color=MUTE)
-ax.text(1900,9.45,"Dot size scales with deaths.\nRed: more than 10,000.",font=SANS,size=9.5,color=MUTE,linespacing=1.4,va="top")
+ax.text(1900,9.6,"Dot size scales with deaths.\nRed: more than 10,000.",font=SANS,size=9.5,color=MUTE,linespacing=1.4,va="top")
 head(f,"When the biggest earthquakes happened","The ten largest recorded earthquakes by year and magnitude. Six of them fall in a 15-year window after 1950;\nnothing above 8.6 was recorded between 1965 and 2004.",top=0.93,sub_y=0.86)
 plt.subplots_adjust(left=0.06,right=0.97,top=0.78,bottom=0.09); save("c5b_timeline")
 # ---------- ch5c: rank by magnitude vs rank by deaths ----------
