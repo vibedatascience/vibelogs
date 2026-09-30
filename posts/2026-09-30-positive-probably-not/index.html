@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="author" content="Rahul">
+<title>Positive, Probably Not | vibelogs</title>
+<meta name="description" content="Part 4 of a visual stats series: conditional probability, Bayes theorem, and precision vs recall, told with 10,000 cubes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,100..900&family=IBM+Plex+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;700&display=swap">
+<style>
+/* Layout: full-bleed isometric cube stage; chrome pinned to the four edges; one caption slot low and centered, like a slide narrator */
+:root{
+  --field:#E9EEF4; --ink:#0A3069; --accent:#E60023; --teal:#0D9488; --muted:#B9C4D2; --white:#FFFFFF; --truth:#64748B; --deep:#0A3069; --t0:#0A3069; --t1:#3D6A9E; --t2:#94A3B8; --t3:#F2798A; --t4:#E60023;
+  --text:#0A3069; --chrome:#0A3069; --cap-bg:#0A3069; --cap-fg:#FFFFFF; --on-accent:#FFFFFF;
+  --f-display:"Anybody","Arial Narrow","Helvetica Neue",sans-serif;
+  --f-body:"Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --field:#0B1424; --ink:#C7D4E6; --accent:#FF2E4F; --teal:#2DD4BF; --muted:#26344A; --white:#F4F7FB; --truth:#94A3B8; --deep:#0B1424; --t0:#9CC3F5; --t1:#5E86B8; --t2:#64748B; --t3:#E8667A; --t4:#FF2E4F;
+  --text:#E3EAF3; --chrome:#E3EAF3; --cap-bg:#E3EAF3; --cap-fg:#0B1424; --on-accent:#FFFFFF; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --field:#0B1424; --ink:#C7D4E6; --accent:#FF2E4F; --teal:#2DD4BF; --muted:#26344A; --white:#F4F7FB; --truth:#94A3B8; --deep:#0B1424; --t0:#9CC3F5; --t1:#5E86B8; --t2:#64748B; --t3:#E8667A; --t4:#FF2E4F;
+  --text:#E3EAF3; --chrome:#E3EAF3; --cap-bg:#E3EAF3; --cap-fg:#0B1424; --on-accent:#FFFFFF; color-scheme:dark}
+
+html,body{height:100%}
+body{margin:0;overflow:hidden;background:var(--field);color:var(--text);font-family:var(--f-body);-webkit-tap-highlight-color:transparent;user-select:none}
+body.on-accent{--chrome:var(--on-accent)}
+a.brand{color:inherit;text-decoration:none;pointer-events:auto}
+a.brand:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+#stage{position:fixed;inset:0;width:100%;height:100%;display:block;cursor:pointer}
+
+.bar{position:fixed;left:0;right:0;display:flex;justify-content:space-between;align-items:center;gap:16px;padding-inline:clamp(16px,3vw,32px);color:var(--chrome);transition:color .6s ease;pointer-events:none;z-index:3}
+.bar.top{top:0;padding-top:calc(env(safe-area-inset-top,0px) + 18px)}
+.bar.bottom{bottom:0;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 16px)}
+.brand{font-family:var(--f-display);font-variation-settings:"wdth" 70;font-weight:800;font-size:18px;letter-spacing:.04em;text-transform:uppercase}
+.count{font-family:var(--f-mono);font-size:13px;font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.nav{pointer-events:auto;font:500 13px/1 var(--f-mono);letter-spacing:.04em;color:inherit;background:none;border:0;padding:10px 4px;cursor:pointer}
+.nav:focus-visible,.panel button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+.nav[aria-disabled="true"]{opacity:.35;cursor:default}
+.ticks{display:flex;align-items:flex-end;gap:5px;height:16px;min-width:0;flex:1;justify-content:center}
+.ticks i{display:block;width:2px;height:7px;background:currentColor;opacity:.45;transition:height .3s ease,opacity .3s ease}
+.ticks i.done{opacity:.8}
+.ticks i.on{height:16px;width:3px;opacity:1}
+
+.caption{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 74px);transform:translateX(-50%);width:min(600px,calc(100% - 32px));text-align:center;z-index:2;pointer-events:none;margin:0;font-size:clamp(16px,1.9vw,19px);line-height:1.62;opacity:0;transition:opacity .25s ease}
+.caption.show{opacity:1}
+.caption span,.hero span,.panel .cap{background:var(--cap-bg);color:var(--cap-fg);padding:.14em .42em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.caption b,.panel b{font-family:var(--f-mono);font-weight:500;font-size:.92em;white-space:nowrap}
+
+.hero{position:fixed;left:clamp(16px,6vw,88px);right:16px;top:calc(env(safe-area-inset-top,0px) + 17vh);z-index:2;pointer-events:none;transition:opacity .5s ease,transform .7s ease}
+.hero.off{opacity:0;transform:translateY(-24px)}
+.hero .eyebrow{font:500 13px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;margin:0 0 18px}
+.hero h1{margin:0;font-family:var(--f-display);font-weight:880;font-variation-settings:"wdth" 58;font-size:clamp(58px,12.5vw,168px);line-height:.94;letter-spacing:-.005em;text-transform:uppercase;text-wrap:balance}
+.hero h1 span{padding:0 .1em;display:inline-block;margin-bottom:.06em}
+.hero h1 .accent{background:var(--accent);color:var(--on-accent)}
+.hero .lede{max-width:34ch;margin:22px 0 0;font-size:clamp(16px,1.8vw,19px);line-height:1.62}
+.hero .hint{margin:26px 0 0;font:500 13px/1.6 var(--f-mono);letter-spacing:.03em}
+
+.lab{position:fixed;left:0;top:0;z-index:1;pointer-events:none;white-space:nowrap;font:500 12px/1 var(--f-mono);font-variant-numeric:tabular-nums;opacity:0;transition:opacity .35s ease;will-change:transform}
+.lab.on{opacity:1}
+.lab.pill{background:var(--cap-bg);color:var(--cap-fg);padding:5px 7px;border-radius:2px}
+.lab.axis{color:var(--chrome);font-size:11px;opacity:0}
+.lab.axis.on{opacity:.8}
+
+.defcard{position:fixed;left:clamp(16px,3vw,32px);top:calc(env(safe-area-inset-top,0px) + 62px);width:min(400px,calc(100% - 32px));box-sizing:border-box;z-index:3;background:var(--cap-bg);color:var(--cap-fg);padding:18px 20px 16px;opacity:0;transform:translateY(-8px);transition:opacity .45s ease,transform .6s ease;pointer-events:none}
+.defcard.right{left:auto;right:clamp(16px,3vw,32px)}
+.defcard.on{opacity:1;transform:none}
+.defcard .k{margin:0 0 8px;font-family:var(--f-display);font-weight:850;font-variation-settings:"wdth" 62;font-size:26px;line-height:1;text-transform:uppercase;letter-spacing:.01em}
+.defcard .d{margin:0;font-size:15px;line-height:1.55}
+.defcard .f{margin:12px 0 0;padding-top:10px;border-top:1px solid currentColor;font:500 13.5px/1.5 var(--f-mono);font-variant-numeric:tabular-nums}
+@media (max-width:560px){.defcard{padding:12px 14px}.defcard .k{font-size:21px}.defcard .d{font-size:13.5px}.defcard .f{font-size:12px;margin-top:8px;padding-top:7px}}
+.panel{position:fixed;left:50%;top:50%;transform:translate(-50%,-46%);width:min(640px,calc(100% - 32px));max-height:calc(100% - 150px);overflow:auto;z-index:4;background:var(--cap-bg);color:var(--cap-fg);padding:clamp(20px,4vw,36px);opacity:0;pointer-events:none;transition:opacity .45s ease,transform .6s ease;box-sizing:border-box;user-select:text}
+.panel.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+.panel h2{margin:0 0 6px;font-family:var(--f-display);font-weight:850;font-variation-settings:"wdth" 62;font-size:clamp(30px,4.6vw,44px);line-height:1;text-transform:uppercase;letter-spacing:.01em;text-wrap:balance}
+.panel .sub{margin:0 0 22px;font-size:15px;opacity:.8}
+.panel dl{display:grid;grid-template-columns:minmax(0,11.5em) minmax(0,1fr);gap:14px 20px;margin:0}
+.panel dt{font:500 13px/1.5 var(--f-mono);letter-spacing:.02em;padding-top:2px}
+.panel dd{margin:0;font-size:15.5px;line-height:1.55;min-width:0}
+.panel .foot{margin:22px 0 0;font:400 12px/1.6 var(--f-mono);opacity:.75}
+.panel button{margin-top:20px;font:500 13px/1 var(--f-mono);letter-spacing:.04em;background:var(--accent);color:var(--on-accent);border:0;padding:12px 16px;cursor:pointer;border-radius:2px}
+@media (max-width:560px){
+  .panel dl{grid-template-columns:minmax(0,1fr);gap:4px}
+  .panel dd{margin-bottom:12px}
+  .ticks{gap:3px}
+  .caption{bottom:calc(env(safe-area-inset-bottom,0px) + 66px)}
+  .brand{font-size:15px}
+}
+.ds{pointer-events:auto;font:500 12px/1 var(--f-mono);letter-spacing:.03em;color:inherit;background:transparent;border:1px solid currentColor;border-radius:2px;padding:7px 26px 7px 9px;max-width:46vw;appearance:none;-webkit-appearance:none;cursor:pointer;
+  background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);background-position:calc(100% - 13px) 50%,calc(100% - 8px) 50%;background-size:5px 5px;background-repeat:no-repeat}
+.ds option{color:#0A3069;background:#fff}
+.ds:focus-visible,.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.top-r{display:flex;align-items:center;gap:14px;min-width:0}
+.chips{pointer-events:auto;display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 0;max-width:640px}
+.chips button{display:flex;flex-direction:column;align-items:flex-start;gap:4px;background:var(--cap-bg);color:var(--cap-fg);border:2px solid var(--cap-bg);border-radius:2px;padding:9px 12px;cursor:pointer;text-align:left}
+.chips button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.chips .cl{font:500 14px/1.1 var(--f-body)}
+.chips .ck{font:500 10.5px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;opacity:.8}
+.hero .pick{margin:26px 0 0;font:500 12px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase}
+@media (max-width:560px){ .count{display:none} .chips button{padding:7px 9px} .chips .cl{font-size:13px} .hero .pick{margin-top:18px} .chips{margin-top:10px} }
+@media (prefers-reduced-motion: reduce){.caption,.hero,.panel,.lab,.ticks i{transition:none}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.legend{position:fixed;right:clamp(16px,3vw,32px);top:calc(env(safe-area-inset-top,0px) + 58px);z-index:3;display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100% - 32px);font:500 11px/1 var(--f-mono);color:var(--chrome);opacity:0;transition:opacity .4s ease;pointer-events:none}
+.legend.on{opacity:1}
+.legend i{display:inline-block;width:11px;height:11px;margin-right:5px;vertical-align:-1px}
+@media (max-width:560px){.legend{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 150px);right:16px;gap:8px}}
+</style>
+</head>
+<body>
+<canvas id="stage" aria-hidden="true"></canvas>
+
+<header class="bar top">
+  <a class="brand" href="../../" aria-label="vibelogs home">Positive, Probably Not</a>
+  <div class="top-r"><div class="count" id="count">01 / 16</div></div>
+</header>
+
+<section class="hero" id="hero">
+  <p class="eyebrow"><span>Basics of statistics &middot; Part 4</span></p>
+  <h1><span>Positive,</span><br><span class="accent">probably not</span></h1>
+  <p class="lede"><span>Conditional probability, Bayes' theorem and precision vs recall, or why a 95%-accurate test can be wrong most of the time.</span></p>
+  <p class="hint"><span>Tap the right side or press &rarr; to start</span></p>
+</section>
+
+<div class="legend" id="legend" aria-label="Legend">
+  <span><i style="background:var(--accent)"></i>sick</span><span><i style="background:var(--ink)"></i>healthy</span>
+</div>
+
+<p class="caption" id="caption" aria-live="polite"></p>
+
+<aside class="defcard" id="defcard" aria-live="polite"><p class="k"></p><p class="d"></p><p class="f"></p></aside>
+
+<section class="panel" id="panel" aria-hidden="true">
+  <h2>Six ideas, ten thousand people</h2>
+  <p class="sub">Everything in this walk-through comes back to these. Earlier parts: <a href="https://rahulch.site/posts/2026-09-30-averages-of-averages/" style="color:inherit">Averages of Averages</a>, <a href="https://rahulch.site/posts/2026-09-30-could-it-be-chance/" style="color:inherit">Could It Be Chance?</a> and <a href="https://rahulch.site/posts/2026-09-30-loud-streets-warm-homes/" style="color:inherit">Loud Streets, Warm Homes</a>.</p>
+  <dl id="recap"></dl>
+  <p class="foot" id="foot"></p>
+  <button type="button" id="restart">Start over</button>
+</section>
+
+<footer class="bar bottom">
+  <button class="nav" id="prev" type="button" aria-label="Previous step">&larr; Back</button>
+  <div class="ticks" id="ticks" aria-hidden="true"></div>
+  <button class="nav" id="next" type="button" aria-label="Next step">Next &rarr;</button>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+"use strict";
+const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const N=10000, M=0, T=N;
+let S=[], rank=new Int32Array(N), llnPos=new Int32Array(N).fill(-1), C=null;
+const J=new Float32Array(T), SC=new Float32Array(T*3);
+{ const R=mulberry32(404); for(let i=0;i<T;i++) J[i]=R(); for(let i=0;i<T;i++){ SC[i*3]=(R()-.5)*80; SC[i*3+1]=-6+R()*30; SC[i*3+2]=(R()-.5)*80; } }
+const pct=(x,d=1)=>(x*100).toFixed(d)+"%";
+const fmtN=x=>Math.round(x).toLocaleString("en-US");
+
+function build(){
+  const R=mulberry32(4242), shuffle=a=>{ for(let k=a.length-1;k>0;k--){ const j=Math.floor(R()*(k+1)); const t=a[k]; a[k]=a[j]; a[j]=t; } return a; };
+  const PREV=.005, SENS=.9, FPR=.05, PREV2=.10;
+  const order=shuffle([...Array(N).keys()]);
+  rank=new Int32Array(N); order.forEach((i,r)=>rank[i]=r);
+
+  /* scenario A: 0.5% prevalence */
+  const nS=Math.round(N*PREV), sickA=order.slice(0,nS), healthyA=order.slice(nS);
+  const nTP=Math.round(nS*SENS), nFP=Math.round((N-nS)*FPR);
+  const TP=sickA.slice(0,nTP), FN=sickA.slice(nTP), FP=shuffle(healthyA.slice()).slice(0,nFP);
+  const sickSet=new Set(sickA), tpSet=new Set(TP), fpSet=new Set(FP), posSet=new Set([...TP,...FP]);
+  const nPos=nTP+nFP, nTN=N-nS-nFP, post=nTP/nPos;
+  const exact=SENS*PREV/(SENS*PREV+FPR*(1-PREV)), pPos=SENS*PREV+FPR*(1-PREV);
+  /* retest */
+  const TP2=TP.slice(0,Math.round(nTP*SENS)), FP2=FP.slice(0,Math.round(nFP*FPR)), pos2=new Set([...TP2,...FP2]);
+  const post2=TP2.length/(TP2.length+FP2.length);
+  /* scenario B: 10% prevalence */
+  const nS2=Math.round(N*PREV2), sickB=order.slice(0,nS2), sickBSet=new Set(sickB);
+  const tpB=sickB.slice(0,Math.round(nS2*SENS)), fpB=shuffle(order.slice(nS2)).slice(0,Math.round((N-nS2)*FPR));
+  const posB=new Set([...tpB,...fpB]), postB=tpB.length/(tpB.length+fpB.length);
+
+  /* layout */
+  const G=.55, CU=.45, gp=s=>[((s%100)-49.5)*G,((Math.floor(s/100))-49.5)*G];
+  const cube=(p,role,lift=0,s=CU)=>[p[0],s/2+lift,p[1],s,s,s,role];
+  const block=(k,cols,ox,oz)=>[ox+(k%cols)*G, oz+Math.floor(k/cols)*G];
+  const grid=i=>gp(i);
+  const hIdx=new Map(); healthyA.forEach((i,k)=>hIdx.set(i,k));
+  const sIdx=new Map(); sickA.forEach((i,k)=>sIdx.set(i,k));
+  const SBX=-37.5, SBZ=-2;
+  const split=i=> sickSet.has(i) ? block(sIdx.get(i),10,SBX,SBZ) : gp(hIdx.get(i));
+  const posList=[...TP,...FP], pIdx=new Map(); posList.forEach((i,k)=>pIdx.set(i,k));
+  const PCOLS=30, PBX=-(PCOLS-1)*G/2, PBZ=31;
+  const posBlock=i=>block(pIdx.get(i),PCOLS,PBX,PBZ);
+  const posRows=Math.ceil(nPos/PCOLS);
+  /* confusion matrix blocks */
+  const MX={TP:[-40,-12],FN:[-40,0],FP:[-30,-12],TN:[-30,0]}, MC={TP:9,FN:9,FP:40,TN:130};
+  const lists={TP,FN,FP,TN:healthyA.filter(i=>!fpSet.has(i))}, mIdx=new Map(), mKey=new Map();
+  for(const k in lists) lists[k].forEach((i,n)=>{ mIdx.set(i,n); mKey.set(i,k); });
+  const mat=i=>{ const k=mKey.get(i); return block(mIdx.get(i),MC[k],MX[k][0],MX[k][1]); };
+  /* scenario B positives block */
+  const posListB=[...tpB,...fpB], pIdxB=new Map(); posListB.forEach((i,k)=>pIdxB.set(i,k));
+  const PCB=50, PBXB=-(PCB-1)*G/2;
+  /* retest */
+  const RCOLS=11, RBX=PBX+PCOLS*G+3, RBZ=PBZ;
+  const re=[...TP2,...FP2], rIdx=new Map(); re.forEach((i,k)=>rIdx.set(i,k));
+
+  const truth=i=>sickSet.has(i)?"accent":"ink";
+  const L=(id,text,p)=>({id,text,p});
+  const cam={ hero:{t:[0,6,0],az:40,el:26,w:80,h:56}, grid:{t:[-2,0,0],az:40,el:42,w:78,h:46}, lift:{t:[-2,2,0],az:40,el:34,w:78,h:48},
+    pos:{t:[0,1,PBZ+posRows*G/2],az:36,el:40,w:26,h:18}, matrix:{t:[2,0,11],az:0,el:64,w:96,h:68},
+    both:{t:[0,1,12],az:38,el:38,w:80,h:56}, re:{t:[RBX+3,1,PBZ+3],az:30,el:42,w:38,h:22} };
+  const sh=c=>Object.assign({},c,{sh:-7});
+  const legend=true;
+
+  const St=[], add=o=>St.push(Object.assign({delay:"random",spread:.8,field:"field",marks:{},labels:[],cap:""},o));
+  add({ hero:true, cam:cam.hero, spread:.6, inst:i=> i<2500 ? [SC[i*3],SC[i*3+1],SC[i*3+2],.6,.6,.6, i%40===0?"accent":"ink"] : [SC[i*3],-20,SC[i*3+2],0,0,0,"ink"] });
+  add({ cam:cam.grid, delay:"rank", spread:1.4, inst:i=>cube(grid(i),"ink"),
+    cap:`Picture <b>10,000 people</b>, one cube each. The set of every possible person is the sample space. Picking one at random, each has the same 1-in-10,000 chance.` });
+  add({ cam:cam.grid, inst:i=>cube(grid(i),truth(i)), legend,
+    cap:`A rare disease affects <b>0.5%</b> of them: ${nS} red cubes. The red cubes form an event, and its probability is ${nS} ÷ 10,000. The navy ones are its complement.` });
+  add({ cam:cam.grid, delay:"x", inst:i=>cube(split(i),truth(i)), legend,
+    labels:[L("sk",`${nS} sick`,[SBX+2.5,1.2,SBZ-1]),L("hl",`${fmtN(N-nS)} healthy`,[0,1.2,-28])],
+    cap:`Split by the truth: ${nS} sick, ${fmtN(N-nS)} healthy. Everyone takes a screening test that is right about 9 times in 10 for sick people and 19 times in 20 for healthy ones.` });
+  add({ cam:cam.lift, inst:i=>cube(split(i),truth(i),tpSet.has(i)?3:0), legend,
+    labels:[L("tp",`${nTP} test positive`,[SBX+2.5,4.6,SBZ-1]),L("fn",`${nS-nTP} missed`,[SBX+2.5,1,SBZ+3.6])],
+    cap:`Among the sick, the test catches <b>90%</b>: ${nTP} light up and rise. ${nS-nTP} slip through as false negatives.` });
+  add({ cam:cam.lift, inst:i=>cube(split(i),truth(i),posSet.has(i)?3:0), legend,
+    labels:[L("tp",`${nTP} true positives`,[SBX+2.5,4.6,SBZ-1]),L("fp",`${nFP} false alarms`,[0,4.6,-28])],
+    cap:`Among the healthy, it wrongly flags <b>5%</b>. That sounds small, but 5% of ${fmtN(N-nS)} is <b>${nFP}</b> false alarms, floating over the navy crowd.` });
+  add({ cam:cam.pos, delay:"x", spread:1.2, inst:i=> posSet.has(i) ? cube(posBlock(i),truth(i)) : cube(split(i),"muted"), legend,
+    labels:[L("pa",`${nPos} tested positive`,[0,1,PBZ-1.2]),L("pb",`${nTP} are sick`,[PBX+ (Math.min(nTP,PCOLS)-1)*G/2,1,PBZ+Math.ceil(nTP/PCOLS)*G+.6])],
+    cap:`Now keep only the ${nPos} people who tested positive. Only <b>${nTP}</b> of them are sick. A positive result means sick just <b>${pct(post)}</b> of the time.` });
+  add({ cam:sh(cam.pos), inst:i=> posSet.has(i) ? cube(posBlock(i),truth(i)) : cube(split(i),"muted"), legend,
+    card:{k:"Conditional probability", d:"Extra information shrinks the sample space. Once you know the test came back positive, only the positive cubes count, and the question becomes what share of them are sick.", f:`P(sick | positive) = ${nTP} ÷ ${nPos} = ${pct(post)}`},
+    cap:`Knowing the result changes the question: out of <b>these ${nPos}</b>, how many are sick?` });
+  add({ cam:sh(cam.pos), inst:i=> posSet.has(i) ? cube(posBlock(i),truth(i)) : cube(split(i),"muted"), legend,
+    card:{k:"Bayes' theorem", d:`The same answer without counting cubes. The top is the red cubes that rose, the bottom is every cube that rose (the law of total probability). The bottom alone, P(positive) = ${pPos.toFixed(5)}, is not the answer.`, f:`P(S|+) = P(+|S)·P(S) ÷ P(+) = (0.9 × 0.005) ÷ (0.9 × 0.005 + 0.05 × 0.995) = ${pct(exact)}`},
+    cap:`Bayes' theorem is the cube count written as a formula. The rare disease gets swamped by false alarms from the huge healthy crowd.` });
+  add({ cam:cam.matrix, delay:"x", spread:1.2, inst:i=>cube(mat(i),truth(i)), legend,
+    labels:[L("mTP",`true positive ${nTP}`,[MX.TP[0]+2.2,1,MX.TP[1]-1]),L("mFN",`false negative ${nS-nTP}`,[MX.FN[0]+2.2,1,MX.FN[1]-1]),L("mFP",`false positive ${nFP}`,[MX.FP[0]+11,1,MX.FP[1]-1]),L("mTN",`true negative ${fmtN(nTN)}`,[MX.TN[0]+35,1,MX.TN[1]-1])],
+    marks:{}, cap:`Every test outcome falls into one of four boxes, the confusion matrix. Back row: tested positive. Front row: tested negative. Left: sick. Right: healthy.` });
+  const hl=(num,rest)=>i=>{ const k=mKey.get(i); return cube(mat(i), num.includes(k)?truth(i):rest.includes(k)?"teal":"muted"); };
+  const mLabs=[L("mTP",`TP ${nTP}`,[MX.TP[0]+2.2,1,MX.TP[1]-1]),L("mFN",`FN ${nS-nTP}`,[MX.FN[0]+2.2,1,MX.FN[1]-1]),L("mFP",`FP ${nFP}`,[MX.FP[0]+11,1,MX.FP[1]-1]),L("mTN",`TN ${fmtN(nTN)}`,[MX.TN[0]+35,1,MX.TN[1]-1])];
+  add({ cam:cam.matrix, inst:hl(["TP"],["FN"]), labels:mLabs,
+    cap:`<b>Recall</b> (also called sensitivity): of everyone who is sick, how many did the test catch? ${nTP} ÷ (${nTP} + ${nS-nTP}) = <b>${pct(nTP/nS,0)}</b>. Teal marks the ones it missed.` });
+  add({ cam:cam.matrix, inst:hl(["TN"],["FP"]), labels:mLabs,
+    cap:`<b>Specificity</b>: of everyone who is healthy, how many did the test clear? ${fmtN(nTN)} ÷ (${fmtN(nTN)} + ${nFP}) = <b>${pct(nTN/(N-nS),0)}</b>. Teal marks the false alarms.` });
+  add({ cam:cam.matrix, cardRight:true, inst:hl(["TP"],["FP"]), labels:mLabs,
+    card:{k:"Three different questions", d:"Recall and specificity describe the test. Precision describes what a positive result means for you, and it depends on how common the disease is. A great test can still have terrible precision.", f:`recall ${pct(nTP/nS,0)} · specificity ${pct(nTN/(N-nS),0)} · precision ${pct(post)}`},
+    cap:`<b>Precision</b>: of everyone who tested positive, how many are sick? ${nTP} ÷ (${nTP} + ${nFP}) = <b>${pct(post)}</b>. Same test, very different number.` });
+  add({ cam:cam.both, legend,
+    cap:`Precision depends on the base rate. Make the disease 20 times more common, <b>10%</b> of people, and run the same test. Now ${fmtN(tpB.length+fpB.length)} test positive and ${fmtN(tpB.length)} of them are sick: <b>${pct(postB)}</b>.`,
+    phases:[ {inst:i=>cube(grid(i),sickBSet.has(i)?"accent":"ink"),delay:"random",spread:.8},
+             {at:1.6,inst:i=>cube(grid(i),sickBSet.has(i)?"accent":"ink",posB.has(i)?3:0),delay:"random",spread:.8},
+             {at:3.4,inst:i=> posB.has(i) ? cube(block(pIdxB.get(i),PCB,PBXB,PBZ),sickBSet.has(i)?"accent":"ink") : cube(grid(i),"muted"),delay:"x",spread:1,
+               labels:[L("pB",`${fmtN(tpB.length+fpB.length)} positive · ${pct(postB,0)} sick`,[0,1,PBZ-1.2])]} ] });
+  add({ cam:sh(cam.re), legend,
+    card:{k:"Bayesian updating", d:"Your belief after the first test becomes the starting point for the second. Retest the positives from the 0.5% world: the prior is no longer 0.5%, it is 8.3%, so a second positive means far more.", f:`prior ${pct(post)} → second positive → ${pct(post2,0)} sick`},
+    cap:`Back to the rare disease. Retest the ${nPos} positives. <b>${TP2.length+FP2.length}</b> come back positive again, and ${TP2.length} of those are sick: <b>${pct(post2,0)}</b>.`,
+    phases:[ {inst:i=> posSet.has(i) ? cube(posBlock(i),truth(i)) : cube(split(i),"muted"),delay:"x",spread:.8},
+             {at:1.8,inst:i=> pos2.has(i) ? cube(block(rIdx.get(i),RCOLS,RBX,RBZ),truth(i)) : posSet.has(i) ? cube(posBlock(i),"muted") : cube(split(i),"muted"),delay:"x",spread:.8,
+               labels:[L("r2",`${TP2.length+FP2.length} positive twice`,[RBX+2.7,1,RBZ-1.2])]} ] });
+  add({ cam:{t:[1,0,13],az:0,el:64,w:92,h:58}, end:true, delay:"x", inst:i=>cube(mat(i),truth(i)) });
+
+  const recap=[
+    ["Sample space and events", "The sample space is every possible outcome, here 10,000 people. An event is a subset, like the red cubes. Its complement is everything else."],
+    ["Conditional probability", `New information shrinks the sample space. P(sick | positive) only counts positive cubes: ${nTP} ÷ ${nPos} = ${pct(post)}.`],
+    ["Bayes' theorem", `P(S|+) = P(+|S)·P(S) ÷ P(+). The denominator P(+) = ${pPos.toFixed(4)} comes from the law of total probability and is not the answer.`],
+    ["Recall and specificity", `Properties of the test: ${pct(nTP/nS,0)} of sick people caught, ${pct(nTN/(N-nS),0)} of healthy people cleared.`],
+    ["Precision and base rates", `What a positive result means: ${pct(post)} at 0.5% prevalence, ${pct(postB)} at 10%. Rare conditions drown in false alarms.`],
+    ["Bayesian updating", `Yesterday's posterior is today's prior: ${pct(post)} after one positive, ${pct(post2,0)} after two.`]
+  ];
+  const source="A thought experiment, not a dataset: 10,000 people, 0.5% prevalence, a test with 90% sensitivity and a 5% false positive rate (the classic screening example). Counts are exact expected values, assigned to cubes at random with a fixed seed.";
+  return {S:St, recap, source, curveSpec:[]};
+}
+
+/* ---------- three.js stage ---------- */
+const canvas=document.getElementById("stage");
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+const scene=new THREE.Scene();
+const camera=new THREE.OrthographicCamera(-1,1,1,-1,-500,1000);
+scene.add(new THREE.AmbientLight(0xffffff,.62));
+const sun=new THREE.DirectionalLight(0xffffff,.48); sun.position.set(.35,1,.55); scene.add(sun);
+
+const mesh=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshLambertMaterial({color:0xffffff}),T);
+mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+mesh.instanceColor=new THREE.InstancedBufferAttribute(new Float32Array(T*3),3);
+mesh.instanceColor.setUsage(THREE.DynamicDrawUsage);
+mesh.frustumCulled=false; scene.add(mesh);
+const IM=mesh.instanceMatrix.array, IC=mesh.instanceColor.array;
+
+const cssVar=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const ROLE={};
+function readRoles(){ ["ink","accent","teal","muted","white","truth","deep","field","t0","t1","t2","t3","t4"].forEach(r=>{ const c=new THREE.Color(cssVar("--"+r)||"#888"); ROLE[r]=[c.r,c.g,c.b]; }); }
+readRoles();
+
+const cur=new Float32Array(T*3), from=new Float32Array(T*3), to=new Float32Array(T*3);
+const sc=new Float32Array(T*3), sFrom=new Float32Array(T*3), sTo=new Float32Array(T*3);
+const cc=new Float32Array(T*3), cFrom=new Float32Array(T*3), cTo=new Float32Array(T*3);
+const delay=new Float32Array(T), roleNow=new Array(T);
+const DUR = RM ? .001 : .95;
+
+const MNAMES=["axis","axis2","meanS","medS","obsS","truS","sdB","sdL","sdR","seB","seL","seR","ciB","ciL","ciR","barA","barB","barC"];
+const MK={};
+MNAMES.forEach(n=>{ const m=new THREE.Mesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0,depthWrite:false}));
+  m.renderOrder=2; scene.add(m); MK[n]={m,cur:{p:[0,0,0],s:[1,1,1],c:[1,1,1],o:0},from:null,to:null,role:"ink"}; });
+
+let CURV={};
+function makeCurves(spec){ for(const k in CURV){ scene.remove(CURV[k].m); CURV[k].m.geometry.dispose(); CURV[k].m.material.dispose(); }
+  CURV={}; spec.forEach(({key,pts})=>{ const geo=new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map(p=>new THREE.Vector3(p[0],p[1],p[2]))),260,.11,6,false);
+    const me=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0,depthTest:false}));
+    me.renderOrder=3; me.visible=false; scene.add(me);
+    CURV[key]={m:me,total:geo.index.count,prog:0,pFrom:0,pTo:0,o:0,oFrom:0,oTo:0,role:"ink"}; }); }
+let camCur=null, camFrom=null, camTo=null, fieldCur=ROLE.field.slice(), fieldFrom=null, fieldTo=null, fieldRole="field";
+let instStart=0, instDur=.95, instAnim=false, stepStart=0, phaseQ=[], bobAmp=RM?0:1;
+
+const lerp=(a,b,t)=>a+(b-a)*t;
+const eio=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+const eout=t=>1-Math.pow(1-t,3);
+let easeFn=eio;
+
+function retarget(p,instant){
+  const now=performance.now()/1000, spread=p.spread??.8, mode=p.delay||"random";
+  from.set(cur); sFrom.set(sc); cFrom.set(cc);
+  for(let i=0;i<T;i++){ const o=p.inst(i), q=i*3;
+    to[q]=o[0]; to[q+1]=o[1]; to[q+2]=o[2]; sTo[q]=o[3]; sTo[q+1]=o[4]; sTo[q+2]=o[5];
+    roleNow[i]=o[6]; const c=ROLE[o[6]]; cTo[q]=c[0]; cTo[q+1]=c[1]; cTo[q+2]=c[2];
+    let key;
+    if(mode==="x") key=.85*Math.min(1,Math.max(0,(to[q]+16)/32))+.15*J[i];
+    else if(mode==="rank") key= i<N ? rank[i]/N : (i-N)/M;
+    else if(mode==="index") key= i<N ? 0 : (i-N)/M;
+    else if(mode==="none") key=0;
+    else if(mode==="lln") key= i<N ? (llnPos[i]>=0?llnPos[i]/M:0) : (i-N)/M;
+    else key=J[i];
+    delay[i]=RM?0:key*spread;
+  }
+  easeFn = p.ease==="out" ? eout : eio;
+  instDur = RM ? .001 : (p.dur||DUR); instStart = instant ? now-100 : now; instAnim=true;
+  if(p.labels) setLabels(p.labels);
+}
+function runPhases(now,instant){ while(phaseQ.length && phaseQ[0].t<=now){ retarget(phaseQ.shift(),instant); } }
+
+function setState(k,instant){
+  const st=S[k], now=performance.now()/1000;
+  for(const n of MNAMES){ const mk=MK[n], spec=st.marks[n];
+    mk.from={p:mk.cur.p.slice(),s:mk.cur.s.slice(),c:mk.cur.c.slice(),o:mk.cur.o};
+    if(spec){ mk.role=spec.role; const c=ROLE[spec.role];
+      mk.to={p:spec.p.slice(),s:spec.s.slice(),c:c.slice(),o:1};
+      if(mk.cur.o<.02){ mk.from.p=spec.p.slice(); mk.from.s=spec.s.slice(); mk.from.c=c.slice(); }
+    } else mk.to={p:mk.cur.p.slice(),s:mk.cur.s.slice(),c:mk.cur.c.slice(),o:0};
+  }
+  camFrom = camCur ? JSON.parse(JSON.stringify(camCur)) : JSON.parse(JSON.stringify(st.cam));
+  camTo = JSON.parse(JSON.stringify(st.cam));
+  if(!camCur) camCur=JSON.parse(JSON.stringify(st.cam));
+  for(const key in CURV){ const c=CURV[key], spec=st.curves&&st.curves[key]; c.pFrom=c.prog; c.oFrom=c.o;
+    if(spec){ c.role=spec; c.oTo=1; c.pTo=1; if(c.o<.02){ c.pFrom=0; c.prog=0; } } else { c.oTo=0; c.pTo=c.prog; } }
+  fieldFrom=fieldCur.slice(); fieldRole=st.field; fieldTo=ROLE[st.field].slice();
+  document.body.classList.toggle("on-accent", st.field==="accent");
+  stepStart = instant ? now-100 : now;
+  setLabels(st.labels||[]);
+  const ph = st.phases || [st];
+  phaseQ = (RM||instant) ? [Object.assign({},ph[ph.length-1],{t:now})] : ph.map(p=>Object.assign({},p,{t:now+(p.at||0)}));
+  runPhases(now,instant);
+}
+
+function updateInstances(now){
+  runPhases(now,false);
+  let moving=false;
+  if(instAnim){ const e=now-instStart; let done=true;
+    for(let i=0;i<T;i++){ let t=(e-delay[i])/instDur; if(t<1) done=false; t=t<0?0:t>1?1:t; t=easeFn(t); const q=i*3;
+      cur[q]=lerp(from[q],to[q],t); cur[q+1]=lerp(from[q+1],to[q+1],t); cur[q+2]=lerp(from[q+2],to[q+2],t);
+      sc[q]=lerp(sFrom[q],sTo[q],t); sc[q+1]=lerp(sFrom[q+1],sTo[q+1],t); sc[q+2]=lerp(sFrom[q+2],sTo[q+2],t);
+      cc[q]=lerp(cFrom[q],cTo[q],t); cc[q+1]=lerp(cFrom[q+1],cTo[q+1],t); cc[q+2]=lerp(cFrom[q+2],cTo[q+2],t); }
+    if(done) instAnim=false; moving=true; }
+  const e=now-stepStart;
+  const g=Math.min(1,e/(RM?.001:1.25)), ge=eio(g);
+  for(const n of MNAMES){ const mk=MK[n]; if(!mk.to) continue; const c=mk.cur;
+    for(let a=0;a<3;a++){ c.p[a]=lerp(mk.from.p[a],mk.to.p[a],ge); c.s[a]=lerp(mk.from.s[a],mk.to.s[a],ge); c.c[a]=lerp(mk.from.c[a],mk.to.c[a],ge); }
+    c.o=lerp(mk.from.o,mk.to.o,ge);
+    mk.m.position.set(c.p[0],c.p[1],c.p[2]); mk.m.scale.set(Math.max(1e-4,c.s[0]),Math.max(1e-4,c.s[1]),Math.max(1e-4,c.s[2]));
+    mk.m.material.color.setRGB(c.c[0],c.c[1],c.c[2]); mk.m.material.opacity=c.o; mk.m.visible=c.o>.01; }
+  const ce=eio(Math.min(1,e/(RM?.001:1.5)));
+  for(const k of ["az","el","w","h","sh"]) camCur[k]=lerp(camFrom[k]??0,camTo[k]??0,ce);
+  for(const key in CURV){ const c=CURV[key]; c.prog=lerp(c.pFrom,c.pTo,eio(Math.min(1,Math.max(0,(e-.5)/(RM?.001:1.8)))));
+    c.o=lerp(c.oFrom,c.oTo,Math.min(1,e/(RM?.001:.5))); const col=ROLE[c.role];
+    c.m.material.color.setRGB(col[0],col[1],col[2]); c.m.material.opacity=c.o; c.m.visible=c.o>.01;
+    c.m.geometry.setDrawRange(0,Math.floor(c.total*c.prog/3)*3); }
+  for(let a=0;a<3;a++) camCur.t[a]=lerp(camFrom.t[a],camTo.t[a],ce);
+  for(let a=0;a<3;a++) fieldCur[a]=lerp(fieldFrom[a],fieldTo[a],Math.min(1,e/.8));
+  return moving;
+}
+
+function writeMatrices(now){
+  const b=bobAmp>.002;
+  for(let i=0;i<T;i++){ const o=i*16,q=i*3; let y=cur[q+1];
+    if(b) y+=Math.sin(now*.8+J[i]*6.283)*1.3*bobAmp;
+    IM[o]=sc[q]; IM[o+5]=sc[q+1]; IM[o+10]=sc[q+2]; IM[o+12]=cur[q]; IM[o+13]=y; IM[o+14]=cur[q+2]; IM[o+15]=1; }
+  IC.set(cc); mesh.instanceMatrix.needsUpdate=true; mesh.instanceColor.needsUpdate=true;
+}
+
+function placeCamera(now){
+  const w=innerWidth,h=innerHeight,asp=w/h;
+  let az=camCur.az; if(bobAmp>.002) az+=Math.sin(now*.12)*9*bobAmp;
+  const A=az*Math.PI/180, E=camCur.el*Math.PI/180, sh=(innerWidth>=760?(camCur.sh||0):0), t=[camCur.t[0]+sh*Math.cos(A),camCur.t[1],camCur.t[2]-sh*Math.sin(A)];
+  camera.position.set(t[0]+Math.cos(E)*Math.sin(A)*300, t[1]+Math.sin(E)*300, t[2]+Math.cos(E)*Math.cos(A)*300);
+  camera.up.set(0,1,0); camera.lookAt(t[0],t[1],t[2]);
+  const hh=Math.max(camCur.h/2, camCur.w/2/asp);
+  camera.top=hh; camera.bottom=-hh; camera.left=-hh*asp; camera.right=hh*asp; camera.updateProjectionMatrix();
+}
+
+/* ---------- labels ---------- */
+const labEls=new Map(); let labSpecs=[];
+function setLabels(list){
+  const ids=new Set(list.map(l=>l.id));
+  labEls.forEach((el,id)=>{ if(!ids.has(id)) el.classList.remove("on"); });
+  list.forEach(l=>{ let el=labEls.get(l.id);
+    if(!el){ el=document.createElement("div"); el.className="lab "+(l.kind==="axis"?"axis":"pill"); document.body.appendChild(el); labEls.set(l.id,el); }
+    if(el.textContent!==l.text){ el.textContent=l.text; }
+    requestAnimationFrame(()=>{ if(labSpecs.some(s=>s.id===l.id)) el.classList.add("on"); }); });
+  labSpecs=list;
+}
+const v3=new THREE.Vector3();
+function placeLabels(){
+  const w=innerWidth,h=innerHeight;
+  labSpecs.forEach(l=>{ const el=labEls.get(l.id); v3.set(l.p[0],l.p[1],l.p[2]).project(camera);
+    const x=(v3.x+1)/2*w, y=(1-v3.y)/2*h;
+    el.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px) ${l.left?"translate(calc(-100% - 8px),-50%)":`translate(-50%,${l.below?"6px":"-100%"})`}`; });
+}
+
+/* ---------- navigation ---------- */
+let step=0;
+const capEl=document.getElementById("caption"), heroEl=document.getElementById("hero"), panelEl=document.getElementById("panel");
+const countEl=document.getElementById("count"), ticksEl=document.getElementById("ticks");
+const prevB=document.getElementById("prev"), nextB=document.getElementById("next");
+let capTimer=null;
+function go(k,instant,force){
+  k=Math.max(0,Math.min(S.length-1,k)); if(k===step && !instant && !force) return; step=k; const st=S[k];
+  setState(k,instant);
+  heroEl.classList.toggle("off",!st.hero);
+  const dc=document.getElementById("defcard");
+  if(st.card){ dc.querySelector(".k").textContent=st.card.k; dc.querySelector(".d").textContent=st.card.d; dc.querySelector(".f").textContent=st.card.f; }
+  dc.classList.toggle("on",!!st.card); dc.classList.toggle("right",!!st.cardRight);
+  document.getElementById("legend").classList.toggle("on",!!st.legend);
+  panelEl.classList.toggle("on",!!st.end); panelEl.setAttribute("aria-hidden",st.end?"false":"true");
+  capEl.classList.remove("show"); clearTimeout(capTimer);
+  capTimer=setTimeout(()=>{ capEl.innerHTML= st.cap ? `<span>${st.cap}</span>` : ""; if(st.cap) capEl.classList.add("show"); }, instant||RM?0:260);
+  countEl.textContent=String(k+1).padStart(2,"0")+" / "+String(S.length).padStart(2,"0");
+  [...ticksEl.children].forEach((t,i)=>{ t.className= i===k?"on":(i<k?"done":""); });
+  prevB.setAttribute("aria-disabled",k===0?"true":"false"); nextB.setAttribute("aria-disabled",k===S.length-1?"true":"false");
+  nextB.innerHTML = k===0 ? "Start &rarr;" : "Next &rarr;";
+}
+const next=()=>go(step+1), prev=()=>go(step-1);
+prevB.addEventListener("click",e=>{e.stopPropagation();prev();});
+nextB.addEventListener("click",e=>{e.stopPropagation();next();});
+document.getElementById("restart").addEventListener("click",e=>{e.stopPropagation();go(0);});
+panelEl.addEventListener("click",e=>e.stopPropagation());
+window.addEventListener("click",e=>{ if(e.target.closest("button,a,.panel,select,label,.chips")) return; (e.clientX>innerWidth/2?next:prev)(); });
+window.addEventListener("keydown",e=>{
+  if(e.target.closest&&e.target.closest("select")) return;
+  if(["ArrowRight","PageDown"," "].includes(e.key)){ e.preventDefault(); next(); }
+  else if(["ArrowLeft","PageUp"].includes(e.key)){ e.preventDefault(); prev(); }
+  else if(e.key==="Home"){ go(0); } else if(e.key==="End"){ go(S.length-1); } });
+
+/* ---------- theme ---------- */
+function retheme(){ readRoles();
+  for(let i=0;i<T;i++){ const c=ROLE[roleNow[i]]||ROLE.ink, q=i*3; for(let a=0;a<3;a++){ cc[q+a]=cTo[q+a]=cFrom[q+a]=c[a]; } }
+  for(const n of MNAMES){ const mk=MK[n], c=ROLE[mk.role]; for(let a=0;a<3;a++){ mk.cur.c[a]=c[a]; if(mk.to) mk.to.c[a]=c[a]; if(mk.from) mk.from.c[a]=c[a]; } }
+  fieldCur=ROLE[fieldRole].slice(); fieldTo=fieldCur.slice(); fieldFrom=fieldCur.slice(); writeMatrices(performance.now()/1000); }
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",retheme);
+new MutationObserver(retheme).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+
+function resize(){ renderer.setSize(innerWidth,innerHeight,false); }
+window.addEventListener("resize",resize); resize();
+
+C=build(); S=C.S; makeCurves(C.curveSpec);
+document.getElementById("recap").innerHTML=C.recap.map(([t,d])=>`<dt>${t}</dt><dd>${d}</dd>`).join("");
+document.getElementById("foot").textContent=C.source;
+ticksEl.innerHTML=S.map(()=>"<i></i>").join("");
+
+/* ---------- boot ---------- */
+for(let i=0;i<T;i++){ const o=S[0].inst(i), q=i*3; cur[q]=o[0];cur[q+1]=o[1];cur[q+2]=o[2]; sc[q]=o[3];sc[q+1]=o[4];sc[q+2]=o[5]; const c=ROLE[o[6]]; cc[q]=c[0];cc[q+1]=c[1];cc[q+2]=c[2]; roleNow[i]=o[6]; }
+step=-1; go(0,true);
+const bg=new THREE.Color();
+function frame(ms){
+  const now=ms/1000;
+  bobAmp += ((S[step].hero&&!RM?1:0)-bobAmp)*.04;
+  const moving=updateInstances(now);
+  if(moving || bobAmp>.002) writeMatrices(now);
+  bg.setRGB(fieldCur[0],fieldCur[1],fieldCur[2]); scene.background=bg;
+  placeCamera(now); placeLabels();
+  renderer.render(scene,camera);
+  requestAnimationFrame(frame);
+}
+writeMatrices(0);
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
