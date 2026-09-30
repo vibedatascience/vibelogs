@@ -1,29 +1,35 @@
 (() => {
   'use strict';
   const $ = id => document.getElementById(id);
-  const catalog = window.GalleryCatalog, CACHE = 'nrennie-catalog-v1', HOUR = 3600000;
-  let rows = window.GALLERY_SNAPSHOT, visible = [], year = 'all', language = 'all';
+  const catalog = window.GalleryCatalog, HOUR = 3600000, CHECKED = 'tt-checked-v2';
+  const live = catalog.SOURCES.filter(s => s.live), cacheKey = id => `tt-${id}-v2`;
+  let rows = window.GALLERY_SNAPSHOT, visible = [], year = 'all', language = 'all', maker = 'all';
   let checked = 0, busy = false, current = null, codeRequest = null, generation = 0;
   const codes = new Map();
   const escape = text => String(text).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  try {
-    const saved = JSON.parse(localStorage.getItem(CACHE));
-    if (saved && typeof saved.csv === 'string') {
-      rows = catalog.merge(rows, catalog.parse(saved.csv, window.Papa));
-      if (Number.isFinite(saved.checked) && saved.checked <= Date.now()) checked = saved.checked;
-    }
-  } catch { /* Storage may be disabled or contain an older format. */ }
+  const read = k => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } };
+  const write = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* Refresh still works without storage. */ } };
+  for (const src of live) {
+    try {
+      const saved = read(cacheKey(src.id));
+      if (saved && typeof saved.text === 'string') rows = catalog.merge(rows, catalog.parse(src.id, saved.text, window.Papa));
+    } catch { /* Storage may hold an older format. */ }
+  }
+  const c0 = read(CHECKED);
+  if (Number.isFinite(c0) && c0 <= Date.now()) checked = c0;
+  const who = x => catalog.makerName(x.m || 'nrennie');
   function filters() {
     const years = [...new Set(rows.map(x => x.y))].sort().reverse();
     const languages = [...new Set(rows.map(x => x.l))].sort();
-    $('filters').innerHTML = [['all','All years'], ...years.map(y => [y,y])].map(([y,label]) => `<button class="chip ${year===y?'on':''}" data-y="${escape(y)}" aria-pressed="${year===y}">${escape(label)}</button>`).join('') + languages.map(l => `<button class="chip lang ${language===l?'on':''}" data-l="${escape(l)}" aria-pressed="${language===l}">${escape(l)}</button>`).join('');
+    const makers = catalog.SOURCES.filter(s => rows.some(x => (x.m || 'nrennie') === s.id));
+    $('filters').innerHTML = [['all','All years'], ...years.map(y => [y,y])].map(([y,label]) => `<button class="chip ${year===y?'on':''}" data-y="${escape(y)}" aria-pressed="${year===y}">${escape(label)}</button>`).join('') + '<span class="sep" aria-hidden="true"></span>' + makers.map(s => `<button class="chip maker ${maker===s.id?'on':''}" data-m="${escape(s.id)}" aria-pressed="${maker===s.id}">${escape(s.name)}</button>`).join('') + '<span class="sep" aria-hidden="true"></span>' + languages.map(l => `<button class="chip lang ${language===l?'on':''}" data-l="${escape(l)}" aria-pressed="${language===l}">${escape(l)}</button>`).join('');
   }
   function render() {
-    visible = catalog.filter(rows, year, language, $('search').value);
+    visible = catalog.filter(rows, year, language, $('search').value, maker);
     $('count').textContent = `${visible.length} of ${rows.length} plots`;
     $('surprise').disabled = !visible.length;
     $('empty').hidden = !!visible.length;
-    $('grid').innerHTML = visible.map(x => `<button class="card" data-date="${x.d}" aria-label="${escape(x.t)} — ${x.d}"><img loading="lazy" src="${escape(x.i)}" alt="${escape(x.t)}"><span class="meta"><span><span class="tag">${escape(x.l)}</span><span class="t" style="display:block">${escape(x.t)}</span></span><span class="d">${x.d}</span></span></button>`).join('');
+    $('grid').innerHTML = visible.map(x => `<button class="card" data-key="${escape(x.k)}" aria-label="${escape(x.t)}, ${x.d}, by ${escape(who(x))}"><img loading="lazy" src="${escape(x.i)}" alt="${escape(x.t)}"><span class="meta"><span><span class="tag">${escape(who(x))} · ${escape(x.l)}</span><span class="t" style="display:block">${escape(x.t)}</span></span><span class="d">${x.d}</span></span></button>`).join('');
   }
   function status(message) {
     $('status').textContent = `${message} · Latest plot ${rows[0].d}`;
@@ -34,24 +40,24 @@
     busy = true;
     $('refresh').disabled = true;
     status('Checking for new plots…');
-    try {
-      const response = await fetch(catalog.URL, {cache:'no-cache', signal:AbortSignal.timeout(15000)});
-      if (!response.ok) throw Error(`HTTP ${response.status}`);
-      const csv = await response.text(), incoming = catalog.parse(csv, window.Papa);
-      // A malformed/truncated upstream export must never erase the saved gallery.
-      if (incoming.length < 200) throw Error('Incomplete catalogue');
-      const old = rows, updated = catalog.merge(rows, incoming), added = updated.length-old.length;
-      rows = updated;
-      checked = Date.now();
-      try { localStorage.setItem(CACHE, JSON.stringify({csv,checked})); } catch { /* Refresh still works without storage. */ }
-      if (JSON.stringify(old) !== JSON.stringify(rows)) { filters(); render(); }
-      status(added ? `${added} new plots added` : 'Up to date');
-    } catch {
-      status('Couldn’t check for updates. Showing saved plots');
-    } finally {
-      busy = false;
-      $('refresh').disabled = false;
+    const old = rows, failed = [];
+    for (const src of live) {
+      try {
+        const response = await fetch(src.url, {cache:'no-cache', signal:AbortSignal.timeout(15000)});
+        if (!response.ok) throw Error(`HTTP ${response.status}`);
+        const text = await response.text(), incoming = catalog.parse(src.id, text, window.Papa);
+        // A malformed or truncated upstream index must never erase the saved gallery.
+        if (incoming.length < src.min) throw Error('Incomplete catalogue');
+        rows = catalog.merge(rows, incoming);
+        write(cacheKey(src.id), {text});
+      } catch { failed.push(src.name); }
     }
+    const added = rows.length-old.length;
+    if (failed.length < live.length) { checked = Date.now(); write(CHECKED, checked); }
+    if (JSON.stringify(old) !== JSON.stringify(rows)) { filters(); render(); }
+    status(failed.length ? `Couldn’t check ${failed.join(' and ')}. Showing saved plots` : added ? `${added} new plots added` : 'Up to date');
+    busy = false;
+    $('refresh').disabled = false;
   }
   function setCode(text, item) {
     $('mc').textContent = text;
@@ -83,7 +89,7 @@
     codeRequest?.abort();
     current = item;
     $('mt').textContent = item.t;
-    $('md').textContent = item.d;
+    $('md').textContent = `${item.d} · ${who(item)}`;
     $('mi').src = item.i;
     $('mi').alt = item.t;
     $('mg').href = item.g;
@@ -93,7 +99,7 @@
     $('mdet').hidden = !item.c;
     $('msum').textContent = 'Show code ('+decodeURIComponent(item.c?.split('/').pop() || '')+')';
     $('mc').textContent = '';
-    const index = visible.findIndex(x => x.d === item.d);
+    const index = visible.findIndex(x => x.k === item.k);
     $('prev').disabled = index <= 0;
     $('next').disabled = index < 0 || index >= visible.length-1;
     $('position').textContent = `${index+1} / ${visible.length}`;
@@ -101,7 +107,7 @@
     document.querySelector('.mbody').scrollTop = 0;
   }
   function move(delta) {
-    const index = visible.findIndex(x => x.d === current?.d);
+    const index = visible.findIndex(x => x.k === current?.k);
     if (visible[index+delta]) open(visible[index+delta]);
   }
   $('filters').addEventListener('click', e => {
@@ -109,18 +115,19 @@
     if (!b) return;
     if (b.dataset.y) year = b.dataset.y;
     if (b.dataset.l) language = language === b.dataset.l ? 'all' : b.dataset.l;
+    if (b.dataset.m) maker = maker === b.dataset.m ? 'all' : b.dataset.m;
     // Preserve keyboard focus while updating the pressed state.
     $('filters').querySelectorAll('button').forEach(c => {
-      const on = c.dataset.y ? c.dataset.y === year : c.dataset.l === language;
+      const on = c.dataset.y ? c.dataset.y === year : c.dataset.m ? c.dataset.m === maker : c.dataset.l === language;
       c.classList.toggle('on',on); c.setAttribute('aria-pressed',on);
     });
     render();
   });
   $('search').addEventListener('input', render);
-  $('clear').addEventListener('click', () => { year = language = 'all'; $('search').value=''; filters(); render(); $('search').focus(); });
+  $('clear').addEventListener('click', () => { year = language = maker = 'all'; $('search').value=''; filters(); render(); $('search').focus(); });
   $('refresh').addEventListener('click', () => refresh(true));
   $('surprise').addEventListener('click', () => { if (visible.length) open(visible[Math.floor(Math.random()*visible.length)]); });
-  $('grid').addEventListener('click', e => { const card=e.target.closest('[data-date]'); if (card) open(visible.find(x => x.d === card.dataset.date)); });
+  $('grid').addEventListener('click', e => { const card=e.target.closest('[data-key]'); if (card) open(visible.find(x => x.k === card.dataset.key)); });
   $('mdet').addEventListener('toggle',loadCode);
   $('prev').addEventListener('click', () => move(-1));
   $('next').addEventListener('click', () => move(1));

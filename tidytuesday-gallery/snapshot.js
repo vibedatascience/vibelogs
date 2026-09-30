@@ -1,5 +1,79 @@
 window.GALLERY_SNAPSHOT = [
   {
+    "k": "2026-09-29-nrennie",
+    "m": "nrennie",
+    "d": "2026-09-29",
+    "y": "2026",
+    "t": "Health metrics in urban centres",
+    "i": "https://raw.githubusercontent.com/nrennie/tidytuesday/main/2026/2026-09-29/20260929.png",
+    "c": "https://raw.githubusercontent.com/nrennie/tidytuesday/main/2026/2026-09-29/20260929.R",
+    "g": "https://github.com/nrennie/tidytuesday/tree/main/2026/2026-09-29",
+    "l": "R",
+    "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, ggforce, emojifont, tidytuesdayR"
+  },
+  {
+    "k": "karamanis:2026/2026-week_39",
+    "m": "karamanis",
+    "d": "2026-09-22",
+    "y": "2026",
+    "t": "Green Areas Across Cities",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_39/plots/urban_green.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_39",
+    "l": "R",
+    "p": "tidyverse, countrycode, ggrepel, camcorder, scales, marquee",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_39/urban_green.R"
+  },
+  {
+    "k": "2026-09-22-nrennie",
+    "m": "nrennie",
+    "d": "2026-09-22",
+    "y": "2026",
+    "t": "Green Areas Across Cities",
+    "i": "https://raw.githubusercontent.com/nrennie/tidytuesday/main/2026/2026-09-22/20260922.png",
+    "c": "https://raw.githubusercontent.com/nrennie/tidytuesday/main/2026/2026-09-22/20260922.R",
+    "g": "https://github.com/nrennie/tidytuesday/tree/main/2026/2026-09-22",
+    "l": "R",
+    "p": "tidyverse, showtext, ggtext, glue, ggview, emojifont, readr"
+  },
+  {
+    "k": "karamanis:2026/2026-week_38",
+    "m": "karamanis",
+    "d": "2026-09-15",
+    "y": "2026",
+    "t": "Dead Sea Scrolls Manuscripts",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_38/plots/dead_sea_scrolls.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_38",
+    "l": "R",
+    "p": "tidyverse, eulerr, grid, camcorder, here, readr, systemfonts, ggplotify, marquee",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_38/dead_sea_scrolls.R"
+  },
+  {
+    "k": "2026-09-15-nrennie",
+    "m": "nrennie",
+    "d": "2026-09-15",
+    "y": "2026",
+    "t": "Dead Sea Scrolls Manuscripts",
+    "i": "https://raw.githubusercontent.com/nrennie/tidytuesday/main/2026/2026-09-15/20260915.png",
+    "c": "https://raw.githubusercontent.com/nrennie/tidytuesday/main/2026/2026-09-15/20260915.R",
+    "g": "https://github.com/nrennie/tidytuesday/tree/main/2026/2026-09-15",
+    "l": "R",
+    "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, WeightedTreemaps, ggiraph, tidytuesdayR, sf, PrettyCols"
+  },
+  {
+    "k": "karamanis:2026/2026-week_37",
+    "m": "karamanis",
+    "d": "2026-09-08",
+    "y": "2026",
+    "t": "The Cappuccino Index",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_37/plots/cappuccino_index.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_37",
+    "l": "R",
+    "p": "tidyverse, countrycode, wbstats, ggcirclepack, shadowtext, marquee, rnaturalearth, ggpp, camcorder, readr, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_37/cappuccino_index.R"
+  },
+  {
+    "k": "2026-09-08-nrennie",
+    "m": "nrennie",
     "d": "2026-09-08",
     "y": "2026",
     "t": "The Cappuccino Index",
@@ -10,6 +84,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, countrycode, emojifont, tidytuesdayR"
   },
   {
+    "k": "karamanis:2026/2026-week_36",
+    "m": "karamanis",
+    "d": "2026-09-01",
+    "y": "2026",
+    "t": "World Castles, Fortresses and Palaces",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_36/plots/world_castles.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_36",
+    "l": "R",
+    "p": "tidyverse, sf, marquee, patchwork, camcorder, readr, colorspace, MetBrewer, rnaturalearth, countrycode",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_36/world_castles.R"
+  },
+  {
+    "k": "2026-09-01-nrennie",
+    "m": "nrennie",
     "d": "2026-09-01",
     "y": "2026",
     "t": "World Castles, Fortresses and Palaces",
@@ -20,6 +108,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, sf, ggiraph, emojifont, ggmapcn, htmltools, tidytuesdayR"
   },
   {
+    "k": "karamanis:2026/2026-week_35",
+    "m": "karamanis",
+    "d": "2026-08-25",
+    "y": "2026",
+    "t": "Country Music Lyrics",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_35/plots/country_lyrics.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_35",
+    "l": "R",
+    "p": "tidyverse, tidytext, ggbump, gghighlight, camcorder, readr, MetBrewer, dplyr, shadowtext",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_35/country_lyrics.R"
+  },
+  {
+    "k": "2026-08-25-nrennie",
+    "m": "nrennie",
     "d": "2026-08-25",
     "y": "2026",
     "t": "Country Music Lyrics",
@@ -30,6 +132,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, statebins, ggnewscale, tidytext, tidytuesdayR, grid, PrettyCols"
   },
   {
+    "k": "karamanis:2026/2026-week_34",
+    "m": "karamanis",
+    "d": "2026-08-18",
+    "y": "2026",
+    "t": "IELTS Exam Results",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_34/plots/ielts.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_34",
+    "l": "R",
+    "p": "tidyverse, ggbeeswarm, sf, camcorder, marquee, readr, countrycode, rnaturalearth, purrr, colorspace, shadowtext, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_34/ielts.R"
+  },
+  {
+    "k": "2026-08-18-nrennie",
+    "m": "nrennie",
     "d": "2026-08-18",
     "y": "2026",
     "t": "IELTS Exam Results",
@@ -40,6 +156,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, rnaturalearth, ggiraph, sf, readr, PrettyCols"
   },
   {
+    "k": "karamanis:2026/2026-week_33",
+    "m": "karamanis",
+    "d": "2026-08-11",
+    "y": "2026",
+    "t": "Palomar Spectroscopic Survey of Nearby Galaxies",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_33/plots/palomar.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_33",
+    "l": "R",
+    "p": "tidyverse, patchwork, camcorder, readr, shadowtext, marquee",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_33/palomar.R"
+  },
+  {
+    "k": "2026-08-11-nrennie",
+    "m": "nrennie",
     "d": "2026-08-11",
     "y": "2026",
     "t": "Palomar Spectroscopic Survey of Nearby Galaxies",
@@ -50,6 +180,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, ggfx, tidytuesdayR"
   },
   {
+    "k": "karamanis:2026/2026-week_32",
+    "m": "karamanis",
+    "d": "2026-08-04",
+    "y": "2026",
+    "t": "Basotho Wool",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_32/plots/basotho_wool.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_32",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_32/basotho_wool.R"
+  },
+  {
+    "k": "2026-08-04-nrennie",
+    "m": "nrennie",
     "d": "2026-08-04",
     "y": "2026",
     "t": "Basotho Wool",
@@ -60,6 +204,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, ggimage, tidytuesdayR, here, scales"
   },
   {
+    "k": "karamanis:2026/2026-week_31",
+    "m": "karamanis",
+    "d": "2026-07-28",
+    "y": "2026",
+    "t": "Ecotourism",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_31/plots/ecotourism.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_31",
+    "l": "R",
+    "p": "tidyverse, sf, patchwork, camcorder, here, readr, ggrepel",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_31/ecotourism.R"
+  },
+  {
+    "k": "2026-07-28-nrennie",
+    "m": "nrennie",
     "d": "2026-07-28",
     "y": "2026",
     "t": "Ecotourism",
@@ -70,6 +228,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, rnaturalearth, sf, tidytuesdayR, stringr, ecotourism, scales"
   },
   {
+    "k": "karamanis:2026/2026-week_30",
+    "m": "karamanis",
+    "d": "2026-07-21",
+    "y": "2026",
+    "t": "Near-Death Experiences",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_30/plots/nde_experiences.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_30",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, here, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_30/nde_experiences.R"
+  },
+  {
+    "k": "2026-07-21-nrennie",
+    "m": "nrennie",
     "d": "2026-07-21",
     "y": "2026",
     "t": "Near-Death Experiences",
@@ -80,6 +252,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, tidytuesdayR"
   },
   {
+    "k": "karamanis:2026/2026-week_29",
+    "m": "karamanis",
+    "d": "2026-07-14",
+    "y": "2026",
+    "t": "Many Penguins",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_29/plots/many_penguins.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_29",
+    "l": "R",
+    "p": "tidyverse, ggridges, camcorder, readr, janitor, wesanderson, colorspace, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_29/many_penguins.R"
+  },
+  {
+    "k": "2026-07-14-nrennie",
+    "m": "nrennie",
     "d": "2026-07-14",
     "y": "2026",
     "t": "Many Penguins",
@@ -90,6 +276,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, geofacet, rcartocolor, tidytuesdayR, stringr"
   },
   {
+    "k": "karamanis:2026/2026-week_28",
+    "m": "karamanis",
+    "d": "2026-07-07",
+    "y": "2026",
+    "t": "UFC Athletes and Fights",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_28/plots/ufc.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_28",
+    "l": "R",
+    "p": "tidyverse, marquee, camcorder, readr, colorspace, scales, ggforce",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_28/ufc.R"
+  },
+  {
+    "k": "2026-07-07-nrennie",
+    "m": "nrennie",
     "d": "2026-07-07",
     "y": "2026",
     "t": "UFC Athletes and Fights",
@@ -100,6 +300,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "D3"
   },
   {
+    "k": "karamanis:2026/2026-week_27",
+    "m": "karamanis",
+    "d": "2026-06-30",
+    "y": "2026",
+    "t": "Wreck Inventory of Ireland",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_27/plots/wreck_inventory.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_27",
+    "l": "R",
+    "p": "tidyverse, sf, camcorder, readr, rnaturalearth, marmap, terra, tidyterra, ggpattern, ggforce, ggrepel",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_27/wreck_inventory.R"
+  },
+  {
+    "k": "2026-06-30-nrennie",
+    "m": "nrennie",
     "d": "2026-06-30",
     "y": "2026",
     "t": "Wreck Inventory of Ireland",
@@ -110,6 +324,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, ggfx, tidytuesdayR"
   },
   {
+    "k": "karamanis:2026/2026-week_26",
+    "m": "karamanis",
+    "d": "2026-06-23",
+    "y": "2026",
+    "t": "Papal Encyclicals",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_26/plots/encyclicals.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_26",
+    "l": "R",
+    "p": "tidyverse, tidytext, lofifonts, camcorder, readr, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_26/encyclicals.R"
+  },
+  {
+    "k": "2026-06-23-nrennie",
+    "m": "nrennie",
     "d": "2026-06-23",
     "y": "2026",
     "t": "Papal Encyclicals",
@@ -120,6 +348,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, ggh4x, tidytuesdayR"
   },
   {
+    "k": "karamanis:2026/2026-week_25",
+    "m": "karamanis",
+    "d": "2026-06-16",
+    "y": "2026",
+    "t": "UK Baby Names",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_25/plots/uk_baby_names.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_25",
+    "l": "R",
+    "p": "tidyverse, camcorder, marquee, readr, shadowtext",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_25/uk_baby_names.R"
+  },
+  {
+    "k": "2026-06-16-nrennie",
+    "m": "nrennie",
     "d": "2026-06-16",
     "y": "2026",
     "t": "UK Baby Names",
@@ -130,6 +372,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, tidytuesdayR, tidyr, dplyr, scales"
   },
   {
+    "k": "karamanis:2026/2026-week_24",
+    "m": "karamanis",
+    "d": "2026-06-09",
+    "y": "2026",
+    "t": "Films Based on Video Games",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_24/plots/game_films.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_24",
+    "l": "R",
+    "p": "tidyverse, htmltools, timeline.horizontal, event, here, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_24/game_films.qmd"
+  },
+  {
+    "k": "2026-06-09-nrennie",
+    "m": "nrennie",
     "d": "2026-06-09",
     "y": "2026",
     "t": "Films Based on Video Games",
@@ -140,6 +396,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "pandas, plotnine, matplotlib, matplotlib, os, highlight_text, re, numpy, ninejs"
   },
   {
+    "k": "karamanis:2026/2026-week_23",
+    "m": "karamanis",
+    "d": "2026-06-02",
+    "y": "2026",
+    "t": "European Parenting Leave Policies",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_23/plots/eplp.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_23",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, countrycode, ggpattern, marquee",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_23/eplp.R"
+  },
+  {
+    "k": "2026-06-02-nrennie",
+    "m": "nrennie",
     "d": "2026-06-02",
     "y": "2026",
     "t": "European Parenting Leave Policies",
@@ -150,6 +420,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "pandas, numpy, country_converter, plotnine, highlight_text, os, matplotlib, matplotlib"
   },
   {
+    "k": "karamanis:2026/2026-week_22",
+    "m": "karamanis",
+    "d": "2026-05-26",
+    "y": "2026",
+    "t": "Sustainable Energy for All",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_22/plots/se4all.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_22",
+    "l": "R",
+    "p": "tidyverse, countrycode, geofacet, camcorder, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_22/se4all.R"
+  },
+  {
+    "k": "2026-05-26-nrennie",
+    "m": "nrennie",
     "d": "2026-05-26",
     "y": "2026",
     "t": "Sustainable Energy for All",
@@ -160,6 +444,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, ggforce, ggiraph, tidytuesdayR"
   },
   {
+    "k": "karamanis:2026/2026-week_21",
+    "m": "karamanis",
+    "d": "2026-05-19",
+    "y": "2026",
+    "t": "State of Crossref Metadata",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_21/plots/crossref.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_21",
+    "l": "R",
+    "p": "tidyverse, gt, countrycode, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_21/crossref.R"
+  },
+  {
+    "k": "2026-05-19-nrennie",
+    "m": "nrennie",
     "d": "2026-05-19",
     "y": "2026",
     "t": "State of Crossref Metadata",
@@ -170,6 +468,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, rvest, ggh4x, tidytuesdayR, scales"
   },
   {
+    "k": "karamanis:2026/2026-week_20",
+    "m": "karamanis",
+    "d": "2026-05-12",
+    "y": "2026",
+    "t": "Twinned Cities",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_20/plots/twinned_cities_scrolly_1.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_20",
+    "l": "R",
+    "p": "tidyverse, geosphere, topojson, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_20/twinned_cities_scrolly.qmd"
+  },
+  {
+    "k": "2026-05-12-nrennie",
+    "m": "nrennie",
     "d": "2026-05-12",
     "y": "2026",
     "t": "Twinned Cities",
@@ -180,6 +492,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, glue, tidytuesdayR, purrr"
   },
   {
+    "k": "karamanis:2026/2026-week_19",
+    "m": "karamanis",
+    "d": "2026-05-05",
+    "y": "2026",
+    "t": "Italian industrial production",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_19/plots/italian_industrial.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_19",
+    "l": "R",
+    "p": "tidyverse, rvest, camcorder, readr, janitor, ggrepel, scales, marquee",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_19/italian_industrial.R"
+  },
+  {
+    "k": "2026-05-05-nrennie",
+    "m": "nrennie",
     "d": "2026-05-05",
     "y": "2026",
     "t": "Italian industrial production",
@@ -190,6 +516,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, tidytuesdayR, scales"
   },
   {
+    "k": "karamanis:2026/2026-week_18",
+    "m": "karamanis",
+    "d": "2026-04-28",
+    "y": "2026",
+    "t": "US Agricultural Tariffs",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_18/plots/tariff_agricultural.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_18",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_18/tariff_agricultural.R"
+  },
+  {
+    "k": "2026-04-28-nrennie",
+    "m": "nrennie",
     "d": "2026-04-28",
     "y": "2026",
     "t": "US Agricultural Tariffs",
@@ -200,6 +540,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, tidytuesdayR"
   },
   {
+    "k": "karamanis:2026/2026-week_17",
+    "m": "karamanis",
+    "d": "2026-04-21",
+    "y": "2026",
+    "t": "Global Health Spending",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_17/plots/health_spending.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_17",
+    "l": "R",
+    "p": "tidyverse, patchwork, camcorder, readr, ISOcodes, gghighlight, colorspace",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_17/health_spending.R"
+  },
+  {
+    "k": "2026-04-21-nrennie",
+    "m": "nrennie",
     "d": "2026-04-21",
     "y": "2026",
     "t": "Global Health Spending",
@@ -210,6 +564,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, geofacet, MetBrewer, ggiraph, tidytuesdayR"
   },
   {
+    "k": "karamanis:2026/2026-week_16",
+    "m": "karamanis",
+    "d": "2026-04-14",
+    "y": "2026",
+    "t": "Bird Sightings at Sea",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_16/plots/bird_sightings.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_16",
+    "l": "R",
+    "p": "tidyverse, sf, marquee, camcorder, readr, rnaturalearth, scales, ggpointdensity, MetBrewer, ggh4x",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_16/bird_sightings.R"
+  },
+  {
+    "k": "2026-04-14-nrennie",
+    "m": "nrennie",
     "d": "2026-04-14",
     "y": "2026",
     "t": "Bird Sightings at Sea",
@@ -220,6 +588,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, ggiraph, cowplot, grid, tidytuesdayR"
   },
   {
+    "k": "karamanis:2026/2026-week_15",
+    "m": "karamanis",
+    "d": "2026-04-07",
+    "y": "2026",
+    "t": "Repair Cafes Worldwide",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_15/plots/repairs.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_15",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, gghighlight, marquee",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_15/repairs.R"
+  },
+  {
+    "k": "2026-04-07-nrennie",
+    "m": "nrennie",
     "d": "2026-04-07",
     "y": "2026",
     "t": "Repair Cafes Worldwide",
@@ -230,6 +612,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, emojifont, tidytuesdayR"
   },
   {
+    "k": "karamanis:2026/2026-week_14",
+    "m": "karamanis",
+    "d": "2026-03-31",
+    "y": "2026",
+    "t": "Coastal Ocean Temperature by Depth",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_14/plots/ocean_temperature.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_14",
+    "l": "R",
+    "p": "tidyverse, patchwork, camcorder, readr, rcartocolor",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_14/ocean_temperature.R"
+  },
+  {
+    "k": "2026-03-31-nrennie",
+    "m": "nrennie",
     "d": "2026-03-31",
     "y": "2026",
     "t": "Coastal Ocean Temperature by Depth",
@@ -240,6 +636,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, ggimage, MetBrewer, tidytuesdayR"
   },
   {
+    "k": "karamanis:2026/2026-week_13",
+    "m": "karamanis",
+    "d": "2026-03-24",
+    "y": "2026",
+    "t": "One Million Digits of Pi",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_13/plots/pi_digits.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_13",
+    "l": "R",
+    "p": "tidyverse, scales, camcorder, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_13/pi_digits.R"
+  },
+  {
+    "k": "2026-03-24-nrennie",
+    "m": "nrennie",
     "d": "2026-03-24",
     "y": "2026",
     "t": "One Million Digits of Pi",
@@ -250,6 +660,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, magick, tidytuesdayR"
   },
   {
+    "k": "karamanis:2026/2026-week_12",
+    "m": "karamanis",
+    "d": "2026-03-17",
+    "y": "2026",
+    "t": "Salmonid Mortality Data",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_12/plots/salmonid.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_12",
+    "l": "R",
+    "p": "tidyverse, rnaturalearth, sf, marquee, camcorder, readr, shadowtext, scales, ggrepel, ggpp, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_12/salmonid.R"
+  },
+  {
+    "k": "2026-03-17-nrennie",
+    "m": "nrennie",
     "d": "2026-03-17",
     "y": "2026",
     "t": "Salmonid Mortality Data",
@@ -260,6 +684,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, ggh4x, cowplot, grid, tidytuesdayR"
   },
   {
+    "k": "karamanis:2026/2026-week_11",
+    "m": "karamanis",
+    "d": "2026-03-10",
+    "y": "2026",
+    "t": "How likely is 'likely'?",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_11/plots/likely.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_11",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, marquee",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_11/likely.R"
+  },
+  {
+    "k": "2026-03-10-nrennie",
+    "m": "nrennie",
     "d": "2026-03-10",
     "y": "2026",
     "t": "How likely is 'likely'?",
@@ -270,6 +708,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, tidytuesdayR"
   },
   {
+    "k": "karamanis:2026/2026-week_10",
+    "m": "karamanis",
+    "d": "2026-03-03",
+    "y": "2026",
+    "t": "Golem Grad Tortoise Data",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_10/plots/tortoise.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_10",
+    "l": "R",
+    "p": "tidyverse, ggforce, camcorder, readr, MetBrewer, marquee",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_10/tortoise.R"
+  },
+  {
+    "k": "2026-03-03-nrennie",
+    "m": "nrennie",
     "d": "2026-03-03",
     "y": "2026",
     "t": "Golem Grad Tortoise Data",
@@ -280,6 +732,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "pandas, plotnine, matplotlib, highlight_text, os, textwrap"
   },
   {
+    "k": "karamanis:2026/2026-week_09",
+    "m": "karamanis",
+    "d": "2026-02-24",
+    "y": "2026",
+    "t": "Science Foundation Ireland Grants Commitments",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_09/plots/sfi_grants.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_09",
+    "l": "R",
+    "p": "tidyverse, tidytext, ggfittext, scales, camcorder, readr, marquee",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_09/sfi_grants.R"
+  },
+  {
+    "k": "2026-02-24-nrennie",
+    "m": "nrennie",
     "d": "2026-02-24",
     "y": "2026",
     "t": "Science Foundation Ireland Grants Commitments",
@@ -290,6 +756,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, tidytuesdayR"
   },
   {
+    "k": "karamanis:2026/2026-week_08",
+    "m": "karamanis",
+    "d": "2026-02-17",
+    "y": "2026",
+    "t": "Agricultural Production Statistics in New Zealand",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_08/plots/agri_nz.gif",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_08",
+    "l": "R",
+    "p": "tidyverse, gganimate, scales, ggh4x, camcorder, readr, gt, systemfonts, ggforce, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_08/agri_nz.R"
+  },
+  {
+    "k": "2026-02-17-nrennie",
+    "m": "nrennie",
     "d": "2026-02-17",
     "y": "2026",
     "t": "Agricultural Production Statistics in New Zealand",
@@ -300,6 +780,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, tidytuesdayR"
   },
   {
+    "k": "karamanis:2026/2026-week_07",
+    "m": "karamanis",
+    "d": "2026-02-10",
+    "y": "2026",
+    "t": "2026 Winter Olympics",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_07/plots/olympics_schedule.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_07",
+    "l": "R",
+    "p": "tidyverse, sf, elevatr, tidyterra, ggrepel, marquee, patchwork, camcorder, readr, eurostat",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_07/olympics_schedule.R"
+  },
+  {
+    "k": "2026-02-10-nrennie",
+    "m": "nrennie",
     "d": "2026-02-10",
     "y": "2026",
     "t": "2026 Winter Olympics",
@@ -310,6 +804,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, ggview, PrettyCols, tidytuesdayR"
   },
   {
+    "k": "karamanis:2026/2026-week_06",
+    "m": "karamanis",
+    "d": "2026-02-03",
+    "y": "2026",
+    "t": "Edible Plants Database",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_06/plots/edible_plants.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_06",
+    "l": "R",
+    "p": "tidyverse, bdftools, camcorder, readr, MetBrewer, rcartocolor, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_06/edible_plants.R"
+  },
+  {
+    "k": "2026-02-03-nrennie",
+    "m": "nrennie",
     "d": "2026-02-03",
     "y": "2026",
     "t": "Edible Plants Database",
@@ -320,6 +828,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, grid, patchwork, scales, tidytuesdayR"
   },
   {
+    "k": "karamanis:2026/2026-week_05",
+    "m": "karamanis",
+    "d": "2026-01-27",
+    "y": "2026",
+    "t": "Brazilian Companies",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_05/plots/brazilian_companies.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_05",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, MetBrewer, shadowtext, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_05/brazilian_companies.R"
+  },
+  {
+    "k": "2026-01-27-nrennie",
+    "m": "nrennie",
     "d": "2026-01-27",
     "y": "2026",
     "t": "Brazilian Companies",
@@ -330,6 +852,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, ggview, scales, ggridges, tidytuesdayR"
   },
   {
+    "k": "karamanis:2026/2026-week_04",
+    "m": "karamanis",
+    "d": "2026-01-20",
+    "y": "2026",
+    "t": "Astronomy Picture of the Day Archive",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_04/plots/apod.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_04",
+    "l": "R",
+    "p": "tidyverse, tidytext, SnowballC, ggraph, tidygraph, ggstar, camcorder, readr, ggrepel",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_04/apod.R"
+  },
+  {
+    "k": "2026-01-20-nrennie",
+    "m": "nrennie",
     "d": "2026-01-20",
     "y": "2026",
     "t": "Astronomy Picture of the Day Archive",
@@ -340,6 +876,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, treemapify, tidytuesdayR, readr"
   },
   {
+    "k": "karamanis:2026/2026-week_03",
+    "m": "karamanis",
+    "d": "2026-01-13",
+    "y": "2026",
+    "t": "The Languages of Africa",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_03/plots/africa_languages.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_03",
+    "l": "R",
+    "p": "tidyverse, treemapify, geofacet, RColorBrewer, patchwork, marquee, camcorder, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_03/africa_languages.R"
+  },
+  {
+    "k": "2026-01-13-nrennie",
+    "m": "nrennie",
     "d": "2026-01-13",
     "y": "2026",
     "t": "The Languages of Africa",
@@ -350,6 +900,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, rnaturalearth, tidytuesdayR"
   },
   {
+    "k": "karamanis:2026/2026-week_02",
+    "m": "karamanis",
+    "d": "2026-01-06",
+    "y": "2026",
+    "t": "2025 in data visualisation",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_02/plots/bond_drinks.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_02",
+    "l": "R",
+    "p": "tidyverse, waffle, camcorder, httr2, rvest",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_02/bond_drinks.R"
+  },
+  {
+    "k": "2026-01-06-nrennie",
+    "m": "nrennie",
     "d": "2026-01-06",
     "y": "2026",
     "t": "2025 in data visualisation",
@@ -360,6 +924,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, lubridate, scales, gh, janitor, magrittr"
   },
   {
+    "k": "karamanis:2026/2026-week_01",
+    "m": "karamanis",
+    "d": "2025-12-30",
+    "y": "2025",
+    "t": "Christmas Novels",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_01/plots/christmas_novels.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2026/2026-week_01",
+    "l": "R",
+    "p": "tidyverse, ggpage, patchwork, camcorder, readr, stringr, ggtext",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2026/2026-week_01/christmas_novels.R"
+  },
+  {
+    "k": "2025-12-30-nrennie",
+    "m": "nrennie",
     "d": "2025-12-30",
     "y": "2025",
     "t": "Christmas Novels",
@@ -370,6 +948,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, scales, ggforce, geomtextpath, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_52",
+    "m": "karamanis",
+    "d": "2025-12-23",
+    "y": "2025",
+    "t": "The Languages of the World",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_52/plots/world_languages.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_52",
+    "l": "R",
+    "p": "tidyverse, sf, patchwork, camcorder, readr, rnaturalearthhires, sfhotspot, MetBrewer, scales, colorspace",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_52/world_languages.R"
+  },
+  {
+    "k": "2025-12-23-nrennie",
+    "m": "nrennie",
     "d": "2025-12-23",
     "y": "2025",
     "t": "The Languages of the World",
@@ -380,6 +972,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggalluvial, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_51",
+    "m": "karamanis",
+    "d": "2025-12-16",
+    "y": "2025",
+    "t": "Roundabouts across the world",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_51/plots/roundabouts.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_51",
+    "l": "R",
+    "p": "tidyverse, sf, crosstalk, leaflet, reactable, camcorder, readr, htmltools",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_51/deprecated/roundabouts-deprecated.R"
+  },
+  {
+    "k": "2025-12-16-nrennie",
+    "m": "nrennie",
     "d": "2025-12-16",
     "y": "2025",
     "t": "Roundabouts across the world",
@@ -390,6 +996,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, osmdata, sf, ggfx, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_50",
+    "m": "karamanis",
+    "d": "2025-12-09",
+    "y": "2025",
+    "t": "Cars in Qatar",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_50/plots/qatarcars.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_50",
+    "l": "R",
+    "p": "tidyverse, reactable, htmltools, readr, knitr, reactablefmtr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_50/qatarcars.R"
+  },
+  {
+    "k": "2025-12-09-nrennie",
+    "m": "nrennie",
     "d": "2025-12-09",
     "y": "2025",
     "t": "Cars in Qatar",
@@ -400,6 +1020,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, ggdist, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_49",
+    "m": "karamanis",
+    "d": "2025-12-02",
+    "y": "2025",
+    "t": "Can an exploding snowman predict the summer season?",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_49/plots/sechselaeuten.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_49",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, MetBrewer, geomtextpath, ggforce, scales, ggnewscale",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_49/sechselaeuten.R"
+  },
+  {
+    "k": "2025-12-02-nrennie",
+    "m": "nrennie",
     "d": "2025-12-02",
     "y": "2025",
     "t": "Can an exploding snowman predict the summer season?",
@@ -410,6 +1044,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggfx, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_48",
+    "m": "karamanis",
+    "d": "2025-11-25",
+    "y": "2025",
+    "t": "Statistical Performance Indicators",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_48/plots/spi_indicators.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_48",
+    "l": "R",
+    "p": "tidyverse, patchwork, camcorder, readr, geomtextpath, gghighlight",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_48/spi_indicators.R"
+  },
+  {
+    "k": "2025-11-25-nrennie",
+    "m": "nrennie",
     "d": "2025-11-25",
     "y": "2025",
     "t": "Statistical Performance Indicators",
@@ -420,6 +1068,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_47",
+    "m": "karamanis",
+    "d": "2025-11-18",
+    "y": "2025",
+    "t": "The Complete Sherlock Holmes",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_47/plots/holmes.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_47",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_47/holmes.R"
+  },
+  {
+    "k": "2025-11-18-nrennie",
+    "m": "nrennie",
     "d": "2025-11-18",
     "y": "2025",
     "t": "The Complete Sherlock Holmes",
@@ -430,6 +1092,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, tidytext, rcartocolor, readr"
   },
   {
+    "k": "karamanis:2025/2025-week_46",
+    "m": "karamanis",
+    "d": "2025-11-11",
+    "y": "2025",
+    "t": "WHO TB Burden Data",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_46/plots/who_tb_data.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_46",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, ggrepel",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_46/who_tb_data.R"
+  },
+  {
+    "k": "2025-11-11-nrennie",
+    "m": "nrennie",
     "d": "2025-11-11",
     "y": "2025",
     "t": "WHO TB Burden Data",
@@ -440,6 +1116,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggh4x, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_45",
+    "m": "karamanis",
+    "d": "2025-11-04",
+    "y": "2025",
+    "t": "Lead concentration in Flint water samples",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_45/plots/flint.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_45",
+    "l": "R",
+    "p": "tidyverse, ggdist, camcorder, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_45/flint.R"
+  },
+  {
+    "k": "2025-11-04-nrennie",
+    "m": "nrennie",
     "d": "2025-11-04",
     "y": "2025",
     "t": "Lead concentration in Flint water samples",
@@ -450,6 +1140,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggdist, cowplot, grid, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_44",
+    "m": "karamanis",
+    "d": "2025-10-28",
+    "y": "2025",
+    "t": "Selected British Literary Prizes (1990-2022)",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_44/plots/prizes.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_44",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_44/prizes.R"
+  },
+  {
+    "k": "2025-10-28-nrennie",
+    "m": "nrennie",
     "d": "2025-10-28",
     "y": "2025",
     "t": "Selected British Literary Prizes (1990-2022)",
@@ -460,6 +1164,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_43",
+    "m": "karamanis",
+    "d": "2025-10-21",
+    "y": "2025",
+    "t": "Historic UK Meteorological & Climate Data",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_43/plots/historic_met.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_43",
+    "l": "R",
+    "p": "tidyverse, flexfont, camcorder, readr, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_43/historic_met.R"
+  },
+  {
+    "k": "2025-10-21-nrennie",
+    "m": "nrennie",
     "d": "2025-10-21",
     "y": "2025",
     "t": "Historic UK Meteorological & Climate Data",
@@ -470,6 +1188,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, cowplot, grid, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_42",
+    "m": "karamanis",
+    "d": "2025-10-14",
+    "y": "2025",
+    "t": "World Food Day",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_42/plots/food_security.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_42",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, MetBrewer, ggrepel, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_42/food_security.R"
+  },
+  {
+    "k": "2025-10-14-nrennie",
+    "m": "nrennie",
     "d": "2025-10-14",
     "y": "2025",
     "t": "World Food Day",
@@ -480,6 +1212,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, countrycode, WeightedTreemaps, ggforce, ggimage, tidytuesdayR, sf, rcartocolor"
   },
   {
+    "k": "karamanis:2025/2025-week_41",
+    "m": "karamanis",
+    "d": "2025-10-07",
+    "y": "2025",
+    "t": "EuroLeague Basketball",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_41/plots/euroleague_basketball.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_41",
+    "l": "R",
+    "p": "tidyverse, rvest, legendry, ggtext, camcorder, readr, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_41/euroleague_basketball.R"
+  },
+  {
+    "k": "2025-10-07-nrennie",
+    "m": "nrennie",
     "d": "2025-10-07",
     "y": "2025",
     "t": "EuroLeague Basketball",
@@ -490,6 +1236,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggnewscale, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_40",
+    "m": "karamanis",
+    "d": "2025-09-30",
+    "y": "2025",
+    "t": "Crane Observations at Lake Hornborgasjön",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_40/plots/cranes.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_40",
+    "l": "R",
+    "p": "tidyverse, sf, patchwork, camcorder, readr, MetBrewer, scales, here, rnaturalearthdata, dplyr, marquee, shadowtext",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_40/cranes.R"
+  },
+  {
+    "k": "2025-09-30-nrennie",
+    "m": "nrennie",
     "d": "2025-09-30",
     "y": "2025",
     "t": "Crane Observations at Lake Hornborgasjön",
@@ -500,6 +1260,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_39",
+    "m": "karamanis",
+    "d": "2025-09-23",
+    "y": "2025",
+    "t": "FIDE Chess Player Ratings",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_39/plots/fide_ratings.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_39",
+    "l": "R",
+    "p": "tidyverse, ggimage, camcorder, here, readr, tibble, scales, ggforce",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_39/fide_ratings.R"
+  },
+  {
+    "k": "2025-09-23-nrennie",
+    "m": "nrennie",
     "d": "2025-09-23",
     "y": "2025",
     "t": "FIDE Chess Player Ratings",
@@ -510,6 +1284,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, cowplot, grid, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_38",
+    "m": "karamanis",
+    "d": "2025-09-16",
+    "y": "2025",
+    "t": "Allrecipes",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_38/plots/allrecipes.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_38",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, MetBrewer, devtools, ggrepel",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_38/allrecipes.R"
+  },
+  {
+    "k": "2025-09-16-nrennie",
+    "m": "nrennie",
     "d": "2025-09-16",
     "y": "2025",
     "t": "Allrecipes",
@@ -520,6 +1308,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggtern, tidytuesdayR, PrettyCols"
   },
   {
+    "k": "karamanis:2025/2025-week_37",
+    "m": "karamanis",
+    "d": "2025-09-09",
+    "y": "2025",
+    "t": "Henley Passport Index",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_37/plots/passport_index.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_37",
+    "l": "R",
+    "p": "tidyverse, gghighlight, camcorder, readr, ggrepel",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_37/passport_index.R"
+  },
+  {
+    "k": "2025-09-09-nrennie",
+    "m": "nrennie",
     "d": "2025-09-09",
     "y": "2025",
     "t": "Henley Passport Index",
@@ -530,6 +1332,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggbump, rcartocolor, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_36",
+    "m": "karamanis",
+    "d": "2025-09-02",
+    "y": "2025",
+    "t": "Australian Frogs",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_36/plots/australian_frogs.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_36",
+    "l": "R",
+    "p": "tidyverse, sf, camcorder, here, readr, rnaturalearth, MetBrewer, ggrepel, scales, marquee",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_36/australian_frogs.R"
+  },
+  {
+    "k": "2025-09-02-nrennie",
+    "m": "nrennie",
     "d": "2025-09-02",
     "y": "2025",
     "t": "Australian Frogs",
@@ -540,6 +1356,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, PrettyCols, ggiraph, ggimage, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_35",
+    "m": "karamanis",
+    "d": "2025-08-26",
+    "y": "2025",
+    "t": "Billboard Hot 100 Number Ones",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_35/plots/billboard_2025.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_35",
+    "l": "R",
+    "p": "tidyverse, ggside, patchwork, camcorder, readr, MetBrewer, marquee, ggrepel",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_35/billboard_2025.R"
+  },
+  {
+    "k": "2025-08-26-nrennie",
+    "m": "nrennie",
     "d": "2025-08-26",
     "y": "2025",
     "t": "Billboard Hot 100 Number Ones",
@@ -550,6 +1380,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggh4x, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_34",
+    "m": "karamanis",
+    "d": "2025-08-19",
+    "y": "2025",
+    "t": "Scottish Munros",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_34/plots/scottish_munros.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_34",
+    "l": "R",
+    "p": "tidyverse, sf, camcorder, patchwork, readr, grid, ggrepel, ggpattern, scales, marquee",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_34/scottish_munros.R"
+  },
+  {
+    "k": "2025-08-19-nrennie",
+    "m": "nrennie",
     "d": "2025-08-19",
     "y": "2025",
     "t": "Scottish Munros",
@@ -560,6 +1404,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggpattern, tidytuesdayR, scales"
   },
   {
+    "k": "karamanis:2025/2025-week_33",
+    "m": "karamanis",
+    "d": "2025-08-12",
+    "y": "2025",
+    "t": "Extreme Weather Attribution Studies",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_33/plots/attribution_studies.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_33",
+    "l": "R",
+    "p": "shiny, leaflet, leafpop, DT, sf, shinyjs, dplyr, purrr, tidyr, readr, ggplot2, ggcirclepack, card, hover, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_33/app.R"
+  },
+  {
+    "k": "2025-08-12-nrennie",
+    "m": "nrennie",
     "d": "2025-08-12",
     "y": "2025",
     "t": "Extreme Weather Attribution Studies",
@@ -570,6 +1428,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_32",
+    "m": "karamanis",
+    "d": "2025-08-05",
+    "y": "2025",
+    "t": "Income Inequality Before and After Taxes",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_32/plots/income_inequality.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_32",
+    "l": "R",
+    "p": "tidyverse, marquee, ggforce, camcorder, readr, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_32/income_inequality.R"
+  },
+  {
+    "k": "2025-08-05-nrennie",
+    "m": "nrennie",
     "d": "2025-08-05",
     "y": "2025",
     "t": "Income Inequality Before and After Taxes",
@@ -580,6 +1452,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_31",
+    "m": "karamanis",
+    "d": "2025-07-29",
+    "y": "2025",
+    "t": "What have we been watching on Netflix?",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_31/plots/netflix_2025-1.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_31",
+    "l": "R",
+    "p": "tidyverse, shadowtext, patchwork, camcorder, readr, png, here, scales, janitor",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_31/netflix_2025.R"
+  },
+  {
+    "k": "2025-07-29-nrennie",
+    "m": "nrennie",
     "d": "2025-07-29",
     "y": "2025",
     "t": "What have we been watching on Netflix?",
@@ -590,6 +1476,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, imager, ggpattern, elementalist, tools, tidytuesdayR, grid"
   },
   {
+    "k": "karamanis:2025/2025-week_30",
+    "m": "karamanis",
+    "d": "2025-07-22",
+    "y": "2025",
+    "t": "MTA Permanent Art Catalog",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_30/plots/mta_art.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_30",
+    "l": "R",
+    "p": "shiny, leaflet, tidyverse, sf, htmltools, janitor, content",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_30/mta_art_shiny_app.R"
+  },
+  {
+    "k": "2025-07-22-nrennie",
+    "m": "nrennie",
     "d": "2025-07-22",
     "y": "2025",
     "t": "MTA Permanent Art Catalog",
@@ -600,6 +1500,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggiraph, tidytext, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_29",
+    "m": "karamanis",
+    "d": "2025-07-15",
+    "y": "2025",
+    "t": "British Library Funding",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_29/plots/bl-funding.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_29",
+    "l": "R",
+    "p": "tidyverse, ggfx, marquee, ggforce, camcorder, readr, ggh4x",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_29/bl-funding.R"
+  },
+  {
+    "k": "2025-07-15-nrennie",
+    "m": "nrennie",
     "d": "2025-07-15",
     "y": "2025",
     "t": "British Library Funding",
@@ -610,6 +1524,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, PrettyCols, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_28",
+    "m": "karamanis",
+    "d": "2025-07-08",
+    "y": "2025",
+    "t": "The xkcd Color Survey Results",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_28/plots/xkcd-colors.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_28",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, colorspace, ggrepel",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_28/xkcd-colors.R"
+  },
+  {
+    "k": "2025-07-08-nrennie",
+    "m": "nrennie",
     "d": "2025-07-08",
     "y": "2025",
     "t": "The xkcd Color Survey Results",
@@ -620,6 +1548,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtext, nrBrand, glue, tidytuesdayR, sysfonts"
   },
   {
+    "k": "karamanis:2025/2025-week_27",
+    "m": "karamanis",
+    "d": "2025-07-01",
+    "y": "2025",
+    "t": "Weekly US Gas Prices",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_27/plots/gas_prices.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_27",
+    "l": "R",
+    "p": "tidyverse, legendry, camcorder, readr, MetBrewer, scales, ggh4x",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_27/gas_prices.R"
+  },
+  {
+    "k": "2025-07-01-nrennie",
+    "m": "nrennie",
     "d": "2025-07-01",
     "y": "2025",
     "t": "Weekly US Gas Prices",
@@ -630,6 +1572,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggHoriPlot, PrettyCols, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_26",
+    "m": "karamanis",
+    "d": "2025-06-24",
+    "y": "2025",
+    "t": "Measles cases across the world",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_26/plots/measles-2025.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_26",
+    "l": "R",
+    "p": "tidyverse, ggHoriPlot, patchwork, camcorder, readr, MetBrewer, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_26/measles-2025.R"
+  },
+  {
+    "k": "2025-06-24-nrennie",
+    "m": "nrennie",
     "d": "2025-06-24",
     "y": "2025",
     "t": "Measles cases across the world",
@@ -640,6 +1596,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, tidytuesdayR, readxl"
   },
   {
+    "k": "karamanis:2025/2025-week_25",
+    "m": "karamanis",
+    "d": "2025-06-17",
+    "y": "2025",
+    "t": "API Specs",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_25/plots/apis.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_25",
+    "l": "R",
+    "p": "tidyverse, marquee, camcorder, readr, ggrepel",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_25/apis.R"
+  },
+  {
+    "k": "2025-06-17-nrennie",
+    "m": "nrennie",
     "d": "2025-06-17",
     "y": "2025",
     "t": "API Specs",
@@ -650,6 +1620,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, treemapify, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_24",
+    "m": "karamanis",
+    "d": "2025-06-10",
+    "y": "2025",
+    "t": "U.S. Judges",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_24/plots/judges_1.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_24",
+    "l": "R",
+    "p": "tidyverse, camcorder, here, janitor",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_24/judges.R"
+  },
+  {
+    "k": "2025-06-10-nrennie",
+    "m": "nrennie",
     "d": "2025-06-10",
     "y": "2025",
     "t": "U.S. Judges",
@@ -660,6 +1644,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "D3"
   },
   {
+    "k": "karamanis:2025/2025-week_23",
+    "m": "karamanis",
+    "d": "2025-06-03",
+    "y": "2025",
+    "t": "Project Gutenberg",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_23/plots/gutenberg_1.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_23",
+    "l": "R",
+    "p": "tidyverse, eulerr, camcorder, readr, ggforce, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_23/gutenberg.R"
+  },
+  {
+    "k": "2025-06-03-nrennie",
+    "m": "nrennie",
     "d": "2025-06-03",
     "y": "2025",
     "t": "Project Gutenberg",
@@ -670,6 +1668,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "D3"
   },
   {
+    "k": "karamanis:2025/2025-week_22",
+    "m": "karamanis",
+    "d": "2025-05-27",
+    "y": "2025",
+    "t": "Dungeons and Dragons Monsters",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_22/plots/monsters.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_22",
+    "l": "R",
+    "p": "shiny, tidyverse, fmsb, bslib, janitor",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_22/shiny-monsters/app.R"
+  },
+  {
+    "k": "2025-05-27-nrennie",
+    "m": "nrennie",
     "d": "2025-05-27",
     "y": "2025",
     "t": "Dungeons and Dragons Monsters",
@@ -680,16 +1692,44 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, tidytuesdayR, plyr, scales, ggplot2, grid"
   },
   {
+    "k": "karamanis:2025/2025-week_21",
+    "m": "karamanis",
+    "d": "2025-05-20",
+    "y": "2025",
+    "t": "Water Quality at Sydney Beaches",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_21/plots/water_quality.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_21",
+    "l": "R",
+    "p": "tidyverse, sf, camcorder, readr, rnaturalearth, here, scales, ggrepel",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_21/water_quality.R"
+  },
+  {
+    "k": "2025-05-20-nrennie",
+    "m": "nrennie",
     "d": "2025-05-20",
     "y": "2025",
     "t": "Water Quality at Sydney Beaches",
     "i": "https://raw.githubusercontent.com/nrennie/tidytuesday/main/2025/2025-05-20/20250520.png",
-    "c": "https://raw.githubusercontent.com/nrennie/tidytuesday/main/2025/2025-05-20/+page.svelte",
+    "c": "https://raw.githubusercontent.com/nrennie/tidytuesday/main/2025/2025-05-20/%2Bpage.svelte",
     "g": "https://github.com/nrennie/tidytuesday/tree/main/2025/2025-05-20",
     "l": "Svelte",
     "p": "SveltePlot"
   },
   {
+    "k": "karamanis:2025/2025-week_20",
+    "m": "karamanis",
+    "d": "2025-05-13",
+    "y": "2025",
+    "t": "Seismic Events at Mount Vesuvius",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_20/plots/vesuvius.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_20",
+    "l": "R",
+    "p": "tidyverse, elevatr, ggpointdensity, marmap, patchwork, camcorder, readr, terra, scales, shadowtext, MetBrewer, rnaturalearth",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_20/vesuvius.R"
+  },
+  {
+    "k": "2025-05-13-nrennie",
+    "m": "nrennie",
     "d": "2025-05-13",
     "y": "2025",
     "t": "Seismic Events at Mount Vesuvius",
@@ -700,6 +1740,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_19",
+    "m": "karamanis",
+    "d": "2025-05-06",
+    "y": "2025",
+    "t": "National Science Foundation Grant Terminations under the Trump Administration",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_19/plots/nsf_terminations.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_19",
+    "l": "R",
+    "p": "tidyverse, sf, patchwork, camcorder, readr, janitor, stringi, usdot, tidycensus, here, shadowtext, glue, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_19/nsf_terminations.R"
+  },
+  {
+    "k": "2025-05-06-nrennie",
+    "m": "nrennie",
     "d": "2025-05-06",
     "y": "2025",
     "t": "National Science Foundation Grant Terminations under the Trump Administration",
@@ -710,6 +1764,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_18",
+    "m": "karamanis",
+    "d": "2025-04-29",
+    "y": "2025",
+    "t": "useR! 2025 program",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_18/plots/user2025.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_18",
+    "l": "R",
+    "p": "tidyverse, scales, camcorder, readr, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_18/user2025.R"
+  },
+  {
+    "k": "2025-04-29-nrennie",
+    "m": "nrennie",
     "d": "2025-04-29",
     "y": "2025",
     "t": "useR! 2025 program",
@@ -720,6 +1788,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggalluvial, ggimage, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_17",
+    "m": "karamanis",
+    "d": "2025-04-22",
+    "y": "2025",
+    "t": "Fatal Car Crashes on 4/20",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_17/plots/daily_accidents.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_17",
+    "l": "R",
+    "p": "tidyverse, slider, camcorder, readr, ggpointdensity, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_17/daily_accidents.R"
+  },
+  {
+    "k": "2025-04-22-nrennie",
+    "m": "nrennie",
     "d": "2025-04-22",
     "y": "2025",
     "t": "Fatal Car Crashes on 4/20",
@@ -730,6 +1812,32 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_15",
+    "m": "karamanis",
+    "d": "2025-04-15",
+    "y": "2025",
+    "t": "Base R Penguins",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_15/plots/care_state.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_15",
+    "l": "R",
+    "p": "tidyverse, geofacet, legendry, camcorder, readr, colorspace",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_15/care_state.R"
+  },
+  {
+    "k": "karamanis:2025/2025-week_16",
+    "m": "karamanis",
+    "d": "2025-04-15",
+    "y": "2025",
+    "t": "Base R Penguins",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_16/plots/penguins_base_R.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_16",
+    "l": "R",
+    "p": "tidyverse, ggforce, camcorder, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_16/penguins_base_R.R"
+  },
+  {
+    "k": "2025-04-15-nrennie",
+    "m": "nrennie",
     "d": "2025-04-15",
     "y": "2025",
     "t": "Base R Penguins",
@@ -740,6 +1848,8 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggdist"
   },
   {
+    "k": "2025-04-08-nrennie",
+    "m": "nrennie",
     "d": "2025-04-08",
     "y": "2025",
     "t": "Timely and Effective Care by US State",
@@ -750,6 +1860,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, geofacet, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_14",
+    "m": "karamanis",
+    "d": "2025-04-01",
+    "y": "2025",
+    "t": "Pokemon",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_14/plots/pokemon.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_14",
+    "l": "R",
+    "p": "tidyverse, ggridges, camcorder, readr, colorspace, marquee",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_14/pokemon.R"
+  },
+  {
+    "k": "2025-04-01-nrennie",
+    "m": "nrennie",
     "d": "2025-04-01",
     "y": "2025",
     "t": "Pokemon",
@@ -760,6 +1884,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggstream, ggimage, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_13",
+    "m": "karamanis",
+    "d": "2025-03-25",
+    "y": "2025",
+    "t": "Amazon's Annual Reports",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_13/plots/amazon_reports.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_13",
+    "l": "R",
+    "p": "tidyverse, geomtextpath, camcorder, readr, ggsankey, colorspace, ggrepel",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_13/amazon_reports.R"
+  },
+  {
+    "k": "2025-03-25-nrennie",
+    "m": "nrennie",
     "d": "2025-03-25",
     "y": "2025",
     "t": "Amazon's Annual Reports",
@@ -770,6 +1908,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, geomtextpath, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_12",
+    "m": "karamanis",
+    "d": "2025-03-18",
+    "y": "2025",
+    "t": "Palm Trees",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_12/plots/palmtrees.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_12",
+    "l": "R",
+    "p": "tidyverse, ggtext, camcorder, readr, geomtextpath, shadowtext",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_12/palmtrees.R"
+  },
+  {
+    "k": "2025-03-18-nrennie",
+    "m": "nrennie",
     "d": "2025-03-18",
     "y": "2025",
     "t": "Palm Trees",
@@ -780,6 +1932,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, treemapify, ggh4x, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_11",
+    "m": "karamanis",
+    "d": "2025-03-11",
+    "y": "2025",
+    "t": "Pixar Films",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_11/plots/pixar_films.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_11",
+    "l": "R",
+    "p": "tidyverse, ggtext, ggimage, camcorder, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_11/pixar_films.R"
+  },
+  {
+    "k": "2025-03-11-nrennie",
+    "m": "nrennie",
     "d": "2025-03-11",
     "y": "2025",
     "t": "Pixar Films",
@@ -790,6 +1956,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "pandas, plotnine, matplotlib, PyDyTuesday, os, highlight_text, pyfonts"
   },
   {
+    "k": "karamanis:2025/2025-week_10",
+    "m": "karamanis",
+    "d": "2025-03-04",
+    "y": "2025",
+    "t": "Long Beach Animal Shelter",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_10/plots/longbeach.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_10",
+    "l": "R",
+    "p": "tidyverse, sf, ggrepel, tigris, patchwork, camcorder, readr, rmapshaper",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_10/longbeach.R"
+  },
+  {
+    "k": "2025-03-04-nrennie",
+    "m": "nrennie",
     "d": "2025-03-04",
     "y": "2025",
     "t": "Long Beach Animal Shelter",
@@ -800,6 +1980,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, tsibble, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_09",
+    "m": "karamanis",
+    "d": "2025-02-25",
+    "y": "2025",
+    "t": "Academic Literature on Racial and Ethnic Disparities in Reproductive Medicine in the US",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_09/plots/reproductive_disparities.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_09",
+    "l": "R",
+    "p": "tidyverse, ggpattern, camcorder, readr, colorspace, shadowtext",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_09/reproductive_disparities.R"
+  },
+  {
+    "k": "2025-02-25-nrennie",
+    "m": "nrennie",
     "d": "2025-02-25",
     "y": "2025",
     "t": "Academic Literature on Racial and Ethnic Disparities in Reproductive Medicine in the US",
@@ -810,6 +2004,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, rcartocolor, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_08",
+    "m": "karamanis",
+    "d": "2025-02-18",
+    "y": "2025",
+    "t": "FBI Crime Data",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_08/plots/agencies.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_08",
+    "l": "R",
+    "p": "tidyverse, sf, spatstat, camcorder, patchwork, readr, glue, scales, rnaturalearth, stars, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_08/agencies.R"
+  },
+  {
+    "k": "2025-02-18-nrennie",
+    "m": "nrennie",
     "d": "2025-02-18",
     "y": "2025",
     "t": "FBI Crime Data",
@@ -820,6 +2028,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, geofacet, tidytuesdayR, purrr"
   },
   {
+    "k": "karamanis:2025/2025-week_07",
+    "m": "karamanis",
+    "d": "2025-02-11",
+    "y": "2025",
+    "t": "CDC Datasets",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_07/plots/cdc_datasets.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_07",
+    "l": "R",
+    "p": "tidyverse, treemapify, camcorder, readr, MetBrewer, colorspace",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_07/cdc_datasets.R"
+  },
+  {
+    "k": "2025-02-11-nrennie",
+    "m": "nrennie",
     "d": "2025-02-11",
     "y": "2025",
     "t": "CDC Datasets",
@@ -830,6 +2052,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, sf, rcartocolor, VoronoiPlus, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_06",
+    "m": "karamanis",
+    "d": "2025-02-04",
+    "y": "2025",
+    "t": "Donuts, Data, and D'oh",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_06/plots/simpsons_2025.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_06",
+    "l": "R",
+    "p": "tidyverse, ggrepel, camcorder, readr, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_06/simpsons_2025.R"
+  },
+  {
+    "k": "2025-02-04-nrennie",
+    "m": "nrennie",
     "d": "2025-02-04",
     "y": "2025",
     "t": "Donuts, Data, and D'oh",
@@ -840,6 +2076,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, patchwork, showtext, camcorder, ggtext, nrBrand, glue, waffle, tidytuesdayR, dplyr, stringr, ggpattern"
   },
   {
+    "k": "karamanis:2025/2025-week_05",
+    "m": "karamanis",
+    "d": "2025-01-28",
+    "y": "2025",
+    "t": "Water Insecurity",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_05/plots/water_insecurity.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_05",
+    "l": "R",
+    "p": "tidyverse, ggridges, camcorder, readr, janitor, scales, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_05/water_insecurity.R"
+  },
+  {
+    "k": "2025-01-28-nrennie",
+    "m": "nrennie",
     "d": "2025-01-28",
     "y": "2025",
     "t": "Water Insecurity",
@@ -850,6 +2100,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, PrettyCols, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_04",
+    "m": "karamanis",
+    "d": "2025-01-21",
+    "y": "2025",
+    "t": "Himalayan Mountaineering Expeditions",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_04/plots/himalayan-2025.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_04",
+    "l": "R",
+    "p": "tidyverse, patchwork, ggtext, camcorder, janitor",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_04/himalayan-2025.R"
+  },
+  {
+    "k": "2025-01-21-nrennie",
+    "m": "nrennie",
     "d": "2025-01-21",
     "y": "2025",
     "t": "Himalayan Mountaineering Expeditions",
@@ -860,6 +2124,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggpattern, rcartocolor, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_03",
+    "m": "karamanis",
+    "d": "2025-01-14",
+    "y": "2025",
+    "t": "posit::conf talks",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_03/plots/posit_conf.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_03",
+    "l": "R",
+    "p": "tidyverse, patchwork, camcorder, readr, MetBrewer, posit",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_03/posit_conf.R"
+  },
+  {
+    "k": "2025-01-14-nrennie",
+    "m": "nrennie",
     "d": "2025-01-14",
     "y": "2025",
     "t": "posit::conf talks",
@@ -870,6 +2148,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggimage, tidytuesdayR"
   },
   {
+    "k": "karamanis:2025/2025-week_02",
+    "m": "karamanis",
+    "d": "2025-01-07",
+    "y": "2025",
+    "t": "Talks and Workshops 2024",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_02/plots/byod-eurobarometer.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_02",
+    "l": "R",
+    "p": "tidyverse, camcorder, rio, here, countrycode, shadowtext, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_02/byod-eurobarometer.R"
+  },
+  {
+    "k": "2025-01-07-nrennie",
+    "m": "nrennie",
     "d": "2025-01-07",
     "y": "2025",
     "t": "Talks and Workshops 2024",
@@ -880,6 +2172,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, cowplot, grid, readr, PrettyCols"
   },
   {
+    "k": "karamanis:2025/2025-week_01",
+    "m": "karamanis",
+    "d": "2024-12-31",
+    "y": "2024",
+    "t": "James Beard Awards",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_01/plots/beard_awards.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2025/2025-week_01",
+    "l": "R",
+    "p": "tidyverse, camcorder, here, shadowtext, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2025/2025-week_01/beard_awards.R"
+  },
+  {
+    "k": "2024-12-31-nrennie",
+    "m": "nrennie",
     "d": "2024-12-31",
     "y": "2024",
     "t": "James Beard Awards",
@@ -890,6 +2196,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, PrettyCols, shadowtext, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_52",
+    "m": "karamanis",
+    "d": "2024-12-24",
+    "y": "2024",
+    "t": "Global Holidays and Travel",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_52/plots/holidays_travel.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_52",
+    "l": "R",
+    "p": "tidyverse, colorspace, legendry, ggtext, camcorder, readr, janitor, countrycode",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_52/holidays_travel.R"
+  },
+  {
+    "k": "2024-12-24-nrennie",
+    "m": "nrennie",
     "d": "2024-12-24",
     "y": "2024",
     "t": "Global Holidays and Travel",
@@ -900,6 +2220,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, countrycode, lemon, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_51",
+    "m": "karamanis",
+    "d": "2024-12-17",
+    "y": "2024",
+    "t": "Dungeons and Dragons Spells (2024)",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_51/plots/spells.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_51",
+    "l": "R",
+    "p": "tidyverse, ggcirclepack, camcorder, readr, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_51/spells.R"
+  },
+  {
+    "k": "2024-12-17-nrennie",
+    "m": "nrennie",
     "d": "2024-12-17",
     "y": "2024",
     "t": "Dungeons and Dragons Spells (2024)",
@@ -910,6 +2244,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggalluvial, ggimage, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_50",
+    "m": "karamanis",
+    "d": "2024-12-10",
+    "y": "2024",
+    "t": "The Scent of Data: Parfumo Fragrances",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_50/plots/parfumo.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_50",
+    "l": "R",
+    "p": "tidyverse, widyr, camcorder, readr, janitor, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_50/parfumo.R"
+  },
+  {
+    "k": "2024-12-10-nrennie",
+    "m": "nrennie",
     "d": "2024-12-10",
     "y": "2024",
     "t": "The Scent of Data: Parfumo Fragrances",
@@ -920,6 +2268,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, packcircles, PrettyCols, ggforce, ggimage, shadowtext, tidytuesdayR, usefunc"
   },
   {
+    "k": "karamanis:2024/2024-week_49",
+    "m": "karamanis",
+    "d": "2024-12-03",
+    "y": "2024",
+    "t": "National Highways Traffic Flow",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_49/plots/traffic.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_49",
+    "l": "R",
+    "p": "tidyverse, camcorder, lubridate, readr, janitor, geomtextpath",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_49/traffic.R"
+  },
+  {
+    "k": "2024-12-03-nrennie",
+    "m": "nrennie",
     "d": "2024-12-03",
     "y": "2024",
     "t": "National Highways Traffic Flow",
@@ -930,6 +2292,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, hms, tidytuesdayR, lubridate, stringr"
   },
   {
+    "k": "karamanis:2024/2024-week_48",
+    "m": "karamanis",
+    "d": "2024-11-26",
+    "y": "2024",
+    "t": "U.S. Customs and Border Protection (CBP) Encounters",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_48/plots/cbp.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_48",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, usmap, MetBrewer, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_48/cbp.R"
+  },
+  {
+    "k": "2024-11-26-nrennie",
+    "m": "nrennie",
     "d": "2024-11-26",
     "y": "2024",
     "t": "U.S. Customs and Border Protection (CBP) Encounters",
@@ -940,6 +2316,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, geofacet, tidytuesdayR, PrettyCols"
   },
   {
+    "k": "karamanis:2024/2024-week_47",
+    "m": "karamanis",
+    "d": "2024-11-19",
+    "y": "2024",
+    "t": "Bob's Burgers Episodes",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_47/plots/bobs_burgers.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_47",
+    "l": "R",
+    "p": "tidyverse, ggforce, camcorder, readr, glue, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_47/bobs_burgers.R"
+  },
+  {
+    "k": "2024-11-19-nrennie",
+    "m": "nrennie",
     "d": "2024-11-19",
     "y": "2024",
     "t": "Bob's Burgers Episodes",
@@ -950,6 +2340,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, camcorder, ggtext, glue, emoji, cowplot, systemfonts, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_46",
+    "m": "karamanis",
+    "d": "2024-11-12",
+    "y": "2024",
+    "t": "ISO Country Codes",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_46/plots/iso_codes.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_46",
+    "l": "R",
+    "p": "tidyverse, sf, camcorder, here, readr, rnaturalearth, janitor, MetBrewer, ggmagnify",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_46/iso_codes.R"
+  },
+  {
+    "k": "2024-11-12-nrennie",
+    "m": "nrennie",
     "d": "2024-11-12",
     "y": "2024",
     "t": "ISO Country Codes",
@@ -960,6 +2364,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, tidytuesdayR, PrettyCols, grDevices"
   },
   {
+    "k": "karamanis:2024/2024-week_45",
+    "m": "karamanis",
+    "d": "2024-11-05",
+    "y": "2024",
+    "t": "Democracy and Dictatorship",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_45/plots/democracy.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_45",
+    "l": "R",
+    "p": "tidyverse, ggtext, camcorder, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_45/democracy.R"
+  },
+  {
+    "k": "2024-11-05-nrennie",
+    "m": "nrennie",
     "d": "2024-11-05",
     "y": "2024",
     "t": "Democracy and Dictatorship",
@@ -970,6 +2388,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, geofacet, glue, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_44",
+    "m": "karamanis",
+    "d": "2024-10-29",
+    "y": "2024",
+    "t": "Monster Movies",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_44/plots/monster_movies.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_44",
+    "l": "R",
+    "p": "tidyverse, tidytext, ggwordcloud, camcorder, readr, magick, here, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_44/monster_movies.R"
+  },
+  {
+    "k": "2024-10-29-nrennie",
+    "m": "nrennie",
     "d": "2024-10-29",
     "y": "2024",
     "t": "Monster Movies",
@@ -980,6 +2412,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggfx, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_43",
+    "m": "karamanis",
+    "d": "2024-10-22",
+    "y": "2024",
+    "t": "The CIA World Factbook",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_43/plots/cia_factbook.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_43",
+    "l": "R",
+    "p": "tidyverse, countrycode, camcorder, here, ggrepel",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_43/cia_factbook.R"
+  },
+  {
+    "k": "2024-10-22-nrennie",
+    "m": "nrennie",
     "d": "2024-10-22",
     "y": "2024",
     "t": "The CIA World Factbook",
@@ -990,6 +2436,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, geofacet, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_42",
+    "m": "karamanis",
+    "d": "2024-10-15",
+    "y": "2024",
+    "t": "Southern Resident Killer Whale Encounters",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_42/plots/orcas.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_42",
+    "l": "R",
+    "p": "tidyverse, sf, geosphere, ggpmisc, shadowtext, patchwork, camcorder, readr, rgeoboundaries, rmapshaper, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_42/orcas.R"
+  },
+  {
+    "k": "2024-10-15-nrennie",
+    "m": "nrennie",
     "d": "2024-10-15",
     "y": "2024",
     "t": "Southern Resident Killer Whale Encounters",
@@ -1000,6 +2460,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_41",
+    "m": "karamanis",
+    "d": "2024-10-08",
+    "y": "2024",
+    "t": "National Park Species",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_41/plots/most_visited_nps_species.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_41",
+    "l": "R",
+    "p": "tidyverse, sf, maps, gt, patchwork, geomtextpath, shadowtext, camcorder, readr, janitor, scales, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_41/most_visited_nps_species.R"
+  },
+  {
+    "k": "2024-10-08-nrennie",
+    "m": "nrennie",
     "d": "2024-10-08",
     "y": "2024",
     "t": "National Park Species",
@@ -1010,6 +2484,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggragged, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_40",
+    "m": "karamanis",
+    "d": "2024-10-01",
+    "y": "2024",
+    "t": "Chess Games",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_40/plots/chess.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_40",
+    "l": "R",
+    "p": "tidyverse, ggsankey, camcorder, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_40/chess.R"
+  },
+  {
+    "k": "2024-10-01-nrennie",
+    "m": "nrennie",
     "d": "2024-10-01",
     "y": "2024",
     "t": "Chess Games",
@@ -1020,6 +2508,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, gghalves, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_39",
+    "m": "karamanis",
+    "d": "2024-09-24",
+    "y": "2024",
+    "t": "International Mathematical Olympiad",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_39/plots/math_olympiad.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_39",
+    "l": "R",
+    "p": "tidyverse, camcorder, ggrepel, ggtext, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_39/math_olympiad.R"
+  },
+  {
+    "k": "2024-09-24-nrennie",
+    "m": "nrennie",
     "d": "2024-09-24",
     "y": "2024",
     "t": "International Mathematical Olympiad",
@@ -1030,6 +2532,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggsankey, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_38",
+    "m": "karamanis",
+    "d": "2024-09-17",
+    "y": "2024",
+    "t": "Shakespeare Dialogue",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_38/plots/shakespeare.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_38",
+    "l": "R",
+    "p": "tidyverse, tidytext, zoo, ggtext, camcorder, readr, ggrepel, ggh4x",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_38/shakespeare.R"
+  },
+  {
+    "k": "2024-09-17-nrennie",
+    "m": "nrennie",
     "d": "2024-09-17",
     "y": "2024",
     "t": "Shakespeare Dialogue",
@@ -1040,6 +2556,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, tidytuesdayR, stringr, tibble, grDevices, dplyr, tidyr, purrr"
   },
   {
+    "k": "karamanis:2024/2024-week_37",
+    "m": "karamanis",
+    "d": "2024-09-10",
+    "y": "2024",
+    "t": "Economic Diversity and Student Outcomes",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_37/plots/college_admissions.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_37",
+    "l": "R",
+    "p": "tidyverse, gt, gtUtils, camcorder, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_37/college_admissions.R"
+  },
+  {
+    "k": "2024-09-10-nrennie",
+    "m": "nrennie",
     "d": "2024-09-10",
     "y": "2024",
     "t": "Economic Diversity and Student Outcomes",
@@ -1050,6 +2580,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggbeeswarm, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_36",
+    "m": "karamanis",
+    "d": "2024-09-03",
+    "y": "2024",
+    "t": "Stack Overflow Annual Developer Survey 2024",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_36/plots/stackoverflow_survey.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_36",
+    "l": "R",
+    "p": "tidyverse, ggstats, camcorder, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_36/stackoverflow_survey.R"
+  },
+  {
+    "k": "2024-09-03-nrennie",
+    "m": "nrennie",
     "d": "2024-09-03",
     "y": "2024",
     "t": "Stack Overflow Annual Developer Survey 2024",
@@ -1060,6 +2604,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggalluvial, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_35",
+    "m": "karamanis",
+    "d": "2024-08-27",
+    "y": "2024",
+    "t": "The Power Rangers Franchise",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_35/plots/power_rangers.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_35",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, janitor, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_35/power_rangers.R"
+  },
+  {
+    "k": "2024-08-27-nrennie",
+    "m": "nrennie",
     "d": "2024-08-27",
     "y": "2024",
     "t": "The Power Rangers Franchise",
@@ -1070,6 +2628,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggHoriPlot, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_34",
+    "m": "karamanis",
+    "d": "2024-08-20",
+    "y": "2024",
+    "t": "English Monarchs and Marriages",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_34/plots/english_monarchs_marriages.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_34",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, MetBrewer, shadowtext",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_34/english_monarchs_marriages.R"
+  },
+  {
+    "k": "2024-08-20-nrennie",
+    "m": "nrennie",
     "d": "2024-08-20",
     "y": "2024",
     "t": "English Monarchs and Marriages",
@@ -1080,6 +2652,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, tidytuesdayR, tibble"
   },
   {
+    "k": "karamanis:2024/2024-week_33",
+    "m": "karamanis",
+    "d": "2024-08-13",
+    "y": "2024",
+    "t": "World's Fairs",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_33/plots/worlds_fairs_scrollcapture.gif",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_33",
+    "l": "R",
+    "p": "",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_33/worlds_fairs_closeread.qmd"
+  },
+  {
+    "k": "2024-08-13-nrennie",
+    "m": "nrennie",
     "d": "2024-08-13",
     "y": "2024",
     "t": "World's Fairs",
@@ -1090,6 +2676,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, lubridate, spiralize, ggimage, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_32",
+    "m": "karamanis",
+    "d": "2024-08-06",
+    "y": "2024",
+    "t": "Olympics Athletes and Medals",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_32/plots/olympics-tt.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_32",
+    "l": "R",
+    "p": "tidyverse, ggcirclepack, camcorder, readr, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_32/olympics-tt.R"
+  },
+  {
+    "k": "2024-08-06-nrennie",
+    "m": "nrennie",
     "d": "2024-08-06",
     "y": "2024",
     "t": "Olympics Athletes and Medals",
@@ -1100,6 +2700,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggsankey, countrycode, readr, tibble"
   },
   {
+    "k": "karamanis:2024/2024-week_31",
+    "m": "karamanis",
+    "d": "2024-07-30",
+    "y": "2024",
+    "t": "Summer Movies",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_31/plots/summer_movies.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_31",
+    "l": "R",
+    "p": "tidyverse, ggsankey, camcorder, readr, shadowtext",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_31/summer_movies.R"
+  },
+  {
+    "k": "2024-07-30-nrennie",
+    "m": "nrennie",
     "d": "2024-07-30",
     "y": "2024",
     "t": "Summer Movies",
@@ -1110,6 +2724,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_30",
+    "m": "karamanis",
+    "d": "2024-07-23",
+    "y": "2024",
+    "t": "American Idol",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_30/plots/idol.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_30",
+    "l": "R",
+    "p": "tidyverse, ggcirclepack, camcorder, readr, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_30/idol.R"
+  },
+  {
+    "k": "2024-07-23-nrennie",
+    "m": "nrennie",
     "d": "2024-07-23",
     "y": "2024",
     "t": "American Idol",
@@ -1120,6 +2748,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggtextcircle, camcorder, ggtext, nrBrand, glue, ggimage, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_29",
+    "m": "karamanis",
+    "d": "2024-07-16",
+    "y": "2024",
+    "t": "English Women's Football",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_29/plots/ewf.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_29",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, ggrepel, shadowtext",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_29/ewf.R"
+  },
+  {
+    "k": "2024-07-16-nrennie",
+    "m": "nrennie",
     "d": "2024-07-16",
     "y": "2024",
     "t": "English Women's Football",
@@ -1130,6 +2772,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "pandas, plotnine, matplotlib, matplotlib, itertools, highlight_text"
   },
   {
+    "k": "karamanis:2024/2024-week_28",
+    "m": "karamanis",
+    "d": "2024-07-09",
+    "y": "2024",
+    "t": "TidyTuesday packages with {funspotr}",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_28/plots/drob_funs.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_28",
+    "l": "R",
+    "p": "tidyverse, ggcirclepack, ggfittext, patchwork, camcorder, readr, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_28/drob_funs.R"
+  },
+  {
+    "k": "2024-07-09-nrennie",
+    "m": "nrennie",
     "d": "2024-07-09",
     "y": "2024",
     "t": "TidyTuesday packages with {funspotr}",
@@ -1140,6 +2796,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, funspotr, stringr, readr, rcartocolor, dplyr, tidyr, lubridate"
   },
   {
+    "k": "karamanis:2024/2024-week_27",
+    "m": "karamanis",
+    "d": "2024-07-02",
+    "y": "2024",
+    "t": "#TidyTuesday Datasets",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_27/plots/tt_datasets.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_27",
+    "l": "R",
+    "p": "tidyverse, ggbump, ggtext, patchwork, camcorder, readr, MetBrewer, shadowtext",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_27/tt_datasets.R"
+  },
+  {
+    "k": "2024-07-02-nrennie",
+    "m": "nrennie",
     "d": "2024-07-02",
     "y": "2024",
     "t": "#TidyTuesday Datasets",
@@ -1150,6 +2820,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_26",
+    "m": "karamanis",
+    "d": "2024-06-25",
+    "y": "2024",
+    "t": "TidyRainbow",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_26/plots/lgbtq_movies.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_26",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, MetBrewer, colorspace, shadowtext, ggtext",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_26/lgbtq_movies.R"
+  },
+  {
+    "k": "2024-06-25-nrennie",
+    "m": "nrennie",
     "d": "2024-06-25",
     "y": "2024",
     "t": "TidyRainbow",
@@ -1160,6 +2844,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, gglgbtq, ggstream, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_25",
+    "m": "karamanis",
+    "d": "2024-06-18",
+    "y": "2024",
+    "t": "US Federal Holidays",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_25/plots/federal_holidays.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_25",
+    "l": "R",
+    "p": "tidyverse, ggcalendar, camcorder, readr, jsonlite, here, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_25/federal_holidays.R"
+  },
+  {
+    "k": "2024-06-18-nrennie",
+    "m": "nrennie",
     "d": "2024-06-18",
     "y": "2024",
     "t": "US Federal Holidays",
@@ -1170,6 +2868,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggcalendar, lubridate, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_24",
+    "m": "karamanis",
+    "d": "2024-06-11",
+    "y": "2024",
+    "t": "Campus Pride Index",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_24/plots/pride_index.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_24",
+    "l": "R",
+    "p": "tidyverse, ggcirclepack, camcorder, readr, ggrepel, ggtext",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_24/pride_index.R"
+  },
+  {
+    "k": "2024-06-11-nrennie",
+    "m": "nrennie",
     "d": "2024-06-11",
     "y": "2024",
     "t": "Campus Pride Index",
@@ -1180,6 +2892,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, sf, gglgbtq, cowplot, tidytuesdayR, sfheaders"
   },
   {
+    "k": "karamanis:2024/2024-week_23",
+    "m": "karamanis",
+    "d": "2024-06-04",
+    "y": "2024",
+    "t": "Cheese",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_23/plots/cheeses.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_23",
+    "l": "R",
+    "p": "tidyverse, ggforce, camcorder, readr, ggrepel",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_23/cheeses.R"
+  },
+  {
+    "k": "2024-06-04-nrennie",
+    "m": "nrennie",
     "d": "2024-06-04",
     "y": "2024",
     "t": "Cheese",
@@ -1190,6 +2916,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggimage, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_22",
+    "m": "karamanis",
+    "d": "2024-05-28",
+    "y": "2024",
+    "t": "Lisa's Vegetable Garden Data",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_22/plots/lisas_garden.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_22",
+    "l": "R",
+    "p": "tidyverse, tidygraph, ggraph, camcorder, readr, shadowtext",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_22/lisas_garden.R"
+  },
+  {
+    "k": "2024-05-28-nrennie",
+    "m": "nrennie",
     "d": "2024-05-28",
     "y": "2024",
     "t": "Lisa's Vegetable Garden Data",
@@ -1200,6 +2940,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_21",
+    "m": "karamanis",
+    "d": "2024-05-21",
+    "y": "2024",
+    "t": "Carbon Majors Emissions Data",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_21/plots/emissions.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_21",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, ggridges, ggtext, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_21/emissions.R"
+  },
+  {
+    "k": "2024-05-21-nrennie",
+    "m": "nrennie",
     "d": "2024-05-21",
     "y": "2024",
     "t": "Carbon Majors Emissions Data",
@@ -1210,6 +2964,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, ggstream, tidytuesdayR, rcartocolor"
   },
   {
+    "k": "karamanis:2024/2024-week_20",
+    "m": "karamanis",
+    "d": "2024-05-14",
+    "y": "2024",
+    "t": "The Great American Coffee Taste Test",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_20/plots/coffee_survey.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_20",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, MetBrewer, colorspace, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_20/coffee_survey.R"
+  },
+  {
+    "k": "2024-05-14-nrennie",
+    "m": "nrennie",
     "d": "2024-05-14",
     "y": "2024",
     "t": "The Great American Coffee Taste Test",
@@ -1220,6 +2988,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, statebins, readr, sysfonts, grid"
   },
   {
+    "k": "karamanis:2024/2024-week_19",
+    "m": "karamanis",
+    "d": "2024-05-07",
+    "y": "2024",
+    "t": "Rolling Stone Album Rankings",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_19/plots/rolling_stone.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_19",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, jsonlite, here, grid, MetBrewer, ggpath",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_19/rolling_stone.R"
+  },
+  {
+    "k": "2024-05-07-nrennie",
+    "m": "nrennie",
     "d": "2024-05-07",
     "y": "2024",
     "t": "Rolling Stone Album Rankings",
@@ -1230,6 +3012,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, ggforce, tidytuesdayR, PrettyCols"
   },
   {
+    "k": "karamanis:2024/2024-week_18",
+    "m": "karamanis",
+    "d": "2024-04-30",
+    "y": "2024",
+    "t": "Worldwide Bureaucracy Indicators",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_18/plots/wwbi.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_18",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, ggdist, ggrepel, scales, colorspace",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_18/wwbi.R"
+  },
+  {
+    "k": "2024-04-30-nrennie",
+    "m": "nrennie",
     "d": "2024-04-30",
     "y": "2024",
     "t": "Worldwide Bureaucracy Indicators",
@@ -1240,6 +3036,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, geofacet, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_17",
+    "m": "karamanis",
+    "d": "2024-04-23",
+    "y": "2024",
+    "t": "Objects Launched into Space",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_17/plots/outer_space_objects.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_17",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, janitor, scales, ggforce, ggtext",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_17/outer_space_objects.R"
+  },
+  {
+    "k": "2024-04-23-nrennie",
+    "m": "nrennie",
     "d": "2024-04-23",
     "y": "2024",
     "t": "Objects Launched into Space",
@@ -1250,6 +3060,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggforce, ggimage, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_16",
+    "m": "karamanis",
+    "d": "2024-04-16",
+    "y": "2024",
+    "t": "Shiny Packages",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_16/plots/shiny.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_16",
+    "l": "R",
+    "p": "tidyverse, treemapify, camcorder, readr, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_16/shiny.R"
+  },
+  {
+    "k": "2024-04-16-nrennie",
+    "m": "nrennie",
     "d": "2024-04-16",
     "y": "2024",
     "t": "Shiny Packages",
@@ -1260,6 +3084,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, rcartocolor, snakecase, tidytuesdayR, stringr, purrr"
   },
   {
+    "k": "karamanis:2024/2024-week_15",
+    "m": "karamanis",
+    "d": "2024-04-09",
+    "y": "2024",
+    "t": "2024 US Solar Eclipse",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_15/plots/eclipses.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_15",
+    "l": "R",
+    "p": "tidyverse, sf, camcorder, readr, tigris, maps, MetBrewer, ggrepel",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_15/eclipses.R"
+  },
+  {
+    "k": "2024-04-09-nrennie",
+    "m": "nrennie",
     "d": "2024-04-09",
     "y": "2024",
     "t": "2024 US Solar Eclipse",
@@ -1270,6 +3108,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, geofacet, cowplot, tidytuesdayR, sysfonts, rcartocolor, hms, lubridate, dplyr, scales"
   },
   {
+    "k": "karamanis:2024/2024-week_14",
+    "m": "karamanis",
+    "d": "2024-04-02",
+    "y": "2024",
+    "t": "Du Bois Challenge 2024",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_14/plots/dubois-2024.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_14",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_14/dubois-2024.R"
+  },
+  {
+    "k": "2024-04-02-nrennie",
+    "m": "nrennie",
     "d": "2024-04-02",
     "y": "2024",
     "t": "Du Bois Challenge 2024",
@@ -1280,6 +3132,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggforce, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_13",
+    "m": "karamanis",
+    "d": "2024-03-26",
+    "y": "2024",
+    "t": "NCAA Men's March Madness",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_13/plots/ncaa.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_13",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, janitor, MetBrewer, shadowtext",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_13/ncaa.R"
+  },
+  {
+    "k": "2024-03-26-nrennie",
+    "m": "nrennie",
     "d": "2024-03-26",
     "y": "2024",
     "t": "NCAA Men's March Madness",
@@ -1290,6 +3156,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, tidytuesdayR, monochromeR"
   },
   {
+    "k": "karamanis:2024/2024-week_12",
+    "m": "karamanis",
+    "d": "2024-03-19",
+    "y": "2024",
+    "t": "X-Men Mutant Moneyball",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_12/plots/mutant_moneyball.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_12",
+    "l": "R",
+    "p": "tidyverse, ggh4x, camcorder, readr, janitor, ggforestplot, scales, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_12/mutant_moneyball.R"
+  },
+  {
+    "k": "2024-03-19-nrennie",
+    "m": "nrennie",
     "d": "2024-03-19",
     "y": "2024",
     "t": "X-Men Mutant Moneyball",
@@ -1300,6 +3180,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, snakecase, ggchicklet, ggimage, cropcircles, tidytuesdayR, grid"
   },
   {
+    "k": "karamanis:2024/2024-week_11",
+    "m": "karamanis",
+    "d": "2024-03-12",
+    "y": "2024",
+    "t": "Fiscal Sponsors",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_11/plots/fiscal_sponsors.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_11",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, ggtext",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_11/fiscal_sponsors.R"
+  },
+  {
+    "k": "2024-03-12-nrennie",
+    "m": "nrennie",
     "d": "2024-03-12",
     "y": "2024",
     "t": "Fiscal Sponsors",
@@ -1310,6 +3204,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, treemapify, tidytuesdayR, rcartocolor"
   },
   {
+    "k": "karamanis:2024/2024-week_10",
+    "m": "karamanis",
+    "d": "2024-03-05",
+    "y": "2024",
+    "t": "Trash Wheel Collection Data",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_10/plots/trashwheel.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_10",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, janitor, tidyquant, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_10/trashwheel.R"
+  },
+  {
+    "k": "2024-03-05-nrennie",
+    "m": "nrennie",
     "d": "2024-03-05",
     "y": "2024",
     "t": "Trash Wheel Collection Data",
@@ -1320,6 +3228,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, waffle, tidytuesdayR, sysfonts, rcartocolor"
   },
   {
+    "k": "karamanis:2024/2024-week_09",
+    "m": "karamanis",
+    "d": "2024-02-27",
+    "y": "2024",
+    "t": "Leap Day",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_09/plots/leap_day.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_09",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, ggtext",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_09/leap_day.R"
+  },
+  {
+    "k": "2024-02-27-nrennie",
+    "m": "nrennie",
     "d": "2024-02-27",
     "y": "2024",
     "t": "Leap Day",
@@ -1330,6 +3252,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggtextcircle, tidytuesdayR, dplyr"
   },
   {
+    "k": "karamanis:2024/2024-week_08",
+    "m": "karamanis",
+    "d": "2024-02-20",
+    "y": "2024",
+    "t": "R Consortium ISC Grants",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_08/plots/isc_grants.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_08",
+    "l": "R",
+    "p": "tidyverse, treemapify, camcorder, readr, MetBrewer, colorspace, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_08/isc_grants.R"
+  },
+  {
+    "k": "2024-02-20-nrennie",
+    "m": "nrennie",
     "d": "2024-02-20",
     "y": "2024",
     "t": "R Consortium ISC Grants",
@@ -1340,6 +3276,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, sf, VoronoiPlus, tidytuesdayR, rcartocolor"
   },
   {
+    "k": "karamanis:2024/2024-week_07",
+    "m": "karamanis",
+    "d": "2024-02-13",
+    "y": "2024",
+    "t": "Valentine's Day Consumer Data",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_07/plots/valentine.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_07",
+    "l": "R",
+    "p": "tidyverse, spatstat, sf, camcorder, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_07/valentine.R"
+  },
+  {
+    "k": "2024-02-13-nrennie",
+    "m": "nrennie",
     "d": "2024-02-13",
     "y": "2024",
     "t": "Valentine's Day Consumer Data",
@@ -1350,6 +3300,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggstream, snakecase, tidytuesdayR, monochromeR"
   },
   {
+    "k": "karamanis:2024/2024-week_06",
+    "m": "karamanis",
+    "d": "2024-02-06",
+    "y": "2024",
+    "t": "A Few World Heritage Sites",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_06/plots/heritage.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_06",
+    "l": "R",
+    "p": "tidyverse, patchwork, camcorder, readr, geomtextpath, ggtrace",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_06/heritage.R"
+  },
+  {
+    "k": "2024-02-06-nrennie",
+    "m": "nrennie",
     "d": "2024-02-06",
     "y": "2024",
     "t": "A Few World Heritage Sites",
@@ -1360,6 +3324,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, geomtextpath, tidytuesdayR, sysfonts"
   },
   {
+    "k": "karamanis:2024/2024-week_05",
+    "m": "karamanis",
+    "d": "2024-01-30",
+    "y": "2024",
+    "t": "Groundhog predictions",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_05/plots/groundhogs.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_05",
+    "l": "R",
+    "p": "tidyverse, gt, gtExtras, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_05/groundhogs.R"
+  },
+  {
+    "k": "2024-01-30-nrennie",
+    "m": "nrennie",
     "d": "2024-01-30",
     "y": "2024",
     "t": "Groundhog predictions",
@@ -1370,6 +3348,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, ggimage, cropcircles, tidytuesdayR"
   },
   {
+    "k": "karamanis:2024/2024-week_04",
+    "m": "karamanis",
+    "d": "2024-01-23",
+    "y": "2024",
+    "t": "Educational attainment of young people in English towns",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_04/plots/english_education.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_04",
+    "l": "R",
+    "p": "tidyverse, ggbeeswarm, camcorder, readr, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_04/english_education.R"
+  },
+  {
+    "k": "2024-01-23-nrennie",
+    "m": "nrennie",
     "d": "2024-01-23",
     "y": "2024",
     "t": "Educational attainment of young people in English towns",
@@ -1380,6 +3372,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, tidytuesdayR, janitor"
   },
   {
+    "k": "karamanis:2024/2024-week_03",
+    "m": "karamanis",
+    "d": "2024-01-16",
+    "y": "2024",
+    "t": "US Polling Places",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_03/plots/polling_places.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_03",
+    "l": "R",
+    "p": "tidyverse, sf, camcorder, readr, colorspace",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_03/polling_places.R"
+  },
+  {
+    "k": "2024-01-16-nrennie",
+    "m": "nrennie",
     "d": "2024-01-16",
     "y": "2024",
     "t": "US Polling Places",
@@ -1390,6 +3396,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, sf, maps, tidytuesdayR, monochromeR, usefunc, statebins, grid"
   },
   {
+    "k": "karamanis:2024/2024-week_02",
+    "m": "karamanis",
+    "d": "2024-01-09",
+    "y": "2024",
+    "t": "Canadian Hockey Player Birth Months",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_02/plots/nhl_births.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2024/2024-week_02",
+    "l": "R",
+    "p": "tidyverse, waffle, ggflags, camcorder, readr, countrycode",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2024/2024-week_02/nhl_births.R"
+  },
+  {
+    "k": "2024-01-09-nrennie",
+    "m": "nrennie",
     "d": "2024-01-09",
     "y": "2024",
     "t": "Canadian Hockey Player Birth Months",
@@ -1400,6 +3420,8 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, tidytuesdayR, readr, statebins, grid"
   },
   {
+    "k": "2024-01-02-nrennie",
+    "m": "nrennie",
     "d": "2024-01-02",
     "y": "2024",
     "t": "GitHub Contributions",
@@ -1410,6 +3432,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, statebins, ggtext, nrBrand, glue, gh, magrittr, readr, grid"
   },
   {
+    "k": "karamanis:2023/2023-week_52",
+    "m": "karamanis",
+    "d": "2023-12-26",
+    "y": "2023",
+    "t": "R Package Structure",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_52/plots/rpackages.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_52",
+    "l": "R",
+    "p": "tidyverse, ggraph, tidygraph, ggtext, grid, ggpp, camcorder, readr, MetBrewer, colorspace, shadowtext",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_52/rpackages.R"
+  },
+  {
+    "k": "2023-12-26-nrennie",
+    "m": "nrennie",
     "d": "2023-12-26",
     "y": "2023",
     "t": "R Package Structure",
@@ -1420,6 +3456,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, rcartocolor, camcorder, ggtext, nrBrand, glue, tidytuesdayR, stringr, purrr"
   },
   {
+    "k": "karamanis:2023/2023-week_51",
+    "m": "karamanis",
+    "d": "2023-12-19",
+    "y": "2023",
+    "t": "Holiday Episodes",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_51/plots/holiday_episodes.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_51",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, ggpointdensity, ggrepel, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_51/holiday_episodes.R"
+  },
+  {
+    "k": "2023-12-19-nrennie",
+    "m": "nrennie",
     "d": "2023-12-19",
     "y": "2023",
     "t": "Holiday Episodes",
@@ -1430,6 +3480,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, tidytuesdayR"
   },
   {
+    "k": "karamanis:2023/2023-week_50",
+    "m": "karamanis",
+    "d": "2023-12-12",
+    "y": "2023",
+    "t": "Holiday Movies",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_50/plots/holiday_movies.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_50",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, ggstream, colorspace, ggrepel",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_50/holiday_movies.R"
+  },
+  {
+    "k": "2023-12-12-nrennie",
+    "m": "nrennie",
     "d": "2023-12-12",
     "y": "2023",
     "t": "Holiday Movies",
@@ -1440,6 +3504,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, tidytuesdayR"
   },
   {
+    "k": "karamanis:2023/2023-week_49",
+    "m": "karamanis",
+    "d": "2023-12-05",
+    "y": "2023",
+    "t": "Life Expectancy",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_49/plots/life_expectancy.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_49",
+    "l": "R",
+    "p": "tidyverse, sf, camcorder, readr, janitor, giscoR, colorspace",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_49/life_expectancy.R"
+  },
+  {
+    "k": "2023-12-05-nrennie",
+    "m": "nrennie",
     "d": "2023-12-05",
     "y": "2023",
     "t": "Life Expectancy",
@@ -1450,6 +3528,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, pals, glue, tidytuesdayR, stringr"
   },
   {
+    "k": "karamanis:2023/2023-week_48",
+    "m": "karamanis",
+    "d": "2023-11-28",
+    "y": "2023",
+    "t": "Doctor Who Episodes",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_48/plots/drwho_episodes.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_48",
+    "l": "R",
+    "p": "tidyverse, tidygraph, ggraph, ggtext, camcorder, readr, MetBrewer, shadowtext",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_48/drwho_episodes.R"
+  },
+  {
+    "k": "2023-11-28-nrennie",
+    "m": "nrennie",
     "d": "2023-11-28",
     "y": "2023",
     "t": "Doctor Who Episodes",
@@ -1460,6 +3552,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, ggalt, tidytuesdayR"
   },
   {
+    "k": "karamanis:2023/2023-week_47",
+    "m": "karamanis",
+    "d": "2023-11-21",
+    "y": "2023",
+    "t": "R-Ladies Chapter Events",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_47/plots/rladies_chapters.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_47",
+    "l": "R",
+    "p": "tidyverse, gganimate, magick, camcorder, readr, jsonlite, scales, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_47/rladies_chapters.R"
+  },
+  {
+    "k": "2023-11-21-nrennie",
+    "m": "nrennie",
     "d": "2023-11-21",
     "y": "2023",
     "t": "R-Ladies Chapter Events",
@@ -1470,6 +3576,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, tidytuesdayR, lubridate"
   },
   {
+    "k": "karamanis:2023/2023-week_46",
+    "m": "karamanis",
+    "d": "2023-11-14",
+    "y": "2023",
+    "t": "Diwali Sales Data",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_46/plots/diwali_sales.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_46",
+    "l": "R",
+    "p": "tidyverse, geofacet, camcorder, readr, janitor, colorspace, shadowtext, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_46/diwali_sales.R"
+  },
+  {
+    "k": "2023-11-14-nrennie",
+    "m": "nrennie",
     "d": "2023-11-14",
     "y": "2023",
     "t": "Diwali Sales Data",
@@ -1480,6 +3600,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, ggsankey, glue, tidytuesdayR"
   },
   {
+    "k": "karamanis:2023/2023-week_45",
+    "m": "karamanis",
+    "d": "2023-11-07",
+    "y": "2023",
+    "t": "US House Election Results",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_45/plots/house.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_45",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, sf, here, janitor, ggrepel",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_45/house.R"
+  },
+  {
+    "k": "2023-11-07-nrennie",
+    "m": "nrennie",
     "d": "2023-11-07",
     "y": "2023",
     "t": "US House Election Results",
@@ -1490,6 +3624,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, geofacet, patchwork, camcorder, ggtext, nrBrand, glue, tidytuesdayR"
   },
   {
+    "k": "karamanis:2023/2023-week_44",
+    "m": "karamanis",
+    "d": "2023-10-31",
+    "y": "2023",
+    "t": "Horror Legends",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_44/plots/horror_articles.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_44",
+    "l": "R",
+    "p": "tidyverse, udpipe, igraph, ggraph, camcorder, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_44/horror_articles.R"
+  },
+  {
+    "k": "2023-10-31-nrennie",
+    "m": "nrennie",
     "d": "2023-10-31",
     "y": "2023",
     "t": "Horror Legends",
@@ -1500,6 +3648,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, purrr, tidytext, ggstream, tidytuesdayR"
   },
   {
+    "k": "karamanis:2023/2023-week_43",
+    "m": "karamanis",
+    "d": "2023-10-24",
+    "y": "2023",
+    "t": "Patient Risk Profiles",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_43/plots/patient_risk_profiles.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_43",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_43/patient_risk_profiles.R"
+  },
+  {
+    "k": "2023-10-24-nrennie",
+    "m": "nrennie",
     "d": "2023-10-24",
     "y": "2023",
     "t": "Patient Risk Profiles",
@@ -1510,6 +3672,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, emojifont, clustMixType, tidytuesdayR, PrettyCols, stringr"
   },
   {
+    "k": "karamanis:2023/2023-week_42",
+    "m": "karamanis",
+    "d": "2023-10-17",
+    "y": "2023",
+    "t": "Taylor Swift",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_42/plots/taylor.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_42",
+    "l": "R",
+    "p": "tidyverse, ggbeeswarm, ggimage, camcorder, readr, here, ggrepel",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_42/taylor.R"
+  },
+  {
+    "k": "2023-10-17-nrennie",
+    "m": "nrennie",
     "d": "2023-10-17",
     "y": "2023",
     "t": "Taylor Swift",
@@ -1520,6 +3696,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, statebins, ggimage, tayloRswift, ggnewscale, tidytuesdayR, grid, rlang"
   },
   {
+    "k": "karamanis:2023/2023-week_41",
+    "m": "karamanis",
+    "d": "2023-10-10",
+    "y": "2023",
+    "t": "Haunted Places in the United States",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_41/plots/haunted_places.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_41",
+    "l": "R",
+    "p": "tidyverse, tidytext, geofacet, treemapify, patchwork, camcorder, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_41/haunted_places.R"
+  },
+  {
+    "k": "2023-10-10-nrennie",
+    "m": "nrennie",
     "d": "2023-10-10",
     "y": "2023",
     "t": "Haunted Places in the United States",
@@ -1530,6 +3720,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, osmdata, sf, ggfx, tidytuesdayR, creepr"
   },
   {
+    "k": "karamanis:2023/2023-week_40",
+    "m": "karamanis",
+    "d": "2023-10-03",
+    "y": "2023",
+    "t": "US Government Grant Opportunities",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_40/plots/grants.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_40",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, scales, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_40/grants.R"
+  },
+  {
+    "k": "2023-10-03-nrennie",
+    "m": "nrennie",
     "d": "2023-10-03",
     "y": "2023",
     "t": "US Government Grant Opportunities",
@@ -1540,6 +3744,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, tidytuesdayR, lubridate"
   },
   {
+    "k": "karamanis:2023/2023-week_39",
+    "m": "karamanis",
+    "d": "2023-09-26",
+    "y": "2023",
+    "t": "Roy Kent F**k Count",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_39/plots/richmondway.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_39",
+    "l": "R",
+    "p": "tidyverse, shadowtext, ggimage, cropcircles, camcorder, readr, janitor, colorspace, ggnewscale, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_39/richmondway.R"
+  },
+  {
+    "k": "2023-09-26-nrennie",
+    "m": "nrennie",
     "d": "2023-09-26",
     "y": "2023",
     "t": "Roy Kent F**k Count",
@@ -1550,6 +3768,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, ggwordcloud, tidytuesdayR"
   },
   {
+    "k": "karamanis:2023/2023-week_38",
+    "m": "karamanis",
+    "d": "2023-09-19",
+    "y": "2023",
+    "t": "CRAN Package Authors",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_38/plots/cran_authors.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_38",
+    "l": "R",
+    "p": "tidyverse, ggstream, ggrepel, ggtext, camcorder, readr, colorspace",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_38/cran_authors.R"
+  },
+  {
+    "k": "2023-09-19-nrennie",
+    "m": "nrennie",
     "d": "2023-09-19",
     "y": "2023",
     "t": "CRAN Package Authors",
@@ -1560,6 +3792,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, igraph, ggraph, glue, tidytuesdayR, lubridate"
   },
   {
+    "k": "karamanis:2023/2023-week_37",
+    "m": "karamanis",
+    "d": "2023-09-12",
+    "y": "2023",
+    "t": "The Global Human Day",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_37/plots/human_day.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_37",
+    "l": "R",
+    "p": "tidyverse, geofacet, camcorder, readr, janitor, shadowtext, viridisLite",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_37/human_day.R"
+  },
+  {
+    "k": "2023-09-12-nrennie",
+    "m": "nrennie",
     "d": "2023-09-12",
     "y": "2023",
     "t": "The Global Human Day",
@@ -1570,6 +3816,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, nrBrand, glue, rcartocolor, VoronoiPlus, tidytuesdayR"
   },
   {
+    "k": "karamanis:2023/2023-week_36",
+    "m": "karamanis",
+    "d": "2023-09-05",
+    "y": "2023",
+    "t": "Union Membership in the United States",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_36/plots/unions.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_36",
+    "l": "R",
+    "p": "tidyverse, geofacet, camcorder, readr, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_36/unions.R"
+  },
+  {
+    "k": "2023-09-05-nrennie",
+    "m": "nrennie",
     "d": "2023-09-05",
     "y": "2023",
     "t": "Union Membership in the United States",
@@ -1580,6 +3840,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, gghighlight, geofacet, nrBrand, glue, readr"
   },
   {
+    "k": "karamanis:2023/2023-week_35",
+    "m": "karamanis",
+    "d": "2023-08-29",
+    "y": "2023",
+    "t": "Fair Use",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_35/plots/fair_use.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_35",
+    "l": "R",
+    "p": "tidyverse, ggparliament, patchwork, camcorder, readr, scales, colorspace, shadowtext",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_35/fair_use.R"
+  },
+  {
+    "k": "2023-08-29-nrennie",
+    "m": "nrennie",
     "d": "2023-08-29",
     "y": "2023",
     "t": "Fair Use",
@@ -1590,6 +3864,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, emojifont, tidytuesdayR"
   },
   {
+    "k": "karamanis:2023/2023-week_34",
+    "m": "karamanis",
+    "d": "2023-08-22",
+    "y": "2023",
+    "t": "Refugees",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_34/plots/refugees.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_34",
+    "l": "R",
+    "p": "tidyverse, ggsankey, ggh4x, camcorder, readr, rnaturalearthdata, scales, colorspace, ggtext",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_34/refugees.R"
+  },
+  {
+    "k": "2023-08-22-nrennie",
+    "m": "nrennie",
     "d": "2023-08-22",
     "y": "2023",
     "t": "Refugees",
@@ -1600,6 +3888,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "stringr, tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, ggraph, tidytuesdayR"
   },
   {
+    "k": "karamanis:2023/2023-week_33",
+    "m": "karamanis",
+    "d": "2023-08-15",
+    "y": "2023",
+    "t": "Spam Emails",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_33/plots/spam.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_33",
+    "l": "R",
+    "p": "tidyverse, ggridges, patchwork, camcorder, readr, RColorBrewer, colorspace",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_33/spam.R"
+  },
+  {
+    "k": "2023-08-15-nrennie",
+    "m": "nrennie",
     "d": "2023-08-15",
     "y": "2023",
     "t": "Spam Emails",
@@ -1610,6 +3912,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "stringr, tidyverse, showtext, patchwork, camcorder, ggtext, nrBrand, glue, ggfx, tidytuesdayR"
   },
   {
+    "k": "karamanis:2023/2023-week_32",
+    "m": "karamanis",
+    "d": "2023-08-08",
+    "y": "2023",
+    "t": "Hot Ones",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_32/plots/hot_ones.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_32",
+    "l": "R",
+    "p": "tidyverse, tidytext, ggh4x, camcorder, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_32/hot_ones.R"
+  },
+  {
+    "k": "2023-08-08-nrennie",
+    "m": "nrennie",
     "d": "2023-08-08",
     "y": "2023",
     "t": "Hot Ones",
@@ -1620,6 +3936,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "stringr, tidyverse, showtext, patchwork, camcorder, ggtext, glue, readr, nrBrand"
   },
   {
+    "k": "karamanis:2023/2023-week_31",
+    "m": "karamanis",
+    "d": "2023-08-01",
+    "y": "2023",
+    "t": "US States",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_31/plots/state_names.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_31",
+    "l": "R",
+    "p": "tidyverse, cowplot, ggtext, patchwork, camcorder, readr, geosphere, rgeoboundaries, ggrepel, sf",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_31/state_names.R"
+  },
+  {
+    "k": "2023-08-01-nrennie",
+    "m": "nrennie",
     "d": "2023-08-01",
     "y": "2023",
     "t": "US States",
@@ -1630,6 +3960,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, patchwork, geofacet, camcorder, ggtext, glue, readr, lubridate, nrBrand"
   },
   {
+    "k": "karamanis:2023/2023-week_30",
+    "m": "karamanis",
+    "d": "2023-07-25",
+    "y": "2023",
+    "t": "Scurvy",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_30/plots/scurvy.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_30",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, RColorBrewer, ggtext",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_30/scurvy.R"
+  },
+  {
+    "k": "2023-07-25-nrennie",
+    "m": "nrennie",
     "d": "2023-07-25",
     "y": "2023",
     "t": "Scurvy",
@@ -1640,6 +3984,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, glue, emojifont, readr, nrBrand, stringr"
   },
   {
+    "k": "karamanis:2023/2023-week_29",
+    "m": "karamanis",
+    "d": "2023-07-18",
+    "y": "2023",
+    "t": "GPT detectors",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_29/plots/detectors.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_29",
+    "l": "R",
+    "p": "tidyverse, ggridges, camcorder, readr, janitor",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_29/detectors.R"
+  },
+  {
+    "k": "2023-07-18-nrennie",
+    "m": "nrennie",
     "d": "2023-07-18",
     "y": "2023",
     "t": "GPT detectors",
@@ -1650,6 +4008,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, glue, ggalluvial, readr"
   },
   {
+    "k": "karamanis:2023/2023-week_28",
+    "m": "karamanis",
+    "d": "2023-07-11",
+    "y": "2023",
+    "t": "Global Surface Temperatures",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_28/plots/global_temps.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_28",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, cetcolor, shadowtext, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_28/global_temps.R"
+  },
+  {
+    "k": "2023-07-11-nrennie",
+    "m": "nrennie",
     "d": "2023-07-11",
     "y": "2023",
     "t": "Global Surface Temperatures",
@@ -1660,6 +4032,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, lubridate, showtext, patchwork, camcorder, ggtext, glue, nrBrand, readr"
   },
   {
+    "k": "karamanis:2023/2023-week_27",
+    "m": "karamanis",
+    "d": "2023-07-04",
+    "y": "2023",
+    "t": "Historical Markers",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_27/plots/historical-markers.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_27",
+    "l": "R",
+    "p": "tidyverse, sf, patchwork, camcorder, readr, rgeoboundaries, rmapshaper, scales, ggpointdensity, RColorBrewer, ggtext",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_27/historical-markers.R"
+  },
+  {
+    "k": "2023-07-04-nrennie",
+    "m": "nrennie",
     "d": "2023-07-04",
     "y": "2023",
     "t": "Historical Markers",
@@ -1670,6 +4056,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, lubridate, showtext, patchwork, camcorder, emojifont, ggtext, glue, nrBrand, readr"
   },
   {
+    "k": "karamanis:2023/2023-week_26",
+    "m": "karamanis",
+    "d": "2023-06-27",
+    "y": "2023",
+    "t": "US Populated Places",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_26/plots/us_places.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_26",
+    "l": "R",
+    "p": "tidyverse, sf, glue, ggtext, camcorder, readr, here, rgeoboundaries, rnaturalearthdata, ggrepel, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_26/us_places.R"
+  },
+  {
+    "k": "2023-06-27-nrennie",
+    "m": "nrennie",
     "d": "2023-06-27",
     "y": "2023",
     "t": "US Populated Places",
@@ -1680,6 +4080,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, lubridate, showtext, camcorder, ggtext, glue, nrBrand, maps, ggspatial, readr, stringr"
   },
   {
+    "k": "karamanis:2023/2023-week_25",
+    "m": "karamanis",
+    "d": "2023-06-20",
+    "y": "2023",
+    "t": "UFO Sightings",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_25/plots/ufo-redux.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_25",
+    "l": "R",
+    "p": "tidyverse, sf, patchwork, camcorder, readr, ggpointdensity, rgeoboundaries, cetcolor, scales, scico",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_25/ufo-redux.R"
+  },
+  {
+    "k": "2023-06-20-nrennie",
+    "m": "nrennie",
     "d": "2023-06-20",
     "y": "2023",
     "t": "UFO Sightings",
@@ -1690,6 +4104,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, lubridate, showtext, camcorder, ggtext, glue, nrBrand, tsibble, rcartocolor, readr"
   },
   {
+    "k": "karamanis:2023/2023-week_24",
+    "m": "karamanis",
+    "d": "2023-06-13",
+    "y": "2023",
+    "t": "SAFI Survey",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_24/plots/safi.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_24",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, shadowtext, cetcolor",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_24/safi.R"
+  },
+  {
+    "k": "2023-06-13-nrennie",
+    "m": "nrennie",
     "d": "2023-06-13",
     "y": "2023",
     "t": "SAFI Survey",
@@ -1700,6 +4128,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, lubridate, showtext, camcorder, ggtext, glue, cowplot, magick, grid, readr, purrr, nrBrand"
   },
   {
+    "k": "karamanis:2023/2023-week_23",
+    "m": "karamanis",
+    "d": "2023-06-06",
+    "y": "2023",
+    "t": "Energy",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_23/plots/owid_energy.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_23",
+    "l": "R",
+    "p": "tidyverse, geofacet, camcorder, readr, scales, ggtext",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_23/owid_energy.R"
+  },
+  {
+    "k": "2023-06-06-nrennie",
+    "m": "nrennie",
     "d": "2023-06-06",
     "y": "2023",
     "t": "Energy",
@@ -1710,6 +4152,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, readr"
   },
   {
+    "k": "karamanis:2023/2023-week_22",
+    "m": "karamanis",
+    "d": "2023-05-30",
+    "y": "2023",
+    "t": "Verified Oldest People",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_22/plots/centenarians.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_22",
+    "l": "R",
+    "p": "tidyverse, ggbeeswarm, packcircles, ggtext, ggrepel, camcorder, readr, RColorBrewer, colorspace, glue",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_22/centenarians.R"
+  },
+  {
+    "k": "2023-05-30-nrennie",
+    "m": "nrennie",
     "d": "2023-05-30",
     "y": "2023",
     "t": "Verified Oldest People",
@@ -1720,6 +4176,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, lubridate, showtext, patchwork, camcorder, ggtext, glue, nrBrand, readr, scales"
   },
   {
+    "k": "karamanis:2023/2023-week_21",
+    "m": "karamanis",
+    "d": "2023-05-23",
+    "y": "2023",
+    "t": "Squirrel Census",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_21/plots/squirrels.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_21",
+    "l": "R",
+    "p": "tidyverse, cetcolor, patchwork, camcorder, readr, janitor, sf, here, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_21/squirrels.R"
+  },
+  {
+    "k": "2023-05-23-nrennie",
+    "m": "nrennie",
     "d": "2023-05-23",
     "y": "2023",
     "t": "Squirrel Census",
@@ -1730,6 +4200,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, lubridate, showtext, patchwork, camcorder, ggtext, glue, nrBrand, ggimage, charlatan, readr, plyr, scales, ggplot2, grid"
   },
   {
+    "k": "karamanis:2023/2023-week_20",
+    "m": "karamanis",
+    "d": "2023-05-16",
+    "y": "2023",
+    "t": "Tornados",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_20/plots/tornados.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_20",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, cetcolor, ggrepel",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_20/tornados.R"
+  },
+  {
+    "k": "2023-05-16-nrennie",
+    "m": "nrennie",
     "d": "2023-05-16",
     "y": "2023",
     "t": "Tornados",
@@ -1740,6 +4224,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, lubridate, showtext, patchwork, camcorder, ggtext, glue, nrBrand, maps, readr"
   },
   {
+    "k": "karamanis:2023/2023-week_19",
+    "m": "karamanis",
+    "d": "2023-05-09",
+    "y": "2023",
+    "t": "Childcare Costs",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_19/plots/childcare.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_19",
+    "l": "R",
+    "p": "tidyverse, sf, cetcolor, camcorder, readr, janitor, rmapshaper, urbnmapr, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_19/childcare.R"
+  },
+  {
+    "k": "2023-05-09-nrennie",
+    "m": "nrennie",
     "d": "2023-05-09",
     "y": "2023",
     "t": "Childcare Costs",
@@ -1750,6 +4248,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, lubridate, showtext, camcorder, ggtext, glue, nrBrand, ggmagnify, readr"
   },
   {
+    "k": "karamanis:2023/2023-week_18",
+    "m": "karamanis",
+    "d": "2023-05-02",
+    "y": "2023",
+    "t": "The Portal Project",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_18/plots/portal.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_18",
+    "l": "R",
+    "p": "tidyverse, geomtextpath, ggtext, camcorder, readr, MetBrewer, colorspace, glue",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_18/portal.R"
+  },
+  {
+    "k": "2023-05-02-nrennie",
+    "m": "nrennie",
     "d": "2023-05-02",
     "y": "2023",
     "t": "The Portal Project",
@@ -1760,6 +4272,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, lubridate, showtext, patchwork, camcorder, ggtext, glue, ggragged, nrBrand, readr"
   },
   {
+    "k": "karamanis:2023/2023-week_17",
+    "m": "karamanis",
+    "d": "2023-04-25",
+    "y": "2023",
+    "t": "London Marathon",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_17/plots/london-marathon.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_17",
+    "l": "R",
+    "p": "tidyverse, sf, lwgeom, camcorder, readr, here, janitor, scales, ggrepel",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_17/london-marathon.R"
+  },
+  {
+    "k": "2023-04-25-nrennie",
+    "m": "nrennie",
     "d": "2023-04-25",
     "y": "2023",
     "t": "London Marathon",
@@ -1770,6 +4296,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, lubridate, showtext, patchwork, camcorder, ggtext, glue, nrBrand, LondonMarathon, readr"
   },
   {
+    "k": "karamanis:2023/2023-week_16",
+    "m": "karamanis",
+    "d": "2023-04-18",
+    "y": "2023",
+    "t": "Neolithic Founder Crops",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_16/plots/founder_crops.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_16",
+    "l": "R",
+    "p": "tidyverse, sf, patchwork, camcorder, readr, rgeoboundaries, MetBrewer, ggpointdensity",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_16/founder_crops.R"
+  },
+  {
+    "k": "2023-04-18-nrennie",
+    "m": "nrennie",
     "d": "2023-04-18",
     "y": "2023",
     "t": "Neolithic Founder Crops",
@@ -1780,6 +4320,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, lubridate, showtext, patchwork, camcorder, ggtext, glue, nrBrand, sf, rnaturalearth, rnaturalearthdata, gghighlight, readr"
   },
   {
+    "k": "karamanis:2023/2023-week_15",
+    "m": "karamanis",
+    "d": "2023-04-11",
+    "y": "2023",
+    "t": "US Egg Production",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_15/plots/eggs.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_15",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, shadowtext, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_15/eggs.R"
+  },
+  {
+    "k": "2023-04-11-nrennie",
+    "m": "nrennie",
     "d": "2023-04-11",
     "y": "2023",
     "t": "US Egg Production",
@@ -1790,6 +4344,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, lubridate, showtext, camcorder, ggtext, glue, nrBrand, sf, readr, lwgeom"
   },
   {
+    "k": "karamanis:2023/2023-week_14",
+    "m": "karamanis",
+    "d": "2023-04-04",
+    "y": "2023",
+    "t": "Premier League",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_14/plots/soccer.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_14",
+    "l": "R",
+    "p": "tidyverse, gghighlight, camcorder, readr, janitor, ggborderline, ggrepel, ggforce",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_14/soccer.R"
+  },
+  {
+    "k": "2023-04-04-nrennie",
+    "m": "nrennie",
     "d": "2023-04-04",
     "y": "2023",
     "t": "Premier League",
@@ -1800,6 +4368,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, lubridate, showtext, camcorder, ggtext, glue, nrBrand, ggforce, emojifont, sysfonts, readr"
   },
   {
+    "k": "karamanis:2023/2023-week_13",
+    "m": "karamanis",
+    "d": "2023-03-28",
+    "y": "2023",
+    "t": "Time Zones",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_13/plots/timezones.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_13",
+    "l": "R",
+    "p": "tidyverse, sf, camcorder, readr, here, rmapshaper, janitor, glue",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_13/timezones.R"
+  },
+  {
+    "k": "2023-03-28-nrennie",
+    "m": "nrennie",
     "d": "2023-03-28",
     "y": "2023",
     "t": "Time Zones",
@@ -1810,6 +4392,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, lubridate, showtext, patchwork, camcorder, ggtext, glue, nrBrand, sf, rnaturalearth, rnaturalearthdata, ggspatial, readr, grid"
   },
   {
+    "k": "karamanis:2023/2023-week_12",
+    "m": "karamanis",
+    "d": "2023-03-21",
+    "y": "2023",
+    "t": "Programming Languages",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_12/plots/languages-1.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_12",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_12/languages.R"
+  },
+  {
+    "k": "2023-03-21-nrennie",
+    "m": "nrennie",
     "d": "2023-03-21",
     "y": "2023",
     "t": "Programming Languages",
@@ -1820,6 +4416,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, lubridate, showtext, camcorder, ggtext, glue, nrBrand, readr"
   },
   {
+    "k": "karamanis:2023/2023-week_11",
+    "m": "karamanis",
+    "d": "2023-03-14",
+    "y": "2023",
+    "t": "European Drug Development",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_11/plots/drugs.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_11",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, stringr, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_11/drugs.R"
+  },
+  {
+    "k": "2023-03-14-nrennie",
+    "m": "nrennie",
     "d": "2023-03-14",
     "y": "2023",
     "t": "European Drug Development",
@@ -1830,6 +4440,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, lubridate, showtext, patchwork, camcorder, ggtext, glue, nrBrand, geomtextpath, ggforce, readr"
   },
   {
+    "k": "karamanis:2023/2023-week_10",
+    "m": "karamanis",
+    "d": "2023-03-07",
+    "y": "2023",
+    "t": "Numbats",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_10/plots/numbats.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_10",
+    "l": "R",
+    "p": "tidyverse, sf, patchwork, ggpointdensity, ggtext, camcorder, readr, sfhotspot, ggnewscale, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_10/numbats.R"
+  },
+  {
+    "k": "2023-03-07-nrennie",
+    "m": "nrennie",
     "d": "2023-03-07",
     "y": "2023",
     "t": "Numbats",
@@ -1840,6 +4464,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, lubridate, showtext, camcorder, ggtext, glue, nrBrand, readr"
   },
   {
+    "k": "karamanis:2023/2023-week_09",
+    "m": "karamanis",
+    "d": "2023-02-28",
+    "y": "2023",
+    "t": "African Language Sentiment",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_09/plots/afrisenti.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_09",
+    "l": "R",
+    "p": "tidyverse, emoji, ggtext, camcorder, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_09/afrisenti.R"
+  },
+  {
+    "k": "2023-02-28-nrennie",
+    "m": "nrennie",
     "d": "2023-02-28",
     "y": "2023",
     "t": "African Language Sentiment",
@@ -1850,6 +4488,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, glue, nrBrand, readr"
   },
   {
+    "k": "karamanis:2023/2023-week_08",
+    "m": "karamanis",
+    "d": "2023-02-21",
+    "y": "2023",
+    "t": "Bob Ross Paintings",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_08/plots/bob_ross-2023.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_08",
+    "l": "R",
+    "p": "tidyverse, patchwork, ggtext, camcorder, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_08/bob_ross-2023.R"
+  },
+  {
+    "k": "2023-02-21-nrennie",
+    "m": "nrennie",
     "d": "2023-02-21",
     "y": "2023",
     "t": "Bob Ross Paintings",
@@ -1860,6 +4512,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, glue, nrBrand, ggsankey, readr"
   },
   {
+    "k": "karamanis:2023/2023-week_07",
+    "m": "karamanis",
+    "d": "2023-02-14",
+    "y": "2023",
+    "t": "Hollywood Age Gaps",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_07/plots/age_gaps.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_07",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_07/age_gaps.R"
+  },
+  {
+    "k": "2023-02-14-nrennie",
+    "m": "nrennie",
     "d": "2023-02-14",
     "y": "2023",
     "t": "Hollywood Age Gaps",
@@ -1870,6 +4536,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, glue, patchwork, nrBrand, png"
   },
   {
+    "k": "karamanis:2023/2023-week_06",
+    "m": "karamanis",
+    "d": "2023-02-07",
+    "y": "2023",
+    "t": "Big Tech",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_06/plots/big_tech.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_06",
+    "l": "R",
+    "p": "tidyverse, bdscale, ggpath, camcorder, readr, stringi, here, MetBrewer, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_06/big_tech.R"
+  },
+  {
+    "k": "2023-02-07-nrennie",
+    "m": "nrennie",
     "d": "2023-02-07",
     "y": "2023",
     "t": "Big Tech",
@@ -1880,6 +4560,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, lubridate, ggsankey, ggtext, glue, readr"
   },
   {
+    "k": "karamanis:2023/2023-week_05",
+    "m": "karamanis",
+    "d": "2023-01-31",
+    "y": "2023",
+    "t": "Cats",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_05/plots/cats_uk.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_05",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, MetBrewer, ggforce, ggshadow",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_05/cats_uk.R"
+  },
+  {
+    "k": "2023-01-31-nrennie",
+    "m": "nrennie",
     "d": "2023-01-31",
     "y": "2023",
     "t": "Cats",
@@ -1890,6 +4584,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggtext, monochromeR, glue, readr"
   },
   {
+    "k": "karamanis:2023/2023-week_04",
+    "m": "karamanis",
+    "d": "2023-01-24",
+    "y": "2023",
+    "t": "Alone",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_04/plots/alone.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_04",
+    "l": "R",
+    "p": "tidyverse, waffle, MetBrewer, ggtext, camcorder, readr, colorspace",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_04/alone.R"
+  },
+  {
+    "k": "2023-01-24-nrennie",
+    "m": "nrennie",
     "d": "2023-01-24",
     "y": "2023",
     "t": "Alone",
@@ -1900,6 +4608,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, magick, ggimage, readr"
   },
   {
+    "k": "karamanis:2023/2023-week_03",
+    "m": "karamanis",
+    "d": "2023-01-17",
+    "y": "2023",
+    "t": "Art History",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_03/plots/arthistory.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_03",
+    "l": "R",
+    "p": "tidyverse, camcorder, readr, ggrepel, MetBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_03/arthistory.R"
+  },
+  {
+    "k": "2023-01-17-nrennie",
+    "m": "nrennie",
     "d": "2023-01-17",
     "y": "2023",
     "t": "Art History",
@@ -1910,6 +4632,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, gganimate, readr"
   },
   {
+    "k": "karamanis:2023/2023-week_02",
+    "m": "karamanis",
+    "d": "2023-01-10",
+    "y": "2023",
+    "t": "Birds",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_02/plots/feederwatch.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_02",
+    "l": "R",
+    "p": "tidyverse, sf, patchwork, ggtext, camcorder, readr, rgeoboundaries, janitor, sfhotspot, MetBrewer, ggimage, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_02/feederwatch.R"
+  },
+  {
+    "k": "2023-01-10-nrennie",
+    "m": "nrennie",
     "d": "2023-01-10",
     "y": "2023",
     "t": "Birds",
@@ -1920,6 +4656,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, sf, spatstat, raster, terra, tidyterra, maps, readr, spatstat.geom, usefunc"
   },
   {
+    "k": "karamanis:2023/2023-week_01",
+    "m": "karamanis",
+    "d": "2023-01-03",
+    "y": "2023",
+    "t": "Doctors in an Ageing Population",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_01/plots/regions.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2023/2023-week_01",
+    "l": "R",
+    "p": "tidyverse, eurostat, camcorder, janitor, sf",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2023/2023-week_01/regions_tt.R"
+  },
+  {
+    "k": "2023-01-03-nrennie",
+    "m": "nrennie",
     "d": "2023-01-03",
     "y": "2023",
     "t": "Doctors in an Ageing Population",
@@ -1930,6 +4680,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, MetBrewer, readr, usefunc"
   },
   {
+    "k": "karamanis:2022/2022-week_52",
+    "m": "karamanis",
+    "d": "2022-12-27",
+    "y": "2022",
+    "t": "Star Trek",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_52/plots/startrek.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_52",
+    "l": "R",
+    "p": "tidyverse, rtrek, trekcolors, camcorder, readr, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_52/startrek.R"
+  },
+  {
+    "k": "2022-12-27-nrennie",
+    "m": "nrennie",
     "d": "2022-12-27",
     "y": "2022",
     "t": "Star Trek",
@@ -1940,6 +4704,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, camcorder, showtext, readr"
   },
   {
+    "k": "karamanis:2022/2022-week_51",
+    "m": "karamanis",
+    "d": "2022-12-20",
+    "y": "2022",
+    "t": "Weather Forecasts",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_51/plots/weather.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_51",
+    "l": "R",
+    "p": "tidyverse, gstat, sf, marmap, ggnewscale, camcorder, readr, terra, here, rmapshaper",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_51/weather.R"
+  },
+  {
+    "k": "2022-12-20-nrennie",
+    "m": "nrennie",
     "d": "2022-12-20",
     "y": "2022",
     "t": "Weather Forecasts",
@@ -1950,6 +4728,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, camcorder, showtext, lubridate, PrettyCols, geofacet, usefunc, patchwork, readr"
   },
   {
+    "k": "karamanis:2022/2022-week_50",
+    "m": "karamanis",
+    "d": "2022-12-13",
+    "y": "2022",
+    "t": "USA Retail",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_50/plots/state_retail.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_50",
+    "l": "R",
+    "p": "tidyverse, ggrepel, camcorder, ggtext, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_50/state_retail.R"
+  },
+  {
+    "k": "2022-12-13-nrennie",
+    "m": "nrennie",
     "d": "2022-12-13",
     "y": "2022",
     "t": "USA Retail",
@@ -1960,6 +4752,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, patchwork, lubridate, readr, usefunc"
   },
   {
+    "k": "karamanis:2022/2022-week_49",
+    "m": "karamanis",
+    "d": "2022-12-06",
+    "y": "2022",
+    "t": "Elevators",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_49/plots/elevators.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_49",
+    "l": "R",
+    "p": "tidyverse, sf, patchwork, ggrepel, ggtext, camcorder, readr, janitor, here, scico",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_49/elevators.R"
+  },
+  {
+    "k": "2022-12-06-nrennie",
+    "m": "nrennie",
     "d": "2022-12-06",
     "y": "2022",
     "t": "Elevators",
@@ -1970,6 +4776,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, sf, osmdata, ggmap, rcartocolor, cowplot, readr, purrr"
   },
   {
+    "k": "karamanis:2022/2022-week_48",
+    "m": "karamanis",
+    "d": "2022-11-29",
+    "y": "2022",
+    "t": "FIFA World Cup",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_48/plots/worldcup.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_48",
+    "l": "R",
+    "p": "tidyverse, svgparser, ggforce, camcorder, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_48/worldcup.R"
+  },
+  {
+    "k": "2022-11-29-nrennie",
+    "m": "nrennie",
     "d": "2022-11-29",
     "y": "2022",
     "t": "FIFA World Cup",
@@ -1980,6 +4800,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggsankey, rcartocolor, forcats, ggtext, readr, glue"
   },
   {
+    "k": "karamanis:2022/2022-week_47",
+    "m": "karamanis",
+    "d": "2022-11-22",
+    "y": "2022",
+    "t": "UK Museums",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_47/plots/museums.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_47",
+    "l": "R",
+    "p": "tidyverse, sf, patchwork, camcorder, readr, janitor, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_47/museums.R"
+  },
+  {
+    "k": "2022-11-22-nrennie",
+    "m": "nrennie",
     "d": "2022-11-22",
     "y": "2022",
     "t": "UK Museums",
@@ -1990,6 +4824,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, viridis, usefunc, gghighlight, readr, purrr"
   },
   {
+    "k": "karamanis:2022/2022-week_46",
+    "m": "karamanis",
+    "d": "2022-11-15",
+    "y": "2022",
+    "t": "Page Metrics",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_46/plots/webpages.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_46",
+    "l": "R",
+    "p": "tidyverse, ggforce, patchwork, camcorder, readr, lubridate, colorspace",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_46/webpages.R"
+  },
+  {
+    "k": "2022-11-15-nrennie",
+    "m": "nrennie",
     "d": "2022-11-15",
     "y": "2022",
     "t": "Page Metrics",
@@ -2000,6 +4848,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, lubridate, camcorder, changepoint, readr"
   },
   {
+    "k": "karamanis:2022/2022-week_45",
+    "m": "karamanis",
+    "d": "2022-11-08",
+    "y": "2022",
+    "t": "Radio Stations",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_45/plots/state_stations.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_45",
+    "l": "R",
+    "p": "tidyverse, geofacet, ggtext, camcorder, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_45/state_stations.R"
+  },
+  {
+    "k": "2022-11-08-nrennie",
+    "m": "nrennie",
     "d": "2022-11-08",
     "y": "2022",
     "t": "Radio Stations",
@@ -2010,6 +4872,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, ggforce, geofacet, ggtext, rcartocolor, readr"
   },
   {
+    "k": "karamanis:2022/2022-week_44",
+    "m": "karamanis",
+    "d": "2022-11-01",
+    "y": "2022",
+    "t": "Horror Movies",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_44/plots/horror_movies.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_44",
+    "l": "R",
+    "p": "tidyverse, lubridate, ggfx, ggpath, camcorder, readr, ggrepel",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_44/horror_movies.R"
+  },
+  {
+    "k": "2022-11-01-nrennie",
+    "m": "nrennie",
     "d": "2022-11-01",
     "y": "2022",
     "t": "Horror Movies",
@@ -2020,6 +4896,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, lubridate, readr"
   },
   {
+    "k": "karamanis:2022/2022-week_43",
+    "m": "karamanis",
+    "d": "2022-10-25",
+    "y": "2022",
+    "t": "The Great British Bake Off",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_43/plots/bakeoff.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_43",
+    "l": "R",
+    "p": "tidyverse, ggtext, camcorder, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_43/bakeoff.R"
+  },
+  {
+    "k": "2022-10-25-nrennie",
+    "m": "nrennie",
     "d": "2022-10-25",
     "y": "2022",
     "t": "The Great British Bake Off",
@@ -2030,6 +4920,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, emojifont, camcorder, PrettyCols, cowplot, readr, usefunc, here"
   },
   {
+    "k": "karamanis:2022/2022-week_42",
+    "m": "karamanis",
+    "d": "2022-10-18",
+    "y": "2022",
+    "t": "Stranger Things",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_42/plots/stranger.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_42",
+    "l": "R",
+    "p": "tidyverse, ggtext, shadowtext, camcorder, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_42/stranger.R"
+  },
+  {
+    "k": "2022-10-18-nrennie",
+    "m": "nrennie",
     "d": "2022-10-18",
     "y": "2022",
     "t": "Stranger Things",
@@ -2040,6 +4944,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, camcorder, showtext, cowplot, readr, purrr, usefunc, here"
   },
   {
+    "k": "karamanis:2022/2022-week_41",
+    "m": "karamanis",
+    "d": "2022-10-11",
+    "y": "2022",
+    "t": "{ravelRy}",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_41/plots/yarn.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_41",
+    "l": "R",
+    "p": "tidyverse, truchet, MetBrewer, ggtext, camcorder, readr, colorspace, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_41/yarn.R"
+  },
+  {
+    "k": "2022-10-11-nrennie",
+    "m": "nrennie",
     "d": "2022-10-11",
     "y": "2022",
     "t": "{ravelRy}",
@@ -2050,6 +4968,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, camcorder, showtext, usefunc, ggimage, readr, here"
   },
   {
+    "k": "karamanis:2022/2022-week_40",
+    "m": "karamanis",
+    "d": "2022-10-04",
+    "y": "2022",
+    "t": "Product Hunt",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_40/plots/product_hunt.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_40",
+    "l": "R",
+    "p": "tidyverse, emo, lubridate, waffle, patchwork, shadowtext, camcorder, readr, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_40/product_hunt.R"
+  },
+  {
+    "k": "2022-10-04-nrennie",
+    "m": "nrennie",
     "d": "2022-10-04",
     "y": "2022",
     "t": "Product Hunt",
@@ -2060,6 +4992,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, camcorder, showtext, lubridate, ggbeeswarm, rcartocolor, usefunc, readr"
   },
   {
+    "k": "karamanis:2022/2022-week_39",
+    "m": "karamanis",
+    "d": "2022-09-27",
+    "y": "2022",
+    "t": "Arts in the USA",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_39/plots/artists.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_39",
+    "l": "R",
+    "p": "tidyverse, camcorder, sf, albersusa, ggpattern, ggrepel, readr, MetBrewer, colorspace",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_39/artists.R"
+  },
+  {
+    "k": "2022-09-27-nrennie",
+    "m": "nrennie",
     "d": "2022-09-27",
     "y": "2022",
     "t": "Arts in the USA",
@@ -2070,6 +5016,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, sf, usefunc, rcartocolor, camcorder, readr, stringr"
   },
   {
+    "k": "karamanis:2022/2022-week_38",
+    "m": "karamanis",
+    "d": "2022-09-20",
+    "y": "2022",
+    "t": "Wastewater Plants",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_38/plots/hydrowaste.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_38",
+    "l": "R",
+    "p": "tidyverse, camcorder, sf, rmapshaper, readr, janitor, here, colorspace, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_38/hydrowaste.R"
+  },
+  {
+    "k": "2022-09-20-nrennie",
+    "m": "nrennie",
     "d": "2022-09-20",
     "y": "2022",
     "t": "Wastewater Plants",
@@ -2080,6 +5040,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, sf, rnaturalearth, PrettyCols, readr, usefunc"
   },
   {
+    "k": "karamanis:2022/2022-week_37",
+    "m": "karamanis",
+    "d": "2022-09-13",
+    "y": "2022",
+    "t": "Bigfoot Sightings",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_37/plots/bigfoot.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_37",
+    "l": "R",
+    "p": "tidyverse, camcorder, sf, ggpattern, rgeoboundaries, here, readr, chroma, RColorBrewer",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_37/bigfoot.R"
+  },
+  {
+    "k": "2022-09-13-nrennie",
+    "m": "nrennie",
     "d": "2022-09-13",
     "y": "2022",
     "t": "Bigfoot Sightings",
@@ -2090,6 +5064,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, usefunc, readr, lubridate"
   },
   {
+    "k": "karamanis:2022/2022-week_36",
+    "m": "karamanis",
+    "d": "2022-09-06",
+    "y": "2022",
+    "t": "Lego",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_36/plots/rebrickable.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_36",
+    "l": "R",
+    "p": "tidyverse, camcorder, geomtextpath, ggtext, readr, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_36/rebrickable.R"
+  },
+  {
+    "k": "2022-09-06-nrennie",
+    "m": "nrennie",
     "d": "2022-09-06",
     "y": "2022",
     "t": "Lego",
@@ -2100,6 +5088,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, camcorder, readr, usefunc"
   },
   {
+    "k": "karamanis:2022/2022-week_35",
+    "m": "karamanis",
+    "d": "2022-08-30",
+    "y": "2022",
+    "t": "Pell Awards",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_35/plots/pell.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_35",
+    "l": "R",
+    "p": "tidyverse, camcorder, scales, patchwork, readr, janitor",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_35/pell.R"
+  },
+  {
+    "k": "2022-08-30-nrennie",
+    "m": "nrennie",
     "d": "2022-08-30",
     "y": "2022",
     "t": "Pell Awards",
@@ -2110,6 +5112,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, camcorder, usmap, showtext, geofacet, readr, usefunc, scales"
   },
   {
+    "k": "karamanis:2022/2022-week_34",
+    "m": "karamanis",
+    "d": "2022-08-23",
+    "y": "2022",
+    "t": "Chips",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_34/plots/chips.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_34",
+    "l": "R",
+    "p": "tidyverse, ggtext, ggrepel, camcorder, readr, here, janitor, colorspace",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_34/chips.R"
+  },
+  {
+    "k": "2022-08-23-nrennie",
+    "m": "nrennie",
     "d": "2022-08-23",
     "y": "2022",
     "t": "Chips",
@@ -2120,6 +5136,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, readr"
   },
   {
+    "k": "karamanis:2022/2022-week_33",
+    "m": "karamanis",
+    "d": "2022-08-16",
+    "y": "2022",
+    "t": "Open-Source Psychometrics Project: Killing Eve",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_33/plots/characters.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_33",
+    "l": "R",
+    "p": "tidyverse, camcorder, ggpointdensity, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_33/characters.R"
+  },
+  {
+    "k": "2022-08-16-nrennie",
+    "m": "nrennie",
     "d": "2022-08-16",
     "y": "2022",
     "t": "Open-Source Psychometrics Project: Killing Eve",
@@ -2130,6 +5160,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, ggimage, showtext, stringr, cowplot, readr, plyr, scales, ggplot2, grid, magick"
   },
   {
+    "k": "karamanis:2022/2022-week_32",
+    "m": "karamanis",
+    "d": "2022-08-09",
+    "y": "2022",
+    "t": "Ferris Wheels",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_32/plots/wheels.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_32",
+    "l": "R",
+    "p": "tidyverse, ggforce, ggnewscale, ggflags, countrycode, patchwork, camcorder, readr, colorspace",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_32/wheels.R"
+  },
+  {
+    "k": "2022-08-09-nrennie",
+    "m": "nrennie",
     "d": "2022-08-09",
     "y": "2022",
     "t": "Ferris Wheels",
@@ -2140,6 +5184,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, cowplot, usefunc, rcartocolor, emojifont, purrr, readr"
   },
   {
+    "k": "karamanis:2022/2022-week_31",
+    "m": "karamanis",
+    "d": "2022-08-02",
+    "y": "2022",
+    "t": "Oregon Spotted Frog",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_31/plots/frogs.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_31",
+    "l": "R",
+    "p": "tidyverse, osmdata, MetBrewer, camcorder, readr, janitor, lubridate, sf, ggrepel",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_31/frogs.R"
+  },
+  {
+    "k": "2022-08-02-nrennie",
+    "m": "nrennie",
     "d": "2022-08-02",
     "y": "2022",
     "t": "Oregon Spotted Frog",
@@ -2150,6 +5208,32 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, lubridate, ggchicklet, rcartocolor, usefunc, forcats, readr, grid"
   },
   {
+    "k": "karamanis:2022/2022-week_29",
+    "m": "karamanis",
+    "d": "2022-07-26",
+    "y": "2022",
+    "t": "Technology",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_29/plots/technology.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_29",
+    "l": "R",
+    "p": "tidyverse, geomtextpath, patchwork, camcorder, readr, here, janitor, geofacet",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_29/technology.R"
+  },
+  {
+    "k": "karamanis:2022/2022-week_28",
+    "m": "karamanis",
+    "d": "2022-07-19",
+    "y": "2022",
+    "t": "Technology Adoption",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_28/plots/flights.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_28",
+    "l": "R",
+    "p": "tidyverse, camcorder, ggbump, readr, janitor, sf, here, colorspace, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_28/flights.R"
+  },
+  {
+    "k": "2022-07-19-nrennie",
+    "m": "nrennie",
     "d": "2022-07-19",
     "y": "2022",
     "t": "Technology Adoption",
@@ -2160,6 +5244,8 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, ggforce, scales, forcats, usefunc, patchwork, readr"
   },
   {
+    "k": "2022-07-12-nrennie",
+    "m": "nrennie",
     "d": "2022-07-12",
     "y": "2022",
     "t": "London Airports",
@@ -2170,6 +5256,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, lubridate, rcartocolor, readr"
   },
   {
+    "k": "karamanis:2022/2022-week_27",
+    "m": "karamanis",
+    "d": "2022-07-05",
+    "y": "2022",
+    "t": "Median Rental Costs in San Francisco",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_27/plots/sf_rents.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_27",
+    "l": "R",
+    "p": "tidyverse, camcorder, sf, osmdata, readr, here, scico, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_27/sf_rents.R"
+  },
+  {
+    "k": "2022-07-05-nrennie",
+    "m": "nrennie",
     "d": "2022-07-05",
     "y": "2022",
     "t": "Median Rental Costs in San Francisco",
@@ -2180,6 +5280,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, ggstream, lubridate, patchwork, showtext, rcartocolor, readr, stringr"
   },
   {
+    "k": "karamanis:2022/2022-week_26",
+    "m": "karamanis",
+    "d": "2022-06-28",
+    "y": "2022",
+    "t": "Scotland's Gender Pay Gap",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_26/plots/paygap.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_26",
+    "l": "R",
+    "p": "tidyverse, camcorder, patchwork, ggtext, geogrid, readr, sf, here, rmapshaper, RColorBrewer, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_26/paygap.R"
+  },
+  {
+    "k": "2022-06-28-nrennie",
+    "m": "nrennie",
     "d": "2022-06-28",
     "y": "2022",
     "t": "Scotland's Gender Pay Gap",
@@ -2190,6 +5304,32 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, PostcodesioR, sf, rnaturalearth, rnaturalearthdata, ggdist, patchwork, readr, usefunc"
   },
   {
+    "k": "karamanis:2022/2022-week_24",
+    "m": "karamanis",
+    "d": "2022-06-21",
+    "y": "2022",
+    "t": "Juneteenth: African American Achievements",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_24/plots/drought.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_24",
+    "l": "R",
+    "p": "tidyverse, camcorder, scico, readr, sf, here, janitor, lubridate",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_24/drought.R"
+  },
+  {
+    "k": "karamanis:2022/2022-week_25",
+    "m": "karamanis",
+    "d": "2022-06-21",
+    "y": "2022",
+    "t": "Juneteenth: African American Achievements",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_25/plots/juneteeth.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_25",
+    "l": "R",
+    "p": "tidyverse, camcorder, geomtextpath, ggforce, readr, ggrepel, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_25/juneteeth.R"
+  },
+  {
+    "k": "2022-06-21-nrennie",
+    "m": "nrennie",
     "d": "2022-06-21",
     "y": "2022",
     "t": "Juneteenth: African American Achievements",
@@ -2200,6 +5340,8 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, usefunc, ggrepel, readr, stringr"
   },
   {
+    "k": "2022-06-14-nrennie",
+    "m": "nrennie",
     "d": "2022-06-14",
     "y": "2022",
     "t": "US Droughts",
@@ -2210,6 +5352,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, lubridate, usefunc, geofacet, ggstream, forcats, showtext, readr"
   },
   {
+    "k": "karamanis:2022/2022-week_23",
+    "m": "karamanis",
+    "d": "2022-06-07",
+    "y": "2022",
+    "t": "Pride Donations",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_23/plots/donations.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_23",
+    "l": "R",
+    "p": "tidyverse, camcorder, ggsvg, shadowtext, readr, janitor, scales, here, colorspace",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_23/donations.R"
+  },
+  {
+    "k": "2022-06-07-nrennie",
+    "m": "nrennie",
     "d": "2022-06-07",
     "y": "2022",
     "t": "Pride Donations",
@@ -2220,6 +5376,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, usefunc, patchwork, readr"
   },
   {
+    "k": "karamanis:2022/2022-week_22",
+    "m": "karamanis",
+    "d": "2022-05-31",
+    "y": "2022",
+    "t": "2022 Axios-Harris Poll",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_22/plots/reputation-table.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_22",
+    "l": "R",
+    "p": "tidyverse, reactablefmtr, htmltools, crosstalk, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_22/reputation-table.qmd"
+  },
+  {
+    "k": "2022-05-31-nrennie",
+    "m": "nrennie",
     "d": "2022-05-31",
     "y": "2022",
     "t": "2022 Axios-Harris Poll",
@@ -2230,6 +5400,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, tidytuesdayR"
   },
   {
+    "k": "karamanis:2022/2022-week_21",
+    "m": "karamanis",
+    "d": "2022-05-24",
+    "y": "2022",
+    "t": "Women's Rugby",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_21/plots/womens_rugby.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_21",
+    "l": "R",
+    "p": "tidyverse, camcorder, ggrepel, rgeoboundaries, patchwork, tidygeocoder, readr, here, lubridate, rmapshaper",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_21/womens_rugby.R"
+  },
+  {
+    "k": "2022-05-24-nrennie",
+    "m": "nrennie",
     "d": "2022-05-24",
     "y": "2022",
     "t": "Women's Rugby",
@@ -2240,6 +5424,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, usefunc, tidytuesdayR, lubridate"
   },
   {
+    "k": "karamanis:2022/2022-week_20",
+    "m": "karamanis",
+    "d": "2022-05-17",
+    "y": "2022",
+    "t": "Eurovision",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_20/plots/eurovision.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_20",
+    "l": "R",
+    "p": "tidyverse, camcorder, ggimage, countrycode, grid, ggpp, ggfx, readr, systemfonts",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_20/eurovision.R"
+  },
+  {
+    "k": "2022-05-17-nrennie",
+    "m": "nrennie",
     "d": "2022-05-17",
     "y": "2022",
     "t": "Eurovision",
@@ -2250,6 +5448,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, tidytuesdayR"
   },
   {
+    "k": "karamanis:2022/2022-week_19",
+    "m": "karamanis",
+    "d": "2022-05-10",
+    "y": "2022",
+    "t": "New York Times Bestsellers",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_19/plots/nyt_titles.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_19",
+    "l": "R",
+    "p": "tidyverse, ggsvg, shadowtext, camcorder, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_19/nyt_titles.R"
+  },
+  {
+    "k": "2022-05-10-nrennie",
+    "m": "nrennie",
     "d": "2022-05-10",
     "y": "2022",
     "t": "New York Times Bestsellers",
@@ -2260,6 +5472,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, usefunc, readr"
   },
   {
+    "k": "karamanis:2022/2022-week_18",
+    "m": "karamanis",
+    "d": "2022-05-03",
+    "y": "2022",
+    "t": "Energy Capacity",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_18/plots/solar_wind.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_18",
+    "l": "R",
+    "p": "tidyverse, camcorder, ggtext, readr, lubridate",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_18/solar_wind.R"
+  },
+  {
+    "k": "2022-05-03-nrennie",
+    "m": "nrennie",
     "d": "2022-05-03",
     "y": "2022",
     "t": "Energy Capacity",
@@ -2270,6 +5496,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "ggstream, ggplot2, dplyr, tidyr, rcartocolor, showtext, usefunc, readr"
   },
   {
+    "k": "karamanis:2022/2022-week_17",
+    "m": "karamanis",
+    "d": "2022-04-26",
+    "y": "2022",
+    "t": "Kaggle Hidden Gems",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_17/plots/hidden_gems.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_17",
+    "l": "R",
+    "p": "tidyverse, camcorder, MetBrewer, ggdist, readr, here, janitor, lubridate",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_17/hidden_gems.R"
+  },
+  {
+    "k": "2022-04-26-nrennie",
+    "m": "nrennie",
     "d": "2022-04-26",
     "y": "2022",
     "t": "Kaggle Hidden Gems",
@@ -2280,6 +5520,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, plotly, tidytext, lubridate, usefunc, htmlwidgets, tidytuesdayR"
   },
   {
+    "k": "karamanis:2022/2022-week_16",
+    "m": "karamanis",
+    "d": "2022-04-19",
+    "y": "2022",
+    "t": "The Times Crossword Puzzles",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_16/plots/crosswords.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_16",
+    "l": "R",
+    "p": "tidyverse, camcorder, lubridate, ggtext, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_16/crosswords.R"
+  },
+  {
+    "k": "2022-04-19-nrennie",
+    "m": "nrennie",
     "d": "2022-04-19",
     "y": "2022",
     "t": "The Times Crossword Puzzles",
@@ -2290,6 +5544,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, usefunc, tidytext, lubridate, tidytuesdayR"
   },
   {
+    "k": "karamanis:2022/2022-week_15",
+    "m": "karamanis",
+    "d": "2022-04-12",
+    "y": "2022",
+    "t": "Indoor Air Pollution",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_15/plots/indoor_pollution.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_15",
+    "l": "R",
+    "p": "tidyverse, camcorder, MetBrewer, patchwork, grid, readr, janitor, ggplot2",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_15/indoor_pollution.R"
+  },
+  {
+    "k": "2022-04-12-nrennie",
+    "m": "nrennie",
     "d": "2022-04-12",
     "y": "2022",
     "t": "Indoor Air Pollution",
@@ -2300,6 +5568,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, usefunc, ggside, hrbrthemes, grid, cowplot, tidytuesdayR"
   },
   {
+    "k": "karamanis:2022/2022-week_14",
+    "m": "karamanis",
+    "d": "2022-04-05",
+    "y": "2022",
+    "t": "News Publications",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_14/plots/news_orgs.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_14",
+    "l": "R",
+    "p": "tidyverse, camcorder, stringi, MetBrewer, readr, ggforce",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_14/news_orgs.R"
+  },
+  {
+    "k": "2022-04-05-nrennie",
+    "m": "nrennie",
     "d": "2022-04-05",
     "y": "2022",
     "t": "News Publications",
@@ -2310,6 +5592,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, usefunc, tidytuesdayR"
   },
   {
+    "k": "karamanis:2022/2022-week_13",
+    "m": "karamanis",
+    "d": "2022-03-29",
+    "y": "2022",
+    "t": "Expenditure in College Sports",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_13/plots/sports.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_13",
+    "l": "R",
+    "p": "tidyverse, geofacet, camcorder, readr, colorspace, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_13/sports.R"
+  },
+  {
+    "k": "2022-03-29-nrennie",
+    "m": "nrennie",
     "d": "2022-03-29",
     "y": "2022",
     "t": "Expenditure in College Sports",
@@ -2320,6 +5616,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, usefunc, scales, tidytuesdayR"
   },
   {
+    "k": "karamanis:2022/2022-week_12",
+    "m": "karamanis",
+    "d": "2022-03-22",
+    "y": "2022",
+    "t": "Baby Names",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_12/plots/babynames.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_12",
+    "l": "R",
+    "p": "tidyverse, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_12/babynames_trends.R"
+  },
+  {
+    "k": "2022-03-22-nrennie",
+    "m": "nrennie",
     "d": "2022-03-22",
     "y": "2022",
     "t": "Baby Names",
@@ -2330,6 +5640,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, usefunc, patchwork, cowplot, rcartocolor, tidytuesdayR, forcats"
   },
   {
+    "k": "karamanis:2022/2022-week_11",
+    "m": "karamanis",
+    "d": "2022-03-15",
+    "y": "2022",
+    "t": "R Vignettes",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_11/plots/vignettes.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_11",
+    "l": "R",
+    "p": "tidyverse, camcorder, lubridate, textreadr, shadowtext, ggshadow, here, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_11/vignettes.R"
+  },
+  {
+    "k": "2022-03-15-nrennie",
+    "m": "nrennie",
     "d": "2022-03-15",
     "y": "2022",
     "t": "R Vignettes",
@@ -2340,6 +5664,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, usefunc, lubridate, jcolors, gtable, grid, RCurl, png, tidytuesdayR"
   },
   {
+    "k": "karamanis:2022/2022-week_10",
+    "m": "karamanis",
+    "d": "2022-03-08",
+    "y": "2022",
+    "t": "Erasmus",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_10/plots/erasmus.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_10",
+    "l": "R",
+    "p": "tidyverse, camcorder, treemapify, sf, patchwork, readr, colorspace, RColorBrewer, here, janitor",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_10/erasmus.R"
+  },
+  {
+    "k": "2022-03-08-nrennie",
+    "m": "nrennie",
     "d": "2022-03-08",
     "y": "2022",
     "t": "Erasmus",
@@ -2350,6 +5688,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, usefunc, showtext, emojifont, tidytuesdayR"
   },
   {
+    "k": "karamanis:2022/2022-week_09",
+    "m": "karamanis",
+    "d": "2022-03-01",
+    "y": "2022",
+    "t": "Alternative Fuel Stations",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_09/plots/stations.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_09",
+    "l": "R",
+    "p": "tidyverse, camcorder, sf, ggrepel, readr, janitor, here, rmapshaper, rgeoboundaries, systemfonts",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_09/stations.R"
+  },
+  {
+    "k": "2022-03-01-nrennie",
+    "m": "nrennie",
     "d": "2022-03-01",
     "y": "2022",
     "t": "Alternative Fuel Stations",
@@ -2360,6 +5712,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, usefunc, showtext, geofacet, cowplot, sf, tidytuesdayR"
   },
   {
+    "k": "karamanis:2022/2022-week_08",
+    "m": "karamanis",
+    "d": "2022-02-22",
+    "y": "2022",
+    "t": "Freedom in the World",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_08/plots/freedom.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_08",
+    "l": "R",
+    "p": "tidyverse, camcorder, geofacet, ggforce, MetBrewer, patchwork, readr, janitor, colorspace",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_08/freedom.R"
+  },
+  {
+    "k": "2022-02-22-nrennie",
+    "m": "nrennie",
     "d": "2022-02-22",
     "y": "2022",
     "t": "Freedom in the World",
@@ -2370,6 +5736,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, geofacet, usefunc, showtext, tidytuesdayR"
   },
   {
+    "k": "karamanis:2022/2022-week_07",
+    "m": "karamanis",
+    "d": "2022-02-15",
+    "y": "2022",
+    "t": "Du Bois Challenge 2022",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_07/plots/dubois_2022.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_07",
+    "l": "R",
+    "p": "tidyverse, camcorder",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_07/dubois_2022.R"
+  },
+  {
+    "k": "2022-02-15-nrennie",
+    "m": "nrennie",
     "d": "2022-02-15",
     "y": "2022",
     "t": "Du Bois Challenge 2022",
@@ -2380,6 +5760,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, showtext, cowplot, readr"
   },
   {
+    "k": "karamanis:2022/2022-week_06",
+    "m": "karamanis",
+    "d": "2022-02-08",
+    "y": "2022",
+    "t": "Tuskegee Airmen",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_06/plots/airmen.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_06",
+    "l": "R",
+    "p": "tidyverse, camcorder, lubridate, geofacet, MetBrewer, ggtext, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_06/airmen-t_shirt.R"
+  },
+  {
+    "k": "2022-02-08-nrennie",
+    "m": "nrennie",
     "d": "2022-02-08",
     "y": "2022",
     "t": "Tuskegee Airmen",
@@ -2390,6 +5784,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, usefunc, lubridate, rcartocolor, showtext, tidytuesdayR"
   },
   {
+    "k": "karamanis:2022/2022-week_05",
+    "m": "karamanis",
+    "d": "2022-02-01",
+    "y": "2022",
+    "t": "Most Popular Dog Breeds",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_05/plots/dog_breeds.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_05",
+    "l": "R",
+    "p": "tidyverse, camcorder, ggimage, ggtext, grid, readr, janitor, colorspace",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_05/dog_breeds.R"
+  },
+  {
+    "k": "2022-02-01-nrennie",
+    "m": "nrennie",
     "d": "2022-02-01",
     "y": "2022",
     "t": "Most Popular Dog Breeds",
@@ -2400,6 +5808,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, ggbump, rcartocolor, showtext, cowplot, magick, readr"
   },
   {
+    "k": "karamanis:2022/2022-week_04",
+    "m": "karamanis",
+    "d": "2022-01-25",
+    "y": "2022",
+    "t": "Board Games",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_04/plots/board_games.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_04",
+    "l": "R",
+    "p": "tidyverse, camcorder, gghalves, ggbeeswarm, patchwork, ggtext, ggforce, ggrepel, readr, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_04/board_games.R"
+  },
+  {
+    "k": "2022-01-25-nrennie",
+    "m": "nrennie",
     "d": "2022-01-25",
     "y": "2022",
     "t": "Board Games",
@@ -2410,6 +5832,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, rcartocolor, showtext, cowplot, tidytuesdayR"
   },
   {
+    "k": "karamanis:2022/2022-week_03",
+    "m": "karamanis",
+    "d": "2022-01-18",
+    "y": "2022",
+    "t": "Where do cacao beans come from?",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_03/plots/chocolate.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_03",
+    "l": "R",
+    "p": "tidyverse, camcorder, colorspace, geomtextpath, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_03/chocolate.R"
+  },
+  {
+    "k": "2022-01-18-nrennie",
+    "m": "nrennie",
     "d": "2022-01-18",
     "y": "2022",
     "t": "Where do cacao beans come from?",
@@ -2420,6 +5856,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, treemapify, showtext, ggsci, tidytuesdayR, grid"
   },
   {
+    "k": "karamanis:2022/2022-week_02",
+    "m": "karamanis",
+    "d": "2022-01-11",
+    "y": "2022",
+    "t": "Bee colony losses in the United States",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_02/plots/bee_colonies-United%20States.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_02",
+    "l": "R",
+    "p": "tidyverse, spatstat, ggtext, camcorder, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_02/bee_colonies.R"
+  },
+  {
+    "k": "2022-01-11-nrennie",
+    "m": "nrennie",
     "d": "2022-01-11",
     "y": "2022",
     "t": "Bee colony losses in the United States",
@@ -2430,6 +5880,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, poissoned, showtext, tidytuesdayR"
   },
   {
+    "k": "karamanis:2022/2022-week_01",
+    "m": "karamanis",
+    "d": "2022-01-04",
+    "y": "2022",
+    "t": "Detecting demand outliers in transport systems",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_01/plots/hate_crimes.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_01",
+    "l": "R",
+    "p": "tidyverse, xlsx, janitor, ggpattern, shadowtext, camcorder, here, colorspace",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2022/2022-week_01/hate_crimes.R"
+  },
+  {
+    "k": "2022-01-04-nrennie",
+    "m": "nrennie",
     "d": "2022-01-04",
     "y": "2022",
     "t": "Detecting demand outliers in transport systems",
@@ -2440,6 +5904,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "geomtextpath, cowplot"
   },
   {
+    "k": "karamanis:2021/2021-week51",
+    "m": "karamanis",
+    "d": "2021-12-21",
+    "y": "2021",
+    "t": "Starbucks",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week51/plots/starbucks.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week51",
+    "l": "R",
+    "p": "tidyverse, camcorder, MetBrewer, readr, colorspace",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week51/starbucks.R"
+  },
+  {
+    "k": "2021-12-21-nrennie",
+    "m": "nrennie",
     "d": "2021-12-21",
     "y": "2021",
     "t": "Starbucks",
@@ -2450,6 +5928,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, emojifont, cowplot, magick, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week50",
+    "m": "karamanis",
+    "d": "2021-12-14",
+    "y": "2021",
+    "t": "Spice Up Your Life!",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week50/plots/spice_girls_wrapped.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week50",
+    "l": "R",
+    "p": "tidyverse, camcorder, hershey, readr, systemfonts",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week50/spice_girls_wrapped.R"
+  },
+  {
+    "k": "2021-12-14-nrennie",
+    "m": "nrennie",
     "d": "2021-12-14",
     "y": "2021",
     "t": "Spice Up Your Life!",
@@ -2460,6 +5952,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, devtools, ggradar, popthemes, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week49",
+    "m": "karamanis",
+    "d": "2021-12-07",
+    "y": "2021",
+    "t": "Spiders!",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week49/plots/spiders.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week49",
+    "l": "R",
+    "p": "tidyverse, ggforce, ggtext, camcorder, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week49/spiders.R"
+  },
+  {
+    "k": "2021-12-07-nrennie",
+    "m": "nrennie",
     "d": "2021-12-07",
     "y": "2021",
     "t": "Spiders!",
@@ -2470,6 +5976,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, spiralize, ComplexHeatmap, cowplot, magick, tidytuesdayR, circlize, rcartocolor"
   },
   {
+    "k": "karamanis:2021/2021-week48",
+    "m": "karamanis",
+    "d": "2021-11-30",
+    "y": "2021",
+    "t": "ICC Men's World Cup Cricket",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week48/plots/cricket.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week48",
+    "l": "R",
+    "p": "tidyverse, camcorder, colorspace, ggtext, readr, grid",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week48/cricket.R"
+  },
+  {
+    "k": "2021-11-30-nrennie",
+    "m": "nrennie",
     "d": "2021-11-30",
     "y": "2021",
     "t": "ICC Men's World Cup Cricket",
@@ -2480,6 +6000,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, lubridate, ggbump, patchwork, cowplot, magick, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week47",
+    "m": "karamanis",
+    "d": "2021-11-23",
+    "y": "2021",
+    "t": "Who is watching Doctor Who?",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week47/plots/dr_who.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week47",
+    "l": "R",
+    "p": "tidyverse, camcorder, ggforce, readr, ghibli",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week47/dr_who.R"
+  },
+  {
+    "k": "2021-11-23-nrennie",
+    "m": "nrennie",
     "d": "2021-11-23",
     "y": "2021",
     "t": "Who is watching Doctor Who?",
@@ -2490,6 +6024,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, ggalt, cowplot, magick, grid, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week45",
+    "m": "karamanis",
+    "d": "2021-11-16",
+    "y": "2021",
+    "t": "Afrimapr",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week45/plots/afrimapr.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week45",
+    "l": "R",
+    "p": "tidyverse, camcorder, afrilearndata, scico, raster",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week45/afrimapr.R"
+  },
+  {
+    "k": "2021-11-09-nrennie",
+    "m": "nrennie",
     "d": "2021-11-09",
     "y": "2021",
     "t": "Africa",
@@ -2500,6 +6048,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "afrilearndata, tidyverse, sf, rcartocolor, showtext"
   },
   {
+    "k": "karamanis:2021/2021-week44",
+    "m": "karamanis",
+    "d": "2021-11-02",
+    "y": "2021",
+    "t": "Glasgow Goes Global",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week44/plots/map.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week44",
+    "l": "R",
+    "p": "tidyverse, camcorder, spData, sf, ggfx",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week44/map.R"
+  },
+  {
+    "k": "2021-11-02-nrennie",
+    "m": "nrennie",
     "d": "2021-11-02",
     "y": "2021",
     "t": "Glasgow Goes Global",
@@ -2510,6 +6072,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "sf, raster, dplyr, spData, spDataLarge, tmap, leaflet, ggplot2, maptools, sp"
   },
   {
+    "k": "karamanis:2021/2021-week43",
+    "m": "karamanis",
+    "d": "2021-10-26",
+    "y": "2021",
+    "t": "Ultra Trail Running",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week43/plots/ultra_running.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week43",
+    "l": "R",
+    "p": "tidyverse, camcorder, colorspace, patchwork, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week43/ultra_running.R"
+  },
+  {
+    "k": "2021-10-26-nrennie",
+    "m": "nrennie",
     "d": "2021-10-26",
     "y": "2021",
     "t": "Ultra Trail Running",
@@ -2520,6 +6096,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, lubridate, cowplot, magick, grid, ggside, readr"
   },
   {
+    "k": "karamanis:2021/2021-week42",
+    "m": "karamanis",
+    "d": "2021-10-19",
+    "y": "2021",
+    "t": "Giant Pumpkins",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week42/plots/pumpkins.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week42",
+    "l": "R",
+    "p": "tidyverse, camcorder, ggforce, colorspace, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week42/pumpkins.R"
+  },
+  {
+    "k": "2021-10-19-nrennie",
+    "m": "nrennie",
     "d": "2021-10-19",
     "y": "2021",
     "t": "Giant Pumpkins",
@@ -2530,9 +6120,23 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, cowplot, showtext, ragg, biscale, maps, sf, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week41",
+    "m": "karamanis",
     "d": "2021-10-12",
     "y": "2021",
-    "t": "TidyTuesday · 2021-10-12",
+    "t": "Global Seafood",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week41/plots/seafood_consumption.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week41",
+    "l": "R",
+    "p": "tidyverse, camcorder, poissoned, readr, janitor",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week41/seafood_consumption.R"
+  },
+  {
+    "k": "2021-10-12-nrennie",
+    "m": "nrennie",
+    "d": "2021-10-12",
+    "y": "2021",
+    "t": "Global Seafood",
     "i": "https://raw.githubusercontent.com/nrennie/tidytuesday/main/2021/12-10-2021/12102021.jpg",
     "c": "https://raw.githubusercontent.com/nrennie/tidytuesday/main/2021/12-10-2021/12102021.R",
     "g": "https://github.com/nrennie/tidytuesday/tree/main/2021/12-10-2021",
@@ -2540,6 +6144,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, magick, grid, extrafont, sf, cowplot, rnaturalearthdata, rnaturalearth, tidytuesdayR, scales"
   },
   {
+    "k": "karamanis:2021/2021-week40",
+    "m": "karamanis",
+    "d": "2021-10-05",
+    "y": "2021",
+    "t": "Hourly Wages of Registered Nurses",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week40/plots/nurses_geofacet.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week40",
+    "l": "R",
+    "p": "tidyverse, scales, camcorder, shadowtext, readr, janitor",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week40/nurses_connected_scatterplot.R"
+  },
+  {
+    "k": "2021-10-05-nrennie",
+    "m": "nrennie",
     "d": "2021-10-05",
     "y": "2021",
     "t": "Hourly Wages of Registered Nurses",
@@ -2550,6 +6168,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, geofacet, extrafont, cowplot, devtools, usefunc, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week39",
+    "m": "karamanis",
+    "d": "2021-09-28",
+    "y": "2021",
+    "t": "NBER Papers",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week39/plots/papers.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week39",
+    "l": "R",
+    "p": "tidyverse, camcorder, ggstream, patchwork, wesanderson, tinter, readr, colorspace",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week39/papers.R"
+  },
+  {
+    "k": "2021-09-28-nrennie",
+    "m": "nrennie",
     "d": "2021-09-28",
     "y": "2021",
     "t": "NBER Papers",
@@ -2560,6 +6192,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, extrafont, ggnetwork, igraph, readr"
   },
   {
+    "k": "karamanis:2021/2021-week38",
+    "m": "karamanis",
+    "d": "2021-09-21",
+    "y": "2021",
+    "t": "Emmy Awards and Nominees",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week38/plots/nominees.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week38",
+    "l": "R",
+    "p": "tidyverse, camcorder, ggtext, colorspace, patchwork, readr, here, grid",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week38/nominees.R"
+  },
+  {
+    "k": "2021-09-21-nrennie",
+    "m": "nrennie",
     "d": "2021-09-21",
     "y": "2021",
     "t": "Emmy Awards and Nominees",
@@ -2570,6 +6216,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, extrafont, patchwork, cowplot, waffle, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week37",
+    "m": "karamanis",
+    "d": "2021-09-14",
+    "y": "2021",
+    "t": "Billboard 100",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week37/plots/billboard.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week37",
+    "l": "R",
+    "p": "tidyverse, lubridate, camcorder, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week37/billboard.R"
+  },
+  {
+    "k": "2021-09-14-nrennie",
+    "m": "nrennie",
     "d": "2021-09-14",
     "y": "2021",
     "t": "Billboard 100",
@@ -2580,6 +6240,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, cowplot, extrafont, lubridate, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week36",
+    "m": "karamanis",
+    "d": "2021-09-07",
+    "y": "2021",
+    "t": "Formula 1 Winning Times",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week36/plots/formula1.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week36",
+    "l": "R",
+    "p": "tidyverse, ggimage, camcorder, wesanderson, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week36/formula1.R"
+  },
+  {
+    "k": "2021-09-07-nrennie",
+    "m": "nrennie",
     "d": "2021-09-07",
     "y": "2021",
     "t": "Formula 1 Winning Times",
@@ -2590,6 +6264,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, extrafont, patchwork, rcartocolor, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week35",
+    "m": "karamanis",
+    "d": "2021-08-31",
+    "y": "2021",
+    "t": "Australian Birds",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week35/plots/bird_baths.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week35",
+    "l": "R",
+    "p": "tidyverse, camcorder, sf, gggibbous, ggrepel, shadowtext, ggnewscale, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week35/bird_baths.R"
+  },
+  {
+    "k": "2021-08-31-nrennie",
+    "m": "nrennie",
     "d": "2021-08-31",
     "y": "2021",
     "t": "Australian Birds",
@@ -2600,6 +6288,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, ggpol, grid, gridExtra, extrafont, cowplot, ghibli, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week34",
+    "m": "karamanis",
+    "d": "2021-08-24",
+    "y": "2021",
+    "t": "Collared Brown Lemur",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week34/plots/lemurs.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week34",
+    "l": "R",
+    "p": "tidyverse, camcorder, ggrepel, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week34/lemurs.R"
+  },
+  {
+    "k": "2021-08-24-nrennie",
+    "m": "nrennie",
     "d": "2021-08-24",
     "y": "2021",
     "t": "Collared Brown Lemur",
@@ -2610,6 +6312,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, cowplot, extrafont, patchwork, tidytuesdayR, readr"
   },
   {
+    "k": "karamanis:2021/2021-week33",
+    "m": "karamanis",
+    "d": "2021-08-17",
+    "y": "2021",
+    "t": "Star Trek: Next Generation",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week33/plots/star_trek_commands.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week33",
+    "l": "R",
+    "p": "tidyverse, camcorder, shadowtext, colorspace, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week33/star_trek_commands.R"
+  },
+  {
+    "k": "2021-08-17-nrennie",
+    "m": "nrennie",
     "d": "2021-08-17",
     "y": "2021",
     "t": "Star Trek: Next Generation",
@@ -2620,6 +6336,32 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, ggalluvial, extrafont, cowplot, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week31",
+    "m": "karamanis",
+    "d": "2021-08-10",
+    "y": "2021",
+    "t": "Infrastructure Investment",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week31/plots/paralympics.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week31",
+    "l": "R",
+    "p": "tidyverse, camcorder, colorspace, rvest, readr, janitor, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week31/paralympics.R"
+  },
+  {
+    "k": "karamanis:2021/2021-week32",
+    "m": "karamanis",
+    "d": "2021-08-10",
+    "y": "2021",
+    "t": "Infrastructure Investment",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week32/plots/investment.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week32",
+    "l": "R",
+    "p": "tidyverse, camcorder, ggforce, scales, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week32/investment.R"
+  },
+  {
+    "k": "2021-08-10-nrennie",
+    "m": "nrennie",
     "d": "2021-08-10",
     "y": "2021",
     "t": "Infrastructure Investment",
@@ -2630,6 +6372,8 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, extrafont, tidytuesdayR"
   },
   {
+    "k": "2021-08-03-nrennie",
+    "m": "nrennie",
     "d": "2021-08-03",
     "y": "2021",
     "t": "Team GB v Team USA",
@@ -2640,6 +6384,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, extrafont, patchwork, cowplot, tidytuesdayR, gt, scales"
   },
   {
+    "k": "karamanis:2021/2021-week30",
+    "m": "karamanis",
+    "d": "2021-07-27",
+    "y": "2021",
+    "t": "Olympic Gold Medals",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week30/plots/olympics.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week30",
+    "l": "R",
+    "p": "tidyverse, camcorder, ggrepel, colorspace, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week30/olympics.R"
+  },
+  {
+    "k": "2021-07-27-nrennie",
+    "m": "nrennie",
     "d": "2021-07-27",
     "y": "2021",
     "t": "Olympic Gold Medals",
@@ -2650,6 +6408,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, extrafont, cowplot, viridis, gganimate, rsvg, magick, tidytuesdayR, scales"
   },
   {
+    "k": "karamanis:2021/2021-week29",
+    "m": "karamanis",
+    "d": "2021-07-20",
+    "y": "2021",
+    "t": "California Droughts",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week29/plots/drought.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week29",
+    "l": "R",
+    "p": "tidyverse, lubridate, patchwork, ggtext, readr, geofacet, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week29/drought.R"
+  },
+  {
+    "k": "2021-07-20-nrennie",
+    "m": "nrennie",
     "d": "2021-07-20",
     "y": "2021",
     "t": "California Droughts",
@@ -2660,6 +6432,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, ggbump, extrafont, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week28",
+    "m": "karamanis",
+    "d": "2021-07-13",
+    "y": "2021",
+    "t": "Scooby Doo, Where are you!",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week28/plots/scoobydoo.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week28",
+    "l": "R",
+    "p": "tidyverse, lubridate, camcorder, shadowtext, colorspace, ggrepel, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week28/scoobydoo.R"
+  },
+  {
+    "k": "2021-07-13-nrennie",
+    "m": "nrennie",
     "d": "2021-07-13",
     "y": "2021",
     "t": "Scooby Doo, Where are you!",
@@ -2670,6 +6456,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, ggforce, extrafont, cowplot, patchwork, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week27",
+    "m": "karamanis",
+    "d": "2021-07-06",
+    "y": "2021",
+    "t": "Independence Days",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week27/plots/holidays.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week27",
+    "l": "R",
+    "p": "tidyverse, camcorder, lubridate, countrycode, ggtext, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week27/holidays.R"
+  },
+  {
+    "k": "2021-07-06-nrennie",
+    "m": "nrennie",
     "d": "2021-07-06",
     "y": "2021",
     "t": "Independence Days",
@@ -2680,6 +6480,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, patchwork, countrycode, extrafont, cowplot, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week26",
+    "m": "karamanis",
+    "d": "2021-06-29",
+    "y": "2021",
+    "t": "Animal Rescues",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week26/plots/animal-rescues.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week26",
+    "l": "R",
+    "p": "tidyverse, geofacet, ggh4x, colorspace, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week26/animal-rescues.R"
+  },
+  {
+    "k": "2021-06-29-nrennie",
+    "m": "nrennie",
     "d": "2021-06-29",
     "y": "2021",
     "t": "Animal Rescues",
@@ -2690,6 +6504,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, ggdist, ggbump, extrafont, patchwork, cowplot, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week25",
+    "m": "karamanis",
+    "d": "2021-06-22",
+    "y": "2021",
+    "t": "City Parks",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week25/plots/parks.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week25",
+    "l": "R",
+    "p": "tidyverse, ComplexUpset, wesanderson, ggimage, patchwork, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week25/parks.R"
+  },
+  {
+    "k": "2021-06-22-nrennie",
+    "m": "nrennie",
     "d": "2021-06-22",
     "y": "2021",
     "t": "City Parks",
@@ -2700,9 +6528,23 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, ggstream, extrafont, patchwork, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week24",
+    "m": "karamanis",
     "d": "2021-06-15",
     "y": "2021",
-    "t": "TidyTuesday · 2021-06-15",
+    "t": "#DuBoisChallenge Tweets",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week24/plots/dubois-tweets.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week24",
+    "l": "R",
+    "p": "tidyverse, lubridate, ggfx, ggimage, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week24/dubois-tweets.R"
+  },
+  {
+    "k": "2021-06-15-nrennie",
+    "m": "nrennie",
+    "d": "2021-06-15",
+    "y": "2021",
+    "t": "#DuBoisChallenge Tweets",
     "i": "https://raw.githubusercontent.com/nrennie/tidytuesday/main/2021/15-06-2021/15062021.jpg",
     "c": "https://raw.githubusercontent.com/nrennie/tidytuesday/main/2021/15-06-2021/15062021.R",
     "g": "https://github.com/nrennie/tidytuesday/tree/main/2021/15-06-2021",
@@ -2710,6 +6552,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, rnaturalearth, extrafont, gganimate, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week23",
+    "m": "karamanis",
+    "d": "2021-06-08",
+    "y": "2021",
+    "t": "Great Lakes Fishing",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week23/plots/fishing.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week23",
+    "l": "R",
+    "p": "tidyverse, ggfx, ggimage, ragg, wesanderson, ggtext, sf, patchwork, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week23/fishing.R"
+  },
+  {
+    "k": "2021-06-08-nrennie",
+    "m": "nrennie",
     "d": "2021-06-08",
     "y": "2021",
     "t": "Great Lakes Fishing",
@@ -2720,6 +6576,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, extrafont, cowplot, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week22",
+    "m": "karamanis",
+    "d": "2021-06-01",
+    "y": "2021",
+    "t": "Survivor: Viewership",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week22/plots/survivor-screenshot.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week22",
+    "l": "R",
+    "p": "tidyverse, glue, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week22/survivor.R"
+  },
+  {
+    "k": "2021-06-01-nrennie",
+    "m": "nrennie",
     "d": "2021-06-01",
     "y": "2021",
     "t": "Survivor: Viewership",
@@ -2730,6 +6600,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, extrafont, cowplot, magick, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week21",
+    "m": "karamanis",
+    "d": "2021-05-25",
+    "y": "2021",
+    "t": "Mario Kart 64 World Records",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week21/plots/mario.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week21",
+    "l": "R",
+    "p": "tidyverse, ggsankey, ggflags, patchwork, wesanderson, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week21/mario.R"
+  },
+  {
+    "k": "2021-05-25-nrennie",
+    "m": "nrennie",
     "d": "2021-05-25",
     "y": "2021",
     "t": "Mario Kart 64 World Records",
@@ -2740,6 +6624,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, lubridate, extrafont, patchwork, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week20",
+    "m": "karamanis",
+    "d": "2021-05-18",
+    "y": "2021",
+    "t": "Does Education Pay?",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week20/plots/survey.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week20",
+    "l": "R",
+    "p": "tidyverse, scales, RColorBrewer, colorspace, cowplot, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week20/survey.R"
+  },
+  {
+    "k": "2021-05-18-nrennie",
+    "m": "nrennie",
     "d": "2021-05-18",
     "y": "2021",
     "t": "Does Education Pay?",
@@ -2750,6 +6648,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, extrafont, patchwork, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week19",
+    "m": "karamanis",
+    "d": "2021-05-11",
+    "y": "2021",
+    "t": "The Internet Inequality",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week19/plots/broadband.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week19",
+    "l": "R",
+    "p": "tidyverse, janitor, sf, colorspace, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week19/broadband.R"
+  },
+  {
+    "k": "2021-05-11-nrennie",
+    "m": "nrennie",
     "d": "2021-05-11",
     "y": "2021",
     "t": "The Internet Inequality",
@@ -2760,6 +6672,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, tigris, extrafont, patchwork, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week18",
+    "m": "karamanis",
+    "d": "2021-05-04",
+    "y": "2021",
+    "t": "Water Access Points",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week18/plots/water-log.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week18",
+    "l": "R",
+    "p": "tidyverse, scales, sf, janitor, cowplot, readr, here, wesanderson",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week18/water.R"
+  },
+  {
+    "k": "2021-05-04-nrennie",
+    "m": "nrennie",
     "d": "2021-05-04",
     "y": "2021",
     "t": "Water Access Points",
@@ -2770,6 +6696,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, rnaturalearth, rnaturalearthdata, extrafont, patchwork, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week17",
+    "m": "karamanis",
+    "d": "2021-04-27",
+    "y": "2021",
+    "t": "CEO Departures",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week17/plots/departures.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week17",
+    "l": "R",
+    "p": "tidyverse, ggimage, here, viridis, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week17/departures.R"
+  },
+  {
+    "k": "2021-04-27-nrennie",
+    "m": "nrennie",
     "d": "2021-04-27",
     "y": "2021",
     "t": "CEO Departures",
@@ -2780,6 +6720,32 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, viridis, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week15",
+    "m": "karamanis",
+    "d": "2021-04-20",
+    "y": "2021",
+    "t": "Netflix Productions in Different Countries",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week15/plots/post-offices.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week15",
+    "l": "R",
+    "p": "tidyverse, here, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week15/post-offices.R"
+  },
+  {
+    "k": "karamanis:2021/2021-week16",
+    "m": "karamanis",
+    "d": "2021-04-20",
+    "y": "2021",
+    "t": "Netflix Productions in Different Countries",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week16/plots/netflix-titles.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week16",
+    "l": "R",
+    "p": "ggforce, tidyverse, lubridate, RColorBrewer, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week16/netflix-titles.R"
+  },
+  {
+    "k": "2021-04-20-nrennie",
+    "m": "nrennie",
     "d": "2021-04-20",
     "y": "2021",
     "t": "Netflix Productions in Different Countries",
@@ -2790,6 +6756,8 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, tidytuesdayR"
   },
   {
+    "k": "2021-04-13-nrennie",
+    "m": "nrennie",
     "d": "2021-04-13",
     "y": "2021",
     "t": "California Post Offices",
@@ -2800,6 +6768,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, dplyr, maps, magick, extrafont, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week14",
+    "m": "karamanis",
+    "d": "2021-04-06",
+    "y": "2021",
+    "t": "Global Soy Production",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week14/plots/deforestation.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week14",
+    "l": "R",
+    "p": "tidyverse, fuzzyjoin, janitor, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week14/deforestation.R"
+  },
+  {
+    "k": "2021-04-06-nrennie",
+    "m": "nrennie",
     "d": "2021-04-06",
     "y": "2021",
     "t": "Global Soy Production",
@@ -2810,6 +6792,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, extrafont, gganimate, transformr, magick, sf, cowplot, tidytuesdayR, scales"
   },
   {
+    "k": "karamanis:2021/2021-week13",
+    "m": "karamanis",
+    "d": "2021-03-30",
+    "y": "2021",
+    "t": "Makeup Shades",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week13/plots/makeup-shades.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week13",
+    "l": "R",
+    "p": "tidyverse, gt, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week13/makeup-shades-gt.R"
+  },
+  {
+    "k": "2021-03-30-nrennie",
+    "m": "nrennie",
     "d": "2021-03-30",
     "y": "2021",
     "t": "Makeup Shades",
@@ -2820,6 +6816,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, doBy, cowplot, readr"
   },
   {
+    "k": "karamanis:2021/2021-week12",
+    "m": "karamanis",
+    "d": "2021-03-23",
+    "y": "2021",
+    "t": "UN Votes on the Total Eliminaton of Nuclear Weapons",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week12/plots/unvotes.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week12",
+    "l": "R",
+    "p": "tidyverse, vhs, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week12/unvotes-bar.R"
+  },
+  {
+    "k": "2021-03-23-nrennie",
+    "m": "nrennie",
     "d": "2021-03-23",
     "y": "2021",
     "t": "UN Votes on the Total Eliminaton of Nuclear Weapons",
@@ -2830,6 +6840,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, cowplot, tidytuesdayR, plyr, sf, rnaturalearthdata, rnaturalearth"
   },
   {
+    "k": "karamanis:2021/2021-week11",
+    "m": "karamanis",
+    "d": "2021-03-16",
+    "y": "2021",
+    "t": "Most Common Words in Game Titles",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week11/plots/games.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week11",
+    "l": "R",
+    "p": "tidyverse, lubridate, ggstream, wesanderson, colorspace, scales, cowplot, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week11/games.R"
+  },
+  {
+    "k": "2021-03-16-nrennie",
+    "m": "nrennie",
     "d": "2021-03-16",
     "y": "2021",
     "t": "Most Common Words in Game Titles",
@@ -2840,6 +6864,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, wordcloud2, magick, cowplot, RColorBrewer, tm, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week10",
+    "m": "karamanis",
+    "d": "2021-03-09",
+    "y": "2021",
+    "t": "The Bechdel Test",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week10/plots/bechdel-test.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week10",
+    "l": "R",
+    "p": "tidyverse, colorspace, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week10/bechdel-test.R"
+  },
+  {
+    "k": "2021-03-09-nrennie",
+    "m": "nrennie",
     "d": "2021-03-09",
     "y": "2021",
     "t": "The Bechdel Test",
@@ -2850,6 +6888,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, ggridges, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week9",
+    "m": "karamanis",
+    "d": "2021-03-02",
+    "y": "2021",
+    "t": "2020 Superbowl Commercials",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week9/plots/superbowl-ads.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week9",
+    "l": "R",
+    "p": "tidyverse, ggimage, cowplot, wesanderson, readr, here, colorspace, RColorBrewer, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week9/superbowl-ads.R"
+  },
+  {
+    "k": "2021-03-02-nrennie",
+    "m": "nrennie",
     "d": "2021-03-02",
     "y": "2021",
     "t": "2020 Superbowl Commercials",
@@ -2860,6 +6912,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week8",
+    "m": "karamanis",
+    "d": "2021-02-23",
+    "y": "2021",
+    "t": "Gender Divides in Construction and Retail Industries",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week8/plots/employed.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week8",
+    "l": "R",
+    "p": "tidyverse, ggfx, ragg, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week8/employed.R"
+  },
+  {
+    "k": "2021-02-23-nrennie",
+    "m": "nrennie",
     "d": "2021-02-23",
     "y": "2021",
     "t": "Gender Divides in Construction and Retail Industries",
@@ -2870,9 +6936,23 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, extrafont, cowplot, magick, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week7",
+    "m": "karamanis",
     "d": "2021-02-16",
     "y": "2021",
-    "t": "TidyTuesday · 2021-02-16",
+    "t": "Du Bois Challenge 2021",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week7/plots/dubois-2.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week7",
+    "l": "R",
+    "p": "tidyverse, janitor, jpeg, cowplot, ggbump, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week7/dubois-2.R"
+  },
+  {
+    "k": "2021-02-16-nrennie",
+    "m": "nrennie",
+    "d": "2021-02-16",
+    "y": "2021",
+    "t": "Du Bois Challenge 2021",
     "i": "https://raw.githubusercontent.com/nrennie/tidytuesday/main/2021/16-02-2021/16022021.jpg",
     "c": "https://raw.githubusercontent.com/nrennie/tidytuesday/main/2021/16-02-2021/16022021.R",
     "g": "https://github.com/nrennie/tidytuesday/tree/main/2021/16-02-2021",
@@ -2880,6 +6960,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week6",
+    "m": "karamanis",
+    "d": "2021-02-09",
+    "y": "2021",
+    "t": "Racial Wealth Inequality in America",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week6/plots/wealth-income.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week6",
+    "l": "R",
+    "p": "tidyverse, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week6/wealth-income.R"
+  },
+  {
+    "k": "2021-02-09-nrennie",
+    "m": "nrennie",
     "d": "2021-02-09",
     "y": "2021",
     "t": "Racial Wealth Inequality in America",
@@ -2890,6 +6984,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, devtools, gganimate, tidytuesdayR, scales"
   },
   {
+    "k": "karamanis:2021/2021-week5",
+    "m": "karamanis",
+    "d": "2021-02-02",
+    "y": "2021",
+    "t": "HBCU Enrollment",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week5/plots/hbcu.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week5",
+    "l": "R",
+    "p": "tidyverse, janitor, ggforce, ggtext, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week5/hbcu.R"
+  },
+  {
+    "k": "2021-02-02-nrennie",
+    "m": "nrennie",
     "d": "2021-02-02",
     "y": "2021",
     "t": "HBCU Enrollment",
@@ -2900,6 +7008,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "readxl, glue, ggplot2"
   },
   {
+    "k": "karamanis:2021/2021-week4",
+    "m": "karamanis",
+    "d": "2021-01-26",
+    "y": "2021",
+    "t": "Plastic Types",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week4/plots/plastics.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week4",
+    "l": "R",
+    "p": "tidyverse, countrycode, waffle, cowplot, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week4/plastics.R"
+  },
+  {
+    "k": "2021-01-26-nrennie",
+    "m": "nrennie",
     "d": "2021-01-26",
     "y": "2021",
     "t": "Plastic Types",
@@ -2910,6 +7032,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidytuesdayR"
   },
   {
+    "k": "karamanis:2021/2021-week3",
+    "m": "karamanis",
+    "d": "2021-01-19",
+    "y": "2021",
+    "t": "University Education in Kenya",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week3/plots/kenya-gender-disability.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week3",
+    "l": "R",
+    "p": "tidyverse, rKenyaCensus, janitor, cowplot, sf, ggtext, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week3/kenya-gender-disability.R"
+  },
+  {
+    "k": "2021-01-19-nrennie",
+    "m": "nrennie",
     "d": "2021-01-19",
     "y": "2021",
     "t": "University Education in Kenya",
@@ -2920,6 +7056,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, maptools, raster, plyr, ggplot2, rgdal, rKenyaCensus, remotes"
   },
   {
+    "k": "karamanis:2021/2021-week2",
+    "m": "karamanis",
+    "d": "2021-01-12",
+    "y": "2021",
+    "t": "Birthplaces of Artists",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week2/plots/art-collections.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week2",
+    "l": "R",
+    "p": "tidyverse, janitor, cowplot, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week2/art-collections.R"
+  },
+  {
+    "k": "2021-01-12-nrennie",
+    "m": "nrennie",
     "d": "2021-01-12",
     "y": "2021",
     "t": "Birthplaces of Artists",
@@ -2930,6 +7080,20 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidytuesdayR, tidyverse, sf, rnaturalearth, rnaturalearthdata"
   },
   {
+    "k": "karamanis:2021/2021-week1",
+    "m": "karamanis",
+    "d": "2021-01-05",
+    "y": "2021",
+    "t": "Transit Costs Project",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week1/plots/transit-cost.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week1",
+    "l": "R",
+    "p": "tidyverse, countrycode, cowplot, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2021/2021-week1/transit-cost.R"
+  },
+  {
+    "k": "2021-01-05-nrennie",
+    "m": "nrennie",
     "d": "2021-01-05",
     "y": "2021",
     "t": "Transit Costs Project",
@@ -2940,6 +7104,8 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidytuesdayR, tidyverse, countrycode"
   },
   {
+    "k": "2020-12-29-nrennie",
+    "m": "nrennie",
     "d": "2020-12-29",
     "y": "2020",
     "t": "Life Expectancy in England",
@@ -2950,13 +7116,1023 @@ window.GALLERY_SNAPSHOT = [
     "p": "tidyverse, sf, ggplot2, patchwork, extrafont"
   },
   {
+    "k": "karamanis:2020/2020-week52",
+    "m": "karamanis",
+    "d": "2020-12-22",
+    "y": "2020",
+    "t": "Big Mac",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week52/plots/big-mac.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week52",
+    "l": "R",
+    "p": "tidyverse, lubridate, scales, cowplot, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week52/big-mac.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week51",
+    "m": "karamanis",
+    "d": "2020-12-15",
+    "y": "2020",
+    "t": "Ninja Warrior",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week51/plots/ninja-warrior.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week51",
+    "l": "R",
+    "p": "tidyverse, ggtext, cowplot, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week51/ninja-warrior.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week50",
+    "m": "karamanis",
+    "d": "2020-12-08",
+    "y": "2020",
+    "t": "Women",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week50/plots/women.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week50",
+    "l": "R",
+    "p": "tidyverse, ggimage, ggforce, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week50/women.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week49",
+    "m": "karamanis",
+    "d": "2020-12-01",
+    "y": "2020",
+    "t": "Shelters",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week49/plots/shelters.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week49",
+    "l": "R",
+    "p": "tidyverse, lubridate, ggtext, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week49/shelters.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week48",
+    "m": "karamanis",
+    "d": "2020-11-24",
+    "y": "2020",
+    "t": "Washington Hiking",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week48/plots/washington-hiking.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week48",
+    "l": "R",
+    "p": "tidyverse, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week48/washington-hiking.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week46",
+    "m": "karamanis",
+    "d": "2020-11-10",
+    "y": "2020",
+    "t": "Phone",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week46/plots/phone.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week46",
+    "l": "R",
+    "p": "tidyverse, geofacet, cowplot, ggimage, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week46/phone.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week45",
+    "m": "karamanis",
+    "d": "2020-11-03",
+    "y": "2020",
+    "t": "Ikea",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week45/plots/ikea.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week45",
+    "l": "R",
+    "p": "tidyverse, ggimage, cowplot, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week45/ikea.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week44",
+    "m": "karamanis",
+    "d": "2020-10-27",
+    "y": "2020",
+    "t": "Canadian Wind Turbines",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week44/plots/wind-turbine.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week44",
+    "l": "R",
+    "p": "tidyverse, gganimate, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week44/wind-turbine-animation.R"
+  },
+  {
     "d": "2020-10-27",
     "y": "2020",
     "t": "Canadian Wind Turbines",
     "i": "https://raw.githubusercontent.com/nrennie/tidytuesday/main/2020/2020-10-27/20201027.png",
     "c": "https://raw.githubusercontent.com/nrennie/tidytuesday/main/2020/2020-10-27/20201027.R",
     "g": "https://github.com/nrennie/tidytuesday/tree/main/2020/2020-10-27",
-    "l": "R"
+    "l": "R",
+    "k": "2020-10-27-nrennie",
+    "m": "nrennie"
+  },
+  {
+    "k": "karamanis:2020/2020-week43",
+    "m": "karamanis",
+    "d": "2020-10-20",
+    "y": "2020",
+    "t": "Beer Awards",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week43/plots/beer-awards.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week43",
+    "l": "R",
+    "p": "tidyverse, waffle, cowplot, ggtext, readr, grid, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week43/beer-awards.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week42",
+    "m": "karamanis",
+    "d": "2020-10-13",
+    "y": "2020",
+    "t": "Datasaurus",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week42/plots/datasaurus.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week42",
+    "l": "R",
+    "p": "tidyverse, cowplot, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week42/datasaurus.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week41",
+    "m": "karamanis",
+    "d": "2020-10-06",
+    "y": "2020",
+    "t": "Tournament",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week41/plots/tournament.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week41",
+    "l": "R",
+    "p": "tidyverse, ggforce, ggtext, ggimage, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week41/tournament.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week40",
+    "m": "karamanis",
+    "d": "2020-09-29",
+    "y": "2020",
+    "t": "Beyonce Swift",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week40/plots/beyonce-swift.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week40",
+    "l": "R",
+    "p": "tidyverse, gt, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week40/beyonce-swift.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week39",
+    "m": "karamanis",
+    "d": "2020-09-22",
+    "y": "2020",
+    "t": "Himalayan Table",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week39/plots/himalayan.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week39",
+    "l": "R",
+    "p": "tidyverse, skimr, gt, readr, scales, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week39/himalayan-table.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week38",
+    "m": "karamanis",
+    "d": "2020-09-15",
+    "y": "2020",
+    "t": "Kids Table",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week38/plots/kids.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week38",
+    "l": "R",
+    "p": "tidyverse, gt, readr, tidyr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week38/kids-table.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week37",
+    "m": "karamanis",
+    "d": "2020-09-08",
+    "y": "2020",
+    "t": "Friends Table",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week37/plots/friends.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week37",
+    "l": "R",
+    "p": "tidyverse, gt, readr, scales, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week37/friends-table.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week36",
+    "m": "karamanis",
+    "d": "2020-09-01",
+    "y": "2020",
+    "t": "Crops",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week36/plots/crops.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week36",
+    "l": "R",
+    "p": "tidyverse, janitor, colorspace, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week36/crops.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week35",
+    "m": "karamanis",
+    "d": "2020-08-25",
+    "y": "2020",
+    "t": "Chopped",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week35/plots/chopped.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week35",
+    "l": "R",
+    "p": "tidyverse, ggforce, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week35/chopped.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week34",
+    "m": "karamanis",
+    "d": "2020-08-18",
+    "y": "2020",
+    "t": "Plants",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week34/plots/plants.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week34",
+    "l": "R",
+    "p": "tidyverse, fuzzyjoin, ggbump, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week34/plants.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week33",
+    "m": "karamanis",
+    "d": "2020-08-11",
+    "y": "2020",
+    "t": "Avatar",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week33/plots/avatar.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week33",
+    "l": "R",
+    "p": "tidyverse, fuzzyjoin, colorspace, futurevisions, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week33/avatar.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week32",
+    "m": "karamanis",
+    "d": "2020-08-04",
+    "y": "2020",
+    "t": "European Energy",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week32/plots/european-energy.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week32",
+    "l": "R",
+    "p": "tidyverse, geofacet, futurevisions, colorspace, cowplot, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week32/european-energy.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week31",
+    "m": "karamanis",
+    "d": "2020-07-28",
+    "y": "2020",
+    "t": "Penguins",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week31/plots/penguins.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week31",
+    "l": "R",
+    "p": "tidyverse, ggforce, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week31/penguins.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week30",
+    "m": "karamanis",
+    "d": "2020-07-21",
+    "y": "2020",
+    "t": "Australian Pets",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week30/plots/australian-pets.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week30",
+    "l": "R",
+    "p": "",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week30/australian-pets-sf.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week29",
+    "m": "karamanis",
+    "d": "2020-07-14",
+    "y": "2020",
+    "t": "Astronauts Table",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week29/plots/astronauts.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week29",
+    "l": "R",
+    "p": "tidyverse, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week29/astronauts-table.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week28",
+    "m": "karamanis",
+    "d": "2020-07-07",
+    "y": "2020",
+    "t": "Coffee Ratings",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week28/plots/coffee-ratings.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week28",
+    "l": "R",
+    "p": "tidyverse, ggforce, colorspace, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week28/coffee-ratings.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week27",
+    "m": "karamanis",
+    "d": "2020-06-30",
+    "y": "2020",
+    "t": "Xmen",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week27/plots/xmen.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week27",
+    "l": "R",
+    "p": "tidyverse, cowplot, ggtext, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week27/xmen.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week26",
+    "m": "karamanis",
+    "d": "2020-06-23",
+    "y": "2020",
+    "t": "Caribou",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week26/plots/caribou.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week26",
+    "l": "R",
+    "p": "tidyverse, gghighlight, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week26/caribou.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week25",
+    "m": "karamanis",
+    "d": "2020-06-16",
+    "y": "2020",
+    "t": "Slavery",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week25/plots/slavery.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week25",
+    "l": "R",
+    "p": "tidyverse, ggforce, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week25/slavery.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week24",
+    "m": "karamanis",
+    "d": "2020-06-09",
+    "y": "2020",
+    "t": "Science Women",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week24/plots/science-women.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week24",
+    "l": "R",
+    "p": "tidyverse, ggforce, shadowtext, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week24/science-women.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week23",
+    "m": "karamanis",
+    "d": "2020-06-02",
+    "y": "2020",
+    "t": "Marbles Race",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week23/plots/marbles.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week23",
+    "l": "R",
+    "p": "tidyverse, gggibbous, colorspace, lubridate, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week23/marbles-race.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week22",
+    "m": "karamanis",
+    "d": "2020-05-26",
+    "y": "2020",
+    "t": "Cocktails",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week22/plots/cocktails.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week22",
+    "l": "R",
+    "p": "tidyverse, magick, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week22/cocktails.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week21",
+    "m": "karamanis",
+    "d": "2020-05-19",
+    "y": "2020",
+    "t": "Beach Volleyball",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week21/plots/beach-volleyball.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week21",
+    "l": "R",
+    "p": "tidyverse, rnaturalearth, gghighlight, lubridate, cowplot, ggimage, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week21/beach-volleyball.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week20",
+    "m": "karamanis",
+    "d": "2020-05-12",
+    "y": "2020",
+    "t": "Volcano Eruptions",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week20/plots/volcano-eruptions.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week20",
+    "l": "R",
+    "p": "tidyverse, scales, cowplot, ggforce, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week20/volcano-eruptions.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week19",
+    "m": "karamanis",
+    "d": "2020-05-05",
+    "y": "2020",
+    "t": "Animal Crossing",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week19/plots/animal-crossing.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week19",
+    "l": "R",
+    "p": "tidyverse, ggimage, ggforce, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week19/animal-crossing.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week18",
+    "m": "karamanis",
+    "d": "2020-04-28",
+    "y": "2020",
+    "t": "Broadway Capacity",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week18/plots/broadway-spotlight.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week18",
+    "l": "R",
+    "p": "tidyverse, lubridate, sf, cowplot, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week18/broadway-capacity.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week17",
+    "m": "karamanis",
+    "d": "2020-04-21",
+    "y": "2020",
+    "t": "Gdpr Fines",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week17/plots/gdpr-fines.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week17",
+    "l": "R",
+    "p": "tidyverse, rnaturalearth, sf, ggtext, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week17/gdpr-fines.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week16",
+    "m": "karamanis",
+    "d": "2020-04-14",
+    "y": "2020",
+    "t": "Rap Artists Likert",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week16/plots/rap-artists-likert.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week16",
+    "l": "R",
+    "p": "tidyverse, janitor, ggimage, ggtext, futurevisions, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week16/rap-artists-likert.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week15",
+    "m": "karamanis",
+    "d": "2020-04-07",
+    "y": "2020",
+    "t": "Tour De France",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week15/plots/tour-de-france.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week15",
+    "l": "R",
+    "p": "tidyverse, lubridate, countrycode, glue, reactable, htmltools, knitr, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week15/tour-de-france-table.Rmd"
+  },
+  {
+    "k": "karamanis:2020/2020-week14",
+    "m": "karamanis",
+    "d": "2020-03-31",
+    "y": "2020",
+    "t": "Beer Glass",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week14/plots/beer-glass.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week14",
+    "l": "R",
+    "p": "spatstat, tidyverse, ggtext, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week14/beer-glass.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week13",
+    "m": "karamanis",
+    "d": "2020-03-24",
+    "y": "2020",
+    "t": "Tbi",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week13/plots/tbi.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week13",
+    "l": "R",
+    "p": "tidyverse, ggforce, ggtext, futurevisions, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week13/tbi.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week12",
+    "m": "karamanis",
+    "d": "2020-03-17",
+    "y": "2020",
+    "t": "The Office",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week12/plots/the-office.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week12",
+    "l": "R",
+    "p": "tidyverse, gender, genderdata, schrute, here, cowplot",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week12/the-office.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week11",
+    "m": "karamanis",
+    "d": "2020-03-10",
+    "y": "2020",
+    "t": "Diversity School2020",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week11/plots/diversity-school2020.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week11",
+    "l": "R",
+    "p": "tidyverse, ggforce, prismatic, readr, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week11/diversity-school2020.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week10",
+    "m": "karamanis",
+    "d": "2020-03-03",
+    "y": "2020",
+    "t": "Hockey Bump",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week10/plots/hockey-bump.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week10",
+    "l": "R",
+    "p": "tidyverse, ggbump, ggrepel, here, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week10/hockey-bump.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week09",
+    "m": "karamanis",
+    "d": "2020-02-25",
+    "y": "2020",
+    "t": "Measles",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week09/plots/measles.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week09",
+    "l": "R",
+    "p": "tidyverse, ggtext, here, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week09/measles.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week08",
+    "m": "karamanis",
+    "d": "2020-02-18",
+    "y": "2020",
+    "t": "Food Consumption",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week08/plots/food-consumption.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week08",
+    "l": "R",
+    "p": "tidyverse, here, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week08/food-consumption.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week07",
+    "m": "karamanis",
+    "d": "2020-02-11",
+    "y": "2020",
+    "t": "Hotels Rooms",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week07/plots/hotels-rooms.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week07",
+    "l": "R",
+    "p": "tidyverse, cowplot, here, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week07/hotels-rooms.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week06",
+    "m": "karamanis",
+    "d": "2020-02-04",
+    "y": "2020",
+    "t": "Nfl Attendance",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week06/plots/nfl-attendance.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week06",
+    "l": "R",
+    "p": "tidyverse, here, gghighlight, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week06/nfl-attendance.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week05",
+    "m": "karamanis",
+    "d": "2020-01-28",
+    "y": "2020",
+    "t": "Sf Tree Trunks",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week05/plots/sf-trees.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week05",
+    "l": "R",
+    "p": "tidyverse, ggforce, here, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week05/sf-tree-trunks.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week04",
+    "m": "karamanis",
+    "d": "2020-01-21",
+    "y": "2020",
+    "t": "Spotify Artists",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week04/plots/spotify.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week04",
+    "l": "R",
+    "p": "tidyverse, here, wesanderson, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week04/spotify-artists.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week03",
+    "m": "karamanis",
+    "d": "2020-01-14",
+    "y": "2020",
+    "t": "Passwords Bsplines",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week03/plots/passwords.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week03",
+    "l": "R",
+    "p": "tidyverse, here, ggforce, wesanderson, tidylog, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week03/passwords-bsplines.R"
+  },
+  {
+    "k": "karamanis:2020/2020-week02",
+    "m": "karamanis",
+    "d": "2020-01-07",
+    "y": "2020",
+    "t": "Aus Fires",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week02/plots/aus-fires.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2020/2020-week02",
+    "l": "R",
+    "p": "tidyverse, here, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2020/2020-week02/aus-fires.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-53",
+    "m": "karamanis",
+    "d": "2019-12-31",
+    "y": "2019",
+    "t": "Jamesbond",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-53/plots/jamesbond.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-53",
+    "l": "R",
+    "p": "tidyverse, here, janitor",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-53/jamesbond.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-52",
+    "m": "karamanis",
+    "d": "2019-12-24",
+    "y": "2019",
+    "t": "Christmas Balls",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-52/plots/christmas-balls.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-52",
+    "l": "R",
+    "p": "tidyverse, here, colorspace",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-52/christmas-balls.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-51",
+    "m": "karamanis",
+    "d": "2019-12-17",
+    "y": "2019",
+    "t": "Dog Friendliness",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-51/plots/dog-friendliness.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-51",
+    "l": "R",
+    "p": "tidyverse, here, fuzzyjoin, ggimage, ggrepel, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-51/dog-friendliness.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-50",
+    "m": "karamanis",
+    "d": "2019-12-10",
+    "y": "2019",
+    "t": "Replicate Homicides",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-50/plots/replicate-homicides.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-50",
+    "l": "R",
+    "p": "tidyverse, ggtext, ggthemes, here",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-50/replicate-homicides.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-49",
+    "m": "karamanis",
+    "d": "2019-12-03",
+    "y": "2019",
+    "t": "Tickets Hydrants",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-49/plots/tickets-hydrants.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-49",
+    "l": "R",
+    "p": "tidyverse, here, osmdata, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-49/tickets-hydrants.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-48",
+    "m": "karamanis",
+    "d": "2019-11-26",
+    "y": "2019",
+    "t": "Loans",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-48/plots/loans.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-48",
+    "l": "R",
+    "p": "tidyverse, viridis, here, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-48/loans.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-47",
+    "m": "karamanis",
+    "d": "2019-11-19",
+    "y": "2019",
+    "t": "Nz Bird",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-47/plots/nz-bird.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-47",
+    "l": "R",
+    "p": "tidyverse, here, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-47/nz-bird.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-46",
+    "m": "karamanis",
+    "d": "2019-11-12",
+    "y": "2019",
+    "t": "Cran",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-46/plots/cran.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-46",
+    "l": "R",
+    "p": "tidyverse, here, viridis, ggtern, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-46/cran.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-45",
+    "m": "karamanis",
+    "d": "2019-11-05",
+    "y": "2019",
+    "t": "Commute Waffle",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-45/plots/commute-waffle.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-45",
+    "l": "R",
+    "p": "tidyverse, here, waffle, ggthemes, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-45/commute-waffle.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-44",
+    "m": "karamanis",
+    "d": "2019-10-29",
+    "y": "2019",
+    "t": "Nyc Squirrels Height",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-44/plots/nyc-squirrels.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-44",
+    "l": "R",
+    "p": "tidyverse, here, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-44/nyc-squirrels-height.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-43",
+    "m": "karamanis",
+    "d": "2019-10-22",
+    "y": "2019",
+    "t": "Horror Skulls",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-43/plots/horror-skulls.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-43",
+    "l": "R",
+    "p": "tidyverse, here, shadowtext, ggforce, grid, lubridate, cowplot, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-43/horror-skulls.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-42",
+    "m": "karamanis",
+    "d": "2019-10-15",
+    "y": "2019",
+    "t": "Big Epa Cars Mpgrace 3lanes",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-42/figures/big-epa-cars-mpgrace-3lanes.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-42",
+    "l": "R",
+    "p": "tidyverse, here, ggimage, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-42/big-epa-corp-3lanes.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-41",
+    "m": "karamanis",
+    "d": "2019-10-08",
+    "y": "2019",
+    "t": "Powerlifting Meets",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-41/figures/powerlifting-meets.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-41",
+    "l": "R",
+    "p": "tidyverse, here, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-41/powerlifting-meets.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-40",
+    "m": "karamanis",
+    "d": "2019-10-01",
+    "y": "2019",
+    "t": "Pizza Likert",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-40/figures/pizza-likert.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-40",
+    "l": "R",
+    "p": "tidyverse, here, cowplot, readr, scales",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-40/pizza-likert.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-39",
+    "m": "karamanis",
+    "d": "2019-09-26",
+    "y": "2019",
+    "t": "School Diversity",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-39/figures/school-diversity.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-39",
+    "l": "R",
+    "p": "tidyverse, janitor, here, viridis, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-39/school-diversity.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-38",
+    "m": "karamanis",
+    "d": "2019-09-17",
+    "y": "2019",
+    "t": "National Parks Lines",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-38/figures/national-parks.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-38",
+    "l": "R",
+    "p": "tidyverse, here, lemon, RColorBrewer, scales, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-38/national-parks-lines.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-37",
+    "m": "karamanis",
+    "d": "2019-09-10",
+    "y": "2019",
+    "t": "Wip Sorry",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-37/figures/parks-map.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-37",
+    "l": "R",
+    "p": "tidyverse, here, urbnmapr, ggsci, ggsflabel, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-37/amusement-parks-map.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-36",
+    "m": "karamanis",
+    "d": "2019-09-03",
+    "y": "2019",
+    "t": "Moore",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-36/figures/moore.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-36",
+    "l": "R",
+    "p": "tidyverse, here, wesanderson, colorspace, lemon, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-36/moore.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-35",
+    "m": "karamanis",
+    "d": "2019-08-27",
+    "y": "2019",
+    "t": "Simpsons",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-35/figures/simpsons.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-35",
+    "l": "R",
+    "p": "tidyverse, here, ggtext, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-35/simpsons.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-34",
+    "m": "karamanis",
+    "d": "2019-08-20",
+    "y": "2019",
+    "t": "Nuclear",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-34/nuclear.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-34",
+    "l": "R",
+    "p": "tidyverse, here, wesanderson, ggtext, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-34/nuclear.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-33",
+    "m": "karamanis",
+    "d": "2019-08-13",
+    "y": "2019",
+    "t": "Emperors Table",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-33/emperors_table.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-33",
+    "l": "R",
+    "p": "tidyverse, here, lubridate, glue, ggtext, rcartocolor, cowplot, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-33/emperors_table.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-32",
+    "m": "karamanis",
+    "d": "2019-08-06",
+    "y": "2019",
+    "t": "Bob Ross",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-32/bob_ross.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-32",
+    "l": "R",
+    "p": "tidyverse, here, ggimage, cowplot, readr, janitor",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-32/bob_ross.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-31",
+    "m": "karamanis",
+    "d": "2019-07-30",
+    "y": "2019",
+    "t": "Videogames",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-31/videogames.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-31",
+    "l": "R",
+    "p": "tidyverse, here, ggrepel, ggforce, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-31/videogames.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-30",
+    "m": "karamanis",
+    "d": "2019-07-23",
+    "y": "2019",
+    "t": "Wildlife",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-30/wildlife.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-30",
+    "l": "R",
+    "p": "tidyverse, here, ggimage, ggrepel",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-30/wildlife.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-29",
+    "m": "karamanis",
+    "d": "2019-07-16",
+    "y": "2019",
+    "t": "R4ds",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-29/r4ds.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-29",
+    "l": "R",
+    "p": "tidyverse, here, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-29/r4ds.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-28",
+    "m": "karamanis",
+    "d": "2019-07-09",
+    "y": "2019",
+    "t": "Wwc",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-28/wwc.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-28",
+    "l": "R",
+    "p": "tidyverse, ggimage, here, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-28/wwc.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-27",
+    "m": "karamanis",
+    "d": "2019-07-02",
+    "y": "2019",
+    "t": "Media Franchises Circles",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-27/media_franchises.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-27",
+    "l": "R",
+    "p": "tidyverse, here, cowplot, RColorBrewer, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-27/media_franchises_circles.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-26",
+    "m": "karamanis",
+    "d": "2019-06-25",
+    "y": "2019",
+    "t": "Ufo Curve",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-26/ufo.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-26",
+    "l": "R",
+    "p": "here, tidyverse, tidytext, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-26/ufo_curve.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-25",
+    "m": "karamanis",
+    "d": "2019-06-18",
+    "y": "2019",
+    "t": "Xbirdcounts",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-25/xBirdCounts.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-25",
+    "l": "R",
+    "p": "here, tidyverse, gridExtra, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-25/xBirdCounts.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-24",
+    "m": "karamanis",
+    "d": "2019-06-11",
+    "y": "2019",
+    "t": "Meteorites",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-24/meteorites.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-24",
+    "l": "R",
+    "p": "tidyverse, ggrepel, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-24/meteorites.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-23",
+    "m": "karamanis",
+    "d": "2019-06-04",
+    "y": "2019",
+    "t": "Ramen",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-23/ramen.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-23",
+    "l": "R",
+    "p": "tidyverse, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-23/ramen.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-22",
+    "m": "karamanis",
+    "d": "2019-05-28",
+    "y": "2019",
+    "t": "Wine",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-22/wine.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-22",
+    "l": "R",
+    "p": "tidyverse, ggimage, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-22/wine.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-21",
+    "m": "karamanis",
+    "d": "2019-05-21",
+    "y": "2019",
+    "t": "Waste",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-21/waste.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-21",
+    "l": "R",
+    "p": "tidyverse, ggimage, janitor, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-21/waste.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-20",
+    "m": "karamanis",
+    "d": "2019-05-14",
+    "y": "2019",
+    "t": "Nobel Prize Laureates",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-20/nobel.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-20",
+    "l": "R",
+    "p": "tidyverse, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-20/nobel.R"
   },
   {
     "d": "2019-05-14",
@@ -2965,6 +8141,128 @@ window.GALLERY_SNAPSHOT = [
     "i": "https://raw.githubusercontent.com/nrennie/tidytuesday/main/2019/2019-05-14/nobel_Economics.png",
     "c": "https://raw.githubusercontent.com/nrennie/tidytuesday/main/2019/2019-05-14/20190514.R",
     "g": "https://github.com/nrennie/tidytuesday/tree/main/2019/2019-05-14",
-    "l": "R"
+    "l": "R",
+    "k": "2019-05-14-nrennie",
+    "m": "nrennie"
+  },
+  {
+    "k": "karamanis:2019/2019-week-19",
+    "m": "karamanis",
+    "d": "2019-05-07",
+    "y": "2019",
+    "t": "Students",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-19/students.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-19",
+    "l": "R",
+    "p": "tidyverse, wesanderson, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-19/students.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-18",
+    "m": "karamanis",
+    "d": "2019-04-30",
+    "y": "2019",
+    "t": "Birds2",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-18/birds2.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-18",
+    "l": "R",
+    "p": "tidyverse, zoo, wesanderson, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-18/birds.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-17",
+    "m": "karamanis",
+    "d": "2019-04-23",
+    "y": "2019",
+    "t": "Anime",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-17/anime.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-17",
+    "l": "R",
+    "p": "tidyverse, wesanderson, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-17/anime.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-16",
+    "m": "karamanis",
+    "d": "2019-04-16",
+    "y": "2019",
+    "t": "Worse",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-16/worse.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-16",
+    "l": "R",
+    "p": "tidyverse, cowplot, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-16/mistakes.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-15",
+    "m": "karamanis",
+    "d": "2019-04-09",
+    "y": "2019",
+    "t": "Tennis",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-15/tennis.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-15",
+    "l": "R",
+    "p": "tidyverse, cowplot, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-15/tennis.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-14",
+    "m": "karamanis",
+    "d": "2019-04-02",
+    "y": "2019",
+    "t": "Bikes",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-14/bikes.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-14",
+    "l": "R",
+    "p": "ggplot2, dplyr, tidyr, png, grid, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-14/bikes.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-13",
+    "m": "karamanis",
+    "d": "2019-03-26",
+    "y": "2019",
+    "t": "Pets",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-13/pets.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-13",
+    "l": "R",
+    "p": "ggplot2, dplyr, viridis, png, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-13/pets.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-12",
+    "m": "karamanis",
+    "d": "2019-03-19",
+    "y": "2019",
+    "t": "Policing",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-12/policing.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-12",
+    "l": "R",
+    "p": "ggplot2, dplyr, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-12/policing.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-11",
+    "m": "karamanis",
+    "d": "2019-03-12",
+    "y": "2019",
+    "t": "Gametitles",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-11/gametitles.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-11",
+    "l": "R",
+    "p": "ggplot2, dplyr, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-11/board_games.R"
+  },
+  {
+    "k": "karamanis:2019/2019-week-10",
+    "m": "karamanis",
+    "d": "2019-03-05",
+    "y": "2019",
+    "t": "Women Workplace",
+    "i": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-10/women-workplace.png",
+    "g": "https://github.com/gkaramanis/tidytuesday/tree/master/2019/2019-week-10",
+    "l": "R",
+    "p": "ggplot2, readr",
+    "c": "https://raw.githubusercontent.com/gkaramanis/tidytuesday/master/2019/2019-week-10/women-workplace.R"
   }
 ];

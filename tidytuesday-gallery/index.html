@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>nrennie / tidytuesday gallery</title>
+<title>TidyTuesday Gallery</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
@@ -25,6 +25,8 @@ h1 span{color:var(--accent)}
 .chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 14px;font-size:13px;font-weight:500;cursor:pointer;color:var(--ink)}
 .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 .chip.lang.on{background:var(--accent);border-color:var(--accent)}
+.chip.maker.on{background:#0a3069;border-color:#0a3069}
+.sep{width:1px;align-self:stretch;background:var(--line);margin:0 4px}
 .count{margin-left:auto;font-size:13px;color:var(--muted)}
 .grid{max-width:1400px;margin:0 auto;padding:28px 32px 80px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;align-items:start}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform .15s ease, box-shadow .15s ease}
@@ -68,10 +70,10 @@ button:disabled{opacity:.45;cursor:default}
 <body>
 <header>
   <h1>tidytuesday<span>.</span></h1>
-  <p class="sub">Every visualisation from <a href="https://github.com/nrennie/tidytuesday" style="color:var(--accent)">nrennie/tidytuesday</a>, newest first. Click a plot to see it full size with the code that made it.</p>
+  <p class="sub">Every #TidyTuesday visualisation from <a href="https://github.com/nrennie/tidytuesday" style="color:var(--accent)">Nicola Rennie</a> and <a href="https://github.com/gkaramanis/tidytuesday" style="color:var(--accent)">Georgios Karamanis</a>, newest first. Click a plot to see it full size with the code that made it.</p>
 </header>
 <div class="bar"><div class="bar-inner">
-  <input id="search" type="search" aria-label="Search plots, dates or packages" placeholder="Search topics, dates or packages…">
+  <input id="search" type="search" aria-label="Search plots, dates or packages" placeholder="Search topics, dates, makers or packages…">
   <button class="chip" id="surprise">Surprise me</button>
   <button class="chip" id="refresh">Refresh</button>
   <span id="status" role="status">Checking for new plots…</span>
