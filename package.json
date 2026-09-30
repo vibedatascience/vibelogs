@@ -1,7 +1,8 @@
 {
   "scripts": {
     "test:hn-reader": "node --test tests/hn-reader-discovery.test.cjs",
-    "test:gallery": "node --test tests/tidytuesday-gallery.test.cjs"
+    "test:gallery": "node --test tests/tidytuesday-gallery.test.cjs",
+    "test:map-gallery": "node --test tests/map-gallery.test.cjs"
   },
   "dependencies": {
     "papaparse": "^5.7.0"
