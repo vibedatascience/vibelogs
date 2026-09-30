@@ -243,6 +243,13 @@ function build(){
   const sh=c=>Object.assign({},c,{sh:-7});
   const L=(id,text,p)=>({id,text,p});
   const intT=(a,b,step=1)=>{ const r=[]; for(let v=a;v<=b;v+=step) r.push([v,v]); return r; };
+  function bracket(name,x1,x2,y,z,role){ const o={}; o[name+"B"]={p:[(x1+x2)/2,y,z],s:[Math.abs(x2-x1),.1,.1],role};
+    o[name+"L"]={p:[x1,y-.3,z],s:[.1,.7,.1],role}; o[name+"R"]={p:[x2,y-.3,z],s:[.1,.7,.1],role}; return o; }
+  const evM=(H,Et,St,Er,Sr)=>{ const z=H.zf+.35, y1=H.top+1.5, y2=H.top+2.9, xs=v=>clamp(H.xv(v),-XW/2,XW/2);
+    const o=Object.assign({},axisM(H),{meanS:{p:[H.xv(Et),(H.top+3.6)/2,z],s:[.14,H.top+3.6,.14],role:"truth"}},bracket("sd",xs(Et-St),xs(Et+St),y1,z,"truth"));
+    if(Er!==undefined) Object.assign(o,bracket("se",xs(Er-Sr),xs(Er+Sr),y2,z,"accent")); return o; };
+  const evL=(H,Et,St,Er,Sr,fm=f2)=>{ const z=H.zf+.35, a=[L("evT",`theory: E = ${fm(Et)}, SD = ${fm(St)}`,[H.xv(Et),H.top+1.85,z])];
+    if(Er!==undefined) a.push(L("evR",`real: mean ${fm(Er)}, SD ${fm(Sr)}`,[H.xv(Er),H.top+3.25,z])); return a; };
 
   const St=[], add=o=>St.push(Object.assign({delay:"random",spread:.8,field:"field",marks:{},labels:[],cap:""},o));
   add({ hero:true, cam:{t:[0,6,0],az:40,el:26,w:70,h:52}, spread:.6, inst:i=>[SC[i*3],SC[i*3+1],SC[i*3+2],.8,.8,.8,i%5?"ink":"teal"] });
@@ -251,13 +258,31 @@ function build(){
   add({ cam:{t:[0,-2,0],az:40,el:40,w:40,h:30}, delay:"random", inst:i=> i<2000 ? (()=>{ const [x,z]=gridP(i); return [x,.25,z,.5,.5,.5,"ink"]; })() : hide(i),
     cap:`Central Park has a weather record for every day since January 1, 1900: <b>${fmtN(ND)}</b> days. Here are 2,000 of them at random, one cube each. Take the last digit of each day's high temperature, so 84°F becomes 4.` });
   add({ cam:sh(camH(HU)), delay:"x", spread:1.2, curves:{cU:"accent"}, inst:inH(HU,"ink"), marks:axisM(HU), labels:axL(HU,intT(0,9),""),
-    card:{k:"Uniform", d:"Every outcome is equally likely. The theoretical piles (red line) are dead flat. Real digits come close; across all days a zero shows up slightly more often.", f:`P(X = k) = 1/10 · E(X) = 4.5 · Var(X) = (10² − 1)/12 = 8.25 · real: E = ${f2(avg(dig))}, Var = ${f2(vr(dig))}`},
+    card:{k:"Uniform", d:"Every outcome is equally likely. The theoretical piles (red line) are dead flat. Real digits come close; across all days a zero shows up slightly more often.", f:`P(X = k) = 1/10 · E(X) = 4.5 · Var(X) = (10² − 1)/12 = 8.25 · all ${fmtN(ND)} days: E = ${f2(avg(dig))}, Var = ${f2(vr(dig))}`},
     cap:`Sorted by last digit, the piles come out nearly level: each digit about 10% of days. Across all ${fmtN(ND)} days, zero is a touch more common at ${pc(allDigCnt[0]/ND)}.` });
 
+  const uMean=avg(uVals), uVar=vr(uVals), uSd=Math.sqrt(uVar), uP=[...Array(10).keys()].map(k=>uVals.filter(v=>v===k).length/uVals.length);
+  const sumTxt=uP.map((q,k)=>`${k}×${q.toFixed(2)}`).slice(0,3).join(" + ")+" + … + "+`9×${uP[9].toFixed(2)}`;
+  const zU=HU.zb-.2, sqBase=HU.top+1.2;
+  const sqAt=k=>{ const d=Math.abs(k-uMean); return [HU.xc(k),sqBase+d/2,zU-k*.01,d,d,.06,"muted"]; };
+  const avgSq=[HU.xv(uMean),sqBase+uSd/2,zU,uSd,uSd,.08,"accent"];
+  add({ cam:camH(HU,{h:Math.max(22,HU.top*2.1)+4,t:[0,Math.max(3,HU.top*.42)+2,0]}), inst:inH(HU,"ink"),
+    marks:Object.assign({},axisM(HU),{meanS:{p:[HU.xv(uMean),(HU.top+3)/2,HU.zf+.35],s:[.14,HU.top+3,.14],role:"truth"}}),
+    labels:[...axL(HU,intT(0,9),""),L("bal",`balance point ${f2(uMean)}`,[HU.xv(uMean),HU.top+3.2,HU.zf+.35])],
+    cap:`What's the expected value? Treat these 2,000 cubes as weights on a plank: it balances at <b>${f2(uMean)}</b>. That's each digit times how often it shows up, added together: ${sumTxt} = ${f2(uMean)}.` });
+  add({ cam:sh(camH(HU,{h:Math.max(22,HU.top*2.1)+12,t:[0,Math.max(3,HU.top*.42)+3,0]})),
+    marks:Object.assign({},axisM(HU),{meanS:{p:[HU.xv(uMean),(HU.top+3)/2,HU.zf+.35],s:[.14,HU.top+3,.14],role:"truth"}}),
+    card:{k:"Variance and SD", d:"Variance is the average squared distance from the balance point. Each gray square's side is one digit's distance from it. Average the squares, weighted by how often each digit happens, and you get one red square: its area is the variance and its side is the standard deviation.", f:`Var = Σ (x − μ)²·P(x) = ${f2(uVar)} · SD = √${f2(uVar)} = ${f2(uSd)}`},
+    cap:`Variance measures spread. Each digit draws a square whose side is its distance from ${f2(uMean)}: 9 sits ${f2(9-uMean)} away, so its square has area ${f1((9-uMean)**2)}. Averaging the squares gives <b>${f2(uVar)}</b>, and the side of that average square is the SD, <b>${f2(uSd)}</b>.`,
+    labels:axL(HU,intT(0,9),""),
+    phases:[ {inst:i=> i<2000 ? inH(HU,"ink")(i) : i<2010 ? sqAt(i-2000) : hide(i),delay:"random",spread:.8,dur:.9},
+             {at:2.8,inst:i=> i<2000 ? inH(HU,"ink")(i) : i<2010 ? avgSq : hide(i),delay:"random",spread:.5,dur:1,labels:[...axL(HU,intT(0,9),""),L("sq",`average square: area ${f2(uVar)}, side ${f2(uSd)}`,[HU.xv(uMean),sqBase+uSd+.4,zU])]} ] });
+  add({ cam:camH(HU), inst:inH(HU,"ink"), marks:evM(HU,4.5,Math.sqrt(8.25),uMean,uSd), labels:[...axL(HU,intT(0,9),""),...evL(HU,4.5,Math.sqrt(8.25),uMean,uSd)],
+    cap:`From here on, every shape gets the same two marks: a pole at its expected value, and brackets one standard deviation either side, gray for the theory and red for the real data. For last digits they almost overlap.` });
   /* bernoulli */
   add({ cam:{t:[0,-1,0],az:36,el:44,w:40,h:30}, delay:"x", inst:i=>{ const [x,z]=calP(i); return [x,.25,z,.5,.5,.5,cal[i]?"teal":"ink"]; },
     cap:`Now a yes-or-no question: did it rain at least 0.01 inch? These are the last 2,100 days, ${fmtD(calStart)} to Dec 2025, laid out week by week. Rainy days are teal.` });
-  add({ cam:sh(camH(HBe)), delay:"x", spread:1.2, inst:inH(HBe,i=>cal[i]?"teal":"ink"), marks:axisM(HBe), labels:[...axL(HBe,[[0,"dry (0)"],[1,"rain (1)"]],""),L("bp",`${pc(avg(cal))} rainy`,[HBe.xc(1),HBe.top+.8,0])],
+  add({ cam:sh(camH(HBe)), delay:"x", spread:1.2, inst:inH(HBe,i=>cal[i]?"teal":"ink"), marks:evM(HBe,p,Math.sqrt(p*(1-p)),avg(cal),Math.sqrt(vr(cal))), labels:[...axL(HBe,[[0,"dry (0)"],[1,"rain (1)"]],""),...evL(HBe,p,Math.sqrt(p*(1-p)),avg(cal),Math.sqrt(vr(cal)))],
     card:{k:"Bernoulli", d:"A single trial with two outcomes, coded 1 and 0. Its one number is p, the chance of a 1. Across 125 years of Central Park days, p is about one in three.", f:`P(X = 1) = p = ${f2(p)} · E(X) = p · Var(X) = p(1 − p) = ${f2(p*(1-p))}`},
     cap:`Every day is one Bernoulli trial: rain (1) or dry (0). Since 1900 it has rained on <b>${pc(p)}</b> of Central Park days.` });
 
@@ -266,8 +291,8 @@ function build(){
     cap:`Group the days into weeks and count the rainy ones. Seven Bernoulli days collapse into one number from 0 to 7. These are the last 300 weeks.`,
     phases:[ {inst:i=>{ const w=Math.floor(i/7), d=i%7, [x,z]=calP(w*7); return [x,.25,z,.5,d===0?.5:0,.5,cal[i]?"teal":"ink"]; },delay:"x",spread:.8,dur:.8},
              {at:1.6,inst:i=>{ if(i%7) return [HB1.pos[(Math.floor(i/7))*3],HB1.pos[(Math.floor(i/7))*3+1],HB1.pos[(Math.floor(i/7))*3+2],0,0,0,"teal"]; const w=i/7; return [HB1.pos[w*3],HB1.pos[w*3+1],HB1.pos[w*3+2],HB1.cu,HB1.cu,HB1.cu,"teal"]; },delay:"x",spread:1,dur:.9} ] });
-  add({ cam:sh(camH(HB2)), delay:"x", spread:1.2, curves:{cB:"accent"}, inst:inH(HB2,"teal"), marks:axisM(HB2), labels:axL(HB2,intT(0,7),"rainy days"),
-    card:{k:"Binomial", d:"The number of successes in n independent trials, each with the same chance p. It assumes the trials don't influence each other. Real rain breaks that rule: wet days cluster.", f:`P(X = k) = C(7,k)·p^k·(1 − p)^(7−k) · E = np = ${f2(7*p)} · Var = np(1 − p) = ${f2(bVar)} · real Var = ${f2(wkVar)}`},
+  add({ cam:sh(camH(HB2)), delay:"x", spread:1.2, curves:{cB:"accent"}, inst:inH(HB2,"teal"), marks:evM(HB2,7*p,Math.sqrt(bVar),wkMean,Math.sqrt(wkVar)), labels:[...axL(HB2,intT(0,7),"rainy days"),...evL(HB2,7*p,Math.sqrt(bVar),wkMean,Math.sqrt(wkVar))],
+    card:{k:"Binomial", d:"The number of successes in n independent trials, each with the same chance p. It assumes the trials don't influence each other. Real rain breaks that rule: wet days cluster, so the red bracket is wider than the gray one.", f:`P(X = k) = C(7,k)·p^k·(1 − p)^(7−k) · E = np = ${f2(7*p)} · Var = np(1 − p) = ${f2(bVar)} · real Var = ${f2(wkVar)}`},
     cap:`Now 2,100 weeks drawn from all ${fmtN(allWeeks.length)} since 1900. The binomial (red) gets the center right, but real weeks are lumpier: ${pc(wk0,1)} are bone dry, against ${pc(bk0,1)} predicted, and washout weeks are more common too.` });
 
   /* geometric */
@@ -275,35 +300,35 @@ function build(){
   add({ cam:camH(HG), delay:"x", spread:1.2, curves:{cG:"accent"}, inst:inH(HG,i=>wSample[i]===1?"accent":"ink"), marks:axisM(HG),
     labels:[...axL(HG,[[1,1],[3,3],[5,5],[7,7],[9,9],[11,11],[13,13],[15,15]],"days"),L("g1",`${fmtN(g1S)} real · ${fmtN(p*N)} predicted`,[HG.xc(0),HG.top+.8,0])],
     cap:`Now wait instead of count. After a rainy day, how many days until the next one? Each cube is one wait, drawn from ${fmtN(waits.length)} since 1900. The red curve is the geometric prediction.` });
-  add({ cam:sh(camH(HG)), curves:{cG:"accent"}, inst:inH(HG,i=>wSample[i]===1?"accent":"ink"), marks:axisM(HG), labels:axL(HG,[[1,1],[3,3],[5,5],[7,7],[9,9],[11,11],[13,13],[15,15]],"days"),
+  add({ cam:sh(camH(HG)), curves:{cG:"accent"}, inst:inH(HG,i=>wSample[i]===1?"accent":"ink"), marks:evM(HG,1/p,Math.sqrt(1-p)/p,wMean,Math.sqrt(wVar)), labels:[...axL(HG,[[1,1],[3,3],[5,5],[7,7],[9,9],[11,11],[13,13],[15,15]],"days"),...evL(HG,1/p,Math.sqrt(1-p)/p,wMean,Math.sqrt(wVar))],
     card:{k:"Geometric", d:"The number of trials until the first success. Each extra day of waiting is less likely than the last by the same factor (1 − p).", f:`P(X = k) = (1 − p)^(k−1)·p · E = 1/p = ${f2(1/p)} · Var = (1 − p)/p² = ${f1((1-p)/p**2)} · real: E = ${f2(wMean)}, Var = ${f1(wVar)}`},
     cap:`The average wait matches exactly, ${f1(wMean)} days. The shape doesn't: <b>${pc(g1,0)}</b> of waits are a single day, against ${pc(p,0)} predicted. In New York, rain tends to follow rain.` });
 
   /* poisson */
   add({ cam:camH(HP), delay:"x", spread:1.2, curves:{cP:"accent"}, inst:inH(HP,"teal"), marks:axisM(HP), labels:axL(HP,intT(0,7),"downpour days"),
     cap:`Now rare events. Call a day with an inch or more of rain a downpour. Count them in each of the <b>${fmtN(months.length)}</b> months since 1900, one cube per month.` });
-  add({ cam:sh(camH(HP)), curves:{cP:"accent"}, inst:inH(HP,"teal"), marks:axisM(HP), labels:axL(HP,intT(0,7),"downpour days"),
-    card:{k:"Poisson", d:"Counts of rare events in a fixed window of time or space, when each event is unlikely but there are many chances for one. One number, λ, sets both the average and the spread.", f:`P(X = k) = e^(−λ)·λ^k / k! · E = Var = λ = ${f2(lam)} · real Var = ${f2(mVar)}`},
+  add({ cam:sh(camH(HP)), curves:{cP:"accent"}, inst:inH(HP,"teal"), marks:evM(HP,lam,Math.sqrt(lam),lam,Math.sqrt(mVar)), labels:[...axL(HP,intT(0,7),"downpour days"),...evL(HP,lam,Math.sqrt(lam),lam,Math.sqrt(mVar))],
+    card:{k:"Poisson", d:"Counts of rare events in a fixed window of time or space, when each event is unlikely but there are many chances for one. One number, λ, sets both the average and the variance, and the two brackets nearly coincide.", f:`P(X = k) = e^(−λ)·λ^k / k! · E = Var = λ = ${f2(lam)} · real Var = ${f2(mVar)}`},
     cap:`Here the theory nails it. An average of ${f2(lam)} downpours a month gives a Poisson that tracks the real piles almost exactly, down to the rare month with 5 or more.` });
 
   /* exponential */
   add({ cam:camH(HE), delay:"x", spread:1.2, curves:{cE:"accent"}, inst:inH(HE,"ink"), marks:axisM(HE), labels:axL(HE,[[0,0],[10,10],[20,20],[30,30],[40,40],[50,50],[60,60]],"sec"),
     cap:`From counting to timing. On summer Saturday nights at 11pm, New Yorkers file a residential noise complaint with 311 every <b>${f1(gMean)} seconds</b> on average. Each cube is the gap between two complaints.` });
-  add({ cam:sh(camH(HE)), curves:{cE:"accent"}, inst:inH(HE,"ink"), marks:axisM(HE), labels:axL(HE,[[0,0],[10,10],[20,20],[30,30],[40,40],[50,50],[60,60]],"sec"),
-    card:{k:"Exponential", d:"The continuous cousin of the geometric: waiting time between random, independent events. It's memoryless: after a quiet 20 seconds, the wait ahead is no shorter than before.", f:`f(x) = λe^(−λx) · E = 1/λ = ${f1(gMean)} s · SD = 1/λ = ${f1(gMean)} s · real SD = ${f1(gSd)} s`},
+  add({ cam:sh(camH(HE)), curves:{cE:"accent"}, inst:inH(HE,"ink"), marks:evM(HE,gMean,gMean,gMean,gSd), labels:[...axL(HE,[[0,0],[10,10],[20,20],[30,30],[40,40],[50,50],[60,60]],"sec"),...evL(HE,gMean,gMean,gMean,gSd,f1)],
+    card:{k:"Exponential", d:"The continuous cousin of the geometric: waiting time between random, independent events. Its SD equals its mean, so the bracket's left end lands right at zero. It's memoryless: after a quiet 20 seconds, the wait ahead is no shorter than before.", f:`f(x) = λe^(−λx) · E = 1/λ = ${f1(gMean)} s · SD = 1/λ = ${f1(gMean)} s · real SD = ${f1(gSd)} s`},
     cap:`Short gaps are the most common and long ones fade away smoothly. The telltale sign: the average gap (${f1(gMean)} s) and its standard deviation (${f1(gSd)} s) are almost equal.` });
 
   /* normal */
   add({ cam:camH(HN), delay:"x", spread:1.2, curves:{cN:"accent"}, inst:inH(HN,"ink"), marks:axisM(HN), labels:axL(HN,[[65,65],[75,75],[85,85],[95,95],[105,"105°F"]],""),
     cap:`July highs in Central Park: 2,100 days drawn from ${fmtN(july.length)} July days since 1900. They pile into the most famous shape in statistics.` });
-  add({ cam:sh(camH(HN)), curves:{cN:"accent"}, inst:inH(HN,v=>Math.abs(jSample[v]-jMu)<=jSd?"teal":"ink"), marks:axisM(HN), labels:axL(HN,[[65,65],[75,75],[85,85],[95,95],[105,"105°F"]],""),
+  add({ cam:sh(camH(HN)), curves:{cN:"accent"}, inst:inH(HN,v=>Math.abs(jSample[v]-jMu)<=jSd?"teal":"ink"), marks:evM(HN,jMu,jSd), labels:[...axL(HN,[[65,65],[75,75],[85,85],[95,95],[105,"105°F"]],""),...evL(HN,jMu,jSd,undefined,undefined,f1)],
     card:{k:"Normal", d:"The bell curve, set by a center μ and a spread σ. It shows up whenever many small, independent pushes add together, which is the central limit theorem at work.", f:`N(μ = ${f1(jMu)}, σ = ${f1(jSd)}) · within ±1σ: ${pc(in1,0)} (theory 68%) · within ±2σ: ${pc(in2,0)} (theory 95%)`},
     cap:`The teal cubes sit within one standard deviation of the mean, ${f1(jMu-jSd)} to ${f1(jMu+jSd)}°F: <b>${pc(in1,0)}</b> of July days, close to the textbook 68%.` });
 
   /* t */
   add({ cam:camH(HT), delay:"x", spread:1.2, curves:{cTn:"truth"}, inst:inH(HT,i=>Math.abs(tStats[i])>3?"accent":"ink"), marks:axisM(HT), labels:axL(HT,[[-6,"−6"],[-3,"−3"],[0,"0"],[3,"+3"],[6,"+6"]],"SE"),
     cap:`Now estimate July's average from just <b>4 random days</b>, and measure how far off you are in estimated standard errors. Repeat 2,100 times. The gray bell is what a normal distribution expects. Red cubes miss by more than 3.` });
-  add({ cam:sh(camH(HT)), curves:{cTn:"truth",cT3:"accent"}, inst:inH(HT,i=>Math.abs(tStats[i])>3?"accent":"ink"), marks:axisM(HT), labels:axL(HT,[[-6,"−6"],[-3,"−3"],[0,"0"],[3,"+3"],[6,"+6"]],"SE"),
+  add({ cam:sh(camH(HT)), curves:{cTn:"truth",cT3:"accent"}, inst:inH(HT,i=>Math.abs(tStats[i])>3?"accent":"ink"), marks:evM(HT,0,Math.sqrt(3),avg(tStats),Math.sqrt(vr(tStats))), labels:[...axL(HT,[[-6,"−6"],[-3,"−3"],[0,"0"],[3,"+3"],[6,"+6"]],"SE"),...evL(HT,0,Math.sqrt(3),avg(tStats),Math.sqrt(vr(tStats)))],
     card:{k:"t distribution", d:"What you get when the spread itself is estimated from a small sample. It looks normal but with fatter tails, set by the degrees of freedom (n − 1). As n grows it melts into the normal.", f:`beyond ±3: real ${pc(tBeyond)} · t with 3 df ${pc(t3Beyond)} · normal 0.3%`},
     cap:`With only 4 days, the estimated spread is itself shaky, so big misses happen far more than the bell allows. The red curve, a t distribution with 3 degrees of freedom, fits: <b>${pc(tBeyond)}</b> real vs ${pc(t3Beyond)} predicted.` });
   add({ cam:{t:[0,6,0],az:40,el:26,w:60,h:44}, end:true, spread:.6, inst:i=>[SC[i*3]*.8,SC[i*3+1]*.6+2,SC[i*3+2]*.8,.7,.7,.7,i%5?"ink":"teal"] });
