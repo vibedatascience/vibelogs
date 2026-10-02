@@ -172,6 +172,7 @@ dd{margin:0;min-width:0}
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/shaders/BokehShader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/postprocessing/BokehPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
 <script>
 (function(){
 'use strict';
@@ -857,6 +858,75 @@ function garnish(kind,arg,c,i,d){ const s=c.spin;
     smokers.push({arr,y:c.rimY+.004,pink}); }
 }
 
+
+/* ---------- bartender ---------- */
+const BT={pos:new T.Vector3(2.36,0,-1.15), ready:false};
+// mixing glass he is stirring, on the bartender side of the counter
+const mixAt=new T.Vector3(BAR.x+.2, topY, BT.pos.z-.2);
+(function(){ const g=new T.Group(); g.position.copy(mixAt); scene.add(g);
+  const base=mesh(lathe([[0,0],[.044,0],[.045,.012],[0,.012]],56), M.glassSolid,0,0,0,g); base.userData.noShadow=true;
+  const shell=lathe([[.045,.012],[.043,.15],[.0415,.1505],[.04,.15],[.0415,.013]],56); const gb=mesh(shell,M.glassBack,0,0,0,g); gb.renderOrder=8; const gf=mesh(shell,M.glassFront,0,0,0,g); gf.renderOrder=9;
+  const lq=mesh(new T.CylinderGeometry(.037,.037,.075,40), liqMat('#c8792a',.8),0,.05,0,g); lq.renderOrder=6; lq.userData.noShadow=true;
+  for(let k=0;k<4;k++){ const c=mesh(rbox(.024,.024,.024,.004),M.ice,Math.cos(k*1.6)*.014,.07+k*.008,Math.sin(k*1.6)*.014,g); c.rotation.set(k,k*2,0); c.renderOrder=7; }
+  BT.spoon=cyl(.0018,.0018,1,M.gold,0,0,0,null,8); BT.spoon.userData.noShadow=true; BT.spoonBowl=mesh(new T.SphereGeometry(.007,12,8),M.gold,0,0,0); BT.spoonBowl.scale.set(1,.4,1.4);
+})();
+const keyLight=new T.SpotLight(0xffd2a8,.9,4,.35,.8,1.6); keyLight.position.set(1.2,2.7,BT.pos.z+.2); keyLight.target.position.set(BT.pos.x,1.55,BT.pos.z); scene.add(keyLight); scene.add(keyLight.target);
+const _v1=new T.Vector3(),_v2=new T.Vector3(),_v3=new T.Vector3(),_q1=new T.Quaternion(),_q2=new T.Quaternion(),_q3=new T.Quaternion();
+function aimBone(bone, child, target){ bone.updateMatrixWorld(true); bone.getWorldPosition(_v1); child.getWorldPosition(_v2);
+  const from=_v2.sub(_v1).normalize(), to=_v3.copy(target).sub(_v1).normalize(); _q1.setFromUnitVectors(from,to);
+  bone.getWorldQuaternion(_q2); _q2.premultiply(_q1); bone.parent.getWorldQuaternion(_q3); bone.quaternion.copy(_q3.invert().multiply(_q2)); bone.updateMatrixWorld(true); }
+function armIK(arm, target, pole){ const S=arm.up.getWorldPosition(new T.Vector3()); const a=arm.a, b=arm.b; const dir=target.clone().sub(S); let d=Math.min(dir.length(), a+b-.002); dir.normalize();
+  const along=(a*a+d*d-b*b)/(2*d), h=Math.sqrt(Math.max(a*a-along*along,0)); const pd=pole.clone().sub(S); pd.sub(dir.clone().multiplyScalar(pd.dot(dir))).normalize();
+  const elbow=S.clone().addScaledVector(dir,along).addScaledVector(pd,h); const tgt=S.clone().addScaledVector(dir,d);
+  aimBone(arm.up, arm.fore, elbow); aimBone(arm.fore, arm.hand, tgt); }
+function curl(bones, prefix, amt, axis){ ['Index','Middle','Ring','Pinky'].forEach(f=>[1,2,3].forEach(k=>{ const b=bones[prefix+'Hand'+f+k]; if(b){ b.quaternion.copy(b.userData.rest); b.rotateOnAxis(axis, amt*(k===1?.7:1)); } })); }
+if(T.GLTFLoader){ new T.GLTFLoader().load('bartender.glb', g=>{
+  const root=g.scene; root.position.copy(BT.pos); root.rotation.y=-Math.PI/2; scene.add(root);
+  const bones={}; root.traverse(o=>{ if(o.isBone){ bones[o.name]=o; o.userData.rest=o.quaternion.clone(); }
+    if(o.isMesh){ o.castShadow=true; o.receiveShadow=true; o.frustumCulled=false; const m=o.material; if(m){ m.envMapIntensity=.55;
+      if(o.name==='Wolf3D_Outfit_Top'){ m.color.setRGB(.16,.16,.18); m.roughness=.75; }
+      if(o.name==='Wolf3D_Outfit_Bottom'){ m.color.setRGB(.12,.12,.13); } }
+      if(o.morphTargetDictionary && o.morphTargetDictionary.mouthSmile!=null){ o.morphTargetInfluences[o.morphTargetDictionary.mouthSmile]=.28; } } });
+  root.updateMatrixWorld(true);
+  // apron, hung from the hips
+  const ap=new T.Mesh(new T.PlaneGeometry(.44,.62,1,6), std({color:0x3a2416, roughness:.55, side:T.DoubleSide, envMapIntensity:.4}));
+  const pp=ap.geometry.attributes.position; for(let i=0;i<pp.count;i++){ const x=pp.getX(i); pp.setZ(i, -Math.abs(x)*.25); } ap.geometry.computeVertexNormals();
+  if(bones.Hips){ bones.Hips.add(ap); ap.position.set(0,-.25,.13); ap.castShadow=true; }
+  const len=(p,c)=>p.getWorldPosition(new T.Vector3()).distanceTo(c.getWorldPosition(new T.Vector3()));
+  const arm=(s)=>({up:bones[s+'Arm'], fore:bones[s+'ForeArm'], hand:bones[s+'Hand'], a:len(bones[s+'Arm'],bones[s+'ForeArm']), b:len(bones[s+'ForeArm'],bones[s+'Hand'])});
+  Object.assign(BT,{root,bones,L:arm('Left'),R:arm('Right'),ready:true, yaw:0, pitch:0});
+}, undefined, ()=>{}); }
+function updateBartender(t){
+  if(BT.spoon){ /* positioned below once hand is known */ }
+  if(!BT.ready) return; const B=BT.bones;
+  // breathing and a slow weight shift
+  ['Spine','Spine1','Spine2','Neck','Head'].forEach(n=>{ if(B[n]) B[n].quaternion.copy(B[n].userData.rest); });
+  if(B.Spine){ B.Spine.rotateX(.07+Math.sin(t*1.1)*.012); B.Spine.rotateZ(Math.sin(t*.23)*.02); }
+  if(B.Spine1) B.Spine1.rotateX(.04+Math.sin(t*1.1+.6)*.008);
+  BT.root.updateMatrixWorld(true);
+  // hands: left resting on the counter, right stirring
+  const side=new T.Vector3(0,0,1); const back=new T.Vector3(1,0,0);
+  const lt=new T.Vector3(BAR.x+.24, topY+.035, BT.pos.z+.26);
+  const st=mixAt.clone().add(new T.Vector3(Math.cos(t*5)*.012, .2+Math.sin(t*2.5)*.004, Math.sin(t*5)*.012));
+  const sh=B.LeftArm.getWorldPosition(new T.Vector3());
+  armIK(BT.L, lt, sh.clone().addScaledVector(side,.45).addScaledVector(back,.35).add(new T.Vector3(0,-.25,0)));
+  const shr=B.RightArm.getWorldPosition(new T.Vector3());
+  armIK(BT.R, st, shr.clone().addScaledVector(side,-.45).addScaledVector(back,.35).add(new T.Vector3(0,-.25,0)));
+  curl(B,'Right',1.0,new T.Vector3(1,0,0)); curl(B,'Left',.2,new T.Vector3(1,0,0));
+  // look at the guest when they are on the guest side of the bar
+  const head=B.Head; const hp=head.getWorldPosition(new T.Vector3()); const to=camera.position.clone().sub(hp);
+  let wantYaw=0, wantPitch=-.32; if(camera.position.x < BT.pos.x-.2 && to.length()<6){ wantYaw=Math.atan2(to.z, -to.x); wantPitch=Math.atan2(to.y, Math.hypot(to.x,to.z)); }
+  const glance=(Math.sin(t*.35)>.55)?1:0; if(glance){ wantYaw=0; wantPitch=-.45; }
+  wantYaw=Math.max(-.9,Math.min(.9,wantYaw)); wantPitch=Math.max(-.5,Math.min(.35,wantPitch));
+  BT.yaw+=(wantYaw-BT.yaw)*.05; BT.pitch+=(wantPitch-BT.pitch)*.05;
+  [[B.Neck,.4],[head,.6]].forEach(([b,k])=>{ if(!b) return; b.updateMatrixWorld(true); b.getWorldQuaternion(_q2);
+    const qy=new T.Quaternion().setFromAxisAngle(new T.Vector3(0,1,0), -BT.yaw*k); const qp=new T.Quaternion().setFromAxisAngle(new T.Vector3(0,0,-1).applyQuaternion(qy), -BT.pitch*k);
+    _q2.premultiply(qy).premultiply(qp); b.parent.getWorldQuaternion(_q3); b.quaternion.copy(_q3.invert().multiply(_q2)); b.updateMatrixWorld(true); });
+  // bar spoon from the fingers down into the glass
+  const hand=BT.R.hand.getWorldPosition(new T.Vector3()); const tip=hand.clone().add(new T.Vector3(-.03,-.03,0)); const bot=mixAt.clone().add(new T.Vector3((tip.x-mixAt.x)*.3, .02, (tip.z-mixAt.z)*.3));
+  const L=tip.distanceTo(bot)+.06; BT.spoon.scale.set(1,L,1); BT.spoon.position.copy(tip).add(bot).multiplyScalar(.5); BT.spoon.quaternion.setFromUnitVectors(new T.Vector3(0,1,0), tip.clone().sub(bot).normalize()); BT.spoonBowl.position.copy(bot);
+}
+
 /* ---------- post ---------- */
 let composer=null, finalPass=null, bokeh=null;
 function setupComposer(){
@@ -978,6 +1048,7 @@ function frame(){
   amb.intensity=W0.amb*hk; hemi.intensity=W0.hemi*hk; barSpots.forEach(s=>s.intensity=W0.spot*(.45+houseCur*.9)); tableSpots.forEach(s=>s.intensity=W0.tspot*hk); sconceLights.forEach((l,k)=>l.intensity=W0.sc[k]*(.5+houseCur)); ceilGroup.visible = camera.position.y < RH-.05;
   if(bokeh){ if(state.sel!=null){ const gp=drinkObjs[state.sel].g.position; bokeh.enabled=true; bokeh.uniforms.focus.value=camera.position.distanceTo(gp)+.02; } else bokeh.enabled=false; }
   lampLights.forEach(l=>l.intensity=.55*(.6+houseCur*.7));
+  updateBartender(t);
   if(composer){ finalPass.uniforms.time.value=t; composer.render(); } else renderer.render(scene,camera);
   // adaptive quality
   if(!tuned && t>1.5){ frames++; ftAcc+=dt; if(t>4.5){ tuned=true; if(ftAcc/frames>1/34 && DPR>1){ DPR=1; resize(); } } }
