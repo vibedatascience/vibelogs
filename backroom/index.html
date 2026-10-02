@@ -885,6 +885,10 @@ if(T.GLTFLoader){ loadGLB(g=>{
   const root=g.scene; root.position.copy(BT.pos); root.rotation.y=-Math.PI/2; scene.add(root);
   const bones={}; root.traverse(o=>{ if(o.isBone){ bones[o.name]=o; o.userData.rest=o.quaternion.clone(); }
     if(o.isMesh){ o.castShadow=true; o.receiveShadow=true; o.frustumCulled=false; const m=o.material; if(m){ m.envMapIntensity=.55;
+      // medium-brown South Indian skin tone, near-black hair and moustache
+      if(m.name==='Wolf3D_Skin'){ m.color.setRGB(.623,.508,.264); m.roughness=.55; }
+      if(m.name==='Wolf3D_Body'){ m.color.setRGB(.525,.46,.256); m.roughness=.55; }
+      if(m.name==='Wolf3D_Beard'){ m.color.setRGB(.16,.15,.15); }
       if(o.name==='Wolf3D_Outfit_Top'){ m.color.setRGB(.16,.16,.18); m.roughness=.75; }
       if(o.name==='Wolf3D_Outfit_Bottom'){ m.color.setRGB(.12,.12,.13); } }
       if(o.morphTargetDictionary && o.morphTargetDictionary.mouthSmile!=null){ o.morphTargetInfluences[o.morphTargetDictionary.mouthSmile]=.28; } } });
