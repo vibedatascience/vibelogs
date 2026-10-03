@@ -4,96 +4,91 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="author" content="Rahul">
-<title>State tiles | Rahul's Site</title>
-<meta name="description" content="Seven tile-grid maps of the fifty states over time: presidential votes, electricity, energy use, taxes, jobs, paychecks and income. Interactive, with data and code.">
+<title>State tiles</title>
+<meta name="description" content="Seven tile-grid maps of the fifty states over time: presidential votes, electricity, energy use, taxes, jobs, paychecks and income.">
 <meta property="og:title" content="State tiles">
-<meta property="og:description" content="Seven tile-grid maps of the fifty states over time, with data and code.">
 <meta property="og:image" content="https://rahulch.site/state-tiles/thumb.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&family=Roboto+Condensed:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@700&family=Roboto+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--paper:#FAFAF8;--ink:#17171C;--cobalt:#2545FF;--muted:#6E6E76;--rule:#E7E7E2;--chip:#EEF1FF;
-  --dark:#0783c8;--light:#7bccf9;--orange:#fe5e32;--nodata:#dddddd;--label:#0d3a60;
-  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{
+  --bg:#f8f8f8; --ink:#111; --grey:#666; --rule:#dcdcdc;
+  --dark:#0783c8; --light:#7bccf9; --orange:#fe5e32; --nodata:#dddddd; --label:#0d3a60;
+  --serif:'Century Schoolbook','TeX Gyre Schola','Old Standard TT',Georgia,serif;
+  --cond:'Roboto Condensed','Arial Narrow',sans-serif;
+}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:17px;line-height:1.7}
-.wrap{max-width:1040px;margin:0 auto;padding:0 24px}
-.narrow{max-width:760px}
-.top{padding:40px 0 0;font-family:'IBM Plex Mono',monospace;font-size:0.8rem}
-.top a{color:var(--muted);text-decoration:none}
-header.post{padding:32px 0 24px;border-bottom:1px solid var(--rule)}
-.meta{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted);display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
-.tag{background:var(--chip);color:var(--cobalt);padding:1px 8px;border-radius:4px;font-weight:500}
-h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.8rem,5vw,2.5rem);letter-spacing:-0.02em;line-height:1.15}
-.lede{margin-top:14px;color:#3a3a42;max-width:720px}
-.lede a,article a{color:var(--cobalt)}
-h2{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.35rem;letter-spacing:-0.01em;margin:48px 0 8px;padding-top:18px;border-top:1px solid var(--rule)}
-h2 .num{font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:0.8rem;color:var(--cobalt);margin-right:10px;vertical-align:middle}
-article{padding:20px 0 40px}
-article p{margin:0 0 16px}
+body{background:var(--bg);color:var(--ink);font-family:var(--cond);font-size:18px;line-height:1.5;
+  padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+a{color:var(--ink);text-decoration-color:var(--orange);text-underline-offset:3px}
+a:hover{color:var(--orange)}
+.wrap{max-width:1100px;margin:0 auto;padding:0 28px}
+
+.back{display:inline-block;margin-top:28px;font-size:0.9rem;color:var(--grey);text-decoration:none}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(2.6rem,7vw,4.4rem);line-height:1;margin:22px 0 10px;letter-spacing:-0.01em}
+.sub{font-size:1.05rem;color:var(--grey)}
+nav.jump{display:flex;flex-wrap:wrap;gap:4px 18px;margin:18px 0 0;font-size:0.95rem}
+nav.jump a{text-decoration:none;color:var(--grey)}
+nav.jump a:hover{color:var(--orange)}
 
 /* explorer */
-.explorer{background:#f8f8f8;border:1px solid var(--rule);border-radius:10px;padding:18px 18px 12px;margin-top:22px}
-.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
-.tabs button{font-family:'IBM Plex Mono',monospace;font-size:0.74rem;letter-spacing:0.03em;background:#fff;border:1px solid var(--rule);color:var(--muted);padding:5px 11px;border-radius:999px;cursor:pointer}
-.tabs button:hover{border-color:var(--cobalt);color:var(--cobalt)}
-.tabs button.active{background:var(--cobalt);border-color:var(--cobalt);color:#fff}
-.ex-head{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;flex-wrap:wrap}
-.ex-title{font-family:'Georgia','Times New Roman',serif;font-weight:700;font-size:clamp(1.4rem,3.6vw,2rem);line-height:1.1;letter-spacing:-0.01em;color:#111}
-.ex-sub{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--muted);margin-top:6px}
-.legend{display:flex;flex-direction:column;gap:2px;font-family:'Roboto Condensed','Arial Narrow',sans-serif;font-weight:600;font-size:0.98rem;line-height:1.25}
-.legend span{display:flex;align-items:center;gap:7px}
-.legend i{display:inline-block;width:12px;height:12px;border-radius:2px}
-.readout{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--ink);min-height:2.6em;margin:12px 0 6px;display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline}
-.readout b{font-family:'Space Grotesk',sans-serif;font-size:0.98rem}
+.explorer{margin:34px 0 10px;padding-top:22px;border-top:2px solid var(--ink)}
+.tabs{display:flex;flex-wrap:wrap;gap:4px 22px;margin-bottom:18px}
+.tabs button{font-family:var(--cond);font-size:1rem;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;
+  background:none;border:0;border-bottom:3px solid transparent;color:var(--grey);padding:2px 0;cursor:pointer}
+.tabs button:hover{color:var(--ink)}
+.tabs button.active{color:var(--ink);border-bottom-color:var(--orange)}
+.ex-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap}
+.ex-title{font-family:var(--serif);font-weight:700;font-size:clamp(1.6rem,4vw,2.5rem);line-height:1.05}
+.ex-sub{font-size:0.9rem;color:var(--grey);margin-top:6px}
+.legend{display:flex;flex-direction:column;gap:1px;font-weight:700;font-size:1.05rem;line-height:1.25}
+.readout{min-height:2.4em;margin:14px 0 8px;display:flex;flex-wrap:wrap;gap:2px 18px;align-items:baseline;font-size:0.98rem}
+.readout b{font-weight:700;font-size:1.08rem}
 .readout .v{display:inline-flex;align-items:center;gap:6px}
-.readout .v i{display:inline-block;width:10px;height:10px;border-radius:2px}
-.readout .hint{color:var(--muted)}
+.readout .v i{display:inline-block;width:11px;height:11px}
+.readout .hint{color:var(--grey)}
 svg.grid{width:100%;height:auto;display:block;touch-action:pan-y}
-svg.grid .lbl{font-family:'Roboto Condensed','Arial Narrow',sans-serif;font-size:22px;fill:var(--label);opacity:.88;pointer-events:none}
+svg.grid .lbl{font-family:var(--cond);font-size:22px;fill:var(--label);opacity:.88;pointer-events:none}
 svg.grid .hit{fill:transparent;cursor:crosshair}
-svg.grid .cross{stroke:#111;stroke-width:1.6;pointer-events:none}
-svg.grid .sel{fill:none;stroke:#111;stroke-width:2.5;pointer-events:none}
-.axisnote{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--muted);display:flex;justify-content:space-between;margin-top:4px}
-.ex-src{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted);margin-top:6px}
-.ex-src a{color:var(--muted)}
+svg.grid .cross{stroke:var(--ink);stroke-width:1.6;pointer-events:none}
+svg.grid .sel{fill:none;stroke:var(--ink);stroke-width:2.5;pointer-events:none}
+.ex-src{font-size:0.82rem;color:var(--grey);margin-top:10px}
+.ex-src a{color:var(--grey)}
 
 /* posters */
-.poster{margin:6px 0 10px;background:#fff;border:1px solid var(--rule);border-radius:8px;padding:6px}
-.poster a{display:block}
-.poster img{width:100%;height:auto;display:block;border-radius:4px}
-.links{font-family:'IBM Plex Mono',monospace;font-size:0.74rem;display:flex;flex-wrap:wrap;gap:6px 16px;margin:0 0 14px}
-.links a{color:var(--cobalt);text-decoration:none}
-.links a:hover{text-decoration:underline}
-.links .k{color:var(--muted)}
-.toc{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 14px;margin:18px 0 0}
-.toc a{color:var(--muted);text-decoration:none}.toc a:hover{color:var(--cobalt)}
-ul.notes{margin:0 0 16px 20px}
-ul.notes li{margin-bottom:6px}
-code{font-family:'IBM Plex Mono',monospace;font-size:0.85em;background:var(--chip);padding:1px 5px;border-radius:4px}
-footer{border-top:1px solid var(--rule);padding:24px 0 56px;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted)}
-footer a{color:var(--muted)}
+section.poster{margin-top:56px;padding-top:22px;border-top:2px solid var(--ink)}
+.p-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.p-num{font-weight:700;font-size:1rem;color:var(--orange)}
+h2{font-family:var(--serif);font-weight:700;font-size:clamp(1.5rem,3.6vw,2.1rem);line-height:1.1}
+.p-years{font-size:0.95rem;color:var(--grey)}
+section.poster p{max-width:760px;margin:10px 0 14px}
+section.poster img{width:100%;height:auto;display:block}
+.links{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:0.88rem;margin-top:8px;color:var(--grey)}
+.links a{color:var(--ink)}
+
+.notes{margin-top:56px;padding-top:22px;border-top:2px solid var(--ink);font-size:0.95rem}
+.notes h2{margin-bottom:10px}
+.notes ul{margin:0 0 14px 18px;max-width:780px}
+.notes li{margin-bottom:6px}
+footer{margin:40px 0 50px;font-size:0.85rem;color:var(--grey)}
+footer a{color:var(--grey)}
+
 @media (max-width:640px){
-  .wrap{padding:0 16px}
-  .explorer{margin-left:-16px;margin-right:-16px;border-radius:0;border-left:0;border-right:0;padding:14px 10px 10px}
-  .poster{margin-left:-16px;margin-right:-16px;border-radius:0;border-left:0;border-right:0;padding:4px 0}
+  .wrap{padding:0 14px}
   svg.grid .lbl{font-size:32px}
+  section.poster img{margin:0 -14px;width:calc(100% + 28px)}
 }
 </style>
 </head>
 <body>
 <div class="wrap">
-<div class="top"><a href="../">&larr; Rahul's Site</a></div>
-<header class="post">
-  <div class="meta"><span>[2026-10-02]</span><span>Rahul</span><span class="tag">Data &amp; visualizations</span></div>
-  <h1>State tiles</h1>
-  <p class="lede">Seven maps of the United States, one small chart per state. Each tile is a 100% stacked area: the bands always add up to the whole, and time runs left to right. Gray means no data, usually because the place was not yet a state. The style copies <a href="https://www.1point21interactive.com/">1POINT21 Interactive</a>'s "Where are Americans born?", which used IPUMS census microdata.</p>
-  <div class="toc">
-    <a href="#explore">explore</a><a href="#president">1. president</a><a href="#electricity">2. electricity</a><a href="#energy-use">3. energy use</a><a href="#taxes">4. taxes</a><a href="#earnings">5. earnings</a><a href="#paychecks">6. paychecks</a><a href="#income">7. income</a><a href="#notes">notes &amp; code</a>
-  </div>
-</header>
+<a class="back" href="../">&larr; rahulch.site</a>
+<h1>State tiles</h1>
+<div class="sub">Fifty states and DC, one small chart each. Seven maps, 1856 to 2025.</div>
+<nav class="jump">
+  <a href="#explore">Explore</a><a href="#president">President</a><a href="#electricity">Electricity</a><a href="#energy-use">Energy use</a><a href="#taxes">Taxes</a><a href="#earnings">Earnings</a><a href="#paychecks">Paychecks</a><a href="#income">Income</a><a href="#notes">Notes &amp; code</a>
+</nav>
 
-<article>
 <div class="explorer" id="explore">
   <div class="tabs" id="tabs"></div>
   <div class="ex-head">
@@ -108,52 +103,68 @@ footer a{color:var(--muted)}
   <div class="ex-src" id="ex-src"></div>
 </div>
 
-<h2 id="president"><span class="num">01</span>How did each state vote?</h2>
-<p>Popular vote share for president, 1856 to 2024. Gray covers the years before statehood and the Civil War elections the seceded states sat out. Mississippi voted 97% Democratic in 1936 and 87% Republican in 1964. Vermont gave Republicans 78% in 1856 and Democrats 63% in 2024. In 1860 the Southern Democrats (Breckinridge) count as a third party, which turns the South light blue that year.</p>
-<div class="poster"><a href="img/president.png"><img src="img/president-1400.jpg" alt="Tile map of presidential vote share by party in every state, 1856 to 2024" loading="lazy" width="1400" height="1111"></a></div>
-<div class="links"><a href="img/president.png">full size</a><a href="data/president.csv">data (CSV)</a><span class="k">sources:</span><a href="https://en.wikipedia.org/wiki/1860_United_States_presidential_election#Results_by_state">Wikipedia state results tables, 1856-1972</a><a href="https://doi.org/10.7910/DVN/42MVDX">MIT Election Data and Science Lab, 1976-2024</a></div>
+<section class="poster" id="president">
+  <div class="p-head"><span class="p-num">01</span><h2>How did each state vote?</h2><span class="p-years">1856-2024</span></div>
+  <p>Popular vote share for president. Gray covers the years before statehood and the Civil War elections the seceded states sat out. Mississippi voted 97% Democratic in 1936 and 87% Republican in 1964. Vermont gave Republicans 78% in 1856 and Democrats 63% in 2024. In 1860 the Southern Democrats (Breckinridge) count as a third party, which turns the South light blue that year.</p>
+  <a href="img/president.png"><img src="img/president-1400.jpg" alt="Tile map of presidential vote share by party in every state, 1856 to 2024" loading="lazy" width="1400" height="1111"></a>
+  <div class="links"><a href="img/president.png">Full size</a><a href="data/president.csv">Data (CSV)</a><span>Sources:</span><a href="https://en.wikipedia.org/wiki/1860_United_States_presidential_election#Results_by_state">Wikipedia state results tables, 1856-1972</a><a href="https://doi.org/10.7910/DVN/42MVDX">MIT Election Data and Science Lab, 1976-2024</a></div>
+</section>
 
-<h2 id="electricity"><span class="num">02</span>How does each state make electricity?</h2>
-<p>Share of net generation by fuel, 1990 to 2024. Coal supplied 86% of Iowa's power in 1990 and 21% in 2024, while clean sources rose from 13% to 66%. Kansas followed the same path. West Virginia still makes 85% of its power from coal. Delaware swapped coal for gas, and Massachusetts burns no coal at all.</p>
-<div class="poster"><a href="img/electricity.png"><img src="img/electricity-1400.jpg" alt="Tile map of electricity generation by fuel in every state, 1990 to 2024" loading="lazy" width="1400" height="1111"></a></div>
-<div class="links"><a href="img/electricity.png">full size</a><a href="data/electricity.csv">data (CSV)</a><span class="k">source:</span><a href="https://www.eia.gov/electricity/data/state/">EIA, net generation by state by energy source</a></div>
+<section class="poster" id="electricity">
+  <div class="p-head"><span class="p-num">02</span><h2>How does each state make electricity?</h2><span class="p-years">1990-2024</span></div>
+  <p>Share of net generation by fuel. Coal supplied 86% of Iowa's power in 1990 and 21% in 2024, while clean sources rose from 13% to 66%. Kansas followed the same path. West Virginia still makes 85% of its power from coal. Delaware swapped coal for gas, and Massachusetts burns no coal at all.</p>
+  <a href="img/electricity.png"><img src="img/electricity-1400.jpg" alt="Tile map of electricity generation by fuel in every state, 1990 to 2024" loading="lazy" width="1400" height="1111"></a>
+  <div class="links"><a href="img/electricity.png">Full size</a><a href="data/electricity.csv">Data (CSV)</a><span>Source:</span><a href="https://www.eia.gov/electricity/data/state/">EIA, net generation by state by energy source</a></div>
+</section>
 
-<h2 id="energy-use"><span class="num">03</span>Who uses each state's energy?</h2>
-<p>Share of total energy consumed by sector, 1960 to 2024. Industry uses 70% of Louisiana's energy and 56% of Texas's. Transportation takes 59% in Hawaii. In DC, homes and offices now use 83% of the energy and industry 3%, down from 28% in 1960.</p>
-<div class="poster"><a href="img/energy-use.png"><img src="img/energy-use-1400.jpg" alt="Tile map of energy consumption by sector in every state, 1960 to 2024" loading="lazy" width="1400" height="1111"></a></div>
-<div class="links"><a href="img/energy-use.png">full size</a><a href="data/energy-use.csv">data (CSV)</a><span class="k">source:</span><a href="https://www.eia.gov/state/seds/">EIA State Energy Data System (SEDS)</a></div>
+<section class="poster" id="energy-use">
+  <div class="p-head"><span class="p-num">03</span><h2>Who uses each state's energy?</h2><span class="p-years">1960-2024</span></div>
+  <p>Share of total energy consumed by sector. Industry uses 70% of Louisiana's energy and 56% of Texas's. Transportation takes 59% in Hawaii. In DC, homes and offices now use 83% of the energy and industry 3%, down from 28% in 1960.</p>
+  <a href="img/energy-use.png"><img src="img/energy-use-1400.jpg" alt="Tile map of energy consumption by sector in every state, 1960 to 2024" loading="lazy" width="1400" height="1111"></a>
+  <div class="links"><a href="img/energy-use.png">Full size</a><a href="data/energy-use.csv">Data (CSV)</a><span>Source:</span><a href="https://www.eia.gov/state/seds/">EIA State Energy Data System (SEDS)</a></div>
+</section>
 
-<h2 id="taxes"><span class="num">04</span>How does each state collect its taxes?</h2>
-<p>State government tax revenue by type, 1942 to 2025. A light blue band appears in the year a state adopts an income tax; Nebraska and Illinois had none in 1960 and over 40% of revenue from it by 2025. Texas and Nevada still have none, and Washington taxes only capital gains. Most of Alaska's orange is oil severance tax, 44% of its 2025 collections.</p>
-<div class="poster"><a href="img/taxes.png"><img src="img/taxes-1400.jpg" alt="Tile map of state tax revenue by type in every state, 1942 to 2025" loading="lazy" width="1400" height="1111"></a></div>
-<div class="links"><a href="img/taxes.png">full size</a><a href="data/taxes.csv">data (CSV)</a><span class="k">source:</span><a href="https://www.census.gov/programs-surveys/stc/data/datasets.html">Census Bureau, Annual Survey of State Tax Collections</a></div>
+<section class="poster" id="taxes">
+  <div class="p-head"><span class="p-num">04</span><h2>How does each state collect its taxes?</h2><span class="p-years">1942-2025</span></div>
+  <p>State government tax revenue by type. A light blue band appears in the year a state adopts an income tax; Nebraska and Illinois had none in 1960 and over 40% of revenue from it by 2025. Texas and Nevada still have none, and Washington taxes only capital gains. Most of Alaska's orange is oil severance tax, 44% of its 2025 collections.</p>
+  <a href="img/taxes.png"><img src="img/taxes-1400.jpg" alt="Tile map of state tax revenue by type in every state, 1942 to 2025" loading="lazy" width="1400" height="1111"></a>
+  <div class="links"><a href="img/taxes.png">Full size</a><a href="data/taxes.csv">Data (CSV)</a><span>Source:</span><a href="https://www.census.gov/programs-surveys/stc/data/datasets.html">Census Bureau, Annual Survey of State Tax Collections</a></div>
+</section>
 
-<h2 id="earnings"><span class="num">05</span>How does each state earn a living?</h2>
-<p>Earnings by industry, 1929 to 2025. Farming was 42% of North Dakota's earnings in 1929 and 6% in 2025. Manufacturing was 48% of Michigan's earnings in 1950 and is 15% now. Connecticut went from 46% to 9%.</p>
-<div class="poster"><a href="img/earnings.png"><img src="img/earnings-1400.jpg" alt="Tile map of earnings from farming, manufacturing and everything else in every state, 1929 to 2025" loading="lazy" width="1400" height="1111"></a></div>
-<div class="links"><a href="img/earnings.png">full size</a><a href="data/earnings.csv">data (CSV)</a><span class="k">source:</span><a href="https://apps.bea.gov/regional/downloadzip.htm">BEA, SAINC5 earnings by industry</a></div>
+<section class="poster" id="earnings">
+  <div class="p-head"><span class="p-num">05</span><h2>How does each state earn a living?</h2><span class="p-years">1929-2025</span></div>
+  <p>Earnings by industry. Farming was 42% of North Dakota's earnings in 1929 and 6% in 2025. Manufacturing was 48% of Michigan's earnings in 1950 and is 15% now. Connecticut went from 46% to 9%.</p>
+  <a href="img/earnings.png"><img src="img/earnings-1400.jpg" alt="Tile map of earnings from farming, manufacturing and everything else in every state, 1929 to 2025" loading="lazy" width="1400" height="1111"></a>
+  <div class="links"><a href="img/earnings.png">Full size</a><a href="data/earnings.csv">Data (CSV)</a><span>Source:</span><a href="https://apps.bea.gov/regional/downloadzip.htm">BEA, SAINC5 earnings by industry</a></div>
+</section>
 
-<h2 id="paychecks"><span class="num">06</span>Who signs the paychecks?</h2>
-<p>Earnings by employer, 1929 to 2025. World War II shows up as a notch in nearly every tile: federal pay was 45% of Virginia's earnings in 1944 and 56% of DC's. In 1960 the federal government paid 43% of Alaska's earnings and 30% of Hawaii's. State and local government grew in most states after 1960.</p>
-<div class="poster"><a href="img/paychecks.png"><img src="img/paychecks-1400.jpg" alt="Tile map of earnings from private, state and local, and federal employers in every state, 1929 to 2025" loading="lazy" width="1400" height="1111"></a></div>
-<div class="links"><a href="img/paychecks.png">full size</a><a href="data/paychecks.csv">data (CSV)</a><span class="k">source:</span><a href="https://apps.bea.gov/regional/downloadzip.htm">BEA, SAINC5 earnings by industry</a></div>
+<section class="poster" id="paychecks">
+  <div class="p-head"><span class="p-num">06</span><h2>Who signs the paychecks?</h2><span class="p-years">1929-2025</span></div>
+  <p>Earnings by employer. World War II shows up as a notch in nearly every tile: federal pay was 45% of Virginia's earnings in 1944 and 56% of DC's. In 1960 the federal government paid 43% of Alaska's earnings and 30% of Hawaii's. State and local government grew in most states after 1960.</p>
+  <a href="img/paychecks.png"><img src="img/paychecks-1400.jpg" alt="Tile map of earnings from private, state and local, and federal employers in every state, 1929 to 2025" loading="lazy" width="1400" height="1111"></a>
+  <div class="links"><a href="img/paychecks.png">Full size</a><a href="data/paychecks.csv">Data (CSV)</a><span>Source:</span><a href="https://apps.bea.gov/regional/downloadzip.htm">BEA, SAINC5 earnings by industry</a></div>
+</section>
 
-<h2 id="income"><span class="num">07</span>Where does the money come from?</h2>
-<p>Personal income by source, 1929 to 2025. Government benefits such as Social Security, Medicare and Medicaid were 2% of income in most states in 1929. They are 31% in West Virginia and 28% in Mississippi today. Florida gets 32% of its income from dividends, interest and rent.</p>
-<div class="poster"><a href="img/income.png"><img src="img/income-1400.jpg" alt="Tile map of personal income from work, investments and government benefits in every state, 1929 to 2025" loading="lazy" width="1400" height="1111"></a></div>
-<div class="links"><a href="img/income.png">full size</a><a href="data/income.csv">data (CSV)</a><span class="k">source:</span><a href="https://apps.bea.gov/regional/downloadzip.htm">BEA, SAINC4 personal income by major component</a></div>
+<section class="poster" id="income">
+  <div class="p-head"><span class="p-num">07</span><h2>Where does the money come from?</h2><span class="p-years">1929-2025</span></div>
+  <p>Personal income by source. Government benefits such as Social Security, Medicare and Medicaid were 2% of income in most states in 1929. They are 31% in West Virginia and 28% in Mississippi today. Florida gets 32% of its income from dividends, interest and rent.</p>
+  <a href="img/income.png"><img src="img/income-1400.jpg" alt="Tile map of personal income from work, investments and government benefits in every state, 1929 to 2025" loading="lazy" width="1400" height="1111"></a>
+  <div class="links"><a href="img/income.png">Full size</a><a href="data/income.csv">Data (CSV)</a><span>Source:</span><a href="https://apps.bea.gov/regional/downloadzip.htm">BEA, SAINC4 personal income by major component</a></div>
+</section>
 
-<h2 id="notes"><span class="num">--</span>Notes and code</h2>
-<ul class="notes">
-  <li>Every band is a share of the state's own total, so a tile shows mix and says nothing about size.</li>
-  <li>Presidential results before 1976 come from the state tables on each Wikipedia election page and agree with two independent R datasets (pscl, cluster) to within a point for most states. 1872 counts Greeley as the Democrat.</li>
-  <li>Clean electricity is nuclear, hydro, wind, solar, geothermal and biomass. Pumped storage and "other" are excluded.</li>
-  <li>BEA industry definitions change from SIC to NAICS in 2001. Negative farm earnings are set to zero, and a few suppressed values are interpolated.</li>
-  <li>State taxes exclude local taxes, which is why property tax looks small. DC has no state government and stays gray on that map.</li>
-</ul>
-<p class="links"><a href="data/tiles.json">all data (JSON)</a><a href="https://github.com/vibedatascience/vibelogs/tree/main/state-tiles/src">code (Python)</a></p>
-</article>
-<footer>Rahul &middot; <a href="../">rahulch.site</a></footer>
+<section class="notes" id="notes">
+  <h2>Notes &amp; code</h2>
+  <ul>
+    <li>Every band is a share of the state's own total, so a tile shows mix and says nothing about size.</li>
+    <li>Presidential results before 1976 come from the state tables on each Wikipedia election page and agree with two independent R datasets (pscl, cluster) to within a point for most states. 1872 counts Greeley as the Democrat.</li>
+    <li>Clean electricity is nuclear, hydro, wind, solar, geothermal and biomass. Pumped storage and "other" are excluded.</li>
+    <li>BEA industry definitions change from SIC to NAICS in 2001. Negative farm earnings are set to zero, and a few suppressed values are interpolated.</li>
+    <li>State taxes exclude local taxes, which is why property tax looks small. DC has no state government and stays gray on that map.</li>
+  </ul>
+  <div class="links"><a href="data/tiles.json">All data (JSON)</a><a href="https://github.com/vibedatascience/vibelogs/tree/main/state-tiles/src">Code (Python)</a></div>
+</section>
+
+<footer>Tile style after 1POINT21 Interactive's "Where are Americans born?". Rahul, <a href="../">rahulch.site</a>.</footer>
 </div>
 
 <script>
@@ -164,19 +175,19 @@ footer a{color:var(--muted)}
     AZ:[1,4],NM:[2,4],KS:[3,4],AR:[4,4],TN:[5,4],NC:[6,4],SC:[7,4],DC:[8,4],DE:[9,4],
     OK:[3,5],LA:[4,5],MS:[5,5],AL:[6,5],GA:[7,5],HI:[0,6],TX:[3,6],FL:[8,6]};
   var META={
-    president:{tab:'president',title:'How did each state vote?',src:'Wikipedia state results tables (1856-1972) and MIT Election Lab (1976-2024)',url:'https://doi.org/10.7910/DVN/42MVDX'},
-    electricity:{tab:'electricity',title:'How does each state make electricity?',src:'EIA, net generation by state by energy source',url:'https://www.eia.gov/electricity/data/state/'},
-    'energy-use':{tab:'energy use',title:"Who uses each state's energy?",src:'EIA State Energy Data System (SEDS)',url:'https://www.eia.gov/state/seds/'},
-    taxes:{tab:'taxes',title:'How does each state collect its taxes?',src:'Census Bureau, Annual Survey of State Tax Collections',url:'https://www.census.gov/programs-surveys/stc/data/datasets.html'},
-    earnings:{tab:'earnings',title:'How does each state earn a living?',src:'BEA, SAINC5 earnings by industry',url:'https://apps.bea.gov/regional/downloadzip.htm'},
-    paychecks:{tab:'paychecks',title:'Who signs the paychecks?',src:'BEA, SAINC5 earnings by industry',url:'https://apps.bea.gov/regional/downloadzip.htm'},
-    income:{tab:'income',title:'Where does the money come from?',src:'BEA, SAINC4 personal income by major component',url:'https://apps.bea.gov/regional/downloadzip.htm'}
+    president:{tab:'President',title:'How did each state vote?',src:'Wikipedia state results tables (1856-1972) and MIT Election Lab (1976-2024)',url:'https://doi.org/10.7910/DVN/42MVDX'},
+    electricity:{tab:'Electricity',title:'How does each state make electricity?',src:'EIA, net generation by state by energy source',url:'https://www.eia.gov/electricity/data/state/'},
+    'energy-use':{tab:'Energy use',title:"Who uses each state's energy?",src:'EIA State Energy Data System (SEDS)',url:'https://www.eia.gov/state/seds/'},
+    taxes:{tab:'Taxes',title:'How does each state collect its taxes?',src:'Census Bureau, Annual Survey of State Tax Collections',url:'https://www.census.gov/programs-surveys/stc/data/datasets.html'},
+    earnings:{tab:'Earnings',title:'How does each state earn a living?',src:'BEA, SAINC5 earnings by industry',url:'https://apps.bea.gov/regional/downloadzip.htm'},
+    paychecks:{tab:'Paychecks',title:'Who signs the paychecks?',src:'BEA, SAINC5 earnings by industry',url:'https://apps.bea.gov/regional/downloadzip.htm'},
+    income:{tab:'Income',title:'Where does the money come from?',src:'BEA, SAINC4 personal income by major component',url:'https://apps.bea.gov/regional/downloadzip.htm'}
   };
   var COL=['#0783c8','#7bccf9','#fe5e32'];
   var T=100,GAP=7,STEP=T+GAP,W=11*STEP-GAP,H=7*STEP-GAP,NS='http://www.w3.org/2000/svg';
   var svg=document.getElementById('grid');
   svg.setAttribute('viewBox','0 0 '+W+' '+H);
-  var DATA=null,cur=null,cross=null,sel=null;
+  var DATA=null,cur=null,cross=null,sel=null,last=null;
 
   function el(tag,attrs){var e=document.createElementNS(NS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);return e;}
   function fmt(v){return v==null?'-':(v<10?v.toFixed(1):Math.round(v))+'%';}
@@ -184,10 +195,10 @@ footer a{color:var(--muted)}
   function draw(slug){
     cur=slug;var set=DATA.sets[slug],yrs=set.years,y0=yrs[0],y1=yrs[yrs.length-1],m=META[slug];
     document.getElementById('ex-title').textContent=m.title;
-    document.getElementById('ex-sub').textContent=y0+' to '+y1+', share of each state’s total';
+    document.getElementById('ex-sub').textContent=y0+'-'+y1+', share of each state’s total';
     var lg=document.getElementById('legend');lg.innerHTML='';
-    for(var i=2;i>=0;i--){var s=document.createElement('span');s.style.color=i==1?'#3aa9e6':COL[i];s.innerHTML='<i style="background:'+COL[i]+'"></i>'+set.labels[i];lg.appendChild(s);}
-    document.getElementById('ex-src').innerHTML='source: <a href="'+m.url+'">'+m.src+'</a> &middot; <a href="data/'+slug+'.csv">CSV</a>';
+    for(var i=2;i>=0;i--){var s=document.createElement('span');s.style.color=COL[i];s.textContent=set.labels[i];lg.appendChild(s);}
+    document.getElementById('ex-src').innerHTML='Source: <a href="'+m.url+'">'+m.src+'</a>. <a href="data/'+slug+'.csv">Data (CSV)</a>';
     [].forEach.call(document.querySelectorAll('#tabs button'),function(b){b.classList.toggle('active',b.dataset.k===slug);});
     while(svg.firstChild)svg.removeChild(svg.firstChild);
     Object.keys(G).forEach(function(st){
@@ -195,7 +206,6 @@ footer a{color:var(--muted)}
       var g=el('g',{transform:'translate('+ox+','+oy+')'});
       g.appendChild(el('rect',{x:0,y:0,width:T,height:T,fill:'#dddddd'}));
       var X=function(yr){return (yr-y0)/(y1-y0)*T;};
-      // contiguous segments of valid years
       var seg=[],segs=[];
       for(var i=0;i<yrs.length;i++){var r=rows[i];if(r&&r[0]!=null){seg.push(i);}else if(seg.length){segs.push(seg);seg=[];}}
       if(seg.length)segs.push(seg);
@@ -204,11 +214,10 @@ footer a{color:var(--muted)}
         if(sg.length===1){var x=xs[0];xs=[Math.max(0,x-0.8),Math.min(T,x+0.8)];sg=[sg[0],sg[0]];}
         var a=sg.map(function(i){return T-rows[i][0]/100*T;});
         var b=sg.map(function(i){return T-(rows[i][0]+rows[i][1])/100*T;});
-        var top='',mid='',bot='';
-        top='M'+xs[0]+',0 '+xs.map(function(x,j){return 'L'+x+','+b[j];}).join(' ')+' L'+xs[xs.length-1]+',0Z';
+        var top='M'+xs[0]+',0 '+xs.map(function(x,j){return 'L'+x+','+b[j];}).join(' ')+' L'+xs[xs.length-1]+',0Z';
         var fwdB=xs.map(function(x,j){return x+','+b[j];}),revA=xs.map(function(x,j){return x+','+a[j];}).reverse();
-        mid='M'+fwdB.join(' L')+' L'+revA.join(' L')+'Z';
-        bot='M'+xs[0]+','+T+' '+xs.map(function(x,j){return 'L'+x+','+a[j];}).join(' ')+' L'+xs[xs.length-1]+','+T+'Z';
+        var mid='M'+fwdB.join(' L')+' L'+revA.join(' L')+'Z';
+        var bot='M'+xs[0]+','+T+' '+xs.map(function(x,j){return 'L'+x+','+a[j];}).join(' ')+' L'+xs[xs.length-1]+','+T+'Z';
         g.appendChild(el('path',{d:top,fill:COL[2]}));
         g.appendChild(el('path',{d:mid,fill:COL[1]}));
         g.appendChild(el('path',{d:bot,fill:COL[0]}));
@@ -222,7 +231,6 @@ footer a{color:var(--muted)}
     if(last)show(last.st,last.fx);
   }
 
-  var last=null;
   function show(st,fx){
     var set=DATA.sets[cur],yrs=set.years,rows=set.s[st]||[],c=G[st];
     fx=Math.max(0,Math.min(1,fx));
@@ -231,12 +239,11 @@ footer a{color:var(--muted)}
     var x=c[0]*STEP+(yrs[best]-yrs[0])/(yrs[yrs.length-1]-yrs[0])*T;
     cross.setAttribute('x1',x);cross.setAttribute('x2',x);cross.setAttribute('y1',c[1]*STEP);cross.setAttribute('y2',c[1]*STEP+T);cross.setAttribute('visibility','visible');
     sel.setAttribute('x',c[0]*STEP);sel.setAttribute('y',c[1]*STEP);sel.setAttribute('visibility','visible');
-    var r=rows[best],ro=document.getElementById('readout');
-    var h='<b>'+DATA.names[st]+', '+yrs[best]+'</b>';
+    var r=rows[best],h='<b>'+DATA.names[st]+', '+yrs[best]+'</b>';
     if(!r||r[0]==null){h+=' <span class="hint">no data</span>';}
     else{var v=[r[0],r[1],Math.max(0,100-r[0]-r[1])];
       for(var k=2;k>=0;k--)h+='<span class="v"><i style="background:'+COL[k]+'"></i>'+set.labels[k]+' '+fmt(v[k])+'</span>';}
-    ro.innerHTML=h;last={st:st,fx:fx};
+    document.getElementById('readout').innerHTML=h;last={st:st,fx:fx};
   }
   function onMove(e){
     var t=e.target;if(!t.dataset||!t.dataset.st)return;
