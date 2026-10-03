@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="author" content="Rahul">
+<title>Who holds each state&#x27;s House seats? | State tiles</title>
+<meta name="description" content="Share of each state&#x27;s House members by party after every election. Georgia sent 11 Democrats and no Republicans in 1900 and 9 Republicans to 5 Democrats in 2024. Texas went from 21 of 22 seats Democratic in 1960 to 25 of 38 Republican. Massachusetts went the other way: 10 of 13 Republican in 1900, all 9 Democratic in 2024.">
+<meta property="og:title" content="Who holds each state&#x27;s House seats? | State tiles">
+<meta property="og:description" content="Share of each state&#x27;s House members by party after every election. Georgia sent 11 Democrats and no Republicans in 1900 and 9 Republicans to 5 Democrats in 2024. Texas went from 21 of 22 seats Democratic in 1960 to 25 of 38 Republican. Massachusetts went the other way: 10 of 13 Republican in 1900, all 9 Democratic in 2024.">
+<meta property="og:image" content="https://rahulch.site/state-tiles/img/house.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@700&family=Roboto+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../app.css">
+</head>
+<body data-root="../" data-slug="house">
+<div class="wrap">
+<nav class="bar">
+  <div class="l"><a class="all" href="../">&larr; All maps</a><span class="muted" id="topic"></span></div>
+  <div class="r"><a id="prev" href="../"></a><span class="muted" id="pos"></span><a id="next" href="../"></a></div>
+</nav>
+<div class="head">
+  <div>
+    <h1>Who holds each state&#x27;s House seats?</h1>
+    <div class="years" id="years"></div>
+  </div>
+  <div class="legend" id="legend"></div>
+</div>
+<div class="readout" id="readout"><span class="hint">Hover or tap a tile to read the numbers for that year.</span></div>
+<svg class="grid" id="grid" role="img" aria-label="Tile grid map: Who holds each state&#x27;s House seats?"></svg>
+<p class="caption" id="caption"></p>
+<p class="note" id="note"></p>
+<div class="links" id="links"></div>
+<section class="more" id="more">
+  <h2 id="more-h"></h2>
+  <div class="cards" id="more-cards"></div>
+</section>
+<footer>Each tile is one state, and time runs left to right. Gray means no data. Style after 1POINT21 Interactive's "Where are Americans born?". <a href="https://github.com/vibedatascience/vibelogs/tree/main/state-tiles/src">Code</a></footer>
+</div>
+<script src="../app.js"></script>
+</body>
+</html>

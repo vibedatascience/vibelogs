@@ -75,7 +75,7 @@
     getJSON(root + 'data/' + slug + '.json').then(function (set) {
       $('years').textContent = years(m, set) + (set.type === 'margin' ? " \u00b7 winner's lead over the runner-up, up to 60 points" : '');
       var lg = '';
-      for (var k = 2; k >= 0; k--) lg += '<span style="color:' + COL[k] + '">' + esc(set.labels[k]) + '</span>';
+      for (var k = 2; k >= 0; k--) if (set.labels[k]) lg += '<span style="color:' + COL[k] + '">' + esc(set.labels[k]) + '</span>';
       $('legend').innerHTML = lg;
       drawGrid($('grid'), set);
     });
@@ -165,7 +165,7 @@
       else if (!r || r[0] == null) h += ' <span class="hint">no data</span>';
       else {
         var v = [r[0], r[1], Math.max(0, 100 - r[0] - r[1])];
-        for (var k = 2; k >= 0; k--) h += '<span class="v"><i style="background:' + COL[k] + '"></i>' + esc(set.labels[k]) + ' ' + fmt(v[k]) + '</span>';
+        for (var k = 2; k >= 0; k--) if (set.labels[k]) h += '<span class="v"><i style="background:' + COL[k] + '"></i>' + esc(set.labels[k]) + ' ' + fmt(v[k]) + '</span>';
       }
       $('readout').innerHTML = h;
     }

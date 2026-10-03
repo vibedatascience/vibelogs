@@ -1,0 +1,3079 @@
+st,state,year,democrat_pct,third_party_pct,republican_pct
+AK,Alaska,1958,100.0,0.0,0.0
+AK,Alaska,1960,100.0,0.0,0.0
+AK,Alaska,1962,100.0,0.0,0.0
+AK,Alaska,1964,100.0,0.0,0.0
+AK,Alaska,1966,0.0,0.0,100.0
+AK,Alaska,1968,0.0,0.0,100.0
+AK,Alaska,1970,100.0,0.0,0.0
+AK,Alaska,1972,0.0,0.0,100.0
+AK,Alaska,1974,0.0,0.0,100.0
+AK,Alaska,1976,0.0,0.0,100.0
+AK,Alaska,1978,0.0,0.0,100.0
+AK,Alaska,1980,0.0,0.0,100.0
+AK,Alaska,1982,0.0,0.0,100.0
+AK,Alaska,1984,0.0,0.0,100.0
+AK,Alaska,1986,0.0,0.0,100.0
+AK,Alaska,1988,0.0,0.0,100.0
+AK,Alaska,1990,0.0,0.0,100.0
+AK,Alaska,1992,0.0,0.0,100.0
+AK,Alaska,1994,0.0,0.0,100.0
+AK,Alaska,1996,0.0,0.0,100.0
+AK,Alaska,1998,0.0,0.0,100.0
+AK,Alaska,2000,0.0,0.0,100.0
+AK,Alaska,2002,0.0,0.0,100.0
+AK,Alaska,2004,0.0,0.0,100.0
+AK,Alaska,2006,0.0,0.0,100.0
+AK,Alaska,2008,0.0,0.0,100.0
+AK,Alaska,2010,0.0,0.0,100.0
+AK,Alaska,2012,0.0,0.0,100.0
+AK,Alaska,2014,0.0,0.0,100.0
+AK,Alaska,2016,0.0,0.0,100.0
+AK,Alaska,2018,0.0,0.0,100.0
+AK,Alaska,2020,0.0,0.0,100.0
+AK,Alaska,2022,100.0,0.0,0.0
+AK,Alaska,2024,0.0,0.0,100.0
+AL,Alabama,1900,100.0,0.0,0.0
+AL,Alabama,1902,100.0,0.0,0.0
+AL,Alabama,1904,100.0,0.0,0.0
+AL,Alabama,1906,100.0,0.0,0.0
+AL,Alabama,1908,100.0,0.0,0.0
+AL,Alabama,1910,100.0,0.0,0.0
+AL,Alabama,1912,100.0,0.0,0.0
+AL,Alabama,1914,100.0,0.0,0.0
+AL,Alabama,1916,100.0,0.0,0.0
+AL,Alabama,1918,100.0,0.0,0.0
+AL,Alabama,1920,100.0,0.0,0.0
+AL,Alabama,1922,100.0,0.0,0.0
+AL,Alabama,1924,100.0,0.0,0.0
+AL,Alabama,1926,100.0,0.0,0.0
+AL,Alabama,1928,100.0,0.0,0.0
+AL,Alabama,1930,100.0,0.0,0.0
+AL,Alabama,1932,100.0,0.0,0.0
+AL,Alabama,1934,100.0,0.0,0.0
+AL,Alabama,1936,100.0,0.0,0.0
+AL,Alabama,1938,100.0,0.0,0.0
+AL,Alabama,1940,100.0,0.0,0.0
+AL,Alabama,1942,100.0,0.0,0.0
+AL,Alabama,1944,100.0,0.0,0.0
+AL,Alabama,1946,100.0,0.0,0.0
+AL,Alabama,1948,100.0,0.0,0.0
+AL,Alabama,1950,100.0,0.0,0.0
+AL,Alabama,1952,100.0,0.0,0.0
+AL,Alabama,1954,100.0,0.0,0.0
+AL,Alabama,1956,100.0,0.0,0.0
+AL,Alabama,1958,100.0,0.0,0.0
+AL,Alabama,1960,100.0,0.0,0.0
+AL,Alabama,1962,100.0,0.0,0.0
+AL,Alabama,1964,37.5,0.0,62.5
+AL,Alabama,1966,62.5,0.0,37.5
+AL,Alabama,1968,62.5,0.0,37.5
+AL,Alabama,1970,62.5,0.0,37.5
+AL,Alabama,1972,57.14,0.0,42.86
+AL,Alabama,1974,57.14,0.0,42.86
+AL,Alabama,1976,57.14,0.0,42.86
+AL,Alabama,1978,57.14,0.0,42.86
+AL,Alabama,1980,57.14,0.0,42.86
+AL,Alabama,1982,71.43,0.0,28.57
+AL,Alabama,1984,71.43,0.0,28.57
+AL,Alabama,1986,71.43,0.0,28.57
+AL,Alabama,1988,71.43,0.0,28.57
+AL,Alabama,1990,71.43,0.0,28.57
+AL,Alabama,1992,57.14,0.0,42.86
+AL,Alabama,1994,57.14,0.0,42.86
+AL,Alabama,1996,28.57,0.0,71.43
+AL,Alabama,1998,28.57,0.0,71.43
+AL,Alabama,2000,28.57,0.0,71.43
+AL,Alabama,2002,28.57,0.0,71.43
+AL,Alabama,2004,28.57,0.0,71.43
+AL,Alabama,2006,28.57,0.0,71.43
+AL,Alabama,2008,37.5,0.0,62.5
+AL,Alabama,2010,14.29,0.0,85.71
+AL,Alabama,2012,14.29,0.0,85.71
+AL,Alabama,2014,14.29,0.0,85.71
+AL,Alabama,2016,14.29,0.0,85.71
+AL,Alabama,2018,14.29,0.0,85.71
+AL,Alabama,2020,14.29,0.0,85.71
+AL,Alabama,2022,14.29,0.0,85.71
+AL,Alabama,2024,28.57,0.0,71.43
+AR,Arkansas,1900,100.0,0.0,0.0
+AR,Arkansas,1902,100.0,0.0,0.0
+AR,Arkansas,1904,100.0,0.0,0.0
+AR,Arkansas,1906,100.0,0.0,0.0
+AR,Arkansas,1908,100.0,0.0,0.0
+AR,Arkansas,1910,100.0,0.0,0.0
+AR,Arkansas,1912,100.0,0.0,0.0
+AR,Arkansas,1914,100.0,0.0,0.0
+AR,Arkansas,1916,100.0,0.0,0.0
+AR,Arkansas,1918,100.0,0.0,0.0
+AR,Arkansas,1920,100.0,0.0,0.0
+AR,Arkansas,1922,100.0,0.0,0.0
+AR,Arkansas,1924,100.0,0.0,0.0
+AR,Arkansas,1926,100.0,0.0,0.0
+AR,Arkansas,1928,100.0,0.0,0.0
+AR,Arkansas,1930,100.0,0.0,0.0
+AR,Arkansas,1932,100.0,0.0,0.0
+AR,Arkansas,1934,100.0,0.0,0.0
+AR,Arkansas,1936,100.0,0.0,0.0
+AR,Arkansas,1938,100.0,0.0,0.0
+AR,Arkansas,1940,100.0,0.0,0.0
+AR,Arkansas,1942,100.0,0.0,0.0
+AR,Arkansas,1944,100.0,0.0,0.0
+AR,Arkansas,1946,100.0,0.0,0.0
+AR,Arkansas,1948,100.0,0.0,0.0
+AR,Arkansas,1950,100.0,0.0,0.0
+AR,Arkansas,1952,100.0,0.0,0.0
+AR,Arkansas,1954,100.0,0.0,0.0
+AR,Arkansas,1956,100.0,0.0,0.0
+AR,Arkansas,1958,83.33,16.67,0.0
+AR,Arkansas,1960,100.0,0.0,0.0
+AR,Arkansas,1962,100.0,0.0,0.0
+AR,Arkansas,1964,100.0,0.0,0.0
+AR,Arkansas,1966,75.0,0.0,25.0
+AR,Arkansas,1968,75.0,0.0,25.0
+AR,Arkansas,1970,75.0,0.0,25.0
+AR,Arkansas,1972,75.0,0.0,25.0
+AR,Arkansas,1974,75.0,0.0,25.0
+AR,Arkansas,1976,75.0,0.0,25.0
+AR,Arkansas,1978,50.0,0.0,50.0
+AR,Arkansas,1980,50.0,0.0,50.0
+AR,Arkansas,1982,50.0,0.0,50.0
+AR,Arkansas,1984,75.0,0.0,25.0
+AR,Arkansas,1986,75.0,0.0,25.0
+AR,Arkansas,1988,50.0,0.0,50.0
+AR,Arkansas,1990,75.0,0.0,25.0
+AR,Arkansas,1992,50.0,0.0,50.0
+AR,Arkansas,1994,50.0,0.0,50.0
+AR,Arkansas,1996,50.0,0.0,50.0
+AR,Arkansas,1998,50.0,0.0,50.0
+AR,Arkansas,2000,75.0,0.0,25.0
+AR,Arkansas,2002,75.0,0.0,25.0
+AR,Arkansas,2004,75.0,0.0,25.0
+AR,Arkansas,2006,75.0,0.0,25.0
+AR,Arkansas,2008,75.0,0.0,25.0
+AR,Arkansas,2010,25.0,0.0,75.0
+AR,Arkansas,2012,0.0,0.0,100.0
+AR,Arkansas,2014,0.0,0.0,100.0
+AR,Arkansas,2016,0.0,0.0,100.0
+AR,Arkansas,2018,0.0,0.0,100.0
+AR,Arkansas,2020,0.0,0.0,100.0
+AR,Arkansas,2022,0.0,0.0,100.0
+AR,Arkansas,2024,0.0,0.0,100.0
+AZ,Arizona,1910,100.0,0.0,0.0
+AZ,Arizona,1912,100.0,0.0,0.0
+AZ,Arizona,1914,100.0,0.0,0.0
+AZ,Arizona,1916,100.0,0.0,0.0
+AZ,Arizona,1918,100.0,0.0,0.0
+AZ,Arizona,1920,100.0,0.0,0.0
+AZ,Arizona,1922,100.0,0.0,0.0
+AZ,Arizona,1924,100.0,0.0,0.0
+AZ,Arizona,1926,100.0,0.0,0.0
+AZ,Arizona,1928,100.0,0.0,0.0
+AZ,Arizona,1930,100.0,0.0,0.0
+AZ,Arizona,1932,100.0,0.0,0.0
+AZ,Arizona,1934,100.0,0.0,0.0
+AZ,Arizona,1936,100.0,0.0,0.0
+AZ,Arizona,1938,100.0,0.0,0.0
+AZ,Arizona,1940,100.0,0.0,0.0
+AZ,Arizona,1942,100.0,0.0,0.0
+AZ,Arizona,1944,100.0,0.0,0.0
+AZ,Arizona,1946,100.0,0.0,0.0
+AZ,Arizona,1948,100.0,0.0,0.0
+AZ,Arizona,1950,100.0,0.0,0.0
+AZ,Arizona,1952,50.0,0.0,50.0
+AZ,Arizona,1954,50.0,0.0,50.0
+AZ,Arizona,1956,50.0,0.0,50.0
+AZ,Arizona,1958,50.0,0.0,50.0
+AZ,Arizona,1960,50.0,0.0,50.0
+AZ,Arizona,1962,66.67,0.0,33.33
+AZ,Arizona,1964,66.67,0.0,33.33
+AZ,Arizona,1966,33.33,0.0,66.67
+AZ,Arizona,1968,33.33,0.0,66.67
+AZ,Arizona,1970,33.33,0.0,66.67
+AZ,Arizona,1972,25.0,0.0,75.0
+AZ,Arizona,1974,25.0,0.0,75.0
+AZ,Arizona,1976,50.0,0.0,50.0
+AZ,Arizona,1978,50.0,0.0,50.0
+AZ,Arizona,1980,50.0,0.0,50.0
+AZ,Arizona,1982,40.0,0.0,60.0
+AZ,Arizona,1984,20.0,0.0,80.0
+AZ,Arizona,1986,20.0,0.0,80.0
+AZ,Arizona,1988,20.0,0.0,80.0
+AZ,Arizona,1990,33.33,0.0,66.67
+AZ,Arizona,1992,50.0,0.0,50.0
+AZ,Arizona,1994,16.67,0.0,83.33
+AZ,Arizona,1996,16.67,0.0,83.33
+AZ,Arizona,1998,16.67,0.0,83.33
+AZ,Arizona,2000,16.67,0.0,83.33
+AZ,Arizona,2002,25.0,0.0,75.0
+AZ,Arizona,2004,25.0,0.0,75.0
+AZ,Arizona,2006,50.0,0.0,50.0
+AZ,Arizona,2008,62.5,0.0,37.5
+AZ,Arizona,2010,37.5,0.0,62.5
+AZ,Arizona,2012,55.56,0.0,44.44
+AZ,Arizona,2014,44.44,0.0,55.56
+AZ,Arizona,2016,44.44,0.0,55.56
+AZ,Arizona,2018,55.56,0.0,44.44
+AZ,Arizona,2020,55.56,0.0,44.44
+AZ,Arizona,2022,33.33,0.0,66.67
+AZ,Arizona,2024,33.33,0.0,66.67
+CA,California,1900,0.0,0.0,100.0
+CA,California,1902,37.5,0.0,62.5
+CA,California,1904,0.0,0.0,100.0
+CA,California,1906,0.0,0.0,100.0
+CA,California,1908,0.0,0.0,100.0
+CA,California,1910,12.5,0.0,87.5
+CA,California,1912,27.27,9.09,63.64
+CA,California,1914,27.27,36.36,36.36
+CA,California,1916,36.36,9.09,54.55
+CA,California,1918,36.36,9.09,54.55
+CA,California,1920,18.18,0.0,81.82
+CA,California,1922,18.18,0.0,81.82
+CA,California,1924,18.18,0.0,81.82
+CA,California,1926,9.09,0.0,90.91
+CA,California,1928,9.09,0.0,90.91
+CA,California,1930,9.09,0.0,90.91
+CA,California,1932,55.0,0.0,45.0
+CA,California,1934,65.0,0.0,35.0
+CA,California,1936,75.0,5.0,20.0
+CA,California,1938,60.0,0.0,40.0
+CA,California,1940,55.0,0.0,45.0
+CA,California,1942,52.17,0.0,47.83
+CA,California,1944,69.57,0.0,30.43
+CA,California,1946,39.13,0.0,60.87
+CA,California,1948,43.48,0.0,56.52
+CA,California,1950,43.48,0.0,56.52
+CA,California,1952,36.67,0.0,63.33
+CA,California,1954,36.67,0.0,63.33
+CA,California,1956,43.33,0.0,56.67
+CA,California,1958,53.33,0.0,46.67
+CA,California,1960,53.33,0.0,46.67
+CA,California,1962,63.16,0.0,36.84
+CA,California,1964,60.53,0.0,39.47
+CA,California,1966,55.26,0.0,44.74
+CA,California,1968,55.26,0.0,44.74
+CA,California,1970,52.63,0.0,47.37
+CA,California,1972,53.49,0.0,46.51
+CA,California,1974,65.12,0.0,34.88
+CA,California,1976,67.44,0.0,32.56
+CA,California,1978,59.09,0.0,40.91
+CA,California,1980,51.16,0.0,48.84
+CA,California,1982,62.22,0.0,37.78
+CA,California,1984,60.0,0.0,40.0
+CA,California,1986,60.0,0.0,40.0
+CA,California,1988,60.0,0.0,40.0
+CA,California,1990,57.78,0.0,42.22
+CA,California,1992,58.49,0.0,41.51
+CA,California,1994,51.85,0.0,48.15
+CA,California,1996,55.77,0.0,44.23
+CA,California,1998,52.83,0.0,47.17
+CA,California,2000,61.54,0.0,38.46
+CA,California,2002,62.26,0.0,37.74
+CA,California,2004,61.54,0.0,38.46
+CA,California,2006,64.15,0.0,35.85
+CA,California,2008,64.15,0.0,35.85
+CA,California,2010,62.75,0.0,37.25
+CA,California,2012,71.7,0.0,28.3
+CA,California,2014,73.58,0.0,26.42
+CA,California,2016,73.58,0.0,26.42
+CA,California,2018,86.79,0.0,13.21
+CA,California,2020,79.25,0.0,20.75
+CA,California,2022,76.92,0.0,23.08
+CA,California,2024,82.69,0.0,17.31
+CO,Colorado,1900,0.0,100.0,0.0
+CO,Colorado,1902,33.33,0.0,66.67
+CO,Colorado,1904,0.0,0.0,100.0
+CO,Colorado,1906,0.0,0.0,100.0
+CO,Colorado,1908,100.0,0.0,0.0
+CO,Colorado,1910,100.0,0.0,0.0
+CO,Colorado,1912,100.0,0.0,0.0
+CO,Colorado,1914,75.0,0.0,25.0
+CO,Colorado,1916,75.0,0.0,25.0
+CO,Colorado,1918,25.0,0.0,75.0
+CO,Colorado,1920,25.0,0.0,75.0
+CO,Colorado,1922,25.0,0.0,75.0
+CO,Colorado,1924,25.0,0.0,75.0
+CO,Colorado,1926,50.0,0.0,50.0
+CO,Colorado,1928,25.0,0.0,75.0
+CO,Colorado,1930,25.0,0.0,75.0
+CO,Colorado,1932,100.0,0.0,0.0
+CO,Colorado,1934,100.0,0.0,0.0
+CO,Colorado,1936,100.0,0.0,0.0
+CO,Colorado,1938,100.0,0.0,0.0
+CO,Colorado,1940,50.0,0.0,50.0
+CO,Colorado,1942,25.0,0.0,75.0
+CO,Colorado,1944,0.0,0.0,100.0
+CO,Colorado,1946,25.0,0.0,75.0
+CO,Colorado,1948,75.0,0.0,25.0
+CO,Colorado,1950,50.0,0.0,50.0
+CO,Colorado,1952,50.0,0.0,50.0
+CO,Colorado,1954,50.0,0.0,50.0
+CO,Colorado,1956,50.0,0.0,50.0
+CO,Colorado,1958,75.0,0.0,25.0
+CO,Colorado,1960,50.0,0.0,50.0
+CO,Colorado,1962,50.0,0.0,50.0
+CO,Colorado,1964,100.0,0.0,0.0
+CO,Colorado,1966,75.0,0.0,25.0
+CO,Colorado,1968,75.0,0.0,25.0
+CO,Colorado,1970,50.0,0.0,50.0
+CO,Colorado,1972,40.0,0.0,60.0
+CO,Colorado,1974,60.0,0.0,40.0
+CO,Colorado,1976,60.0,0.0,40.0
+CO,Colorado,1978,60.0,0.0,40.0
+CO,Colorado,1980,60.0,0.0,40.0
+CO,Colorado,1982,50.0,0.0,50.0
+CO,Colorado,1984,33.33,0.0,66.67
+CO,Colorado,1986,50.0,0.0,50.0
+CO,Colorado,1988,50.0,0.0,50.0
+CO,Colorado,1990,50.0,0.0,50.0
+CO,Colorado,1992,33.33,0.0,66.67
+CO,Colorado,1994,33.33,0.0,66.67
+CO,Colorado,1996,33.33,0.0,66.67
+CO,Colorado,1998,33.33,0.0,66.67
+CO,Colorado,2000,33.33,0.0,66.67
+CO,Colorado,2002,28.57,0.0,71.43
+CO,Colorado,2004,42.86,0.0,57.14
+CO,Colorado,2006,57.14,0.0,42.86
+CO,Colorado,2008,71.43,0.0,28.57
+CO,Colorado,2010,42.86,0.0,57.14
+CO,Colorado,2012,42.86,0.0,57.14
+CO,Colorado,2014,42.86,0.0,57.14
+CO,Colorado,2016,42.86,0.0,57.14
+CO,Colorado,2018,57.14,0.0,42.86
+CO,Colorado,2020,57.14,0.0,42.86
+CO,Colorado,2022,62.5,0.0,37.5
+CO,Colorado,2024,50.0,0.0,50.0
+CT,Connecticut,1900,0.0,0.0,100.0
+CT,Connecticut,1902,0.0,0.0,100.0
+CT,Connecticut,1904,0.0,0.0,100.0
+CT,Connecticut,1906,0.0,0.0,100.0
+CT,Connecticut,1908,0.0,0.0,100.0
+CT,Connecticut,1910,20.0,0.0,80.0
+CT,Connecticut,1912,100.0,0.0,0.0
+CT,Connecticut,1914,0.0,0.0,100.0
+CT,Connecticut,1916,20.0,0.0,80.0
+CT,Connecticut,1918,20.0,0.0,80.0
+CT,Connecticut,1920,0.0,0.0,100.0
+CT,Connecticut,1922,20.0,0.0,80.0
+CT,Connecticut,1924,0.0,0.0,100.0
+CT,Connecticut,1926,0.0,0.0,100.0
+CT,Connecticut,1928,0.0,0.0,100.0
+CT,Connecticut,1930,40.0,0.0,60.0
+CT,Connecticut,1932,33.33,0.0,66.67
+CT,Connecticut,1934,66.67,0.0,33.33
+CT,Connecticut,1936,100.0,0.0,0.0
+CT,Connecticut,1938,33.33,0.0,66.67
+CT,Connecticut,1940,100.0,0.0,0.0
+CT,Connecticut,1942,0.0,0.0,100.0
+CT,Connecticut,1944,66.67,0.0,33.33
+CT,Connecticut,1946,0.0,0.0,100.0
+CT,Connecticut,1948,50.0,0.0,50.0
+CT,Connecticut,1950,33.33,0.0,66.67
+CT,Connecticut,1952,16.67,0.0,83.33
+CT,Connecticut,1954,16.67,0.0,83.33
+CT,Connecticut,1956,0.0,0.0,100.0
+CT,Connecticut,1958,100.0,0.0,0.0
+CT,Connecticut,1960,66.67,0.0,33.33
+CT,Connecticut,1962,83.33,0.0,16.67
+CT,Connecticut,1964,100.0,0.0,0.0
+CT,Connecticut,1966,83.33,0.0,16.67
+CT,Connecticut,1968,66.67,0.0,33.33
+CT,Connecticut,1970,66.67,0.0,33.33
+CT,Connecticut,1972,50.0,0.0,50.0
+CT,Connecticut,1974,66.67,0.0,33.33
+CT,Connecticut,1976,66.67,0.0,33.33
+CT,Connecticut,1978,83.33,0.0,16.67
+CT,Connecticut,1980,66.67,0.0,33.33
+CT,Connecticut,1982,66.67,0.0,33.33
+CT,Connecticut,1984,50.0,0.0,50.0
+CT,Connecticut,1986,50.0,0.0,50.0
+CT,Connecticut,1988,50.0,0.0,50.0
+CT,Connecticut,1990,50.0,0.0,50.0
+CT,Connecticut,1992,50.0,0.0,50.0
+CT,Connecticut,1994,50.0,0.0,50.0
+CT,Connecticut,1996,66.67,0.0,33.33
+CT,Connecticut,1998,66.67,0.0,33.33
+CT,Connecticut,2000,50.0,0.0,50.0
+CT,Connecticut,2002,40.0,0.0,60.0
+CT,Connecticut,2004,40.0,0.0,60.0
+CT,Connecticut,2006,80.0,0.0,20.0
+CT,Connecticut,2008,100.0,0.0,0.0
+CT,Connecticut,2010,100.0,0.0,0.0
+CT,Connecticut,2012,100.0,0.0,0.0
+CT,Connecticut,2014,100.0,0.0,0.0
+CT,Connecticut,2016,100.0,0.0,0.0
+CT,Connecticut,2018,100.0,0.0,0.0
+CT,Connecticut,2020,100.0,0.0,0.0
+CT,Connecticut,2022,100.0,0.0,0.0
+CT,Connecticut,2024,100.0,0.0,0.0
+DE,Delaware,1900,0.0,0.0,100.0
+DE,Delaware,1902,100.0,0.0,0.0
+DE,Delaware,1904,0.0,0.0,100.0
+DE,Delaware,1906,0.0,0.0,100.0
+DE,Delaware,1908,0.0,0.0,100.0
+DE,Delaware,1910,0.0,0.0,100.0
+DE,Delaware,1912,100.0,0.0,0.0
+DE,Delaware,1914,0.0,0.0,100.0
+DE,Delaware,1916,100.0,0.0,0.0
+DE,Delaware,1918,0.0,0.0,100.0
+DE,Delaware,1920,0.0,0.0,100.0
+DE,Delaware,1922,100.0,0.0,0.0
+DE,Delaware,1924,0.0,0.0,100.0
+DE,Delaware,1926,0.0,0.0,100.0
+DE,Delaware,1928,0.0,0.0,100.0
+DE,Delaware,1930,0.0,0.0,100.0
+DE,Delaware,1932,100.0,0.0,0.0
+DE,Delaware,1934,0.0,0.0,100.0
+DE,Delaware,1936,100.0,0.0,0.0
+DE,Delaware,1938,0.0,0.0,100.0
+DE,Delaware,1940,100.0,0.0,0.0
+DE,Delaware,1942,0.0,0.0,100.0
+DE,Delaware,1944,100.0,0.0,0.0
+DE,Delaware,1946,0.0,0.0,100.0
+DE,Delaware,1948,0.0,0.0,100.0
+DE,Delaware,1950,0.0,0.0,100.0
+DE,Delaware,1952,0.0,0.0,100.0
+DE,Delaware,1954,100.0,0.0,0.0
+DE,Delaware,1956,0.0,0.0,100.0
+DE,Delaware,1958,100.0,0.0,0.0
+DE,Delaware,1960,100.0,0.0,0.0
+DE,Delaware,1962,100.0,0.0,0.0
+DE,Delaware,1964,100.0,0.0,0.0
+DE,Delaware,1966,0.0,0.0,100.0
+DE,Delaware,1968,0.0,0.0,100.0
+DE,Delaware,1970,0.0,0.0,100.0
+DE,Delaware,1972,0.0,0.0,100.0
+DE,Delaware,1974,0.0,0.0,100.0
+DE,Delaware,1976,0.0,0.0,100.0
+DE,Delaware,1978,0.0,0.0,100.0
+DE,Delaware,1980,0.0,0.0,100.0
+DE,Delaware,1982,100.0,0.0,0.0
+DE,Delaware,1984,100.0,0.0,0.0
+DE,Delaware,1986,100.0,0.0,0.0
+DE,Delaware,1988,100.0,0.0,0.0
+DE,Delaware,1990,100.0,0.0,0.0
+DE,Delaware,1992,0.0,0.0,100.0
+DE,Delaware,1994,0.0,0.0,100.0
+DE,Delaware,1996,0.0,0.0,100.0
+DE,Delaware,1998,0.0,0.0,100.0
+DE,Delaware,2000,0.0,0.0,100.0
+DE,Delaware,2002,0.0,0.0,100.0
+DE,Delaware,2004,0.0,0.0,100.0
+DE,Delaware,2006,0.0,0.0,100.0
+DE,Delaware,2008,0.0,0.0,100.0
+DE,Delaware,2010,100.0,0.0,0.0
+DE,Delaware,2012,100.0,0.0,0.0
+DE,Delaware,2014,100.0,0.0,0.0
+DE,Delaware,2016,100.0,0.0,0.0
+DE,Delaware,2018,100.0,0.0,0.0
+DE,Delaware,2020,100.0,0.0,0.0
+DE,Delaware,2022,100.0,0.0,0.0
+DE,Delaware,2024,100.0,0.0,0.0
+FL,Florida,1900,100.0,0.0,0.0
+FL,Florida,1902,100.0,0.0,0.0
+FL,Florida,1904,100.0,0.0,0.0
+FL,Florida,1906,100.0,0.0,0.0
+FL,Florida,1908,100.0,0.0,0.0
+FL,Florida,1910,100.0,0.0,0.0
+FL,Florida,1912,100.0,0.0,0.0
+FL,Florida,1914,100.0,0.0,0.0
+FL,Florida,1916,100.0,0.0,0.0
+FL,Florida,1918,100.0,0.0,0.0
+FL,Florida,1920,100.0,0.0,0.0
+FL,Florida,1922,100.0,0.0,0.0
+FL,Florida,1924,100.0,0.0,0.0
+FL,Florida,1926,100.0,0.0,0.0
+FL,Florida,1928,100.0,0.0,0.0
+FL,Florida,1930,100.0,0.0,0.0
+FL,Florida,1932,100.0,0.0,0.0
+FL,Florida,1934,100.0,0.0,0.0
+FL,Florida,1936,100.0,0.0,0.0
+FL,Florida,1938,100.0,0.0,0.0
+FL,Florida,1940,100.0,0.0,0.0
+FL,Florida,1942,100.0,0.0,0.0
+FL,Florida,1944,100.0,0.0,0.0
+FL,Florida,1946,100.0,0.0,0.0
+FL,Florida,1948,100.0,0.0,0.0
+FL,Florida,1950,100.0,0.0,0.0
+FL,Florida,1952,100.0,0.0,0.0
+FL,Florida,1954,87.5,0.0,12.5
+FL,Florida,1956,87.5,0.0,12.5
+FL,Florida,1958,87.5,0.0,12.5
+FL,Florida,1960,87.5,0.0,12.5
+FL,Florida,1962,83.33,0.0,16.67
+FL,Florida,1964,83.33,0.0,16.67
+FL,Florida,1966,75.0,0.0,25.0
+FL,Florida,1968,75.0,0.0,25.0
+FL,Florida,1970,75.0,0.0,25.0
+FL,Florida,1972,73.33,0.0,26.67
+FL,Florida,1974,66.67,0.0,33.33
+FL,Florida,1976,66.67,0.0,33.33
+FL,Florida,1978,80.0,0.0,20.0
+FL,Florida,1980,73.33,0.0,26.67
+FL,Florida,1982,68.42,0.0,31.58
+FL,Florida,1984,63.16,0.0,36.84
+FL,Florida,1986,63.16,0.0,36.84
+FL,Florida,1988,47.37,0.0,52.63
+FL,Florida,1990,47.37,0.0,52.63
+FL,Florida,1992,43.48,0.0,56.52
+FL,Florida,1994,34.78,0.0,65.22
+FL,Florida,1996,34.78,0.0,65.22
+FL,Florida,1998,34.78,0.0,65.22
+FL,Florida,2000,34.78,0.0,65.22
+FL,Florida,2002,28.0,0.0,72.0
+FL,Florida,2004,28.0,0.0,72.0
+FL,Florida,2006,36.0,0.0,64.0
+FL,Florida,2008,40.0,0.0,60.0
+FL,Florida,2010,20.83,0.0,79.17
+FL,Florida,2012,37.04,0.0,62.96
+FL,Florida,2014,37.04,0.0,62.96
+FL,Florida,2016,40.74,0.0,59.26
+FL,Florida,2018,48.15,0.0,51.85
+FL,Florida,2020,40.74,0.0,59.26
+FL,Florida,2022,28.57,0.0,71.43
+FL,Florida,2024,28.57,0.0,71.43
+GA,Georgia,1900,100.0,0.0,0.0
+GA,Georgia,1902,100.0,0.0,0.0
+GA,Georgia,1904,100.0,0.0,0.0
+GA,Georgia,1906,100.0,0.0,0.0
+GA,Georgia,1908,100.0,0.0,0.0
+GA,Georgia,1910,100.0,0.0,0.0
+GA,Georgia,1912,100.0,0.0,0.0
+GA,Georgia,1914,100.0,0.0,0.0
+GA,Georgia,1916,100.0,0.0,0.0
+GA,Georgia,1918,100.0,0.0,0.0
+GA,Georgia,1920,100.0,0.0,0.0
+GA,Georgia,1922,100.0,0.0,0.0
+GA,Georgia,1924,100.0,0.0,0.0
+GA,Georgia,1926,100.0,0.0,0.0
+GA,Georgia,1928,100.0,0.0,0.0
+GA,Georgia,1930,100.0,0.0,0.0
+GA,Georgia,1932,100.0,0.0,0.0
+GA,Georgia,1934,100.0,0.0,0.0
+GA,Georgia,1936,100.0,0.0,0.0
+GA,Georgia,1938,100.0,0.0,0.0
+GA,Georgia,1940,100.0,0.0,0.0
+GA,Georgia,1942,100.0,0.0,0.0
+GA,Georgia,1944,100.0,0.0,0.0
+GA,Georgia,1946,100.0,0.0,0.0
+GA,Georgia,1948,100.0,0.0,0.0
+GA,Georgia,1950,100.0,0.0,0.0
+GA,Georgia,1952,100.0,0.0,0.0
+GA,Georgia,1954,100.0,0.0,0.0
+GA,Georgia,1956,100.0,0.0,0.0
+GA,Georgia,1958,100.0,0.0,0.0
+GA,Georgia,1960,100.0,0.0,0.0
+GA,Georgia,1962,100.0,0.0,0.0
+GA,Georgia,1964,90.0,0.0,10.0
+GA,Georgia,1966,80.0,0.0,20.0
+GA,Georgia,1968,80.0,0.0,20.0
+GA,Georgia,1970,80.0,0.0,20.0
+GA,Georgia,1972,90.0,0.0,10.0
+GA,Georgia,1974,100.0,0.0,0.0
+GA,Georgia,1976,100.0,0.0,0.0
+GA,Georgia,1978,90.0,0.0,10.0
+GA,Georgia,1980,90.0,0.0,10.0
+GA,Georgia,1982,90.0,0.0,10.0
+GA,Georgia,1984,80.0,0.0,20.0
+GA,Georgia,1986,80.0,0.0,20.0
+GA,Georgia,1988,90.0,0.0,10.0
+GA,Georgia,1990,90.0,0.0,10.0
+GA,Georgia,1992,63.64,0.0,36.36
+GA,Georgia,1994,33.33,0.0,66.67
+GA,Georgia,1996,27.27,0.0,72.73
+GA,Georgia,1998,30.0,0.0,70.0
+GA,Georgia,2000,27.27,0.0,72.73
+GA,Georgia,2002,38.46,0.0,61.54
+GA,Georgia,2004,46.15,0.0,53.85
+GA,Georgia,2006,46.15,0.0,53.85
+GA,Georgia,2008,46.15,0.0,53.85
+GA,Georgia,2010,38.46,0.0,61.54
+GA,Georgia,2012,35.71,0.0,64.29
+GA,Georgia,2014,28.57,0.0,71.43
+GA,Georgia,2016,28.57,0.0,71.43
+GA,Georgia,2018,35.71,0.0,64.29
+GA,Georgia,2020,42.86,0.0,57.14
+GA,Georgia,2022,35.71,0.0,64.29
+GA,Georgia,2024,35.71,0.0,64.29
+HI,Hawaii,1958,100.0,0.0,0.0
+HI,Hawaii,1960,100.0,0.0,0.0
+HI,Hawaii,1962,100.0,0.0,0.0
+HI,Hawaii,1964,100.0,0.0,0.0
+HI,Hawaii,1966,100.0,0.0,0.0
+HI,Hawaii,1968,100.0,0.0,0.0
+HI,Hawaii,1970,100.0,0.0,0.0
+HI,Hawaii,1972,100.0,0.0,0.0
+HI,Hawaii,1974,100.0,0.0,0.0
+HI,Hawaii,1976,100.0,0.0,0.0
+HI,Hawaii,1978,100.0,0.0,0.0
+HI,Hawaii,1980,100.0,0.0,0.0
+HI,Hawaii,1982,100.0,0.0,0.0
+HI,Hawaii,1984,100.0,0.0,0.0
+HI,Hawaii,1986,50.0,0.0,50.0
+HI,Hawaii,1988,50.0,0.0,50.0
+HI,Hawaii,1990,100.0,0.0,0.0
+HI,Hawaii,1992,100.0,0.0,0.0
+HI,Hawaii,1994,100.0,0.0,0.0
+HI,Hawaii,1996,100.0,0.0,0.0
+HI,Hawaii,1998,100.0,0.0,0.0
+HI,Hawaii,2000,100.0,0.0,0.0
+HI,Hawaii,2002,100.0,0.0,0.0
+HI,Hawaii,2004,100.0,0.0,0.0
+HI,Hawaii,2006,100.0,0.0,0.0
+HI,Hawaii,2008,100.0,0.0,0.0
+HI,Hawaii,2010,100.0,0.0,0.0
+HI,Hawaii,2012,100.0,0.0,0.0
+HI,Hawaii,2014,100.0,0.0,0.0
+HI,Hawaii,2016,100.0,0.0,0.0
+HI,Hawaii,2018,100.0,0.0,0.0
+HI,Hawaii,2020,100.0,0.0,0.0
+HI,Hawaii,2022,100.0,0.0,0.0
+HI,Hawaii,2024,100.0,0.0,0.0
+IA,Iowa,1900,0.0,0.0,100.0
+IA,Iowa,1902,9.09,0.0,90.91
+IA,Iowa,1904,0.0,0.0,100.0
+IA,Iowa,1906,9.09,0.0,90.91
+IA,Iowa,1908,9.09,0.0,90.91
+IA,Iowa,1910,9.09,0.0,90.91
+IA,Iowa,1912,27.27,0.0,72.73
+IA,Iowa,1914,9.09,0.0,90.91
+IA,Iowa,1916,0.0,0.0,100.0
+IA,Iowa,1918,0.0,0.0,100.0
+IA,Iowa,1920,0.0,0.0,100.0
+IA,Iowa,1922,0.0,0.0,100.0
+IA,Iowa,1924,0.0,0.0,100.0
+IA,Iowa,1926,0.0,0.0,100.0
+IA,Iowa,1928,0.0,0.0,100.0
+IA,Iowa,1930,9.09,0.0,90.91
+IA,Iowa,1932,66.67,0.0,33.33
+IA,Iowa,1934,66.67,0.0,33.33
+IA,Iowa,1936,55.56,0.0,44.44
+IA,Iowa,1938,22.22,0.0,77.78
+IA,Iowa,1940,22.22,0.0,77.78
+IA,Iowa,1942,0.0,0.0,100.0
+IA,Iowa,1944,0.0,0.0,100.0
+IA,Iowa,1946,0.0,0.0,100.0
+IA,Iowa,1948,0.0,0.0,100.0
+IA,Iowa,1950,0.0,0.0,100.0
+IA,Iowa,1952,0.0,0.0,100.0
+IA,Iowa,1954,0.0,0.0,100.0
+IA,Iowa,1956,12.5,0.0,87.5
+IA,Iowa,1958,50.0,0.0,50.0
+IA,Iowa,1960,25.0,0.0,75.0
+IA,Iowa,1962,14.29,0.0,85.71
+IA,Iowa,1964,85.71,0.0,14.29
+IA,Iowa,1966,28.57,0.0,71.43
+IA,Iowa,1968,28.57,0.0,71.43
+IA,Iowa,1970,28.57,0.0,71.43
+IA,Iowa,1972,50.0,0.0,50.0
+IA,Iowa,1974,83.33,0.0,16.67
+IA,Iowa,1976,66.67,0.0,33.33
+IA,Iowa,1978,50.0,0.0,50.0
+IA,Iowa,1980,50.0,0.0,50.0
+IA,Iowa,1982,50.0,0.0,50.0
+IA,Iowa,1984,33.33,0.0,66.67
+IA,Iowa,1986,33.33,0.0,66.67
+IA,Iowa,1988,33.33,0.0,66.67
+IA,Iowa,1990,33.33,0.0,66.67
+IA,Iowa,1992,20.0,0.0,80.0
+IA,Iowa,1994,0.0,0.0,100.0
+IA,Iowa,1996,20.0,0.0,80.0
+IA,Iowa,1998,20.0,0.0,80.0
+IA,Iowa,2000,20.0,0.0,80.0
+IA,Iowa,2002,20.0,0.0,80.0
+IA,Iowa,2004,20.0,0.0,80.0
+IA,Iowa,2006,60.0,0.0,40.0
+IA,Iowa,2008,60.0,0.0,40.0
+IA,Iowa,2010,60.0,0.0,40.0
+IA,Iowa,2012,50.0,0.0,50.0
+IA,Iowa,2014,25.0,0.0,75.0
+IA,Iowa,2016,25.0,0.0,75.0
+IA,Iowa,2018,75.0,0.0,25.0
+IA,Iowa,2020,25.0,0.0,75.0
+IA,Iowa,2022,0.0,0.0,100.0
+IA,Iowa,2024,0.0,0.0,100.0
+ID,Idaho,1900,0.0,100.0,0.0
+ID,Idaho,1902,0.0,0.0,100.0
+ID,Idaho,1904,0.0,0.0,100.0
+ID,Idaho,1906,0.0,0.0,100.0
+ID,Idaho,1908,0.0,0.0,100.0
+ID,Idaho,1910,0.0,0.0,100.0
+ID,Idaho,1912,0.0,0.0,100.0
+ID,Idaho,1914,0.0,0.0,100.0
+ID,Idaho,1916,0.0,0.0,100.0
+ID,Idaho,1918,0.0,0.0,100.0
+ID,Idaho,1920,0.0,0.0,100.0
+ID,Idaho,1922,0.0,0.0,100.0
+ID,Idaho,1924,0.0,0.0,100.0
+ID,Idaho,1926,0.0,0.0,100.0
+ID,Idaho,1928,0.0,0.0,100.0
+ID,Idaho,1930,0.0,0.0,100.0
+ID,Idaho,1932,100.0,0.0,0.0
+ID,Idaho,1934,100.0,0.0,0.0
+ID,Idaho,1936,100.0,0.0,0.0
+ID,Idaho,1938,50.0,0.0,50.0
+ID,Idaho,1940,50.0,0.0,50.0
+ID,Idaho,1942,50.0,0.0,50.0
+ID,Idaho,1944,50.0,0.0,50.0
+ID,Idaho,1946,0.0,0.0,100.0
+ID,Idaho,1948,50.0,0.0,50.0
+ID,Idaho,1950,0.0,0.0,100.0
+ID,Idaho,1952,50.0,0.0,50.0
+ID,Idaho,1954,50.0,0.0,50.0
+ID,Idaho,1956,50.0,0.0,50.0
+ID,Idaho,1958,50.0,0.0,50.0
+ID,Idaho,1960,100.0,0.0,0.0
+ID,Idaho,1962,100.0,0.0,0.0
+ID,Idaho,1964,50.0,0.0,50.0
+ID,Idaho,1966,0.0,0.0,100.0
+ID,Idaho,1968,0.0,0.0,100.0
+ID,Idaho,1970,0.0,0.0,100.0
+ID,Idaho,1972,0.0,0.0,100.0
+ID,Idaho,1974,0.0,0.0,100.0
+ID,Idaho,1976,0.0,0.0,100.0
+ID,Idaho,1978,0.0,0.0,100.0
+ID,Idaho,1980,0.0,0.0,100.0
+ID,Idaho,1982,0.0,0.0,100.0
+ID,Idaho,1984,50.0,0.0,50.0
+ID,Idaho,1986,50.0,0.0,50.0
+ID,Idaho,1988,50.0,0.0,50.0
+ID,Idaho,1990,100.0,0.0,0.0
+ID,Idaho,1992,50.0,0.0,50.0
+ID,Idaho,1994,0.0,0.0,100.0
+ID,Idaho,1996,0.0,0.0,100.0
+ID,Idaho,1998,0.0,0.0,100.0
+ID,Idaho,2000,0.0,0.0,100.0
+ID,Idaho,2002,0.0,0.0,100.0
+ID,Idaho,2004,0.0,0.0,100.0
+ID,Idaho,2006,0.0,0.0,100.0
+ID,Idaho,2008,50.0,0.0,50.0
+ID,Idaho,2010,0.0,0.0,100.0
+ID,Idaho,2012,0.0,0.0,100.0
+ID,Idaho,2014,0.0,0.0,100.0
+ID,Idaho,2016,0.0,0.0,100.0
+ID,Idaho,2018,0.0,0.0,100.0
+ID,Idaho,2020,0.0,0.0,100.0
+ID,Idaho,2022,0.0,0.0,100.0
+ID,Idaho,2024,0.0,0.0,100.0
+IL,Illinois,1900,50.0,0.0,50.0
+IL,Illinois,1902,32.0,0.0,68.0
+IL,Illinois,1904,4.17,0.0,95.83
+IL,Illinois,1906,20.0,0.0,80.0
+IL,Illinois,1908,24.0,0.0,76.0
+IL,Illinois,1910,44.0,0.0,56.0
+IL,Illinois,1912,74.07,7.41,18.52
+IL,Illinois,1914,37.04,3.7,59.26
+IL,Illinois,1916,22.22,0.0,77.78
+IL,Illinois,1918,18.52,0.0,81.48
+IL,Illinois,1920,11.11,0.0,88.89
+IL,Illinois,1922,25.93,0.0,74.07
+IL,Illinois,1924,18.52,0.0,81.48
+IL,Illinois,1926,25.93,0.0,74.07
+IL,Illinois,1928,22.22,0.0,77.78
+IL,Illinois,1930,44.44,0.0,55.56
+IL,Illinois,1932,70.37,0.0,29.63
+IL,Illinois,1934,77.78,0.0,22.22
+IL,Illinois,1936,77.78,0.0,22.22
+IL,Illinois,1938,62.96,0.0,37.04
+IL,Illinois,1940,40.74,0.0,59.26
+IL,Illinois,1942,26.92,0.0,73.08
+IL,Illinois,1944,42.31,0.0,57.69
+IL,Illinois,1946,23.08,0.0,76.92
+IL,Illinois,1948,46.15,0.0,53.85
+IL,Illinois,1950,30.77,0.0,69.23
+IL,Illinois,1952,36.0,0.0,64.0
+IL,Illinois,1954,48.0,0.0,52.0
+IL,Illinois,1956,44.0,0.0,56.0
+IL,Illinois,1958,56.0,0.0,44.0
+IL,Illinois,1960,56.0,0.0,44.0
+IL,Illinois,1962,50.0,0.0,50.0
+IL,Illinois,1964,54.17,0.0,45.83
+IL,Illinois,1966,50.0,0.0,50.0
+IL,Illinois,1968,50.0,0.0,50.0
+IL,Illinois,1970,50.0,0.0,50.0
+IL,Illinois,1972,39.13,0.0,60.87
+IL,Illinois,1974,54.17,0.0,45.83
+IL,Illinois,1976,50.0,0.0,50.0
+IL,Illinois,1978,45.83,0.0,54.17
+IL,Illinois,1980,41.67,0.0,58.33
+IL,Illinois,1982,54.55,0.0,45.45
+IL,Illinois,1984,59.09,0.0,40.91
+IL,Illinois,1986,59.09,0.0,40.91
+IL,Illinois,1988,63.64,0.0,36.36
+IL,Illinois,1990,65.22,0.0,34.78
+IL,Illinois,1992,60.0,0.0,40.0
+IL,Illinois,1994,52.38,0.0,47.62
+IL,Illinois,1996,50.0,0.0,50.0
+IL,Illinois,1998,50.0,0.0,50.0
+IL,Illinois,2000,50.0,0.0,50.0
+IL,Illinois,2002,47.37,0.0,52.63
+IL,Illinois,2004,52.63,0.0,47.37
+IL,Illinois,2006,52.63,0.0,47.37
+IL,Illinois,2008,61.11,0.0,38.89
+IL,Illinois,2010,42.11,0.0,57.89
+IL,Illinois,2012,66.67,0.0,33.33
+IL,Illinois,2014,55.56,0.0,44.44
+IL,Illinois,2016,61.11,0.0,38.89
+IL,Illinois,2018,72.22,0.0,27.78
+IL,Illinois,2020,72.22,0.0,27.78
+IL,Illinois,2022,82.35,0.0,17.65
+IL,Illinois,2024,82.35,0.0,17.65
+IN,Indiana,1900,30.77,0.0,69.23
+IN,Indiana,1902,30.77,0.0,69.23
+IN,Indiana,1904,15.38,0.0,84.62
+IN,Indiana,1906,30.77,0.0,69.23
+IN,Indiana,1908,84.62,0.0,15.38
+IN,Indiana,1910,92.31,0.0,7.69
+IN,Indiana,1912,100.0,0.0,0.0
+IN,Indiana,1914,84.62,0.0,15.38
+IN,Indiana,1916,30.77,0.0,69.23
+IN,Indiana,1918,0.0,0.0,100.0
+IN,Indiana,1920,0.0,0.0,100.0
+IN,Indiana,1922,38.46,0.0,61.54
+IN,Indiana,1924,23.08,0.0,76.92
+IN,Indiana,1926,23.08,0.0,76.92
+IN,Indiana,1928,23.08,0.0,76.92
+IN,Indiana,1930,69.23,0.0,30.77
+IN,Indiana,1932,100.0,0.0,0.0
+IN,Indiana,1934,100.0,0.0,0.0
+IN,Indiana,1936,91.67,0.0,8.33
+IN,Indiana,1938,41.67,0.0,58.33
+IN,Indiana,1940,33.33,0.0,66.67
+IN,Indiana,1942,18.18,0.0,81.82
+IN,Indiana,1944,18.18,0.0,81.82
+IN,Indiana,1946,18.18,0.0,81.82
+IN,Indiana,1948,63.64,0.0,36.36
+IN,Indiana,1950,18.18,0.0,81.82
+IN,Indiana,1952,9.09,0.0,90.91
+IN,Indiana,1954,18.18,0.0,81.82
+IN,Indiana,1956,18.18,0.0,81.82
+IN,Indiana,1958,72.73,0.0,27.27
+IN,Indiana,1960,36.36,0.0,63.64
+IN,Indiana,1962,36.36,0.0,63.64
+IN,Indiana,1964,54.55,0.0,45.45
+IN,Indiana,1966,45.45,0.0,54.55
+IN,Indiana,1968,36.36,0.0,63.64
+IN,Indiana,1970,45.45,0.0,54.55
+IN,Indiana,1972,36.36,0.0,63.64
+IN,Indiana,1974,81.82,0.0,18.18
+IN,Indiana,1976,72.73,0.0,27.27
+IN,Indiana,1978,63.64,0.0,36.36
+IN,Indiana,1980,54.55,0.0,45.45
+IN,Indiana,1982,50.0,0.0,50.0
+IN,Indiana,1984,50.0,0.0,50.0
+IN,Indiana,1986,60.0,0.0,40.0
+IN,Indiana,1988,70.0,0.0,30.0
+IN,Indiana,1990,80.0,0.0,20.0
+IN,Indiana,1992,70.0,0.0,30.0
+IN,Indiana,1994,40.0,0.0,60.0
+IN,Indiana,1996,40.0,0.0,60.0
+IN,Indiana,1998,40.0,0.0,60.0
+IN,Indiana,2000,40.0,0.0,60.0
+IN,Indiana,2002,33.33,0.0,66.67
+IN,Indiana,2004,22.22,0.0,77.78
+IN,Indiana,2006,55.56,0.0,44.44
+IN,Indiana,2008,55.56,0.0,44.44
+IN,Indiana,2010,33.33,0.0,66.67
+IN,Indiana,2012,22.22,0.0,77.78
+IN,Indiana,2014,22.22,0.0,77.78
+IN,Indiana,2016,22.22,0.0,77.78
+IN,Indiana,2018,22.22,0.0,77.78
+IN,Indiana,2020,22.22,0.0,77.78
+IN,Indiana,2022,22.22,0.0,77.78
+IN,Indiana,2024,22.22,0.0,77.78
+KS,Kansas,1900,12.5,0.0,87.5
+KS,Kansas,1902,0.0,0.0,100.0
+KS,Kansas,1904,0.0,0.0,100.0
+KS,Kansas,1906,0.0,0.0,100.0
+KS,Kansas,1908,0.0,0.0,100.0
+KS,Kansas,1910,0.0,0.0,100.0
+KS,Kansas,1912,62.5,0.0,37.5
+KS,Kansas,1914,75.0,0.0,25.0
+KS,Kansas,1916,62.5,0.0,37.5
+KS,Kansas,1918,12.5,0.0,87.5
+KS,Kansas,1920,0.0,0.0,100.0
+KS,Kansas,1922,12.5,0.0,87.5
+KS,Kansas,1924,25.0,0.0,75.0
+KS,Kansas,1926,12.5,0.0,87.5
+KS,Kansas,1928,12.5,0.0,87.5
+KS,Kansas,1930,12.5,0.0,87.5
+KS,Kansas,1932,42.86,0.0,57.14
+KS,Kansas,1934,42.86,0.0,57.14
+KS,Kansas,1936,28.57,0.0,71.43
+KS,Kansas,1938,14.29,0.0,85.71
+KS,Kansas,1940,14.29,0.0,85.71
+KS,Kansas,1942,0.0,0.0,100.0
+KS,Kansas,1944,0.0,0.0,100.0
+KS,Kansas,1946,0.0,0.0,100.0
+KS,Kansas,1948,0.0,0.0,100.0
+KS,Kansas,1950,0.0,0.0,100.0
+KS,Kansas,1952,16.67,0.0,83.33
+KS,Kansas,1954,0.0,0.0,100.0
+KS,Kansas,1956,16.67,0.0,83.33
+KS,Kansas,1958,50.0,0.0,50.0
+KS,Kansas,1960,16.67,0.0,83.33
+KS,Kansas,1962,0.0,0.0,100.0
+KS,Kansas,1964,0.0,0.0,100.0
+KS,Kansas,1966,0.0,0.0,100.0
+KS,Kansas,1968,0.0,0.0,100.0
+KS,Kansas,1970,20.0,0.0,80.0
+KS,Kansas,1972,20.0,0.0,80.0
+KS,Kansas,1974,20.0,0.0,80.0
+KS,Kansas,1976,40.0,0.0,60.0
+KS,Kansas,1978,20.0,0.0,80.0
+KS,Kansas,1980,20.0,0.0,80.0
+KS,Kansas,1982,40.0,0.0,60.0
+KS,Kansas,1984,40.0,0.0,60.0
+KS,Kansas,1986,40.0,0.0,60.0
+KS,Kansas,1988,40.0,0.0,60.0
+KS,Kansas,1990,40.0,0.0,60.0
+KS,Kansas,1992,50.0,0.0,50.0
+KS,Kansas,1994,0.0,0.0,100.0
+KS,Kansas,1996,0.0,0.0,100.0
+KS,Kansas,1998,25.0,0.0,75.0
+KS,Kansas,2000,25.0,0.0,75.0
+KS,Kansas,2002,25.0,0.0,75.0
+KS,Kansas,2004,25.0,0.0,75.0
+KS,Kansas,2006,50.0,0.0,50.0
+KS,Kansas,2008,25.0,0.0,75.0
+KS,Kansas,2010,0.0,0.0,100.0
+KS,Kansas,2012,0.0,0.0,100.0
+KS,Kansas,2014,0.0,0.0,100.0
+KS,Kansas,2016,0.0,0.0,100.0
+KS,Kansas,2018,25.0,0.0,75.0
+KS,Kansas,2020,25.0,0.0,75.0
+KS,Kansas,2022,25.0,0.0,75.0
+KS,Kansas,2024,25.0,0.0,75.0
+KY,Kentucky,1900,81.82,0.0,18.18
+KY,Kentucky,1902,90.91,0.0,9.09
+KY,Kentucky,1904,81.82,0.0,18.18
+KY,Kentucky,1906,63.64,0.0,36.36
+KY,Kentucky,1908,72.73,0.0,27.27
+KY,Kentucky,1910,81.82,0.0,18.18
+KY,Kentucky,1912,81.82,0.0,18.18
+KY,Kentucky,1914,81.82,0.0,18.18
+KY,Kentucky,1916,81.82,0.0,18.18
+KY,Kentucky,1918,63.64,0.0,36.36
+KY,Kentucky,1920,72.73,0.0,27.27
+KY,Kentucky,1922,75.0,0.0,25.0
+KY,Kentucky,1924,72.73,0.0,27.27
+KY,Kentucky,1926,72.73,0.0,27.27
+KY,Kentucky,1928,27.27,0.0,72.73
+KY,Kentucky,1930,81.82,0.0,18.18
+KY,Kentucky,1932,100.0,0.0,0.0
+KY,Kentucky,1934,88.89,0.0,11.11
+KY,Kentucky,1936,88.89,0.0,11.11
+KY,Kentucky,1938,88.89,0.0,11.11
+KY,Kentucky,1940,88.89,0.0,11.11
+KY,Kentucky,1942,88.89,0.0,11.11
+KY,Kentucky,1944,88.89,0.0,11.11
+KY,Kentucky,1946,66.67,0.0,33.33
+KY,Kentucky,1948,77.78,0.0,22.22
+KY,Kentucky,1950,77.78,0.0,22.22
+KY,Kentucky,1952,75.0,0.0,25.0
+KY,Kentucky,1954,75.0,0.0,25.0
+KY,Kentucky,1956,75.0,0.0,25.0
+KY,Kentucky,1958,87.5,0.0,12.5
+KY,Kentucky,1960,87.5,0.0,12.5
+KY,Kentucky,1962,71.43,0.0,28.57
+KY,Kentucky,1964,85.71,0.0,14.29
+KY,Kentucky,1966,57.14,0.0,42.86
+KY,Kentucky,1968,57.14,0.0,42.86
+KY,Kentucky,1970,71.43,0.0,28.57
+KY,Kentucky,1972,71.43,0.0,28.57
+KY,Kentucky,1974,71.43,0.0,28.57
+KY,Kentucky,1976,71.43,0.0,28.57
+KY,Kentucky,1978,57.14,0.0,42.86
+KY,Kentucky,1980,57.14,0.0,42.86
+KY,Kentucky,1982,57.14,0.0,42.86
+KY,Kentucky,1984,57.14,0.0,42.86
+KY,Kentucky,1986,57.14,0.0,42.86
+KY,Kentucky,1988,57.14,0.0,42.86
+KY,Kentucky,1990,57.14,0.0,42.86
+KY,Kentucky,1992,57.14,0.0,42.86
+KY,Kentucky,1994,33.33,0.0,66.67
+KY,Kentucky,1996,16.67,0.0,83.33
+KY,Kentucky,1998,16.67,0.0,83.33
+KY,Kentucky,2000,16.67,0.0,83.33
+KY,Kentucky,2002,16.67,0.0,83.33
+KY,Kentucky,2004,16.67,0.0,83.33
+KY,Kentucky,2006,33.33,0.0,66.67
+KY,Kentucky,2008,33.33,0.0,66.67
+KY,Kentucky,2010,33.33,0.0,66.67
+KY,Kentucky,2012,16.67,0.0,83.33
+KY,Kentucky,2014,16.67,0.0,83.33
+KY,Kentucky,2016,16.67,0.0,83.33
+KY,Kentucky,2018,16.67,0.0,83.33
+KY,Kentucky,2020,16.67,0.0,83.33
+KY,Kentucky,2022,16.67,0.0,83.33
+KY,Kentucky,2024,16.67,0.0,83.33
+LA,Louisiana,1900,100.0,0.0,0.0
+LA,Louisiana,1902,100.0,0.0,0.0
+LA,Louisiana,1904,100.0,0.0,0.0
+LA,Louisiana,1906,100.0,0.0,0.0
+LA,Louisiana,1908,100.0,0.0,0.0
+LA,Louisiana,1910,100.0,0.0,0.0
+LA,Louisiana,1912,100.0,0.0,0.0
+LA,Louisiana,1914,87.5,12.5,0.0
+LA,Louisiana,1916,87.5,12.5,0.0
+LA,Louisiana,1918,100.0,0.0,0.0
+LA,Louisiana,1920,100.0,0.0,0.0
+LA,Louisiana,1922,100.0,0.0,0.0
+LA,Louisiana,1924,100.0,0.0,0.0
+LA,Louisiana,1926,100.0,0.0,0.0
+LA,Louisiana,1928,100.0,0.0,0.0
+LA,Louisiana,1930,100.0,0.0,0.0
+LA,Louisiana,1932,100.0,0.0,0.0
+LA,Louisiana,1934,100.0,0.0,0.0
+LA,Louisiana,1936,100.0,0.0,0.0
+LA,Louisiana,1938,100.0,0.0,0.0
+LA,Louisiana,1940,100.0,0.0,0.0
+LA,Louisiana,1942,100.0,0.0,0.0
+LA,Louisiana,1944,100.0,0.0,0.0
+LA,Louisiana,1946,100.0,0.0,0.0
+LA,Louisiana,1948,100.0,0.0,0.0
+LA,Louisiana,1950,100.0,0.0,0.0
+LA,Louisiana,1952,100.0,0.0,0.0
+LA,Louisiana,1954,100.0,0.0,0.0
+LA,Louisiana,1956,100.0,0.0,0.0
+LA,Louisiana,1958,100.0,0.0,0.0
+LA,Louisiana,1960,100.0,0.0,0.0
+LA,Louisiana,1962,100.0,0.0,0.0
+LA,Louisiana,1964,100.0,0.0,0.0
+LA,Louisiana,1966,100.0,0.0,0.0
+LA,Louisiana,1968,100.0,0.0,0.0
+LA,Louisiana,1970,100.0,0.0,0.0
+LA,Louisiana,1972,87.5,0.0,12.5
+LA,Louisiana,1974,75.0,0.0,25.0
+LA,Louisiana,1976,75.0,0.0,25.0
+LA,Louisiana,1978,62.5,0.0,37.5
+LA,Louisiana,1980,75.0,0.0,25.0
+LA,Louisiana,1982,75.0,0.0,25.0
+LA,Louisiana,1984,75.0,0.0,25.0
+LA,Louisiana,1986,62.5,0.0,37.5
+LA,Louisiana,1988,50.0,0.0,50.0
+LA,Louisiana,1990,50.0,0.0,50.0
+LA,Louisiana,1992,57.14,0.0,42.86
+LA,Louisiana,1994,44.44,0.0,55.56
+LA,Louisiana,1996,28.57,0.0,71.43
+LA,Louisiana,1998,28.57,0.0,71.43
+LA,Louisiana,2000,28.57,0.0,71.43
+LA,Louisiana,2002,42.86,0.0,57.14
+LA,Louisiana,2004,28.57,0.0,71.43
+LA,Louisiana,2006,28.57,0.0,71.43
+LA,Louisiana,2008,14.29,0.0,85.71
+LA,Louisiana,2010,14.29,0.0,85.71
+LA,Louisiana,2012,16.67,0.0,83.33
+LA,Louisiana,2014,16.67,0.0,83.33
+LA,Louisiana,2016,16.67,0.0,83.33
+LA,Louisiana,2018,16.67,0.0,83.33
+LA,Louisiana,2020,16.67,0.0,83.33
+LA,Louisiana,2022,16.67,0.0,83.33
+LA,Louisiana,2024,33.33,0.0,66.67
+MA,Massachusetts,1900,23.08,0.0,76.92
+MA,Massachusetts,1902,28.57,0.0,71.43
+MA,Massachusetts,1904,21.43,0.0,78.57
+MA,Massachusetts,1906,21.43,0.0,78.57
+MA,Massachusetts,1908,21.43,0.0,78.57
+MA,Massachusetts,1910,28.57,0.0,71.43
+MA,Massachusetts,1912,50.0,0.0,50.0
+MA,Massachusetts,1914,25.0,0.0,75.0
+MA,Massachusetts,1916,25.0,6.25,68.75
+MA,Massachusetts,1918,26.67,0.0,73.33
+MA,Massachusetts,1920,12.5,0.0,87.5
+MA,Massachusetts,1922,18.75,0.0,81.25
+MA,Massachusetts,1924,16.67,0.0,83.33
+MA,Massachusetts,1926,18.75,0.0,81.25
+MA,Massachusetts,1928,18.75,0.0,81.25
+MA,Massachusetts,1930,25.0,0.0,75.0
+MA,Massachusetts,1932,33.33,0.0,66.67
+MA,Massachusetts,1934,46.67,0.0,53.33
+MA,Massachusetts,1936,33.33,0.0,66.67
+MA,Massachusetts,1938,33.33,0.0,66.67
+MA,Massachusetts,1940,40.0,0.0,60.0
+MA,Massachusetts,1942,28.57,0.0,71.43
+MA,Massachusetts,1944,28.57,0.0,71.43
+MA,Massachusetts,1946,35.71,0.0,64.29
+MA,Massachusetts,1948,42.86,0.0,57.14
+MA,Massachusetts,1950,42.86,0.0,57.14
+MA,Massachusetts,1952,42.86,0.0,57.14
+MA,Massachusetts,1954,50.0,0.0,50.0
+MA,Massachusetts,1956,50.0,0.0,50.0
+MA,Massachusetts,1958,57.14,0.0,42.86
+MA,Massachusetts,1960,57.14,0.0,42.86
+MA,Massachusetts,1962,58.33,0.0,41.67
+MA,Massachusetts,1964,58.33,0.0,41.67
+MA,Massachusetts,1966,58.33,0.0,41.67
+MA,Massachusetts,1968,58.33,0.0,41.67
+MA,Massachusetts,1970,66.67,0.0,33.33
+MA,Massachusetts,1972,66.67,8.33,25.0
+MA,Massachusetts,1974,83.33,0.0,16.67
+MA,Massachusetts,1976,83.33,0.0,16.67
+MA,Massachusetts,1978,83.33,0.0,16.67
+MA,Massachusetts,1980,83.33,0.0,16.67
+MA,Massachusetts,1982,90.91,0.0,9.09
+MA,Massachusetts,1984,90.91,0.0,9.09
+MA,Massachusetts,1986,90.91,0.0,9.09
+MA,Massachusetts,1988,90.91,0.0,9.09
+MA,Massachusetts,1990,91.67,0.0,8.33
+MA,Massachusetts,1992,80.0,0.0,20.0
+MA,Massachusetts,1994,80.0,0.0,20.0
+MA,Massachusetts,1996,100.0,0.0,0.0
+MA,Massachusetts,1998,100.0,0.0,0.0
+MA,Massachusetts,2000,100.0,0.0,0.0
+MA,Massachusetts,2002,100.0,0.0,0.0
+MA,Massachusetts,2004,100.0,0.0,0.0
+MA,Massachusetts,2006,100.0,0.0,0.0
+MA,Massachusetts,2008,100.0,0.0,0.0
+MA,Massachusetts,2010,100.0,0.0,0.0
+MA,Massachusetts,2012,100.0,0.0,0.0
+MA,Massachusetts,2014,100.0,0.0,0.0
+MA,Massachusetts,2016,100.0,0.0,0.0
+MA,Massachusetts,2018,100.0,0.0,0.0
+MA,Massachusetts,2020,100.0,0.0,0.0
+MA,Massachusetts,2022,100.0,0.0,0.0
+MA,Massachusetts,2024,100.0,0.0,0.0
+MD,Maryland,1900,0.0,0.0,100.0
+MD,Maryland,1902,33.33,0.0,66.67
+MD,Maryland,1904,50.0,0.0,50.0
+MD,Maryland,1906,50.0,0.0,50.0
+MD,Maryland,1908,50.0,0.0,50.0
+MD,Maryland,1910,83.33,0.0,16.67
+MD,Maryland,1912,100.0,0.0,0.0
+MD,Maryland,1914,83.33,0.0,16.67
+MD,Maryland,1916,66.67,0.0,33.33
+MD,Maryland,1918,50.0,0.0,50.0
+MD,Maryland,1920,33.33,0.0,66.67
+MD,Maryland,1922,50.0,0.0,50.0
+MD,Maryland,1924,66.67,0.0,33.33
+MD,Maryland,1926,83.33,0.0,16.67
+MD,Maryland,1928,66.67,0.0,33.33
+MD,Maryland,1930,100.0,0.0,0.0
+MD,Maryland,1932,100.0,0.0,0.0
+MD,Maryland,1934,100.0,0.0,0.0
+MD,Maryland,1936,100.0,0.0,0.0
+MD,Maryland,1938,100.0,0.0,0.0
+MD,Maryland,1940,100.0,0.0,0.0
+MD,Maryland,1942,66.67,0.0,33.33
+MD,Maryland,1944,83.33,0.0,16.67
+MD,Maryland,1946,66.67,0.0,33.33
+MD,Maryland,1948,66.67,0.0,33.33
+MD,Maryland,1950,50.0,0.0,50.0
+MD,Maryland,1952,42.86,0.0,57.14
+MD,Maryland,1954,57.14,0.0,42.86
+MD,Maryland,1956,57.14,0.0,42.86
+MD,Maryland,1958,100.0,0.0,0.0
+MD,Maryland,1960,85.71,0.0,14.29
+MD,Maryland,1962,75.0,0.0,25.0
+MD,Maryland,1964,75.0,0.0,25.0
+MD,Maryland,1966,62.5,0.0,37.5
+MD,Maryland,1968,50.0,0.0,50.0
+MD,Maryland,1970,62.5,0.0,37.5
+MD,Maryland,1972,50.0,0.0,50.0
+MD,Maryland,1974,62.5,0.0,37.5
+MD,Maryland,1976,62.5,0.0,37.5
+MD,Maryland,1978,75.0,0.0,25.0
+MD,Maryland,1980,88.89,0.0,11.11
+MD,Maryland,1982,87.5,0.0,12.5
+MD,Maryland,1984,75.0,0.0,25.0
+MD,Maryland,1986,75.0,0.0,25.0
+MD,Maryland,1988,75.0,0.0,25.0
+MD,Maryland,1990,62.5,0.0,37.5
+MD,Maryland,1992,50.0,0.0,50.0
+MD,Maryland,1994,55.56,0.0,44.44
+MD,Maryland,1996,50.0,0.0,50.0
+MD,Maryland,1998,50.0,0.0,50.0
+MD,Maryland,2000,50.0,0.0,50.0
+MD,Maryland,2002,75.0,0.0,25.0
+MD,Maryland,2004,75.0,0.0,25.0
+MD,Maryland,2006,75.0,0.0,25.0
+MD,Maryland,2008,87.5,0.0,12.5
+MD,Maryland,2010,75.0,0.0,25.0
+MD,Maryland,2012,87.5,0.0,12.5
+MD,Maryland,2014,87.5,0.0,12.5
+MD,Maryland,2016,87.5,0.0,12.5
+MD,Maryland,2018,87.5,0.0,12.5
+MD,Maryland,2020,87.5,0.0,12.5
+MD,Maryland,2022,87.5,0.0,12.5
+MD,Maryland,2024,87.5,0.0,12.5
+ME,Maine,1900,0.0,0.0,100.0
+ME,Maine,1902,0.0,0.0,100.0
+ME,Maine,1904,0.0,0.0,100.0
+ME,Maine,1906,0.0,0.0,100.0
+ME,Maine,1908,0.0,0.0,100.0
+ME,Maine,1910,50.0,0.0,50.0
+ME,Maine,1912,25.0,0.0,75.0
+ME,Maine,1914,25.0,0.0,75.0
+ME,Maine,1916,0.0,0.0,100.0
+ME,Maine,1918,0.0,0.0,100.0
+ME,Maine,1920,0.0,0.0,100.0
+ME,Maine,1922,0.0,0.0,100.0
+ME,Maine,1924,0.0,0.0,100.0
+ME,Maine,1926,0.0,0.0,100.0
+ME,Maine,1928,0.0,0.0,100.0
+ME,Maine,1930,0.0,0.0,100.0
+ME,Maine,1932,66.67,0.0,33.33
+ME,Maine,1934,66.67,0.0,33.33
+ME,Maine,1936,0.0,0.0,100.0
+ME,Maine,1938,0.0,0.0,100.0
+ME,Maine,1940,0.0,0.0,100.0
+ME,Maine,1942,0.0,0.0,100.0
+ME,Maine,1944,0.0,0.0,100.0
+ME,Maine,1946,0.0,0.0,100.0
+ME,Maine,1948,0.0,0.0,100.0
+ME,Maine,1950,0.0,0.0,100.0
+ME,Maine,1952,0.0,0.0,100.0
+ME,Maine,1954,0.0,0.0,100.0
+ME,Maine,1956,33.33,0.0,66.67
+ME,Maine,1958,66.67,0.0,33.33
+ME,Maine,1960,0.0,0.0,100.0
+ME,Maine,1962,0.0,0.0,100.0
+ME,Maine,1964,50.0,0.0,50.0
+ME,Maine,1966,100.0,0.0,0.0
+ME,Maine,1968,100.0,0.0,0.0
+ME,Maine,1970,100.0,0.0,0.0
+ME,Maine,1972,50.0,0.0,50.0
+ME,Maine,1974,0.0,0.0,100.0
+ME,Maine,1976,0.0,0.0,100.0
+ME,Maine,1978,0.0,0.0,100.0
+ME,Maine,1980,0.0,0.0,100.0
+ME,Maine,1982,0.0,0.0,100.0
+ME,Maine,1984,0.0,0.0,100.0
+ME,Maine,1986,50.0,0.0,50.0
+ME,Maine,1988,50.0,0.0,50.0
+ME,Maine,1990,50.0,0.0,50.0
+ME,Maine,1992,50.0,0.0,50.0
+ME,Maine,1994,50.0,0.0,50.0
+ME,Maine,1996,100.0,0.0,0.0
+ME,Maine,1998,100.0,0.0,0.0
+ME,Maine,2000,100.0,0.0,0.0
+ME,Maine,2002,100.0,0.0,0.0
+ME,Maine,2004,100.0,0.0,0.0
+ME,Maine,2006,100.0,0.0,0.0
+ME,Maine,2008,100.0,0.0,0.0
+ME,Maine,2010,100.0,0.0,0.0
+ME,Maine,2012,100.0,0.0,0.0
+ME,Maine,2014,50.0,0.0,50.0
+ME,Maine,2016,50.0,0.0,50.0
+ME,Maine,2018,100.0,0.0,0.0
+ME,Maine,2020,100.0,0.0,0.0
+ME,Maine,2022,100.0,0.0,0.0
+ME,Maine,2024,100.0,0.0,0.0
+MI,Michigan,1900,0.0,0.0,100.0
+MI,Michigan,1902,8.33,0.0,91.67
+MI,Michigan,1904,0.0,0.0,100.0
+MI,Michigan,1906,0.0,0.0,100.0
+MI,Michigan,1908,0.0,0.0,100.0
+MI,Michigan,1910,16.67,0.0,83.33
+MI,Michigan,1912,15.38,7.69,76.92
+MI,Michigan,1914,15.38,0.0,84.62
+MI,Michigan,1916,7.69,0.0,92.31
+MI,Michigan,1918,7.69,0.0,92.31
+MI,Michigan,1920,0.0,0.0,100.0
+MI,Michigan,1922,7.69,0.0,92.31
+MI,Michigan,1924,0.0,0.0,100.0
+MI,Michigan,1926,0.0,0.0,100.0
+MI,Michigan,1928,0.0,0.0,100.0
+MI,Michigan,1930,7.69,0.0,92.31
+MI,Michigan,1932,58.82,0.0,41.18
+MI,Michigan,1934,35.29,0.0,64.71
+MI,Michigan,1936,47.06,0.0,52.94
+MI,Michigan,1938,29.41,0.0,70.59
+MI,Michigan,1940,35.29,0.0,64.71
+MI,Michigan,1942,29.41,0.0,70.59
+MI,Michigan,1944,35.29,0.0,64.71
+MI,Michigan,1946,17.65,0.0,82.35
+MI,Michigan,1948,29.41,0.0,70.59
+MI,Michigan,1950,29.41,0.0,70.59
+MI,Michigan,1952,27.78,0.0,72.22
+MI,Michigan,1954,38.89,0.0,61.11
+MI,Michigan,1956,33.33,0.0,66.67
+MI,Michigan,1958,38.89,0.0,61.11
+MI,Michigan,1960,38.89,0.0,61.11
+MI,Michigan,1962,42.11,0.0,57.89
+MI,Michigan,1964,63.16,0.0,36.84
+MI,Michigan,1966,36.84,0.0,63.16
+MI,Michigan,1968,36.84,0.0,63.16
+MI,Michigan,1970,36.84,0.0,63.16
+MI,Michigan,1972,36.84,0.0,63.16
+MI,Michigan,1974,63.16,0.0,36.84
+MI,Michigan,1976,57.89,0.0,42.11
+MI,Michigan,1978,70.0,0.0,30.0
+MI,Michigan,1980,63.16,0.0,36.84
+MI,Michigan,1982,66.67,0.0,33.33
+MI,Michigan,1984,61.11,0.0,38.89
+MI,Michigan,1986,61.11,0.0,38.89
+MI,Michigan,1988,61.11,0.0,38.89
+MI,Michigan,1990,61.11,0.0,38.89
+MI,Michigan,1992,58.82,0.0,41.18
+MI,Michigan,1994,56.25,0.0,43.75
+MI,Michigan,1996,62.5,0.0,37.5
+MI,Michigan,1998,62.5,0.0,37.5
+MI,Michigan,2000,56.25,0.0,43.75
+MI,Michigan,2002,40.0,0.0,60.0
+MI,Michigan,2004,40.0,0.0,60.0
+MI,Michigan,2006,40.0,0.0,60.0
+MI,Michigan,2008,53.33,0.0,46.67
+MI,Michigan,2010,40.0,0.0,60.0
+MI,Michigan,2012,35.71,0.0,64.29
+MI,Michigan,2014,35.71,0.0,64.29
+MI,Michigan,2016,35.71,0.0,64.29
+MI,Michigan,2018,50.0,0.0,50.0
+MI,Michigan,2020,50.0,0.0,50.0
+MI,Michigan,2022,53.85,0.0,46.15
+MI,Michigan,2024,46.15,0.0,53.85
+MN,Minnesota,1900,0.0,0.0,100.0
+MN,Minnesota,1902,11.11,0.0,88.89
+MN,Minnesota,1904,0.0,0.0,100.0
+MN,Minnesota,1906,11.11,0.0,88.89
+MN,Minnesota,1908,11.11,0.0,88.89
+MN,Minnesota,1910,11.11,0.0,88.89
+MN,Minnesota,1912,10.0,0.0,90.0
+MN,Minnesota,1914,10.0,10.0,80.0
+MN,Minnesota,1916,10.0,10.0,80.0
+MN,Minnesota,1918,10.0,10.0,80.0
+MN,Minnesota,1920,0.0,0.0,100.0
+MN,Minnesota,1922,0.0,20.0,80.0
+MN,Minnesota,1924,0.0,30.0,70.0
+MN,Minnesota,1926,0.0,20.0,80.0
+MN,Minnesota,1928,0.0,10.0,90.0
+MN,Minnesota,1930,0.0,10.0,90.0
+MN,Minnesota,1932,11.11,55.56,33.33
+MN,Minnesota,1934,11.11,33.33,55.56
+MN,Minnesota,1936,11.11,55.56,33.33
+MN,Minnesota,1938,11.11,11.11,77.78
+MN,Minnesota,1940,0.0,11.11,88.89
+MN,Minnesota,1942,0.0,11.11,88.89
+MN,Minnesota,1944,22.22,0.0,77.78
+MN,Minnesota,1946,11.11,0.0,88.89
+MN,Minnesota,1948,44.44,0.0,55.56
+MN,Minnesota,1950,44.44,0.0,55.56
+MN,Minnesota,1952,44.44,0.0,55.56
+MN,Minnesota,1954,55.56,0.0,44.44
+MN,Minnesota,1956,55.56,0.0,44.44
+MN,Minnesota,1958,44.44,0.0,55.56
+MN,Minnesota,1960,33.33,0.0,66.67
+MN,Minnesota,1962,50.0,0.0,50.0
+MN,Minnesota,1964,50.0,0.0,50.0
+MN,Minnesota,1966,37.5,0.0,62.5
+MN,Minnesota,1968,37.5,0.0,62.5
+MN,Minnesota,1970,50.0,0.0,50.0
+MN,Minnesota,1972,50.0,0.0,50.0
+MN,Minnesota,1974,62.5,0.0,37.5
+MN,Minnesota,1976,62.5,0.0,37.5
+MN,Minnesota,1978,50.0,0.0,50.0
+MN,Minnesota,1980,37.5,0.0,62.5
+MN,Minnesota,1982,62.5,0.0,37.5
+MN,Minnesota,1984,62.5,0.0,37.5
+MN,Minnesota,1986,62.5,0.0,37.5
+MN,Minnesota,1988,62.5,0.0,37.5
+MN,Minnesota,1990,75.0,0.0,25.0
+MN,Minnesota,1992,75.0,0.0,25.0
+MN,Minnesota,1994,75.0,0.0,25.0
+MN,Minnesota,1996,75.0,0.0,25.0
+MN,Minnesota,1998,75.0,0.0,25.0
+MN,Minnesota,2000,62.5,0.0,37.5
+MN,Minnesota,2002,50.0,0.0,50.0
+MN,Minnesota,2004,50.0,0.0,50.0
+MN,Minnesota,2006,62.5,0.0,37.5
+MN,Minnesota,2008,62.5,0.0,37.5
+MN,Minnesota,2010,50.0,0.0,50.0
+MN,Minnesota,2012,62.5,0.0,37.5
+MN,Minnesota,2014,62.5,0.0,37.5
+MN,Minnesota,2016,62.5,0.0,37.5
+MN,Minnesota,2018,62.5,0.0,37.5
+MN,Minnesota,2020,50.0,0.0,50.0
+MN,Minnesota,2022,50.0,0.0,50.0
+MN,Minnesota,2024,50.0,0.0,50.0
+MO,Missouri,1900,85.71,0.0,14.29
+MO,Missouri,1902,93.75,0.0,6.25
+MO,Missouri,1904,43.75,0.0,56.25
+MO,Missouri,1906,75.0,0.0,25.0
+MO,Missouri,1908,62.5,0.0,37.5
+MO,Missouri,1910,81.25,0.0,18.75
+MO,Missouri,1912,87.5,0.0,12.5
+MO,Missouri,1914,87.5,0.0,12.5
+MO,Missouri,1916,87.5,0.0,12.5
+MO,Missouri,1918,68.75,0.0,31.25
+MO,Missouri,1920,12.5,0.0,87.5
+MO,Missouri,1922,68.75,0.0,31.25
+MO,Missouri,1924,58.82,0.0,41.18
+MO,Missouri,1926,75.0,0.0,25.0
+MO,Missouri,1928,37.5,0.0,62.5
+MO,Missouri,1930,75.0,0.0,25.0
+MO,Missouri,1932,100.0,0.0,0.0
+MO,Missouri,1934,92.31,0.0,7.69
+MO,Missouri,1936,92.31,0.0,7.69
+MO,Missouri,1938,92.31,0.0,7.69
+MO,Missouri,1940,76.92,0.0,23.08
+MO,Missouri,1942,38.46,0.0,61.54
+MO,Missouri,1944,53.85,0.0,46.15
+MO,Missouri,1946,30.77,0.0,69.23
+MO,Missouri,1948,92.31,0.0,7.69
+MO,Missouri,1950,76.92,0.0,23.08
+MO,Missouri,1952,63.64,0.0,36.36
+MO,Missouri,1954,81.82,0.0,18.18
+MO,Missouri,1956,90.91,0.0,9.09
+MO,Missouri,1958,90.91,0.0,9.09
+MO,Missouri,1960,81.82,0.0,18.18
+MO,Missouri,1962,80.0,0.0,20.0
+MO,Missouri,1964,80.0,0.0,20.0
+MO,Missouri,1966,80.0,0.0,20.0
+MO,Missouri,1968,90.0,0.0,10.0
+MO,Missouri,1970,90.0,0.0,10.0
+MO,Missouri,1972,90.0,0.0,10.0
+MO,Missouri,1974,90.0,0.0,10.0
+MO,Missouri,1976,80.0,0.0,20.0
+MO,Missouri,1978,80.0,0.0,20.0
+MO,Missouri,1980,60.0,0.0,40.0
+MO,Missouri,1982,66.67,0.0,33.33
+MO,Missouri,1984,66.67,0.0,33.33
+MO,Missouri,1986,55.56,0.0,44.44
+MO,Missouri,1988,55.56,0.0,44.44
+MO,Missouri,1990,66.67,0.0,33.33
+MO,Missouri,1992,66.67,0.0,33.33
+MO,Missouri,1994,66.67,0.0,33.33
+MO,Missouri,1996,55.56,0.0,44.44
+MO,Missouri,1998,55.56,0.0,44.44
+MO,Missouri,2000,44.44,0.0,55.56
+MO,Missouri,2002,44.44,0.0,55.56
+MO,Missouri,2004,44.44,0.0,55.56
+MO,Missouri,2006,44.44,0.0,55.56
+MO,Missouri,2008,44.44,0.0,55.56
+MO,Missouri,2010,33.33,0.0,66.67
+MO,Missouri,2012,25.0,0.0,75.0
+MO,Missouri,2014,25.0,0.0,75.0
+MO,Missouri,2016,25.0,0.0,75.0
+MO,Missouri,2018,25.0,0.0,75.0
+MO,Missouri,2020,25.0,0.0,75.0
+MO,Missouri,2022,25.0,0.0,75.0
+MO,Missouri,2024,25.0,0.0,75.0
+MS,Mississippi,1900,100.0,0.0,0.0
+MS,Mississippi,1902,100.0,0.0,0.0
+MS,Mississippi,1904,100.0,0.0,0.0
+MS,Mississippi,1906,100.0,0.0,0.0
+MS,Mississippi,1908,100.0,0.0,0.0
+MS,Mississippi,1910,100.0,0.0,0.0
+MS,Mississippi,1912,100.0,0.0,0.0
+MS,Mississippi,1914,100.0,0.0,0.0
+MS,Mississippi,1916,100.0,0.0,0.0
+MS,Mississippi,1918,100.0,0.0,0.0
+MS,Mississippi,1920,100.0,0.0,0.0
+MS,Mississippi,1922,100.0,0.0,0.0
+MS,Mississippi,1924,100.0,0.0,0.0
+MS,Mississippi,1926,100.0,0.0,0.0
+MS,Mississippi,1928,100.0,0.0,0.0
+MS,Mississippi,1930,100.0,0.0,0.0
+MS,Mississippi,1932,100.0,0.0,0.0
+MS,Mississippi,1934,100.0,0.0,0.0
+MS,Mississippi,1936,100.0,0.0,0.0
+MS,Mississippi,1938,100.0,0.0,0.0
+MS,Mississippi,1940,100.0,0.0,0.0
+MS,Mississippi,1942,100.0,0.0,0.0
+MS,Mississippi,1944,100.0,0.0,0.0
+MS,Mississippi,1946,100.0,0.0,0.0
+MS,Mississippi,1948,100.0,0.0,0.0
+MS,Mississippi,1950,100.0,0.0,0.0
+MS,Mississippi,1952,100.0,0.0,0.0
+MS,Mississippi,1954,100.0,0.0,0.0
+MS,Mississippi,1956,100.0,0.0,0.0
+MS,Mississippi,1958,100.0,0.0,0.0
+MS,Mississippi,1960,100.0,0.0,0.0
+MS,Mississippi,1962,100.0,0.0,0.0
+MS,Mississippi,1964,80.0,0.0,20.0
+MS,Mississippi,1966,100.0,0.0,0.0
+MS,Mississippi,1968,100.0,0.0,0.0
+MS,Mississippi,1970,100.0,0.0,0.0
+MS,Mississippi,1972,60.0,0.0,40.0
+MS,Mississippi,1974,60.0,0.0,40.0
+MS,Mississippi,1976,60.0,0.0,40.0
+MS,Mississippi,1978,60.0,0.0,40.0
+MS,Mississippi,1980,60.0,0.0,40.0
+MS,Mississippi,1982,60.0,0.0,40.0
+MS,Mississippi,1984,60.0,0.0,40.0
+MS,Mississippi,1986,80.0,0.0,20.0
+MS,Mississippi,1988,80.0,0.0,20.0
+MS,Mississippi,1990,100.0,0.0,0.0
+MS,Mississippi,1992,100.0,0.0,0.0
+MS,Mississippi,1994,66.67,0.0,33.33
+MS,Mississippi,1996,40.0,0.0,60.0
+MS,Mississippi,1998,60.0,0.0,40.0
+MS,Mississippi,2000,60.0,0.0,40.0
+MS,Mississippi,2002,50.0,0.0,50.0
+MS,Mississippi,2004,50.0,0.0,50.0
+MS,Mississippi,2006,50.0,0.0,50.0
+MS,Mississippi,2008,75.0,0.0,25.0
+MS,Mississippi,2010,25.0,0.0,75.0
+MS,Mississippi,2012,25.0,0.0,75.0
+MS,Mississippi,2014,25.0,0.0,75.0
+MS,Mississippi,2016,25.0,0.0,75.0
+MS,Mississippi,2018,25.0,0.0,75.0
+MS,Mississippi,2020,25.0,0.0,75.0
+MS,Mississippi,2022,25.0,0.0,75.0
+MS,Mississippi,2024,25.0,0.0,75.0
+MT,Montana,1900,0.0,100.0,0.0
+MT,Montana,1902,0.0,0.0,100.0
+MT,Montana,1904,0.0,0.0,100.0
+MT,Montana,1906,0.0,0.0,100.0
+MT,Montana,1908,0.0,0.0,100.0
+MT,Montana,1910,0.0,0.0,100.0
+MT,Montana,1912,100.0,0.0,0.0
+MT,Montana,1914,100.0,0.0,0.0
+MT,Montana,1916,50.0,0.0,50.0
+MT,Montana,1918,50.0,0.0,50.0
+MT,Montana,1920,0.0,0.0,100.0
+MT,Montana,1922,50.0,0.0,50.0
+MT,Montana,1924,50.0,0.0,50.0
+MT,Montana,1926,50.0,0.0,50.0
+MT,Montana,1928,50.0,0.0,50.0
+MT,Montana,1930,50.0,0.0,50.0
+MT,Montana,1932,100.0,0.0,0.0
+MT,Montana,1934,100.0,0.0,0.0
+MT,Montana,1936,100.0,0.0,0.0
+MT,Montana,1938,50.0,0.0,50.0
+MT,Montana,1940,50.0,0.0,50.0
+MT,Montana,1942,100.0,0.0,0.0
+MT,Montana,1944,100.0,0.0,0.0
+MT,Montana,1946,50.0,0.0,50.0
+MT,Montana,1948,50.0,0.0,50.0
+MT,Montana,1950,50.0,0.0,50.0
+MT,Montana,1952,50.0,0.0,50.0
+MT,Montana,1954,50.0,0.0,50.0
+MT,Montana,1956,100.0,0.0,0.0
+MT,Montana,1958,100.0,0.0,0.0
+MT,Montana,1960,50.0,0.0,50.0
+MT,Montana,1962,50.0,0.0,50.0
+MT,Montana,1964,50.0,0.0,50.0
+MT,Montana,1966,50.0,0.0,50.0
+MT,Montana,1968,50.0,0.0,50.0
+MT,Montana,1970,50.0,0.0,50.0
+MT,Montana,1972,50.0,0.0,50.0
+MT,Montana,1974,100.0,0.0,0.0
+MT,Montana,1976,50.0,0.0,50.0
+MT,Montana,1978,50.0,0.0,50.0
+MT,Montana,1980,50.0,0.0,50.0
+MT,Montana,1982,50.0,0.0,50.0
+MT,Montana,1984,50.0,0.0,50.0
+MT,Montana,1986,50.0,0.0,50.0
+MT,Montana,1988,50.0,0.0,50.0
+MT,Montana,1990,50.0,0.0,50.0
+MT,Montana,1992,100.0,0.0,0.0
+MT,Montana,1994,100.0,0.0,0.0
+MT,Montana,1996,0.0,0.0,100.0
+MT,Montana,1998,0.0,0.0,100.0
+MT,Montana,2000,0.0,0.0,100.0
+MT,Montana,2002,0.0,0.0,100.0
+MT,Montana,2004,0.0,0.0,100.0
+MT,Montana,2006,0.0,0.0,100.0
+MT,Montana,2008,0.0,0.0,100.0
+MT,Montana,2010,0.0,0.0,100.0
+MT,Montana,2012,0.0,0.0,100.0
+MT,Montana,2014,0.0,0.0,100.0
+MT,Montana,2016,0.0,0.0,100.0
+MT,Montana,2018,0.0,0.0,100.0
+MT,Montana,2020,0.0,0.0,100.0
+MT,Montana,2022,0.0,0.0,100.0
+MT,Montana,2024,0.0,0.0,100.0
+NC,North Carolina,1900,77.78,0.0,22.22
+NC,North Carolina,1902,100.0,0.0,0.0
+NC,North Carolina,1904,90.0,0.0,10.0
+NC,North Carolina,1906,100.0,0.0,0.0
+NC,North Carolina,1908,70.0,0.0,30.0
+NC,North Carolina,1910,100.0,0.0,0.0
+NC,North Carolina,1912,100.0,0.0,0.0
+NC,North Carolina,1914,90.0,0.0,10.0
+NC,North Carolina,1916,100.0,0.0,0.0
+NC,North Carolina,1918,100.0,0.0,0.0
+NC,North Carolina,1920,100.0,0.0,0.0
+NC,North Carolina,1922,100.0,0.0,0.0
+NC,North Carolina,1924,100.0,0.0,0.0
+NC,North Carolina,1926,100.0,0.0,0.0
+NC,North Carolina,1928,80.0,0.0,20.0
+NC,North Carolina,1930,100.0,0.0,0.0
+NC,North Carolina,1932,100.0,0.0,0.0
+NC,North Carolina,1934,100.0,0.0,0.0
+NC,North Carolina,1936,100.0,0.0,0.0
+NC,North Carolina,1938,100.0,0.0,0.0
+NC,North Carolina,1940,100.0,0.0,0.0
+NC,North Carolina,1942,100.0,0.0,0.0
+NC,North Carolina,1944,100.0,0.0,0.0
+NC,North Carolina,1946,100.0,0.0,0.0
+NC,North Carolina,1948,100.0,0.0,0.0
+NC,North Carolina,1950,100.0,0.0,0.0
+NC,North Carolina,1952,91.67,0.0,8.33
+NC,North Carolina,1954,91.67,0.0,8.33
+NC,North Carolina,1956,91.67,0.0,8.33
+NC,North Carolina,1958,91.67,0.0,8.33
+NC,North Carolina,1960,91.67,0.0,8.33
+NC,North Carolina,1962,81.82,0.0,18.18
+NC,North Carolina,1964,81.82,0.0,18.18
+NC,North Carolina,1966,72.73,0.0,27.27
+NC,North Carolina,1968,63.64,0.0,36.36
+NC,North Carolina,1970,63.64,0.0,36.36
+NC,North Carolina,1972,63.64,0.0,36.36
+NC,North Carolina,1974,81.82,0.0,18.18
+NC,North Carolina,1976,81.82,0.0,18.18
+NC,North Carolina,1978,81.82,0.0,18.18
+NC,North Carolina,1980,63.64,0.0,36.36
+NC,North Carolina,1982,81.82,0.0,18.18
+NC,North Carolina,1984,54.55,0.0,45.45
+NC,North Carolina,1986,72.73,0.0,27.27
+NC,North Carolina,1988,72.73,0.0,27.27
+NC,North Carolina,1990,63.64,0.0,36.36
+NC,North Carolina,1992,66.67,0.0,33.33
+NC,North Carolina,1994,33.33,0.0,66.67
+NC,North Carolina,1996,50.0,0.0,50.0
+NC,North Carolina,1998,41.67,0.0,58.33
+NC,North Carolina,2000,41.67,0.0,58.33
+NC,North Carolina,2002,46.15,0.0,53.85
+NC,North Carolina,2004,46.15,0.0,53.85
+NC,North Carolina,2006,53.85,0.0,46.15
+NC,North Carolina,2008,61.54,0.0,38.46
+NC,North Carolina,2010,53.85,0.0,46.15
+NC,North Carolina,2012,30.77,0.0,69.23
+NC,North Carolina,2014,23.08,0.0,76.92
+NC,North Carolina,2016,23.08,0.0,76.92
+NC,North Carolina,2018,23.08,0.0,76.92
+NC,North Carolina,2020,38.46,0.0,61.54
+NC,North Carolina,2022,50.0,0.0,50.0
+NC,North Carolina,2024,28.57,0.0,71.43
+ND,North Dakota,1900,0.0,0.0,100.0
+ND,North Dakota,1902,0.0,0.0,100.0
+ND,North Dakota,1904,0.0,0.0,100.0
+ND,North Dakota,1906,0.0,0.0,100.0
+ND,North Dakota,1908,0.0,0.0,100.0
+ND,North Dakota,1910,0.0,0.0,100.0
+ND,North Dakota,1912,0.0,0.0,100.0
+ND,North Dakota,1914,0.0,0.0,100.0
+ND,North Dakota,1916,0.0,0.0,100.0
+ND,North Dakota,1918,0.0,0.0,100.0
+ND,North Dakota,1920,0.0,0.0,100.0
+ND,North Dakota,1922,0.0,0.0,100.0
+ND,North Dakota,1924,0.0,0.0,100.0
+ND,North Dakota,1926,0.0,0.0,100.0
+ND,North Dakota,1928,0.0,0.0,100.0
+ND,North Dakota,1930,0.0,0.0,100.0
+ND,North Dakota,1932,0.0,0.0,100.0
+ND,North Dakota,1934,0.0,0.0,100.0
+ND,North Dakota,1936,0.0,0.0,100.0
+ND,North Dakota,1938,0.0,0.0,100.0
+ND,North Dakota,1940,0.0,0.0,100.0
+ND,North Dakota,1942,0.0,0.0,100.0
+ND,North Dakota,1944,0.0,0.0,100.0
+ND,North Dakota,1946,0.0,0.0,100.0
+ND,North Dakota,1948,0.0,0.0,100.0
+ND,North Dakota,1950,0.0,0.0,100.0
+ND,North Dakota,1952,0.0,0.0,100.0
+ND,North Dakota,1954,0.0,0.0,100.0
+ND,North Dakota,1956,0.0,0.0,100.0
+ND,North Dakota,1958,50.0,0.0,50.0
+ND,North Dakota,1960,0.0,0.0,100.0
+ND,North Dakota,1962,0.0,0.0,100.0
+ND,North Dakota,1964,50.0,0.0,50.0
+ND,North Dakota,1966,0.0,0.0,100.0
+ND,North Dakota,1968,0.0,0.0,100.0
+ND,North Dakota,1970,50.0,0.0,50.0
+ND,North Dakota,1972,0.0,0.0,100.0
+ND,North Dakota,1974,0.0,0.0,100.0
+ND,North Dakota,1976,0.0,0.0,100.0
+ND,North Dakota,1978,0.0,0.0,100.0
+ND,North Dakota,1980,100.0,0.0,0.0
+ND,North Dakota,1982,100.0,0.0,0.0
+ND,North Dakota,1984,100.0,0.0,0.0
+ND,North Dakota,1986,100.0,0.0,0.0
+ND,North Dakota,1988,100.0,0.0,0.0
+ND,North Dakota,1990,100.0,0.0,0.0
+ND,North Dakota,1992,100.0,0.0,0.0
+ND,North Dakota,1994,100.0,0.0,0.0
+ND,North Dakota,1996,100.0,0.0,0.0
+ND,North Dakota,1998,100.0,0.0,0.0
+ND,North Dakota,2000,100.0,0.0,0.0
+ND,North Dakota,2002,100.0,0.0,0.0
+ND,North Dakota,2004,100.0,0.0,0.0
+ND,North Dakota,2006,100.0,0.0,0.0
+ND,North Dakota,2008,100.0,0.0,0.0
+ND,North Dakota,2010,0.0,0.0,100.0
+ND,North Dakota,2012,0.0,0.0,100.0
+ND,North Dakota,2014,0.0,0.0,100.0
+ND,North Dakota,2016,0.0,0.0,100.0
+ND,North Dakota,2018,0.0,0.0,100.0
+ND,North Dakota,2020,0.0,0.0,100.0
+ND,North Dakota,2022,0.0,0.0,100.0
+ND,North Dakota,2024,0.0,0.0,100.0
+NE,Nebraska,1900,33.33,33.33,33.33
+NE,Nebraska,1902,16.67,0.0,83.33
+NE,Nebraska,1904,0.0,0.0,100.0
+NE,Nebraska,1906,16.67,0.0,83.33
+NE,Nebraska,1908,50.0,0.0,50.0
+NE,Nebraska,1910,50.0,0.0,50.0
+NE,Nebraska,1912,50.0,0.0,50.0
+NE,Nebraska,1914,50.0,0.0,50.0
+NE,Nebraska,1916,50.0,0.0,50.0
+NE,Nebraska,1918,0.0,0.0,100.0
+NE,Nebraska,1920,0.0,0.0,100.0
+NE,Nebraska,1922,50.0,0.0,50.0
+NE,Nebraska,1924,50.0,0.0,50.0
+NE,Nebraska,1926,66.67,0.0,33.33
+NE,Nebraska,1928,33.33,0.0,66.67
+NE,Nebraska,1930,66.67,0.0,33.33
+NE,Nebraska,1932,100.0,0.0,0.0
+NE,Nebraska,1934,80.0,0.0,20.0
+NE,Nebraska,1936,80.0,0.0,20.0
+NE,Nebraska,1938,40.0,0.0,60.0
+NE,Nebraska,1940,40.0,0.0,60.0
+NE,Nebraska,1942,0.0,0.0,100.0
+NE,Nebraska,1944,0.0,0.0,100.0
+NE,Nebraska,1946,0.0,0.0,100.0
+NE,Nebraska,1948,25.0,0.0,75.0
+NE,Nebraska,1950,0.0,0.0,100.0
+NE,Nebraska,1952,0.0,0.0,100.0
+NE,Nebraska,1954,0.0,0.0,100.0
+NE,Nebraska,1956,0.0,0.0,100.0
+NE,Nebraska,1958,50.0,0.0,50.0
+NE,Nebraska,1960,0.0,0.0,100.0
+NE,Nebraska,1962,0.0,0.0,100.0
+NE,Nebraska,1964,33.33,0.0,66.67
+NE,Nebraska,1966,0.0,0.0,100.0
+NE,Nebraska,1968,0.0,0.0,100.0
+NE,Nebraska,1970,0.0,0.0,100.0
+NE,Nebraska,1972,0.0,0.0,100.0
+NE,Nebraska,1974,0.0,0.0,100.0
+NE,Nebraska,1976,33.33,0.0,66.67
+NE,Nebraska,1978,33.33,0.0,66.67
+NE,Nebraska,1980,0.0,0.0,100.0
+NE,Nebraska,1982,0.0,0.0,100.0
+NE,Nebraska,1984,0.0,0.0,100.0
+NE,Nebraska,1986,0.0,0.0,100.0
+NE,Nebraska,1988,33.33,0.0,66.67
+NE,Nebraska,1990,33.33,0.0,66.67
+NE,Nebraska,1992,33.33,0.0,66.67
+NE,Nebraska,1994,0.0,0.0,100.0
+NE,Nebraska,1996,0.0,0.0,100.0
+NE,Nebraska,1998,0.0,0.0,100.0
+NE,Nebraska,2000,0.0,0.0,100.0
+NE,Nebraska,2002,0.0,0.0,100.0
+NE,Nebraska,2004,0.0,0.0,100.0
+NE,Nebraska,2006,0.0,0.0,100.0
+NE,Nebraska,2008,0.0,0.0,100.0
+NE,Nebraska,2010,0.0,0.0,100.0
+NE,Nebraska,2012,0.0,0.0,100.0
+NE,Nebraska,2014,33.33,0.0,66.67
+NE,Nebraska,2016,0.0,0.0,100.0
+NE,Nebraska,2018,0.0,0.0,100.0
+NE,Nebraska,2020,0.0,0.0,100.0
+NE,Nebraska,2022,0.0,0.0,100.0
+NE,Nebraska,2024,0.0,0.0,100.0
+NH,New Hampshire,1900,0.0,0.0,100.0
+NH,New Hampshire,1902,0.0,0.0,100.0
+NH,New Hampshire,1904,0.0,0.0,100.0
+NH,New Hampshire,1906,0.0,0.0,100.0
+NH,New Hampshire,1908,0.0,0.0,100.0
+NH,New Hampshire,1910,0.0,0.0,100.0
+NH,New Hampshire,1912,100.0,0.0,0.0
+NH,New Hampshire,1914,0.0,0.0,100.0
+NH,New Hampshire,1916,0.0,0.0,100.0
+NH,New Hampshire,1918,0.0,0.0,100.0
+NH,New Hampshire,1920,0.0,0.0,100.0
+NH,New Hampshire,1922,50.0,0.0,50.0
+NH,New Hampshire,1924,0.0,0.0,100.0
+NH,New Hampshire,1926,0.0,0.0,100.0
+NH,New Hampshire,1928,0.0,0.0,100.0
+NH,New Hampshire,1930,50.0,0.0,50.0
+NH,New Hampshire,1932,50.0,0.0,50.0
+NH,New Hampshire,1934,50.0,0.0,50.0
+NH,New Hampshire,1936,0.0,0.0,100.0
+NH,New Hampshire,1938,0.0,0.0,100.0
+NH,New Hampshire,1940,0.0,0.0,100.0
+NH,New Hampshire,1942,0.0,0.0,100.0
+NH,New Hampshire,1944,0.0,0.0,100.0
+NH,New Hampshire,1946,0.0,0.0,100.0
+NH,New Hampshire,1948,0.0,0.0,100.0
+NH,New Hampshire,1950,0.0,0.0,100.0
+NH,New Hampshire,1952,0.0,0.0,100.0
+NH,New Hampshire,1954,0.0,0.0,100.0
+NH,New Hampshire,1956,0.0,0.0,100.0
+NH,New Hampshire,1958,0.0,0.0,100.0
+NH,New Hampshire,1960,0.0,0.0,100.0
+NH,New Hampshire,1962,0.0,0.0,100.0
+NH,New Hampshire,1964,50.0,0.0,50.0
+NH,New Hampshire,1966,0.0,0.0,100.0
+NH,New Hampshire,1968,0.0,0.0,100.0
+NH,New Hampshire,1970,0.0,0.0,100.0
+NH,New Hampshire,1972,0.0,0.0,100.0
+NH,New Hampshire,1974,50.0,0.0,50.0
+NH,New Hampshire,1976,50.0,0.0,50.0
+NH,New Hampshire,1978,50.0,0.0,50.0
+NH,New Hampshire,1980,50.0,0.0,50.0
+NH,New Hampshire,1982,50.0,0.0,50.0
+NH,New Hampshire,1984,0.0,0.0,100.0
+NH,New Hampshire,1986,0.0,0.0,100.0
+NH,New Hampshire,1988,0.0,0.0,100.0
+NH,New Hampshire,1990,50.0,0.0,50.0
+NH,New Hampshire,1992,50.0,0.0,50.0
+NH,New Hampshire,1994,0.0,0.0,100.0
+NH,New Hampshire,1996,0.0,0.0,100.0
+NH,New Hampshire,1998,0.0,0.0,100.0
+NH,New Hampshire,2000,0.0,0.0,100.0
+NH,New Hampshire,2002,0.0,0.0,100.0
+NH,New Hampshire,2004,0.0,0.0,100.0
+NH,New Hampshire,2006,100.0,0.0,0.0
+NH,New Hampshire,2008,100.0,0.0,0.0
+NH,New Hampshire,2010,0.0,0.0,100.0
+NH,New Hampshire,2012,100.0,0.0,0.0
+NH,New Hampshire,2014,50.0,0.0,50.0
+NH,New Hampshire,2016,100.0,0.0,0.0
+NH,New Hampshire,2018,100.0,0.0,0.0
+NH,New Hampshire,2020,100.0,0.0,0.0
+NH,New Hampshire,2022,100.0,0.0,0.0
+NH,New Hampshire,2024,100.0,0.0,0.0
+NJ,New Jersey,1900,25.0,0.0,75.0
+NJ,New Jersey,1902,30.0,0.0,70.0
+NJ,New Jersey,1904,10.0,0.0,90.0
+NJ,New Jersey,1906,40.0,0.0,60.0
+NJ,New Jersey,1908,30.0,0.0,70.0
+NJ,New Jersey,1910,70.0,0.0,30.0
+NJ,New Jersey,1912,91.67,0.0,8.33
+NJ,New Jersey,1914,33.33,0.0,66.67
+NJ,New Jersey,1916,25.0,0.0,75.0
+NJ,New Jersey,1918,41.67,0.0,58.33
+NJ,New Jersey,1920,8.33,0.0,91.67
+NJ,New Jersey,1922,50.0,0.0,50.0
+NJ,New Jersey,1924,16.67,0.0,83.33
+NJ,New Jersey,1926,25.0,0.0,75.0
+NJ,New Jersey,1928,16.67,0.0,83.33
+NJ,New Jersey,1930,33.33,0.0,66.67
+NJ,New Jersey,1932,28.57,0.0,71.43
+NJ,New Jersey,1934,28.57,0.0,71.43
+NJ,New Jersey,1936,50.0,0.0,50.0
+NJ,New Jersey,1938,21.43,0.0,78.57
+NJ,New Jersey,1940,28.57,0.0,71.43
+NJ,New Jersey,1942,21.43,0.0,78.57
+NJ,New Jersey,1944,14.29,0.0,85.71
+NJ,New Jersey,1946,14.29,0.0,85.71
+NJ,New Jersey,1948,35.71,0.0,64.29
+NJ,New Jersey,1950,33.33,0.0,66.67
+NJ,New Jersey,1952,35.71,0.0,64.29
+NJ,New Jersey,1954,42.86,0.0,57.14
+NJ,New Jersey,1956,33.33,0.0,66.67
+NJ,New Jersey,1958,35.71,0.0,64.29
+NJ,New Jersey,1960,42.86,0.0,57.14
+NJ,New Jersey,1962,46.67,0.0,53.33
+NJ,New Jersey,1964,73.33,0.0,26.67
+NJ,New Jersey,1966,60.0,0.0,40.0
+NJ,New Jersey,1968,60.0,0.0,40.0
+NJ,New Jersey,1970,60.0,0.0,40.0
+NJ,New Jersey,1972,53.33,0.0,46.67
+NJ,New Jersey,1974,80.0,0.0,20.0
+NJ,New Jersey,1976,73.33,0.0,26.67
+NJ,New Jersey,1978,66.67,0.0,33.33
+NJ,New Jersey,1980,53.33,0.0,46.67
+NJ,New Jersey,1982,64.29,0.0,35.71
+NJ,New Jersey,1984,57.14,0.0,42.86
+NJ,New Jersey,1986,57.14,0.0,42.86
+NJ,New Jersey,1988,57.14,0.0,42.86
+NJ,New Jersey,1990,57.14,0.0,42.86
+NJ,New Jersey,1992,53.85,0.0,46.15
+NJ,New Jersey,1994,38.46,0.0,61.54
+NJ,New Jersey,1996,46.15,0.0,53.85
+NJ,New Jersey,1998,53.85,0.0,46.15
+NJ,New Jersey,2000,53.85,0.0,46.15
+NJ,New Jersey,2002,53.85,0.0,46.15
+NJ,New Jersey,2004,53.85,0.0,46.15
+NJ,New Jersey,2006,53.85,0.0,46.15
+NJ,New Jersey,2008,61.54,0.0,38.46
+NJ,New Jersey,2010,53.85,0.0,46.15
+NJ,New Jersey,2012,50.0,0.0,50.0
+NJ,New Jersey,2014,50.0,0.0,50.0
+NJ,New Jersey,2016,58.33,0.0,41.67
+NJ,New Jersey,2018,91.67,0.0,8.33
+NJ,New Jersey,2020,83.33,0.0,16.67
+NJ,New Jersey,2022,75.0,0.0,25.0
+NJ,New Jersey,2024,75.0,0.0,25.0
+NM,New Mexico,1910,50.0,0.0,50.0
+NM,New Mexico,1912,100.0,0.0,0.0
+NM,New Mexico,1914,0.0,0.0,100.0
+NM,New Mexico,1916,100.0,0.0,0.0
+NM,New Mexico,1918,0.0,0.0,100.0
+NM,New Mexico,1920,0.0,0.0,100.0
+NM,New Mexico,1922,100.0,0.0,0.0
+NM,New Mexico,1924,100.0,0.0,0.0
+NM,New Mexico,1926,100.0,0.0,0.0
+NM,New Mexico,1928,0.0,0.0,100.0
+NM,New Mexico,1930,100.0,0.0,0.0
+NM,New Mexico,1932,100.0,0.0,0.0
+NM,New Mexico,1934,100.0,0.0,0.0
+NM,New Mexico,1936,100.0,0.0,0.0
+NM,New Mexico,1938,100.0,0.0,0.0
+NM,New Mexico,1940,100.0,0.0,0.0
+NM,New Mexico,1942,100.0,0.0,0.0
+NM,New Mexico,1944,100.0,0.0,0.0
+NM,New Mexico,1946,100.0,0.0,0.0
+NM,New Mexico,1948,100.0,0.0,0.0
+NM,New Mexico,1950,100.0,0.0,0.0
+NM,New Mexico,1952,100.0,0.0,0.0
+NM,New Mexico,1954,100.0,0.0,0.0
+NM,New Mexico,1956,100.0,0.0,0.0
+NM,New Mexico,1958,100.0,0.0,0.0
+NM,New Mexico,1960,100.0,0.0,0.0
+NM,New Mexico,1962,100.0,0.0,0.0
+NM,New Mexico,1964,100.0,0.0,0.0
+NM,New Mexico,1966,100.0,0.0,0.0
+NM,New Mexico,1968,0.0,0.0,100.0
+NM,New Mexico,1970,50.0,0.0,50.0
+NM,New Mexico,1972,50.0,0.0,50.0
+NM,New Mexico,1974,50.0,0.0,50.0
+NM,New Mexico,1976,50.0,0.0,50.0
+NM,New Mexico,1978,50.0,0.0,50.0
+NM,New Mexico,1980,0.0,0.0,100.0
+NM,New Mexico,1982,33.33,0.0,66.67
+NM,New Mexico,1984,33.33,0.0,66.67
+NM,New Mexico,1986,33.33,0.0,66.67
+NM,New Mexico,1988,33.33,0.0,66.67
+NM,New Mexico,1990,33.33,0.0,66.67
+NM,New Mexico,1992,33.33,0.0,66.67
+NM,New Mexico,1994,33.33,0.0,66.67
+NM,New Mexico,1996,33.33,0.0,66.67
+NM,New Mexico,1998,33.33,0.0,66.67
+NM,New Mexico,2000,33.33,0.0,66.67
+NM,New Mexico,2002,33.33,0.0,66.67
+NM,New Mexico,2004,33.33,0.0,66.67
+NM,New Mexico,2006,33.33,0.0,66.67
+NM,New Mexico,2008,100.0,0.0,0.0
+NM,New Mexico,2010,66.67,0.0,33.33
+NM,New Mexico,2012,66.67,0.0,33.33
+NM,New Mexico,2014,66.67,0.0,33.33
+NM,New Mexico,2016,66.67,0.0,33.33
+NM,New Mexico,2018,100.0,0.0,0.0
+NM,New Mexico,2020,66.67,0.0,33.33
+NM,New Mexico,2022,100.0,0.0,0.0
+NM,New Mexico,2024,100.0,0.0,0.0
+NV,Nevada,1900,100.0,0.0,0.0
+NV,Nevada,1902,100.0,0.0,0.0
+NV,Nevada,1904,100.0,0.0,0.0
+NV,Nevada,1906,100.0,0.0,0.0
+NV,Nevada,1908,100.0,0.0,0.0
+NV,Nevada,1910,0.0,0.0,100.0
+NV,Nevada,1912,0.0,0.0,100.0
+NV,Nevada,1914,0.0,0.0,100.0
+NV,Nevada,1916,0.0,0.0,100.0
+NV,Nevada,1918,100.0,0.0,0.0
+NV,Nevada,1920,0.0,0.0,100.0
+NV,Nevada,1922,100.0,0.0,0.0
+NV,Nevada,1924,0.0,0.0,100.0
+NV,Nevada,1926,0.0,0.0,100.0
+NV,Nevada,1928,0.0,0.0,100.0
+NV,Nevada,1930,0.0,0.0,100.0
+NV,Nevada,1932,100.0,0.0,0.0
+NV,Nevada,1934,100.0,0.0,0.0
+NV,Nevada,1936,100.0,0.0,0.0
+NV,Nevada,1938,100.0,0.0,0.0
+NV,Nevada,1940,100.0,0.0,0.0
+NV,Nevada,1942,100.0,0.0,0.0
+NV,Nevada,1944,100.0,0.0,0.0
+NV,Nevada,1946,0.0,0.0,100.0
+NV,Nevada,1948,100.0,0.0,0.0
+NV,Nevada,1950,100.0,0.0,0.0
+NV,Nevada,1952,0.0,0.0,100.0
+NV,Nevada,1954,0.0,0.0,100.0
+NV,Nevada,1956,100.0,0.0,0.0
+NV,Nevada,1958,100.0,0.0,0.0
+NV,Nevada,1960,100.0,0.0,0.0
+NV,Nevada,1962,100.0,0.0,0.0
+NV,Nevada,1964,100.0,0.0,0.0
+NV,Nevada,1966,100.0,0.0,0.0
+NV,Nevada,1968,100.0,0.0,0.0
+NV,Nevada,1970,100.0,0.0,0.0
+NV,Nevada,1972,0.0,0.0,100.0
+NV,Nevada,1974,100.0,0.0,0.0
+NV,Nevada,1976,100.0,0.0,0.0
+NV,Nevada,1978,100.0,0.0,0.0
+NV,Nevada,1980,100.0,0.0,0.0
+NV,Nevada,1982,50.0,0.0,50.0
+NV,Nevada,1984,50.0,0.0,50.0
+NV,Nevada,1986,50.0,0.0,50.0
+NV,Nevada,1988,50.0,0.0,50.0
+NV,Nevada,1990,50.0,0.0,50.0
+NV,Nevada,1992,50.0,0.0,50.0
+NV,Nevada,1994,0.0,0.0,100.0
+NV,Nevada,1996,0.0,0.0,100.0
+NV,Nevada,1998,50.0,0.0,50.0
+NV,Nevada,2000,50.0,0.0,50.0
+NV,Nevada,2002,33.33,0.0,66.67
+NV,Nevada,2004,33.33,0.0,66.67
+NV,Nevada,2006,33.33,0.0,66.67
+NV,Nevada,2008,66.67,0.0,33.33
+NV,Nevada,2010,33.33,0.0,66.67
+NV,Nevada,2012,50.0,0.0,50.0
+NV,Nevada,2014,25.0,0.0,75.0
+NV,Nevada,2016,75.0,0.0,25.0
+NV,Nevada,2018,75.0,0.0,25.0
+NV,Nevada,2020,75.0,0.0,25.0
+NV,Nevada,2022,75.0,0.0,25.0
+NV,Nevada,2024,75.0,0.0,25.0
+NY,New York,1900,35.29,0.0,64.71
+NY,New York,1902,45.95,0.0,54.05
+NY,New York,1904,29.73,0.0,70.27
+NY,New York,1906,29.73,2.7,67.57
+NY,New York,1908,29.73,0.0,70.27
+NY,New York,1910,59.46,2.7,37.84
+NY,New York,1912,72.09,2.33,25.58
+NY,New York,1914,42.86,4.76,52.38
+NY,New York,1916,38.64,2.27,59.09
+NY,New York,1918,44.19,0.0,55.81
+NY,New York,1920,20.93,2.33,76.74
+NY,New York,1922,51.16,0.0,48.84
+NY,New York,1924,51.16,2.33,46.51
+NY,New York,1926,58.14,0.0,41.86
+NY,New York,1928,53.49,0.0,46.51
+NY,New York,1930,53.49,0.0,46.51
+NY,New York,1932,64.44,0.0,35.56
+NY,New York,1934,64.44,0.0,35.56
+NY,New York,1936,64.44,0.0,35.56
+NY,New York,1938,55.56,2.22,42.22
+NY,New York,1940,55.56,2.22,42.22
+NY,New York,1942,51.11,2.22,46.67
+NY,New York,1944,48.89,2.22,48.89
+NY,New York,1946,35.56,2.22,62.22
+NY,New York,1948,53.33,2.22,44.44
+NY,New York,1950,51.11,0.0,48.89
+NY,New York,1952,37.21,0.0,62.79
+NY,New York,1954,39.53,0.0,60.47
+NY,New York,1956,39.53,0.0,60.47
+NY,New York,1958,44.19,0.0,55.81
+NY,New York,1960,51.16,0.0,48.84
+NY,New York,1962,48.78,0.0,51.22
+NY,New York,1964,65.85,0.0,34.15
+NY,New York,1966,62.5,0.0,37.5
+NY,New York,1968,63.41,0.0,36.59
+NY,New York,1970,58.54,0.0,41.46
+NY,New York,1972,56.41,0.0,43.59
+NY,New York,1974,69.23,0.0,30.77
+NY,New York,1976,71.79,0.0,28.21
+NY,New York,1978,66.67,0.0,33.33
+NY,New York,1980,56.41,0.0,43.59
+NY,New York,1982,58.82,0.0,41.18
+NY,New York,1984,55.88,0.0,44.12
+NY,New York,1986,58.82,0.0,41.18
+NY,New York,1988,61.76,0.0,38.24
+NY,New York,1990,61.76,0.0,38.24
+NY,New York,1992,58.06,0.0,41.94
+NY,New York,1994,54.84,0.0,45.16
+NY,New York,1996,58.06,0.0,41.94
+NY,New York,1998,59.38,0.0,40.62
+NY,New York,2000,61.29,0.0,38.71
+NY,New York,2002,65.52,0.0,34.48
+NY,New York,2004,68.97,0.0,31.03
+NY,New York,2006,79.31,0.0,20.69
+NY,New York,2008,89.66,0.0,10.34
+NY,New York,2010,72.41,0.0,27.59
+NY,New York,2012,77.78,0.0,22.22
+NY,New York,2014,69.23,0.0,30.77
+NY,New York,2016,66.67,0.0,33.33
+NY,New York,2018,77.78,0.0,22.22
+NY,New York,2020,70.37,0.0,29.63
+NY,New York,2022,61.54,0.0,38.46
+NY,New York,2024,73.08,0.0,26.92
+OH,Ohio,1900,19.05,0.0,80.95
+OH,Ohio,1902,19.05,0.0,80.95
+OH,Ohio,1904,4.76,0.0,95.24
+OH,Ohio,1906,23.81,0.0,76.19
+OH,Ohio,1908,38.1,0.0,61.9
+OH,Ohio,1910,76.19,0.0,23.81
+OH,Ohio,1912,86.36,0.0,13.64
+OH,Ohio,1914,40.91,0.0,59.09
+OH,Ohio,1916,59.09,0.0,40.91
+OH,Ohio,1918,36.36,0.0,63.64
+OH,Ohio,1920,0.0,0.0,100.0
+OH,Ohio,1922,27.27,0.0,72.73
+OH,Ohio,1924,27.27,0.0,72.73
+OH,Ohio,1926,27.27,0.0,72.73
+OH,Ohio,1928,13.64,0.0,86.36
+OH,Ohio,1930,40.91,0.0,59.09
+OH,Ohio,1932,75.0,0.0,25.0
+OH,Ohio,1934,75.0,0.0,25.0
+OH,Ohio,1936,91.67,0.0,8.33
+OH,Ohio,1938,37.5,0.0,62.5
+OH,Ohio,1940,50.0,0.0,50.0
+OH,Ohio,1942,13.04,0.0,86.96
+OH,Ohio,1944,26.09,0.0,73.91
+OH,Ohio,1946,17.39,0.0,82.61
+OH,Ohio,1948,52.17,0.0,47.83
+OH,Ohio,1950,30.43,4.35,65.22
+OH,Ohio,1952,26.09,4.35,69.57
+OH,Ohio,1954,26.09,0.0,73.91
+OH,Ohio,1956,26.09,0.0,73.91
+OH,Ohio,1958,39.13,0.0,60.87
+OH,Ohio,1960,30.43,0.0,69.57
+OH,Ohio,1962,25.0,0.0,75.0
+OH,Ohio,1964,41.67,0.0,58.33
+OH,Ohio,1966,20.83,0.0,79.17
+OH,Ohio,1968,25.0,0.0,75.0
+OH,Ohio,1970,29.17,0.0,70.83
+OH,Ohio,1972,30.43,0.0,69.57
+OH,Ohio,1974,34.78,0.0,65.22
+OH,Ohio,1976,43.48,0.0,56.52
+OH,Ohio,1978,43.48,0.0,56.52
+OH,Ohio,1980,43.48,0.0,56.52
+OH,Ohio,1982,47.62,0.0,52.38
+OH,Ohio,1984,52.38,0.0,47.62
+OH,Ohio,1986,52.38,0.0,47.62
+OH,Ohio,1988,52.38,0.0,47.62
+OH,Ohio,1990,52.38,0.0,47.62
+OH,Ohio,1992,50.0,0.0,50.0
+OH,Ohio,1994,31.58,0.0,68.42
+OH,Ohio,1996,42.11,0.0,57.89
+OH,Ohio,1998,42.11,0.0,57.89
+OH,Ohio,2000,42.11,0.0,57.89
+OH,Ohio,2002,33.33,0.0,66.67
+OH,Ohio,2004,33.33,0.0,66.67
+OH,Ohio,2006,38.89,0.0,61.11
+OH,Ohio,2008,55.56,0.0,44.44
+OH,Ohio,2010,27.78,0.0,72.22
+OH,Ohio,2012,25.0,0.0,75.0
+OH,Ohio,2014,25.0,0.0,75.0
+OH,Ohio,2016,25.0,0.0,75.0
+OH,Ohio,2018,25.0,0.0,75.0
+OH,Ohio,2020,25.0,0.0,75.0
+OH,Ohio,2022,33.33,0.0,66.67
+OH,Ohio,2024,33.33,0.0,66.67
+OK,Oklahoma,1906,80.0,0.0,20.0
+OK,Oklahoma,1908,40.0,0.0,60.0
+OK,Oklahoma,1910,60.0,0.0,40.0
+OK,Oklahoma,1912,75.0,0.0,25.0
+OK,Oklahoma,1914,87.5,0.0,12.5
+OK,Oklahoma,1916,75.0,0.0,25.0
+OK,Oklahoma,1918,87.5,0.0,12.5
+OK,Oklahoma,1920,37.5,0.0,62.5
+OK,Oklahoma,1922,87.5,0.0,12.5
+OK,Oklahoma,1924,75.0,0.0,25.0
+OK,Oklahoma,1926,87.5,0.0,12.5
+OK,Oklahoma,1928,62.5,0.0,37.5
+OK,Oklahoma,1930,87.5,0.0,12.5
+OK,Oklahoma,1932,100.0,0.0,0.0
+OK,Oklahoma,1934,100.0,0.0,0.0
+OK,Oklahoma,1936,100.0,0.0,0.0
+OK,Oklahoma,1938,100.0,0.0,0.0
+OK,Oklahoma,1940,88.89,0.0,11.11
+OK,Oklahoma,1942,87.5,0.0,12.5
+OK,Oklahoma,1944,75.0,0.0,25.0
+OK,Oklahoma,1946,75.0,0.0,25.0
+OK,Oklahoma,1948,100.0,0.0,0.0
+OK,Oklahoma,1950,75.0,0.0,25.0
+OK,Oklahoma,1952,83.33,0.0,16.67
+OK,Oklahoma,1954,83.33,0.0,16.67
+OK,Oklahoma,1956,83.33,0.0,16.67
+OK,Oklahoma,1958,83.33,0.0,16.67
+OK,Oklahoma,1960,83.33,0.0,16.67
+OK,Oklahoma,1962,83.33,0.0,16.67
+OK,Oklahoma,1964,83.33,0.0,16.67
+OK,Oklahoma,1966,66.67,0.0,33.33
+OK,Oklahoma,1968,66.67,0.0,33.33
+OK,Oklahoma,1970,66.67,0.0,33.33
+OK,Oklahoma,1972,83.33,0.0,16.67
+OK,Oklahoma,1974,83.33,0.0,16.67
+OK,Oklahoma,1976,83.33,0.0,16.67
+OK,Oklahoma,1978,83.33,0.0,16.67
+OK,Oklahoma,1980,83.33,0.0,16.67
+OK,Oklahoma,1982,83.33,0.0,16.67
+OK,Oklahoma,1984,83.33,0.0,16.67
+OK,Oklahoma,1986,66.67,0.0,33.33
+OK,Oklahoma,1988,66.67,0.0,33.33
+OK,Oklahoma,1990,66.67,0.0,33.33
+OK,Oklahoma,1992,57.14,0.0,42.86
+OK,Oklahoma,1994,16.67,0.0,83.33
+OK,Oklahoma,1996,0.0,0.0,100.0
+OK,Oklahoma,1998,0.0,0.0,100.0
+OK,Oklahoma,2000,16.67,0.0,83.33
+OK,Oklahoma,2002,20.0,0.0,80.0
+OK,Oklahoma,2004,20.0,0.0,80.0
+OK,Oklahoma,2006,20.0,0.0,80.0
+OK,Oklahoma,2008,20.0,0.0,80.0
+OK,Oklahoma,2010,20.0,0.0,80.0
+OK,Oklahoma,2012,0.0,0.0,100.0
+OK,Oklahoma,2014,0.0,0.0,100.0
+OK,Oklahoma,2016,0.0,0.0,100.0
+OK,Oklahoma,2018,20.0,0.0,80.0
+OK,Oklahoma,2020,0.0,0.0,100.0
+OK,Oklahoma,2022,0.0,0.0,100.0
+OK,Oklahoma,2024,0.0,0.0,100.0
+OR,Oregon,1900,0.0,0.0,100.0
+OR,Oregon,1902,0.0,0.0,100.0
+OR,Oregon,1904,0.0,0.0,100.0
+OR,Oregon,1906,0.0,0.0,100.0
+OR,Oregon,1908,0.0,0.0,100.0
+OR,Oregon,1910,0.0,0.0,100.0
+OR,Oregon,1912,0.0,0.0,100.0
+OR,Oregon,1914,0.0,0.0,100.0
+OR,Oregon,1916,0.0,0.0,100.0
+OR,Oregon,1918,0.0,0.0,100.0
+OR,Oregon,1920,0.0,0.0,100.0
+OR,Oregon,1922,33.33,0.0,66.67
+OR,Oregon,1924,0.0,0.0,100.0
+OR,Oregon,1926,0.0,0.0,100.0
+OR,Oregon,1928,0.0,0.0,100.0
+OR,Oregon,1930,33.33,0.0,66.67
+OR,Oregon,1932,66.67,0.0,33.33
+OR,Oregon,1934,33.33,0.0,66.67
+OR,Oregon,1936,66.67,0.0,33.33
+OR,Oregon,1938,33.33,0.0,66.67
+OR,Oregon,1940,33.33,0.0,66.67
+OR,Oregon,1942,0.0,0.0,100.0
+OR,Oregon,1944,0.0,0.0,100.0
+OR,Oregon,1946,0.0,0.0,100.0
+OR,Oregon,1948,0.0,0.0,100.0
+OR,Oregon,1950,0.0,0.0,100.0
+OR,Oregon,1952,0.0,0.0,100.0
+OR,Oregon,1954,25.0,0.0,75.0
+OR,Oregon,1956,75.0,0.0,25.0
+OR,Oregon,1958,75.0,0.0,25.0
+OR,Oregon,1960,50.0,0.0,50.0
+OR,Oregon,1962,75.0,0.0,25.0
+OR,Oregon,1964,75.0,0.0,25.0
+OR,Oregon,1966,50.0,0.0,50.0
+OR,Oregon,1968,50.0,0.0,50.0
+OR,Oregon,1970,50.0,0.0,50.0
+OR,Oregon,1972,50.0,0.0,50.0
+OR,Oregon,1974,100.0,0.0,0.0
+OR,Oregon,1976,100.0,0.0,0.0
+OR,Oregon,1978,100.0,0.0,0.0
+OR,Oregon,1980,75.0,0.0,25.0
+OR,Oregon,1982,60.0,0.0,40.0
+OR,Oregon,1984,60.0,0.0,40.0
+OR,Oregon,1986,60.0,0.0,40.0
+OR,Oregon,1988,60.0,0.0,40.0
+OR,Oregon,1990,80.0,0.0,20.0
+OR,Oregon,1992,80.0,0.0,20.0
+OR,Oregon,1994,66.67,0.0,33.33
+OR,Oregon,1996,80.0,0.0,20.0
+OR,Oregon,1998,80.0,0.0,20.0
+OR,Oregon,2000,80.0,0.0,20.0
+OR,Oregon,2002,80.0,0.0,20.0
+OR,Oregon,2004,80.0,0.0,20.0
+OR,Oregon,2006,80.0,0.0,20.0
+OR,Oregon,2008,80.0,0.0,20.0
+OR,Oregon,2010,80.0,0.0,20.0
+OR,Oregon,2012,80.0,0.0,20.0
+OR,Oregon,2014,80.0,0.0,20.0
+OR,Oregon,2016,80.0,0.0,20.0
+OR,Oregon,2018,80.0,0.0,20.0
+OR,Oregon,2020,80.0,0.0,20.0
+OR,Oregon,2022,66.67,0.0,33.33
+OR,Oregon,2024,83.33,0.0,16.67
+PA,Pennsylvania,1900,13.33,0.0,86.67
+PA,Pennsylvania,1902,12.5,9.38,78.12
+PA,Pennsylvania,1904,3.12,0.0,96.88
+PA,Pennsylvania,1906,21.88,0.0,78.12
+PA,Pennsylvania,1908,15.62,0.0,84.38
+PA,Pennsylvania,1910,27.27,0.0,72.73
+PA,Pennsylvania,1912,33.33,5.56,61.11
+PA,Pennsylvania,1914,16.67,0.0,83.33
+PA,Pennsylvania,1916,20.0,2.86,77.14
+PA,Pennsylvania,1918,19.44,0.0,80.56
+PA,Pennsylvania,1920,2.78,2.78,94.44
+PA,Pennsylvania,1922,16.67,0.0,83.33
+PA,Pennsylvania,1924,0.0,0.0,100.0
+PA,Pennsylvania,1926,5.56,0.0,94.44
+PA,Pennsylvania,1928,2.78,0.0,97.22
+PA,Pennsylvania,1930,8.33,0.0,91.67
+PA,Pennsylvania,1932,32.35,0.0,67.65
+PA,Pennsylvania,1934,67.65,0.0,32.35
+PA,Pennsylvania,1936,79.41,0.0,20.59
+PA,Pennsylvania,1938,44.12,0.0,55.88
+PA,Pennsylvania,1940,55.88,0.0,44.12
+PA,Pennsylvania,1942,42.42,0.0,57.58
+PA,Pennsylvania,1944,45.45,0.0,54.55
+PA,Pennsylvania,1946,15.15,0.0,84.85
+PA,Pennsylvania,1948,48.48,0.0,51.52
+PA,Pennsylvania,1950,39.39,0.0,60.61
+PA,Pennsylvania,1952,36.67,0.0,63.33
+PA,Pennsylvania,1954,46.67,0.0,53.33
+PA,Pennsylvania,1956,43.33,0.0,56.67
+PA,Pennsylvania,1958,53.33,0.0,46.67
+PA,Pennsylvania,1960,46.67,0.0,53.33
+PA,Pennsylvania,1962,48.15,0.0,51.85
+PA,Pennsylvania,1964,55.56,0.0,44.44
+PA,Pennsylvania,1966,51.85,0.0,48.15
+PA,Pennsylvania,1968,51.85,0.0,48.15
+PA,Pennsylvania,1970,51.85,0.0,48.15
+PA,Pennsylvania,1972,52.0,0.0,48.0
+PA,Pennsylvania,1974,56.0,0.0,44.0
+PA,Pennsylvania,1976,68.0,0.0,32.0
+PA,Pennsylvania,1978,60.0,0.0,40.0
+PA,Pennsylvania,1980,44.0,4.0,52.0
+PA,Pennsylvania,1982,56.52,0.0,43.48
+PA,Pennsylvania,1984,56.52,0.0,43.48
+PA,Pennsylvania,1986,52.17,0.0,47.83
+PA,Pennsylvania,1988,52.17,0.0,47.83
+PA,Pennsylvania,1990,50.0,0.0,50.0
+PA,Pennsylvania,1992,52.38,0.0,47.62
+PA,Pennsylvania,1994,52.38,0.0,47.62
+PA,Pennsylvania,1996,52.38,0.0,47.62
+PA,Pennsylvania,1998,52.38,0.0,47.62
+PA,Pennsylvania,2000,47.62,0.0,52.38
+PA,Pennsylvania,2002,36.84,0.0,63.16
+PA,Pennsylvania,2004,36.84,0.0,63.16
+PA,Pennsylvania,2006,57.89,0.0,42.11
+PA,Pennsylvania,2008,63.16,0.0,36.84
+PA,Pennsylvania,2010,36.84,0.0,63.16
+PA,Pennsylvania,2012,27.78,0.0,72.22
+PA,Pennsylvania,2014,27.78,0.0,72.22
+PA,Pennsylvania,2016,27.78,0.0,72.22
+PA,Pennsylvania,2018,50.0,0.0,50.0
+PA,Pennsylvania,2020,50.0,0.0,50.0
+PA,Pennsylvania,2022,52.94,0.0,47.06
+PA,Pennsylvania,2024,41.18,0.0,58.82
+RI,Rhode Island,1900,0.0,0.0,100.0
+RI,Rhode Island,1902,50.0,0.0,50.0
+RI,Rhode Island,1904,50.0,0.0,50.0
+RI,Rhode Island,1906,50.0,0.0,50.0
+RI,Rhode Island,1908,0.0,0.0,100.0
+RI,Rhode Island,1910,50.0,0.0,50.0
+RI,Rhode Island,1912,66.67,0.0,33.33
+RI,Rhode Island,1914,33.33,0.0,66.67
+RI,Rhode Island,1916,33.33,0.0,66.67
+RI,Rhode Island,1918,0.0,0.0,100.0
+RI,Rhode Island,1920,0.0,0.0,100.0
+RI,Rhode Island,1922,33.33,0.0,66.67
+RI,Rhode Island,1924,33.33,0.0,66.67
+RI,Rhode Island,1926,0.0,0.0,100.0
+RI,Rhode Island,1928,33.33,0.0,66.67
+RI,Rhode Island,1930,33.33,0.0,66.67
+RI,Rhode Island,1932,100.0,0.0,0.0
+RI,Rhode Island,1934,100.0,0.0,0.0
+RI,Rhode Island,1936,100.0,0.0,0.0
+RI,Rhode Island,1938,0.0,0.0,100.0
+RI,Rhode Island,1940,100.0,0.0,0.0
+RI,Rhode Island,1942,100.0,0.0,0.0
+RI,Rhode Island,1944,100.0,0.0,0.0
+RI,Rhode Island,1946,100.0,0.0,0.0
+RI,Rhode Island,1948,100.0,0.0,0.0
+RI,Rhode Island,1950,100.0,0.0,0.0
+RI,Rhode Island,1952,100.0,0.0,0.0
+RI,Rhode Island,1954,100.0,0.0,0.0
+RI,Rhode Island,1956,100.0,0.0,0.0
+RI,Rhode Island,1958,100.0,0.0,0.0
+RI,Rhode Island,1960,100.0,0.0,0.0
+RI,Rhode Island,1962,100.0,0.0,0.0
+RI,Rhode Island,1964,100.0,0.0,0.0
+RI,Rhode Island,1966,100.0,0.0,0.0
+RI,Rhode Island,1968,100.0,0.0,0.0
+RI,Rhode Island,1970,100.0,0.0,0.0
+RI,Rhode Island,1972,100.0,0.0,0.0
+RI,Rhode Island,1974,100.0,0.0,0.0
+RI,Rhode Island,1976,100.0,0.0,0.0
+RI,Rhode Island,1978,100.0,0.0,0.0
+RI,Rhode Island,1980,50.0,0.0,50.0
+RI,Rhode Island,1982,50.0,0.0,50.0
+RI,Rhode Island,1984,50.0,0.0,50.0
+RI,Rhode Island,1986,50.0,0.0,50.0
+RI,Rhode Island,1988,0.0,0.0,100.0
+RI,Rhode Island,1990,50.0,0.0,50.0
+RI,Rhode Island,1992,50.0,0.0,50.0
+RI,Rhode Island,1994,100.0,0.0,0.0
+RI,Rhode Island,1996,100.0,0.0,0.0
+RI,Rhode Island,1998,100.0,0.0,0.0
+RI,Rhode Island,2000,100.0,0.0,0.0
+RI,Rhode Island,2002,100.0,0.0,0.0
+RI,Rhode Island,2004,100.0,0.0,0.0
+RI,Rhode Island,2006,100.0,0.0,0.0
+RI,Rhode Island,2008,100.0,0.0,0.0
+RI,Rhode Island,2010,100.0,0.0,0.0
+RI,Rhode Island,2012,100.0,0.0,0.0
+RI,Rhode Island,2014,100.0,0.0,0.0
+RI,Rhode Island,2016,100.0,0.0,0.0
+RI,Rhode Island,2018,100.0,0.0,0.0
+RI,Rhode Island,2020,100.0,0.0,0.0
+RI,Rhode Island,2022,100.0,0.0,0.0
+RI,Rhode Island,2024,100.0,0.0,0.0
+SC,South Carolina,1900,100.0,0.0,0.0
+SC,South Carolina,1902,100.0,0.0,0.0
+SC,South Carolina,1904,100.0,0.0,0.0
+SC,South Carolina,1906,100.0,0.0,0.0
+SC,South Carolina,1908,100.0,0.0,0.0
+SC,South Carolina,1910,100.0,0.0,0.0
+SC,South Carolina,1912,100.0,0.0,0.0
+SC,South Carolina,1914,100.0,0.0,0.0
+SC,South Carolina,1916,100.0,0.0,0.0
+SC,South Carolina,1918,100.0,0.0,0.0
+SC,South Carolina,1920,100.0,0.0,0.0
+SC,South Carolina,1922,100.0,0.0,0.0
+SC,South Carolina,1924,100.0,0.0,0.0
+SC,South Carolina,1926,100.0,0.0,0.0
+SC,South Carolina,1928,100.0,0.0,0.0
+SC,South Carolina,1930,100.0,0.0,0.0
+SC,South Carolina,1932,100.0,0.0,0.0
+SC,South Carolina,1934,100.0,0.0,0.0
+SC,South Carolina,1936,100.0,0.0,0.0
+SC,South Carolina,1938,100.0,0.0,0.0
+SC,South Carolina,1940,100.0,0.0,0.0
+SC,South Carolina,1942,100.0,0.0,0.0
+SC,South Carolina,1944,100.0,0.0,0.0
+SC,South Carolina,1946,100.0,0.0,0.0
+SC,South Carolina,1948,100.0,0.0,0.0
+SC,South Carolina,1950,100.0,0.0,0.0
+SC,South Carolina,1952,100.0,0.0,0.0
+SC,South Carolina,1954,100.0,0.0,0.0
+SC,South Carolina,1956,100.0,0.0,0.0
+SC,South Carolina,1958,100.0,0.0,0.0
+SC,South Carolina,1960,100.0,0.0,0.0
+SC,South Carolina,1962,100.0,0.0,0.0
+SC,South Carolina,1964,100.0,0.0,0.0
+SC,South Carolina,1966,83.33,0.0,16.67
+SC,South Carolina,1968,83.33,0.0,16.67
+SC,South Carolina,1970,80.0,0.0,20.0
+SC,South Carolina,1972,66.67,0.0,33.33
+SC,South Carolina,1974,83.33,0.0,16.67
+SC,South Carolina,1976,83.33,0.0,16.67
+SC,South Carolina,1978,66.67,0.0,33.33
+SC,South Carolina,1980,33.33,0.0,66.67
+SC,South Carolina,1982,50.0,0.0,50.0
+SC,South Carolina,1984,50.0,0.0,50.0
+SC,South Carolina,1986,66.67,0.0,33.33
+SC,South Carolina,1988,66.67,0.0,33.33
+SC,South Carolina,1990,66.67,0.0,33.33
+SC,South Carolina,1992,50.0,0.0,50.0
+SC,South Carolina,1994,33.33,0.0,66.67
+SC,South Carolina,1996,33.33,0.0,66.67
+SC,South Carolina,1998,33.33,0.0,66.67
+SC,South Carolina,2000,33.33,0.0,66.67
+SC,South Carolina,2002,33.33,0.0,66.67
+SC,South Carolina,2004,33.33,0.0,66.67
+SC,South Carolina,2006,33.33,0.0,66.67
+SC,South Carolina,2008,33.33,0.0,66.67
+SC,South Carolina,2010,16.67,0.0,83.33
+SC,South Carolina,2012,14.29,0.0,85.71
+SC,South Carolina,2014,14.29,0.0,85.71
+SC,South Carolina,2016,14.29,0.0,85.71
+SC,South Carolina,2018,28.57,0.0,71.43
+SC,South Carolina,2020,14.29,0.0,85.71
+SC,South Carolina,2022,14.29,0.0,85.71
+SC,South Carolina,2024,14.29,0.0,85.71
+SD,South Dakota,1900,0.0,0.0,100.0
+SD,South Dakota,1902,0.0,0.0,100.0
+SD,South Dakota,1904,0.0,0.0,100.0
+SD,South Dakota,1906,0.0,0.0,100.0
+SD,South Dakota,1908,0.0,0.0,100.0
+SD,South Dakota,1910,0.0,0.0,100.0
+SD,South Dakota,1912,0.0,0.0,100.0
+SD,South Dakota,1914,33.33,0.0,66.67
+SD,South Dakota,1916,33.33,0.0,66.67
+SD,South Dakota,1918,33.33,0.0,66.67
+SD,South Dakota,1920,0.0,0.0,100.0
+SD,South Dakota,1922,0.0,0.0,100.0
+SD,South Dakota,1924,0.0,0.0,100.0
+SD,South Dakota,1926,0.0,0.0,100.0
+SD,South Dakota,1928,0.0,0.0,100.0
+SD,South Dakota,1930,0.0,0.0,100.0
+SD,South Dakota,1932,100.0,0.0,0.0
+SD,South Dakota,1934,100.0,0.0,0.0
+SD,South Dakota,1936,50.0,0.0,50.0
+SD,South Dakota,1938,0.0,0.0,100.0
+SD,South Dakota,1940,0.0,0.0,100.0
+SD,South Dakota,1942,0.0,0.0,100.0
+SD,South Dakota,1944,0.0,0.0,100.0
+SD,South Dakota,1946,0.0,0.0,100.0
+SD,South Dakota,1948,0.0,0.0,100.0
+SD,South Dakota,1950,0.0,0.0,100.0
+SD,South Dakota,1952,0.0,0.0,100.0
+SD,South Dakota,1954,0.0,0.0,100.0
+SD,South Dakota,1956,50.0,0.0,50.0
+SD,South Dakota,1958,50.0,0.0,50.0
+SD,South Dakota,1960,0.0,0.0,100.0
+SD,South Dakota,1962,0.0,0.0,100.0
+SD,South Dakota,1964,0.0,0.0,100.0
+SD,South Dakota,1966,0.0,0.0,100.0
+SD,South Dakota,1968,0.0,0.0,100.0
+SD,South Dakota,1970,100.0,0.0,0.0
+SD,South Dakota,1972,50.0,0.0,50.0
+SD,South Dakota,1974,0.0,0.0,100.0
+SD,South Dakota,1976,0.0,0.0,100.0
+SD,South Dakota,1978,50.0,0.0,50.0
+SD,South Dakota,1980,50.0,0.0,50.0
+SD,South Dakota,1982,100.0,0.0,0.0
+SD,South Dakota,1984,100.0,0.0,0.0
+SD,South Dakota,1986,100.0,0.0,0.0
+SD,South Dakota,1988,100.0,0.0,0.0
+SD,South Dakota,1990,100.0,0.0,0.0
+SD,South Dakota,1992,100.0,0.0,0.0
+SD,South Dakota,1994,100.0,0.0,0.0
+SD,South Dakota,1996,0.0,0.0,100.0
+SD,South Dakota,1998,0.0,0.0,100.0
+SD,South Dakota,2000,0.0,0.0,100.0
+SD,South Dakota,2002,0.0,0.0,100.0
+SD,South Dakota,2004,100.0,0.0,0.0
+SD,South Dakota,2006,100.0,0.0,0.0
+SD,South Dakota,2008,100.0,0.0,0.0
+SD,South Dakota,2010,0.0,0.0,100.0
+SD,South Dakota,2012,0.0,0.0,100.0
+SD,South Dakota,2014,0.0,0.0,100.0
+SD,South Dakota,2016,0.0,0.0,100.0
+SD,South Dakota,2018,0.0,0.0,100.0
+SD,South Dakota,2020,0.0,0.0,100.0
+SD,South Dakota,2022,0.0,0.0,100.0
+SD,South Dakota,2024,0.0,0.0,100.0
+TN,Tennessee,1900,80.0,0.0,20.0
+TN,Tennessee,1902,80.0,0.0,20.0
+TN,Tennessee,1904,80.0,0.0,20.0
+TN,Tennessee,1906,80.0,0.0,20.0
+TN,Tennessee,1908,80.0,0.0,20.0
+TN,Tennessee,1910,80.0,0.0,20.0
+TN,Tennessee,1912,80.0,0.0,20.0
+TN,Tennessee,1914,80.0,0.0,20.0
+TN,Tennessee,1916,80.0,0.0,20.0
+TN,Tennessee,1918,80.0,0.0,20.0
+TN,Tennessee,1920,50.0,0.0,50.0
+TN,Tennessee,1922,80.0,0.0,20.0
+TN,Tennessee,1924,80.0,0.0,20.0
+TN,Tennessee,1926,80.0,0.0,20.0
+TN,Tennessee,1928,80.0,0.0,20.0
+TN,Tennessee,1930,80.0,0.0,20.0
+TN,Tennessee,1932,77.78,0.0,22.22
+TN,Tennessee,1934,77.78,0.0,22.22
+TN,Tennessee,1936,77.78,0.0,22.22
+TN,Tennessee,1938,77.78,0.0,22.22
+TN,Tennessee,1940,66.67,11.11,22.22
+TN,Tennessee,1942,80.0,0.0,20.0
+TN,Tennessee,1944,80.0,0.0,20.0
+TN,Tennessee,1946,80.0,0.0,20.0
+TN,Tennessee,1948,80.0,0.0,20.0
+TN,Tennessee,1950,80.0,0.0,20.0
+TN,Tennessee,1952,77.78,0.0,22.22
+TN,Tennessee,1954,77.78,0.0,22.22
+TN,Tennessee,1956,77.78,0.0,22.22
+TN,Tennessee,1958,77.78,0.0,22.22
+TN,Tennessee,1960,77.78,0.0,22.22
+TN,Tennessee,1962,66.67,0.0,33.33
+TN,Tennessee,1964,66.67,0.0,33.33
+TN,Tennessee,1966,55.56,0.0,44.44
+TN,Tennessee,1968,55.56,0.0,44.44
+TN,Tennessee,1970,55.56,0.0,44.44
+TN,Tennessee,1972,37.5,0.0,62.5
+TN,Tennessee,1974,62.5,0.0,37.5
+TN,Tennessee,1976,62.5,0.0,37.5
+TN,Tennessee,1978,62.5,0.0,37.5
+TN,Tennessee,1980,62.5,0.0,37.5
+TN,Tennessee,1982,66.67,0.0,33.33
+TN,Tennessee,1984,66.67,0.0,33.33
+TN,Tennessee,1986,66.67,0.0,33.33
+TN,Tennessee,1988,66.67,0.0,33.33
+TN,Tennessee,1990,66.67,0.0,33.33
+TN,Tennessee,1992,66.67,0.0,33.33
+TN,Tennessee,1994,44.44,0.0,55.56
+TN,Tennessee,1996,44.44,0.0,55.56
+TN,Tennessee,1998,44.44,0.0,55.56
+TN,Tennessee,2000,44.44,0.0,55.56
+TN,Tennessee,2002,55.56,0.0,44.44
+TN,Tennessee,2004,55.56,0.0,44.44
+TN,Tennessee,2006,55.56,0.0,44.44
+TN,Tennessee,2008,55.56,0.0,44.44
+TN,Tennessee,2010,22.22,0.0,77.78
+TN,Tennessee,2012,22.22,0.0,77.78
+TN,Tennessee,2014,22.22,0.0,77.78
+TN,Tennessee,2016,22.22,0.0,77.78
+TN,Tennessee,2018,22.22,0.0,77.78
+TN,Tennessee,2020,22.22,0.0,77.78
+TN,Tennessee,2022,11.11,0.0,88.89
+TN,Tennessee,2024,11.11,0.0,88.89
+TX,Texas,1900,100.0,0.0,0.0
+TX,Texas,1902,100.0,0.0,0.0
+TX,Texas,1904,100.0,0.0,0.0
+TX,Texas,1906,100.0,0.0,0.0
+TX,Texas,1908,100.0,0.0,0.0
+TX,Texas,1910,100.0,0.0,0.0
+TX,Texas,1912,100.0,0.0,0.0
+TX,Texas,1914,100.0,0.0,0.0
+TX,Texas,1916,100.0,0.0,0.0
+TX,Texas,1918,100.0,0.0,0.0
+TX,Texas,1920,94.44,0.0,5.56
+TX,Texas,1922,94.44,0.0,5.56
+TX,Texas,1924,94.44,0.0,5.56
+TX,Texas,1926,94.44,0.0,5.56
+TX,Texas,1928,100.0,0.0,0.0
+TX,Texas,1930,94.44,0.0,5.56
+TX,Texas,1932,100.0,0.0,0.0
+TX,Texas,1934,100.0,0.0,0.0
+TX,Texas,1936,100.0,0.0,0.0
+TX,Texas,1938,100.0,0.0,0.0
+TX,Texas,1940,100.0,0.0,0.0
+TX,Texas,1942,100.0,0.0,0.0
+TX,Texas,1944,100.0,0.0,0.0
+TX,Texas,1946,100.0,0.0,0.0
+TX,Texas,1948,100.0,0.0,0.0
+TX,Texas,1950,100.0,0.0,0.0
+TX,Texas,1952,100.0,0.0,0.0
+TX,Texas,1954,95.45,0.0,4.55
+TX,Texas,1956,95.45,0.0,4.55
+TX,Texas,1958,95.45,0.0,4.55
+TX,Texas,1960,95.45,0.0,4.55
+TX,Texas,1962,91.3,0.0,8.7
+TX,Texas,1964,100.0,0.0,0.0
+TX,Texas,1966,91.3,0.0,8.7
+TX,Texas,1968,86.96,0.0,13.04
+TX,Texas,1970,86.96,0.0,13.04
+TX,Texas,1972,83.33,0.0,16.67
+TX,Texas,1974,87.5,0.0,12.5
+TX,Texas,1976,91.67,0.0,8.33
+TX,Texas,1978,83.33,0.0,16.67
+TX,Texas,1980,79.17,0.0,20.83
+TX,Texas,1982,77.78,0.0,22.22
+TX,Texas,1984,62.96,0.0,37.04
+TX,Texas,1986,62.96,0.0,37.04
+TX,Texas,1988,70.37,0.0,29.63
+TX,Texas,1990,67.86,0.0,32.14
+TX,Texas,1992,70.0,0.0,30.0
+TX,Texas,1994,61.29,0.0,38.71
+TX,Texas,1996,56.67,0.0,43.33
+TX,Texas,1998,56.67,0.0,43.33
+TX,Texas,2000,56.67,0.0,43.33
+TX,Texas,2002,51.52,0.0,48.48
+TX,Texas,2004,34.38,0.0,65.62
+TX,Texas,2006,40.62,0.0,59.38
+TX,Texas,2008,37.5,0.0,62.5
+TX,Texas,2010,28.12,0.0,71.88
+TX,Texas,2012,33.33,0.0,66.67
+TX,Texas,2014,30.56,0.0,69.44
+TX,Texas,2016,30.56,0.0,69.44
+TX,Texas,2018,36.11,0.0,63.89
+TX,Texas,2020,36.11,0.0,63.89
+TX,Texas,2022,34.21,0.0,65.79
+TX,Texas,2024,34.21,0.0,65.79
+UT,Utah,1900,0.0,0.0,100.0
+UT,Utah,1902,0.0,0.0,100.0
+UT,Utah,1904,0.0,0.0,100.0
+UT,Utah,1906,0.0,0.0,100.0
+UT,Utah,1908,0.0,0.0,100.0
+UT,Utah,1910,0.0,0.0,100.0
+UT,Utah,1912,0.0,0.0,100.0
+UT,Utah,1914,50.0,0.0,50.0
+UT,Utah,1916,100.0,0.0,0.0
+UT,Utah,1918,100.0,0.0,0.0
+UT,Utah,1920,0.0,0.0,100.0
+UT,Utah,1922,0.0,0.0,100.0
+UT,Utah,1924,0.0,0.0,100.0
+UT,Utah,1926,0.0,0.0,100.0
+UT,Utah,1928,0.0,0.0,100.0
+UT,Utah,1930,0.0,0.0,100.0
+UT,Utah,1932,100.0,0.0,0.0
+UT,Utah,1934,100.0,0.0,0.0
+UT,Utah,1936,100.0,0.0,0.0
+UT,Utah,1938,100.0,0.0,0.0
+UT,Utah,1940,100.0,0.0,0.0
+UT,Utah,1942,100.0,0.0,0.0
+UT,Utah,1944,100.0,0.0,0.0
+UT,Utah,1946,50.0,0.0,50.0
+UT,Utah,1948,100.0,0.0,0.0
+UT,Utah,1950,100.0,0.0,0.0
+UT,Utah,1952,0.0,0.0,100.0
+UT,Utah,1954,0.0,0.0,100.0
+UT,Utah,1956,0.0,0.0,100.0
+UT,Utah,1958,50.0,0.0,50.0
+UT,Utah,1960,100.0,0.0,0.0
+UT,Utah,1962,0.0,0.0,100.0
+UT,Utah,1964,50.0,0.0,50.0
+UT,Utah,1966,0.0,0.0,100.0
+UT,Utah,1968,0.0,0.0,100.0
+UT,Utah,1970,50.0,0.0,50.0
+UT,Utah,1972,100.0,0.0,0.0
+UT,Utah,1974,100.0,0.0,0.0
+UT,Utah,1976,50.0,0.0,50.0
+UT,Utah,1978,50.0,0.0,50.0
+UT,Utah,1980,0.0,0.0,100.0
+UT,Utah,1982,0.0,0.0,100.0
+UT,Utah,1984,0.0,0.0,100.0
+UT,Utah,1986,33.33,0.0,66.67
+UT,Utah,1988,33.33,0.0,66.67
+UT,Utah,1990,66.67,0.0,33.33
+UT,Utah,1992,66.67,0.0,33.33
+UT,Utah,1994,33.33,0.0,66.67
+UT,Utah,1996,0.0,0.0,100.0
+UT,Utah,1998,0.0,0.0,100.0
+UT,Utah,2000,33.33,0.0,66.67
+UT,Utah,2002,33.33,0.0,66.67
+UT,Utah,2004,33.33,0.0,66.67
+UT,Utah,2006,33.33,0.0,66.67
+UT,Utah,2008,33.33,0.0,66.67
+UT,Utah,2010,33.33,0.0,66.67
+UT,Utah,2012,25.0,0.0,75.0
+UT,Utah,2014,0.0,0.0,100.0
+UT,Utah,2016,0.0,0.0,100.0
+UT,Utah,2018,25.0,0.0,75.0
+UT,Utah,2020,0.0,0.0,100.0
+UT,Utah,2022,0.0,0.0,100.0
+UT,Utah,2024,0.0,0.0,100.0
+VA,Virginia,1900,100.0,0.0,0.0
+VA,Virginia,1902,90.0,0.0,10.0
+VA,Virginia,1904,90.0,0.0,10.0
+VA,Virginia,1906,90.0,0.0,10.0
+VA,Virginia,1908,90.0,0.0,10.0
+VA,Virginia,1910,90.0,0.0,10.0
+VA,Virginia,1912,90.0,0.0,10.0
+VA,Virginia,1914,90.0,0.0,10.0
+VA,Virginia,1916,90.0,0.0,10.0
+VA,Virginia,1918,90.0,0.0,10.0
+VA,Virginia,1920,90.0,0.0,10.0
+VA,Virginia,1922,100.0,0.0,0.0
+VA,Virginia,1924,100.0,0.0,0.0
+VA,Virginia,1926,100.0,0.0,0.0
+VA,Virginia,1928,70.0,0.0,30.0
+VA,Virginia,1930,90.0,0.0,10.0
+VA,Virginia,1932,100.0,0.0,0.0
+VA,Virginia,1934,100.0,0.0,0.0
+VA,Virginia,1936,100.0,0.0,0.0
+VA,Virginia,1938,100.0,0.0,0.0
+VA,Virginia,1940,100.0,0.0,0.0
+VA,Virginia,1942,100.0,0.0,0.0
+VA,Virginia,1944,100.0,0.0,0.0
+VA,Virginia,1946,100.0,0.0,0.0
+VA,Virginia,1948,100.0,0.0,0.0
+VA,Virginia,1950,100.0,0.0,0.0
+VA,Virginia,1952,70.0,0.0,30.0
+VA,Virginia,1954,80.0,0.0,20.0
+VA,Virginia,1956,80.0,0.0,20.0
+VA,Virginia,1958,80.0,0.0,20.0
+VA,Virginia,1960,80.0,0.0,20.0
+VA,Virginia,1962,80.0,0.0,20.0
+VA,Virginia,1964,80.0,0.0,20.0
+VA,Virginia,1966,60.0,0.0,40.0
+VA,Virginia,1968,50.0,0.0,50.0
+VA,Virginia,1970,40.0,0.0,60.0
+VA,Virginia,1972,30.0,0.0,70.0
+VA,Virginia,1974,50.0,0.0,50.0
+VA,Virginia,1976,40.0,0.0,60.0
+VA,Virginia,1978,40.0,0.0,60.0
+VA,Virginia,1980,10.0,0.0,90.0
+VA,Virginia,1982,40.0,0.0,60.0
+VA,Virginia,1984,40.0,0.0,60.0
+VA,Virginia,1986,50.0,0.0,50.0
+VA,Virginia,1988,50.0,0.0,50.0
+VA,Virginia,1990,54.55,0.0,45.45
+VA,Virginia,1992,63.64,0.0,36.36
+VA,Virginia,1994,54.55,0.0,45.45
+VA,Virginia,1996,54.55,0.0,45.45
+VA,Virginia,1998,50.0,8.33,41.67
+VA,Virginia,2000,33.33,8.33,58.33
+VA,Virginia,2002,27.27,0.0,72.73
+VA,Virginia,2004,27.27,0.0,72.73
+VA,Virginia,2006,27.27,0.0,72.73
+VA,Virginia,2008,54.55,0.0,45.45
+VA,Virginia,2010,27.27,0.0,72.73
+VA,Virginia,2012,27.27,0.0,72.73
+VA,Virginia,2014,27.27,0.0,72.73
+VA,Virginia,2016,36.36,0.0,63.64
+VA,Virginia,2018,63.64,0.0,36.36
+VA,Virginia,2020,63.64,0.0,36.36
+VA,Virginia,2022,54.55,0.0,45.45
+VA,Virginia,2024,54.55,0.0,45.45
+VT,Vermont,1900,0.0,0.0,100.0
+VT,Vermont,1902,0.0,0.0,100.0
+VT,Vermont,1904,0.0,0.0,100.0
+VT,Vermont,1906,0.0,0.0,100.0
+VT,Vermont,1908,0.0,0.0,100.0
+VT,Vermont,1910,0.0,0.0,100.0
+VT,Vermont,1912,0.0,0.0,100.0
+VT,Vermont,1914,0.0,0.0,100.0
+VT,Vermont,1916,0.0,0.0,100.0
+VT,Vermont,1918,0.0,0.0,100.0
+VT,Vermont,1920,0.0,0.0,100.0
+VT,Vermont,1922,0.0,0.0,100.0
+VT,Vermont,1924,0.0,0.0,100.0
+VT,Vermont,1926,0.0,0.0,100.0
+VT,Vermont,1928,0.0,0.0,100.0
+VT,Vermont,1930,0.0,0.0,100.0
+VT,Vermont,1932,0.0,0.0,100.0
+VT,Vermont,1934,0.0,0.0,100.0
+VT,Vermont,1936,0.0,0.0,100.0
+VT,Vermont,1938,0.0,0.0,100.0
+VT,Vermont,1940,0.0,0.0,100.0
+VT,Vermont,1942,0.0,0.0,100.0
+VT,Vermont,1944,0.0,0.0,100.0
+VT,Vermont,1946,0.0,0.0,100.0
+VT,Vermont,1948,0.0,0.0,100.0
+VT,Vermont,1950,0.0,0.0,100.0
+VT,Vermont,1952,0.0,0.0,100.0
+VT,Vermont,1954,0.0,0.0,100.0
+VT,Vermont,1956,0.0,0.0,100.0
+VT,Vermont,1958,100.0,0.0,0.0
+VT,Vermont,1960,0.0,0.0,100.0
+VT,Vermont,1962,0.0,0.0,100.0
+VT,Vermont,1964,0.0,0.0,100.0
+VT,Vermont,1966,0.0,0.0,100.0
+VT,Vermont,1968,0.0,0.0,100.0
+VT,Vermont,1970,0.0,0.0,100.0
+VT,Vermont,1972,0.0,0.0,100.0
+VT,Vermont,1974,0.0,0.0,100.0
+VT,Vermont,1976,0.0,0.0,100.0
+VT,Vermont,1978,0.0,0.0,100.0
+VT,Vermont,1980,0.0,0.0,100.0
+VT,Vermont,1982,0.0,0.0,100.0
+VT,Vermont,1984,0.0,0.0,100.0
+VT,Vermont,1986,0.0,0.0,100.0
+VT,Vermont,1988,0.0,0.0,100.0
+VT,Vermont,1990,0.0,100.0,0.0
+VT,Vermont,1992,0.0,100.0,0.0
+VT,Vermont,1994,0.0,100.0,0.0
+VT,Vermont,1996,0.0,100.0,0.0
+VT,Vermont,1998,0.0,100.0,0.0
+VT,Vermont,2000,0.0,100.0,0.0
+VT,Vermont,2002,0.0,100.0,0.0
+VT,Vermont,2004,0.0,100.0,0.0
+VT,Vermont,2006,100.0,0.0,0.0
+VT,Vermont,2008,100.0,0.0,0.0
+VT,Vermont,2010,100.0,0.0,0.0
+VT,Vermont,2012,100.0,0.0,0.0
+VT,Vermont,2014,100.0,0.0,0.0
+VT,Vermont,2016,100.0,0.0,0.0
+VT,Vermont,2018,100.0,0.0,0.0
+VT,Vermont,2020,100.0,0.0,0.0
+VT,Vermont,2022,100.0,0.0,0.0
+VT,Vermont,2024,100.0,0.0,0.0
+WA,Washington,1900,0.0,0.0,100.0
+WA,Washington,1902,0.0,0.0,100.0
+WA,Washington,1904,0.0,0.0,100.0
+WA,Washington,1906,0.0,0.0,100.0
+WA,Washington,1908,0.0,0.0,100.0
+WA,Washington,1910,0.0,0.0,100.0
+WA,Washington,1912,0.0,40.0,60.0
+WA,Washington,1914,20.0,0.0,80.0
+WA,Washington,1916,20.0,0.0,80.0
+WA,Washington,1918,0.0,0.0,100.0
+WA,Washington,1920,0.0,0.0,100.0
+WA,Washington,1922,20.0,0.0,80.0
+WA,Washington,1924,20.0,0.0,80.0
+WA,Washington,1926,20.0,0.0,80.0
+WA,Washington,1928,20.0,0.0,80.0
+WA,Washington,1930,20.0,0.0,80.0
+WA,Washington,1932,100.0,0.0,0.0
+WA,Washington,1934,100.0,0.0,0.0
+WA,Washington,1936,100.0,0.0,0.0
+WA,Washington,1938,100.0,0.0,0.0
+WA,Washington,1940,100.0,0.0,0.0
+WA,Washington,1942,50.0,0.0,50.0
+WA,Washington,1944,66.67,0.0,33.33
+WA,Washington,1946,16.67,0.0,83.33
+WA,Washington,1948,33.33,0.0,66.67
+WA,Washington,1950,33.33,0.0,66.67
+WA,Washington,1952,14.29,0.0,85.71
+WA,Washington,1954,14.29,0.0,85.71
+WA,Washington,1956,14.29,0.0,85.71
+WA,Washington,1958,14.29,0.0,85.71
+WA,Washington,1960,28.57,0.0,71.43
+WA,Washington,1962,14.29,0.0,85.71
+WA,Washington,1964,71.43,0.0,28.57
+WA,Washington,1966,71.43,0.0,28.57
+WA,Washington,1968,71.43,0.0,28.57
+WA,Washington,1970,85.71,0.0,14.29
+WA,Washington,1972,85.71,0.0,14.29
+WA,Washington,1974,85.71,0.0,14.29
+WA,Washington,1976,85.71,0.0,14.29
+WA,Washington,1978,85.71,0.0,14.29
+WA,Washington,1980,71.43,0.0,28.57
+WA,Washington,1982,62.5,0.0,37.5
+WA,Washington,1984,62.5,0.0,37.5
+WA,Washington,1986,62.5,0.0,37.5
+WA,Washington,1988,62.5,0.0,37.5
+WA,Washington,1990,62.5,0.0,37.5
+WA,Washington,1992,88.89,0.0,11.11
+WA,Washington,1994,22.22,0.0,77.78
+WA,Washington,1996,33.33,0.0,66.67
+WA,Washington,1998,55.56,0.0,44.44
+WA,Washington,2000,66.67,0.0,33.33
+WA,Washington,2002,66.67,0.0,33.33
+WA,Washington,2004,66.67,0.0,33.33
+WA,Washington,2006,66.67,0.0,33.33
+WA,Washington,2008,66.67,0.0,33.33
+WA,Washington,2010,55.56,0.0,44.44
+WA,Washington,2012,60.0,0.0,40.0
+WA,Washington,2014,60.0,0.0,40.0
+WA,Washington,2016,60.0,0.0,40.0
+WA,Washington,2018,70.0,0.0,30.0
+WA,Washington,2020,70.0,0.0,30.0
+WA,Washington,2022,80.0,0.0,20.0
+WA,Washington,2024,80.0,0.0,20.0
+WI,Wisconsin,1900,0.0,0.0,100.0
+WI,Wisconsin,1902,9.09,0.0,90.91
+WI,Wisconsin,1904,9.09,0.0,90.91
+WI,Wisconsin,1906,18.18,0.0,81.82
+WI,Wisconsin,1908,9.09,0.0,90.91
+WI,Wisconsin,1910,18.18,9.09,72.73
+WI,Wisconsin,1912,27.27,0.0,72.73
+WI,Wisconsin,1914,27.27,0.0,72.73
+WI,Wisconsin,1916,0.0,0.0,100.0
+WI,Wisconsin,1918,0.0,0.0,100.0
+WI,Wisconsin,1920,0.0,0.0,100.0
+WI,Wisconsin,1922,0.0,9.09,90.91
+WI,Wisconsin,1924,0.0,9.09,90.91
+WI,Wisconsin,1926,0.0,9.09,90.91
+WI,Wisconsin,1928,0.0,0.0,100.0
+WI,Wisconsin,1930,9.09,0.0,90.91
+WI,Wisconsin,1932,50.0,0.0,50.0
+WI,Wisconsin,1934,30.0,70.0,0.0
+WI,Wisconsin,1936,30.0,70.0,0.0
+WI,Wisconsin,1938,0.0,20.0,80.0
+WI,Wisconsin,1940,10.0,30.0,60.0
+WI,Wisconsin,1942,30.0,20.0,50.0
+WI,Wisconsin,1944,20.0,10.0,70.0
+WI,Wisconsin,1946,0.0,0.0,100.0
+WI,Wisconsin,1948,20.0,0.0,80.0
+WI,Wisconsin,1950,10.0,0.0,90.0
+WI,Wisconsin,1952,10.0,0.0,90.0
+WI,Wisconsin,1954,30.0,0.0,70.0
+WI,Wisconsin,1956,30.0,0.0,70.0
+WI,Wisconsin,1958,50.0,0.0,50.0
+WI,Wisconsin,1960,40.0,0.0,60.0
+WI,Wisconsin,1962,40.0,0.0,60.0
+WI,Wisconsin,1964,50.0,0.0,50.0
+WI,Wisconsin,1966,30.0,0.0,70.0
+WI,Wisconsin,1968,30.0,0.0,70.0
+WI,Wisconsin,1970,50.0,0.0,50.0
+WI,Wisconsin,1972,55.56,0.0,44.44
+WI,Wisconsin,1974,77.78,0.0,22.22
+WI,Wisconsin,1976,77.78,0.0,22.22
+WI,Wisconsin,1978,60.0,0.0,40.0
+WI,Wisconsin,1980,55.56,0.0,44.44
+WI,Wisconsin,1982,55.56,0.0,44.44
+WI,Wisconsin,1984,55.56,0.0,44.44
+WI,Wisconsin,1986,55.56,0.0,44.44
+WI,Wisconsin,1988,55.56,0.0,44.44
+WI,Wisconsin,1990,44.44,0.0,55.56
+WI,Wisconsin,1992,50.0,0.0,50.0
+WI,Wisconsin,1994,33.33,0.0,66.67
+WI,Wisconsin,1996,55.56,0.0,44.44
+WI,Wisconsin,1998,55.56,0.0,44.44
+WI,Wisconsin,2000,55.56,0.0,44.44
+WI,Wisconsin,2002,50.0,0.0,50.0
+WI,Wisconsin,2004,50.0,0.0,50.0
+WI,Wisconsin,2006,62.5,0.0,37.5
+WI,Wisconsin,2008,62.5,0.0,37.5
+WI,Wisconsin,2010,37.5,0.0,62.5
+WI,Wisconsin,2012,37.5,0.0,62.5
+WI,Wisconsin,2014,37.5,0.0,62.5
+WI,Wisconsin,2016,37.5,0.0,62.5
+WI,Wisconsin,2018,37.5,0.0,62.5
+WI,Wisconsin,2020,37.5,0.0,62.5
+WI,Wisconsin,2022,25.0,0.0,75.0
+WI,Wisconsin,2024,25.0,0.0,75.0
+WV,West Virginia,1900,0.0,0.0,100.0
+WV,West Virginia,1902,0.0,0.0,100.0
+WV,West Virginia,1904,0.0,0.0,100.0
+WV,West Virginia,1906,0.0,0.0,100.0
+WV,West Virginia,1908,0.0,0.0,100.0
+WV,West Virginia,1910,80.0,0.0,20.0
+WV,West Virginia,1912,33.33,0.0,66.67
+WV,West Virginia,1914,50.0,0.0,50.0
+WV,West Virginia,1916,33.33,0.0,66.67
+WV,West Virginia,1918,16.67,0.0,83.33
+WV,West Virginia,1920,0.0,0.0,100.0
+WV,West Virginia,1922,66.67,0.0,33.33
+WV,West Virginia,1924,16.67,0.0,83.33
+WV,West Virginia,1926,16.67,0.0,83.33
+WV,West Virginia,1928,16.67,0.0,83.33
+WV,West Virginia,1930,33.33,0.0,66.67
+WV,West Virginia,1932,100.0,0.0,0.0
+WV,West Virginia,1934,100.0,0.0,0.0
+WV,West Virginia,1936,100.0,0.0,0.0
+WV,West Virginia,1938,83.33,0.0,16.67
+WV,West Virginia,1940,100.0,0.0,0.0
+WV,West Virginia,1942,50.0,0.0,50.0
+WV,West Virginia,1944,83.33,0.0,16.67
+WV,West Virginia,1946,33.33,0.0,66.67
+WV,West Virginia,1948,100.0,0.0,0.0
+WV,West Virginia,1950,100.0,0.0,0.0
+WV,West Virginia,1952,83.33,0.0,16.67
+WV,West Virginia,1954,100.0,0.0,0.0
+WV,West Virginia,1956,66.67,0.0,33.33
+WV,West Virginia,1958,83.33,0.0,16.67
+WV,West Virginia,1960,83.33,0.0,16.67
+WV,West Virginia,1962,80.0,0.0,20.0
+WV,West Virginia,1964,80.0,0.0,20.0
+WV,West Virginia,1966,80.0,0.0,20.0
+WV,West Virginia,1968,100.0,0.0,0.0
+WV,West Virginia,1970,100.0,0.0,0.0
+WV,West Virginia,1972,100.0,0.0,0.0
+WV,West Virginia,1974,100.0,0.0,0.0
+WV,West Virginia,1976,100.0,0.0,0.0
+WV,West Virginia,1978,100.0,0.0,0.0
+WV,West Virginia,1980,50.0,0.0,50.0
+WV,West Virginia,1982,100.0,0.0,0.0
+WV,West Virginia,1984,100.0,0.0,0.0
+WV,West Virginia,1986,100.0,0.0,0.0
+WV,West Virginia,1988,100.0,0.0,0.0
+WV,West Virginia,1990,100.0,0.0,0.0
+WV,West Virginia,1992,100.0,0.0,0.0
+WV,West Virginia,1994,100.0,0.0,0.0
+WV,West Virginia,1996,100.0,0.0,0.0
+WV,West Virginia,1998,100.0,0.0,0.0
+WV,West Virginia,2000,66.67,0.0,33.33
+WV,West Virginia,2002,66.67,0.0,33.33
+WV,West Virginia,2004,66.67,0.0,33.33
+WV,West Virginia,2006,66.67,0.0,33.33
+WV,West Virginia,2008,66.67,0.0,33.33
+WV,West Virginia,2010,33.33,0.0,66.67
+WV,West Virginia,2012,33.33,0.0,66.67
+WV,West Virginia,2014,0.0,0.0,100.0
+WV,West Virginia,2016,0.0,0.0,100.0
+WV,West Virginia,2018,0.0,0.0,100.0
+WV,West Virginia,2020,0.0,0.0,100.0
+WV,West Virginia,2022,0.0,0.0,100.0
+WV,West Virginia,2024,0.0,0.0,100.0
+WY,Wyoming,1900,0.0,0.0,100.0
+WY,Wyoming,1902,0.0,0.0,100.0
+WY,Wyoming,1904,0.0,0.0,100.0
+WY,Wyoming,1906,0.0,0.0,100.0
+WY,Wyoming,1908,0.0,0.0,100.0
+WY,Wyoming,1910,0.0,0.0,100.0
+WY,Wyoming,1912,0.0,0.0,100.0
+WY,Wyoming,1914,0.0,0.0,100.0
+WY,Wyoming,1916,0.0,0.0,100.0
+WY,Wyoming,1918,0.0,0.0,100.0
+WY,Wyoming,1920,0.0,0.0,100.0
+WY,Wyoming,1924,0.0,0.0,100.0
+WY,Wyoming,1926,0.0,0.0,100.0
+WY,Wyoming,1928,0.0,0.0,100.0
+WY,Wyoming,1930,0.0,0.0,100.0
+WY,Wyoming,1932,0.0,0.0,100.0
+WY,Wyoming,1934,100.0,0.0,0.0
+WY,Wyoming,1936,100.0,0.0,0.0
+WY,Wyoming,1938,0.0,0.0,100.0
+WY,Wyoming,1940,100.0,0.0,0.0
+WY,Wyoming,1942,0.0,0.0,100.0
+WY,Wyoming,1944,0.0,0.0,100.0
+WY,Wyoming,1946,0.0,0.0,100.0
+WY,Wyoming,1948,0.0,0.0,100.0
+WY,Wyoming,1950,0.0,0.0,100.0
+WY,Wyoming,1952,0.0,0.0,100.0
+WY,Wyoming,1954,0.0,0.0,100.0
+WY,Wyoming,1956,0.0,0.0,100.0
+WY,Wyoming,1958,0.0,0.0,100.0
+WY,Wyoming,1960,0.0,0.0,100.0
+WY,Wyoming,1962,0.0,0.0,100.0
+WY,Wyoming,1964,100.0,0.0,0.0
+WY,Wyoming,1966,0.0,0.0,100.0
+WY,Wyoming,1968,0.0,0.0,100.0
+WY,Wyoming,1970,100.0,0.0,0.0
+WY,Wyoming,1972,100.0,0.0,0.0
+WY,Wyoming,1974,100.0,0.0,0.0
+WY,Wyoming,1976,100.0,0.0,0.0
+WY,Wyoming,1978,0.0,0.0,100.0
+WY,Wyoming,1980,0.0,0.0,100.0
+WY,Wyoming,1982,0.0,0.0,100.0
+WY,Wyoming,1984,0.0,0.0,100.0
+WY,Wyoming,1986,0.0,0.0,100.0
+WY,Wyoming,1988,0.0,0.0,100.0
+WY,Wyoming,1990,0.0,0.0,100.0
+WY,Wyoming,1992,0.0,0.0,100.0
+WY,Wyoming,1994,0.0,0.0,100.0
+WY,Wyoming,1996,0.0,0.0,100.0
+WY,Wyoming,1998,0.0,0.0,100.0
+WY,Wyoming,2000,0.0,0.0,100.0
+WY,Wyoming,2002,0.0,0.0,100.0
+WY,Wyoming,2004,0.0,0.0,100.0
+WY,Wyoming,2006,0.0,0.0,100.0
+WY,Wyoming,2008,0.0,0.0,100.0
+WY,Wyoming,2010,0.0,0.0,100.0
+WY,Wyoming,2012,0.0,0.0,100.0
+WY,Wyoming,2014,0.0,0.0,100.0
+WY,Wyoming,2016,0.0,0.0,100.0
+WY,Wyoming,2018,0.0,0.0,100.0
+WY,Wyoming,2020,0.0,0.0,100.0
+WY,Wyoming,2022,0.0,0.0,100.0
+WY,Wyoming,2024,0.0,0.0,100.0

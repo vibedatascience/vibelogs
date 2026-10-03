@@ -3,7 +3,8 @@
     "Politics",
     "Energy",
     "Money",
-    "Work"
+    "Work",
+    "People"
   ],
   "maps": [
     {
@@ -25,6 +26,21 @@
       "short_source": "Wikipedia, MIT Election Lab",
       "years": "1900-2024",
       "chart": "margin"
+    },
+    {
+      "slug": "house",
+      "topic": "Politics",
+      "title": "Who holds each state's House seats?",
+      "caption": "Share of each state's House members by party after every election. Georgia sent 11 Democrats and no Republicans in 1900 and 9 Republicans to 5 Democrats in 2024. Texas went from 21 of 22 seats Democratic in 1960 to 25 of 38 Republican. Massachusetts went the other way: 10 of 13 Republican in 1900, all 9 Democratic in 2024.",
+      "note": "Light blue is third parties: Wisconsin Progressives and Minnesota Farmer-Labor in the 1930s, and Bernie Sanders in Vermont from 1990. Members who joined mid-term are not counted. DC's non-voting delegate is excluded.",
+      "sources": [
+        [
+          "Voteview, Congressional Roll-Call Votes Database (House members)",
+          "https://voteview.com/data"
+        ]
+      ],
+      "short_source": "Voteview",
+      "years": "1900-2024"
     },
     {
       "slug": "electricity",
@@ -72,6 +88,21 @@
       "years": "1942-2025"
     },
     {
+      "slug": "income",
+      "topic": "Money",
+      "title": "Where does the money come from?",
+      "caption": "Personal income by source. Government benefits were 2% of income in most states in 1929. They are 31% in West Virginia and 28% in Mississippi today. Florida gets 32% of its income from dividends, interest and rent.",
+      "note": "Work = net earnings by place of residence. Benefits = personal current transfer receipts (Social Security, Medicare, Medicaid and others).",
+      "sources": [
+        [
+          "BEA, SAINC4 personal income by major component",
+          "https://apps.bea.gov/regional/downloadzip.htm"
+        ]
+      ],
+      "short_source": "BEA",
+      "years": "1929-2025"
+    },
+    {
       "slug": "earnings",
       "topic": "Work",
       "title": "How does each state earn a living?",
@@ -102,19 +133,72 @@
       "years": "1929-2025"
     },
     {
-      "slug": "income",
-      "topic": "Money",
-      "title": "Where does the money come from?",
-      "caption": "Personal income by source. Government benefits were 2% of income in most states in 1929. They are 31% in West Virginia and 28% in Mississippi today. Florida gets 32% of its income from dividends, interest and rent.",
-      "note": "Work = net earnings by place of residence. Benefits = personal current transfer receipts (Social Security, Medicare, Medicaid and others).",
+      "slug": "economy",
+      "topic": "Work",
+      "title": "What does each state produce?",
+      "caption": "GDP by industry. Mining, oil and gas made up 49% of Wyoming's GDP and 50% of Alaska's in 1981, and 12% and 14% in 2025. North Dakota's share went from 2% in 1999 to 20% in 2014 with the Bakken boom. Manufacturing was 48% of Michigan's GDP in 1963 and 15% in 2025.",
+      "note": "Current-dollar GDP. Industry definitions change from SIC to NAICS in 1997. A few suppressed values are interpolated.",
       "sources": [
         [
-          "BEA, SAINC4 personal income by major component",
+          "BEA, GDP by state and industry (SAGDP2, SAGDP2S)",
           "https://apps.bea.gov/regional/downloadzip.htm"
         ]
       ],
       "short_source": "BEA",
-      "years": "1929-2025"
+      "years": "1963-2025"
+    },
+    {
+      "slug": "homeownership",
+      "topic": "People",
+      "title": "Do people own or rent their homes?",
+      "caption": "Share of homes lived in by their owners. Ownership fell in 39 of 49 states between 1930 and 1940, then rose sharply after the war: Georgia went from 31% in 1940 to 56% in 1960. New York climbed from 30% in 1940 to 52%. DC is still mostly renters at 40%, and West Virginia leads at 78%.",
+      "note": "1900-2000 from the decennial census; 2005-2025 are annual averages of the quarterly Housing Vacancies and Homeownership Survey, so the two series are not strictly comparable.",
+      "sources": [
+        [
+          "Census Bureau, historical census homeownership rates",
+          "https://www.census.gov/data/tables/time-series/dec/coh-owner.html"
+        ],
+        [
+          "Census Bureau, HVS homeownership rates by state",
+          "https://www.census.gov/housing/hvs/data/rates.html"
+        ]
+      ],
+      "short_source": "Census Bureau",
+      "years": "1900-2025"
+    },
+    {
+      "slug": "age",
+      "topic": "People",
+      "title": "How old is each state?",
+      "caption": "Residents by age. In the median state, under-18s fell from 35% of residents in 1970 to 22% in 2024. Maine is now the oldest state, with 24% aged 65 and over. Alaska went from 2% to 15%. Utah stays the youngest: 27% of its residents are children.",
+      "note": "July 1 estimates each year; 1980 is not estimated. Before 1990 the 15-19 group is split 3:2 to estimate under-18s. From 2010 the estimates count civilians only.",
+      "sources": [
+        [
+          "Census Bureau, population estimates by age",
+          "https://www2.census.gov/programs-surveys/popest/"
+        ]
+      ],
+      "short_source": "Census Bureau",
+      "years": "1970-2024"
+    },
+    {
+      "slug": "urban",
+      "topic": "People",
+      "title": "City or country?",
+      "caption": "Share of residents living in urban areas at each census. North Dakota was 7% urban in 1900 and 61% in 2020. Nevada went from 17% to 94%. Vermont and Maine are still mostly rural, at 35% and 39% urban.",
+      "note": "2000 is not included. The 2020 Census changed the urban definition (areas with at least 5,000 people or 2,000 homes), which lowers some states slightly.",
+      "sources": [
+        [
+          "Census Bureau, Urban and Rural Population: 1900 to 1990",
+          "https://www.census.gov/population/censusdata/urpop0090.txt"
+        ],
+        [
+          "Census Bureau, state urban and rural population 2010 and 2020",
+          "https://www.census.gov/programs-surveys/geography/guidance/geo-areas/urban-rural.html"
+        ]
+      ],
+      "short_source": "Census Bureau",
+      "years": "1900-2020"
     }
   ]
 }
