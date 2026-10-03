@@ -72,3 +72,4 @@ footer a{color:var(--grey)}
   .search{width:100%}
   svg.grid .lbl{font-size:32px}
 }
+svg.grid .halo{paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round;opacity:1}

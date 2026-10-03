@@ -22,7 +22,7 @@ open('catalog.json', 'a').write('\n')
 
 FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com">\n'
          '<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@700&family=Roboto+Condensed:wght@400;600;700&display=swap" rel="stylesheet">')
-FOOT = ('<footer>Each tile is one state; the bands are shares of that state\'s total and time runs left to right. '
+FOOT = ('<footer>Each tile is one state, and time runs left to right. '
         'Gray means no data. Style after 1POINT21 Interactive\'s "Where are Americans born?". '
         '<a href="https://github.com/vibedatascience/vibelogs/tree/main/state-tiles/src">Code</a></footer>')
 

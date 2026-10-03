@@ -73,7 +73,7 @@
     else { $('more').hidden = true; }
 
     getJSON(root + 'data/' + slug + '.json').then(function (set) {
-      $('years').textContent = years(m, set);
+      $('years').textContent = years(m, set) + (set.type === 'margin' ? " \u00b7 winner's lead over the runner-up, up to 60 points" : '');
       var lg = '';
       for (var k = 2; k >= 0; k--) lg += '<span style="color:' + COL[k] + '">' + esc(set.labels[k]) + '</span>';
       $('legend').innerHTML = lg;
@@ -86,11 +86,42 @@
     var yrs = set.years, y0 = yrs[0], y1 = yrs[yrs.length - 1], cross, sel;
     svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
     function el(tag, a) { var e = document.createElementNS(NS, tag); for (var k in a) e.setAttribute(k, a[k]); return e; }
+    function marginTile(g, rows, X) {
+      var cap = set.cap || 60, mid = T / 2, pts = [], first = null, step = X(yrs[1]) - X(yrs[0]);
+      for (var i = 0; i < yrs.length; i++) {
+        var r = rows[i]; if (!r) continue;
+        if (first === null) first = X(yrs[i]);
+        pts.push([X(yrs[i]), Math.max(-cap, Math.min(cap, r[0]))]);
+      }
+      if (first === null) return;
+      g.appendChild(el('rect', { x: first, y: 0, width: T - first, height: T, fill: '#ffffff' }));
+      var P = [pts[0]];   // add a point wherever the line crosses zero
+      for (var k = 1; k < pts.length; k++) {
+        var a = pts[k - 1], b = pts[k];
+        if (a[1] * b[1] < 0) { var t = a[1] / (a[1] - b[1]); P.push([a[0] + t * (b[0] - a[0]), 0]); }
+        P.push(b);
+      }
+      function area(sign, color) {
+        var d = 'M' + P[0][0] + ',' + mid;
+        P.forEach(function (p) { var v = sign > 0 ? Math.max(0, p[1]) : Math.min(0, p[1]); d += ' L' + p[0] + ',' + (mid - v / cap * mid); });
+        d += ' L' + P[P.length - 1][0] + ',' + mid + 'Z';
+        g.appendChild(el('path', { d: d, fill: color }));
+      }
+      area(1, COL[2]); area(-1, COL[0]);
+      for (var i2 = 0; i2 < yrs.length; i2++) {
+        var r2 = rows[i2]; if (!r2 || r2[1] !== 'O') continue;
+        var hh = Math.max(Math.min(r2[3] - r2[6], cap) / cap * mid, 2);
+        g.appendChild(el('rect', { x: X(yrs[i2]) - step * 0.45, y: mid - hh / 2, width: step * 0.9, height: hh, fill: COL[1] }));
+      }
+      g.appendChild(el('line', { x1: first, x2: T, y1: mid, y2: mid, stroke: '#111', 'stroke-width': 0.7, 'stroke-opacity': 0.55 }));
+    }
     Object.keys(G).forEach(function (st) {
       var c = G[st], rows = set.s[st] || [];
       var g = el('g', { transform: 'translate(' + c[0] * STEP + ',' + c[1] * STEP + ')' });
       g.appendChild(el('rect', { x: 0, y: 0, width: T, height: T, fill: '#efefef' }));
       var X = function (yr) { return (yr - y0) / (y1 - y0) * T; };
+      if (set.type === 'margin') { marginTile(g, rows, X); }
+      else {
       var seg = [], segs = [];
       for (var i = 0; i < yrs.length; i++) { var r = rows[i]; if (r && r[0] != null) seg.push(i); else if (seg.length) { segs.push(seg); seg = []; } }
       if (seg.length) segs.push(seg);
@@ -107,7 +138,8 @@
         g.appendChild(el('path', { d: mid, fill: COL[1] }));
         g.appendChild(el('path', { d: bot, fill: COL[0] }));
       });
-      var t = el('text', { x: T - 6, y: T - 7, 'text-anchor': 'end', 'class': 'lbl' }); t.textContent = st; g.appendChild(t);
+      }
+      var t = el('text', { x: T - 6, y: T - 7, 'text-anchor': 'end', 'class': set.type === 'margin' ? 'lbl halo' : 'lbl' }); t.textContent = st; g.appendChild(t);
       var hit = el('rect', { x: 0, y: 0, width: T, height: T, 'class': 'hit' }); hit.setAttribute('data-st', st); g.appendChild(hit);
       svg.appendChild(g);
     });
@@ -124,7 +156,13 @@
       cross.setAttribute('x1', x); cross.setAttribute('x2', x); cross.setAttribute('y1', c[1] * STEP); cross.setAttribute('y2', c[1] * STEP + T); cross.setAttribute('visibility', 'visible');
       sel.setAttribute('x', c[0] * STEP); sel.setAttribute('y', c[1] * STEP); sel.setAttribute('visibility', 'visible');
       var r = rows[best], h = '<b>' + esc(set.names[st]) + ', ' + yrs[best] + '</b>';
-      if (!r || r[0] == null) h += ' <span class="hint">no data</span>';
+      var PC = { D: COL[0], O: COL[1], R: COL[2] }, PL = { D: 'D', O: '3rd', R: 'R' };
+      if (set.type === 'margin' && r) {
+        h += '<span class="v"><i style="background:' + PC[r[1]] + '"></i>' + esc(r[2]) + ' (' + PL[r[1]] + ') ' + r[3].toFixed(1) + '%</span>' +
+             '<span class="v"><i style="background:' + PC[r[5]] + '"></i>' + esc(r[4]) + ' (' + PL[r[5]] + ') ' + r[6].toFixed(1) + '%</span>' +
+             '<span class="v">lead ' + (r[3] - r[6]).toFixed(1) + ' pts</span>';
+      }
+      else if (!r || r[0] == null) h += ' <span class="hint">no data</span>';
       else {
         var v = [r[0], r[1], Math.max(0, 100 - r[0] - r[1])];
         for (var k = 2; k >= 0; k--) h += '<span class="v"><i style="background:' + COL[k] + '"></i>' + esc(set.labels[k]) + ' ' + fmt(v[k]) + '</span>';

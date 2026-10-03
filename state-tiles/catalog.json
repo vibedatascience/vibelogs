@@ -9,12 +9,12 @@
     {
       "slug": "president",
       "topic": "Politics",
-      "title": "How did each state vote?",
-      "caption": "Popular vote share for president. Mississippi voted 97% Democratic in 1936 and 87% Republican in 1964. Vermont gave Republicans 78% in 1856 and Democrats 63% in 2024.",
-      "note": "Gray covers years before statehood and the Civil War elections the seceded states sat out. In 1860 the Southern Democrats (Breckinridge) count as a third party; 1872 counts Greeley as the Democrat. Results before 1976 agree with the pscl and cluster R datasets to within a point for most states.",
+      "title": "Who won each state, and by how much?",
+      "caption": "The winner's lead over the runner-up in every presidential election. Republican leads rise above the zero line and Democratic leads fall below it. Mississippi went from Roosevelt by 94 points in 1936 to Goldwater by 74 in 1964. Vermont went from Roosevelt (R) by 59 in 1904 to Harris by 31 in 2024.",
+      "note": "Light-blue bands on the zero line are third-party wins: Roosevelt's Bull Moose in 1912, La Follette in 1924, Thurmond in 1948 and Wallace in 1968. Leads over 60 points reach the tile edge. Alabama 1960 counts the Democratic slate of Kennedy and unpledged electors once.",
       "sources": [
         [
-          "Wikipedia state results tables, 1856-1972",
+          "Wikipedia state results tables, 1900-1972",
           "https://en.wikipedia.org/wiki/1860_United_States_presidential_election#Results_by_state"
         ],
         [
@@ -23,7 +23,8 @@
         ]
       ],
       "short_source": "Wikipedia, MIT Election Lab",
-      "years": "1856-2024"
+      "years": "1900-2024",
+      "chart": "margin"
     },
     {
       "slug": "electricity",
