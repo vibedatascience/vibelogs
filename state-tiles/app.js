@@ -89,7 +89,7 @@
     Object.keys(G).forEach(function (st) {
       var c = G[st], rows = set.s[st] || [];
       var g = el('g', { transform: 'translate(' + c[0] * STEP + ',' + c[1] * STEP + ')' });
-      g.appendChild(el('rect', { x: 0, y: 0, width: T, height: T, fill: '#dddddd' }));
+      g.appendChild(el('rect', { x: 0, y: 0, width: T, height: T, fill: '#efefef' }));
       var X = function (yr) { return (yr - y0) / (y1 - y0) * T; };
       var seg = [], segs = [];
       for (var i = 0; i < yrs.length; i++) { var r = rows[i]; if (r && r[0] != null) seg.push(i); else if (seg.length) { segs.push(seg); seg = []; } }
