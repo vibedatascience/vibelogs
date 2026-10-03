@@ -1,0 +1,119 @@
+{
+  "topics": [
+    "Politics",
+    "Energy",
+    "Money",
+    "Work"
+  ],
+  "maps": [
+    {
+      "slug": "president",
+      "topic": "Politics",
+      "title": "How did each state vote?",
+      "caption": "Popular vote share for president. Mississippi voted 97% Democratic in 1936 and 87% Republican in 1964. Vermont gave Republicans 78% in 1856 and Democrats 63% in 2024.",
+      "note": "Gray covers years before statehood and the Civil War elections the seceded states sat out. In 1860 the Southern Democrats (Breckinridge) count as a third party; 1872 counts Greeley as the Democrat. Results before 1976 agree with the pscl and cluster R datasets to within a point for most states.",
+      "sources": [
+        [
+          "Wikipedia state results tables, 1856-1972",
+          "https://en.wikipedia.org/wiki/1860_United_States_presidential_election#Results_by_state"
+        ],
+        [
+          "MIT Election Lab, 1976-2024",
+          "https://doi.org/10.7910/DVN/42MVDX"
+        ]
+      ],
+      "short_source": "Wikipedia, MIT Election Lab",
+      "years": "1856-2024"
+    },
+    {
+      "slug": "electricity",
+      "topic": "Energy",
+      "title": "How does each state make electricity?",
+      "caption": "Share of net generation by fuel. Coal supplied 86% of Iowa's power in 1990 and 21% in 2024, while clean sources rose from 13% to 66%. West Virginia still makes 85% of its power from coal. Delaware swapped coal for gas.",
+      "note": "Clean is nuclear, hydro, wind, solar, geothermal and biomass. Pumped storage and \"other\" are excluded.",
+      "sources": [
+        [
+          "EIA, net generation by state by energy source",
+          "https://www.eia.gov/electricity/data/state/"
+        ]
+      ],
+      "short_source": "EIA",
+      "years": "1990-2024"
+    },
+    {
+      "slug": "energy-use",
+      "topic": "Energy",
+      "title": "Who uses each state's energy?",
+      "caption": "Share of total energy consumed by sector. Industry uses 70% of Louisiana's energy and 56% of Texas's. Transportation takes 59% in Hawaii. In DC, industry fell from 28% in 1960 to 3%.",
+      "note": "Homes & businesses = residential + commercial. Energy measured in Btu.",
+      "sources": [
+        [
+          "EIA State Energy Data System (SEDS)",
+          "https://www.eia.gov/state/seds/"
+        ]
+      ],
+      "short_source": "EIA SEDS",
+      "years": "1960-2024"
+    },
+    {
+      "slug": "taxes",
+      "topic": "Money",
+      "title": "How does each state collect its taxes?",
+      "caption": "State government tax revenue by type. Light blue appears when a state adopts an income tax: Nebraska and Illinois had none in 1960 and over 40% of revenue from it by 2025. Texas and Nevada still have none. Most of Alaska's orange is oil severance tax.",
+      "note": "State taxes only; local taxes, including most property tax, are excluded. Biennial until 1950. DC has no state government.",
+      "sources": [
+        [
+          "Census Bureau, Annual Survey of State Tax Collections",
+          "https://www.census.gov/programs-surveys/stc/data/datasets.html"
+        ]
+      ],
+      "short_source": "Census Bureau",
+      "years": "1942-2025"
+    },
+    {
+      "slug": "earnings",
+      "topic": "Work",
+      "title": "How does each state earn a living?",
+      "caption": "Earnings by industry. Farming was 42% of North Dakota's earnings in 1929 and 6% in 2025. Manufacturing was 48% of Michigan's earnings in 1950 and is 15% now.",
+      "note": "Industry definitions change from SIC to NAICS in 2001. Negative farm earnings are set to zero.",
+      "sources": [
+        [
+          "BEA, SAINC5 earnings by industry",
+          "https://apps.bea.gov/regional/downloadzip.htm"
+        ]
+      ],
+      "short_source": "BEA",
+      "years": "1929-2025"
+    },
+    {
+      "slug": "paychecks",
+      "topic": "Work",
+      "title": "Who signs the paychecks?",
+      "caption": "Earnings by employer. World War II shows in nearly every tile: federal pay was 45% of Virginia's earnings in 1944 and 56% of DC's. In 1960 the federal government paid 43% of Alaska's earnings.",
+      "note": "Federal = federal civilian + military. A few suppressed values are interpolated.",
+      "sources": [
+        [
+          "BEA, SAINC5 earnings by industry",
+          "https://apps.bea.gov/regional/downloadzip.htm"
+        ]
+      ],
+      "short_source": "BEA",
+      "years": "1929-2025"
+    },
+    {
+      "slug": "income",
+      "topic": "Money",
+      "title": "Where does the money come from?",
+      "caption": "Personal income by source. Government benefits were 2% of income in most states in 1929. They are 31% in West Virginia and 28% in Mississippi today. Florida gets 32% of its income from dividends, interest and rent.",
+      "note": "Work = net earnings by place of residence. Benefits = personal current transfer receipts (Social Security, Medicare, Medicaid and others).",
+      "sources": [
+        [
+          "BEA, SAINC4 personal income by major component",
+          "https://apps.bea.gov/regional/downloadzip.htm"
+        ]
+      ],
+      "short_source": "BEA",
+      "years": "1929-2025"
+    }
+  ]
+}

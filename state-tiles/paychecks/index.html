@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="author" content="Rahul">
+<title>Who signs the paychecks? | State tiles</title>
+<meta name="description" content="Earnings by employer. World War II shows in nearly every tile: federal pay was 45% of Virginia&#x27;s earnings in 1944 and 56% of DC&#x27;s. In 1960 the federal government paid 43% of Alaska&#x27;s earnings.">
+<meta property="og:title" content="Who signs the paychecks? | State tiles">
+<meta property="og:description" content="Earnings by employer. World War II shows in nearly every tile: federal pay was 45% of Virginia&#x27;s earnings in 1944 and 56% of DC&#x27;s. In 1960 the federal government paid 43% of Alaska&#x27;s earnings.">
+<meta property="og:image" content="https://rahulch.site/state-tiles/img/paychecks.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@700&family=Roboto+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../app.css">
+</head>
+<body data-root="../" data-slug="paychecks">
+<div class="wrap">
+<nav class="bar">
+  <div class="l"><a class="all" href="../">&larr; All maps</a><span class="muted" id="topic"></span></div>
+  <div class="r"><a id="prev" href="../"></a><span class="muted" id="pos"></span><a id="next" href="../"></a></div>
+</nav>
+<div class="head">
+  <div>
+    <h1>Who signs the paychecks?</h1>
+    <div class="years" id="years"></div>
+  </div>
+  <div class="legend" id="legend"></div>
+</div>
+<div class="readout" id="readout"><span class="hint">Hover or tap a tile to read the numbers for that year.</span></div>
+<svg class="grid" id="grid" role="img" aria-label="Tile grid map: Who signs the paychecks?"></svg>
+<p class="caption" id="caption"></p>
+<p class="note" id="note"></p>
+<div class="links" id="links"></div>
+<section class="more" id="more">
+  <h2 id="more-h"></h2>
+  <div class="cards" id="more-cards"></div>
+</section>
+<footer>Each tile is one state; the bands are shares of that state's total and time runs left to right. Gray means no data. Style after 1POINT21 Interactive's "Where are Americans born?". <a href="https://github.com/vibedatascience/vibelogs/tree/main/state-tiles/src">Code</a></footer>
+</div>
+<script src="../app.js"></script>
+</body>
+</html>

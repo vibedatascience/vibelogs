@@ -31,5 +31,6 @@ for slug,f,cols,yc,scale,labels in D:
         S[st]=[[None if np.isnan(a) else round(a,1), None if np.isnan(b) else round(b,1)] for a,b in zip(g[cols[0]],g[cols[1]])]
     allj[slug]=dict(years=[int(y) for y in years],labels=labels,s=S)
     print(slug,len(x),years[0],years[-1])
-json.dump(dict(names=names,sets=allj),open(f'{OUT}/data/tiles.json','w'),separators=(',',':'))
-print(os.path.getsize(f'{OUT}/data/tiles.json')//1024,'KB')
+for slug,d in allj.items():
+    d['names']=names
+    json.dump(d,open(f'{OUT}/data/{slug}.json','w'),separators=(',',':'))

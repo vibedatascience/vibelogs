@@ -5,198 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="author" content="Rahul">
 <title>State tiles</title>
-<meta name="description" content="Seven tile-grid maps of the fifty states over time: presidential votes, electricity, energy use, taxes, jobs, paychecks and income.">
+<meta name="description" content="7 tile-grid maps of the fifty states over time.">
 <meta property="og:title" content="State tiles">
+<meta property="og:description" content="7 tile-grid maps of the fifty states over time.">
 <meta property="og:image" content="https://rahulch.site/state-tiles/thumb.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@700&family=Roboto+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#f8f8f8; --ink:#111; --grey:#666;
-  --label:#0d3a60;
-  --serif:'Century Schoolbook','TeX Gyre Schola','Old Standard TT',Georgia,serif;
-  --cond:'Roboto Condensed','Arial Narrow',sans-serif;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--cond);font-size:18px;line-height:1.5;
-  padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
-a{color:var(--ink);text-decoration-color:#fe5e32;text-underline-offset:3px}
-a:hover{color:#fe5e32}
-.wrap{max-width:1100px;margin:0 auto;padding:0 28px}
-.back{display:inline-block;margin-top:28px;font-size:0.9rem;color:var(--grey);text-decoration:none}
-
-.tabs{display:flex;flex-wrap:wrap;gap:4px 22px;margin:28px 0 22px}
-.tabs button{font-family:var(--cond);font-size:1rem;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;
-  background:none;border:0;border-bottom:3px solid transparent;color:var(--grey);padding:2px 0;cursor:pointer}
-.tabs button:hover{color:var(--ink)}
-.tabs button.active{color:var(--ink);border-bottom-color:#fe5e32}
-.head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap}
-h1{font-family:var(--serif);font-weight:700;font-size:clamp(1.9rem,5vw,3.2rem);line-height:1.05}
-.years{font-size:0.95rem;color:var(--grey);margin-top:6px}
-.legend{display:flex;flex-direction:column;gap:1px;font-weight:700;font-size:1.05rem;line-height:1.25}
-.readout{min-height:2.4em;margin:14px 0 8px;display:flex;flex-wrap:wrap;gap:2px 18px;align-items:baseline;font-size:0.98rem}
-.readout b{font-weight:700;font-size:1.08rem}
-.readout .v{display:inline-flex;align-items:center;gap:6px}
-.readout .v i{display:inline-block;width:11px;height:11px}
-.readout .hint{color:var(--grey)}
-svg.grid{width:100%;height:auto;display:block;touch-action:pan-y}
-svg.grid .lbl{font-family:var(--cond);font-size:22px;fill:var(--label);opacity:.88;pointer-events:none}
-svg.grid .hit{fill:transparent;cursor:crosshair}
-svg.grid .cross{stroke:var(--ink);stroke-width:1.6;pointer-events:none}
-svg.grid .sel{fill:none;stroke:var(--ink);stroke-width:2.5;pointer-events:none}
-.caption{max-width:780px;margin:18px 0 0}
-.note{max-width:780px;font-size:0.88rem;color:var(--grey);margin-top:8px}
-.links{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:0.9rem;margin-top:12px}
-footer{margin:48px 0 50px;font-size:0.85rem;color:var(--grey)}
-footer a{color:var(--grey)}
-@media (max-width:640px){
-  .wrap{padding:0 14px}
-  svg.grid .lbl{font-size:32px}
-}
-</style>
+<link rel="stylesheet" href="app.css">
 </head>
-<body>
+<body data-root="./">
 <div class="wrap">
 <a class="back" href="../">&larr; rahulch.site</a>
-
-<div class="tabs" id="tabs"></div>
-<div class="head">
+<div class="ix-head">
   <div>
-    <h1 id="title">State tiles</h1>
-    <div class="years" id="years"></div>
+    <h1>State tiles</h1>
+    <div class="ix-sub"><span id="count">7 maps</span> of the fifty states over time. One small chart per state.</div>
   </div>
-  <div class="legend" id="legend"></div>
+  <div class="search">
+    <label for="q">Search maps</label>
+    <input id="q" type="search" placeholder="taxes, coal, 1860..." autocomplete="off">
+  </div>
 </div>
-<div class="readout" id="readout"><span class="hint">Hover or tap a tile to read the numbers for that year.</span></div>
-<svg class="grid" id="grid" role="img" aria-label="Tile grid map of US states"></svg>
-<p class="caption" id="caption"></p>
-<p class="note" id="note"></p>
-<div class="links" id="links"></div>
-
-<footer>Each tile is one state; the bands are shares of that state's total and time runs left to right. Gray means no data. Style after 1POINT21 Interactive's "Where are Americans born?". <a href="data/tiles.json">All data (JSON)</a> &middot; <a href="https://github.com/vibedatascience/vibelogs/tree/main/state-tiles/src">Code</a></footer>
+<div class="tabs" id="tabs"></div>
+<div class="cards" id="cards"></div>
+<p class="empty" id="empty" hidden>No map matches that search.</p>
+<footer>Each tile is one state; the bands are shares of that state's total and time runs left to right. Gray means no data. Style after 1POINT21 Interactive's "Where are Americans born?". <a href="https://github.com/vibedatascience/vibelogs/tree/main/state-tiles/src">Code</a></footer>
 </div>
-
-<script>
-(function(){
-  var G={AK:[0,0],ME:[10,0],WA:[0,1],ID:[1,1],MT:[2,1],ND:[3,1],MN:[4,1],IL:[5,1],WI:[6,1],MI:[7,1],NY:[8,1],VT:[9,1],NH:[10,1],
-    OR:[0,2],NV:[1,2],WY:[2,2],SD:[3,2],IA:[4,2],IN:[5,2],OH:[6,2],PA:[7,2],NJ:[8,2],RI:[9,2],MA:[10,2],
-    CA:[0,3],UT:[1,3],CO:[2,3],NE:[3,3],MO:[4,3],KY:[5,3],WV:[6,3],VA:[7,3],MD:[8,3],CT:[9,3],
-    AZ:[1,4],NM:[2,4],KS:[3,4],AR:[4,4],TN:[5,4],NC:[6,4],SC:[7,4],DC:[8,4],DE:[9,4],
-    OK:[3,5],LA:[4,5],MS:[5,5],AL:[6,5],GA:[7,5],HI:[0,6],TX:[3,6],FL:[8,6]};
-  var META={
-    president:{tab:'President',title:'How did each state vote?',
-      caption:'Popular vote share for president. Mississippi voted 97% Democratic in 1936 and 87% Republican in 1964. Vermont gave Republicans 78% in 1856 and Democrats 63% in 2024.',
-      note:'Gray covers years before statehood and the Civil War elections the seceded states sat out. In 1860 the Southern Democrats (Breckinridge) count as a third party; 1872 counts Greeley as the Democrat. Results before 1976 agree with the pscl and cluster R datasets to within a point for most states.',
-      src:[['Wikipedia state results tables, 1856-1972','https://en.wikipedia.org/wiki/1860_United_States_presidential_election#Results_by_state'],['MIT Election Lab, 1976-2024','https://doi.org/10.7910/DVN/42MVDX']]},
-    electricity:{tab:'Electricity',title:'How does each state make electricity?',
-      caption:"Share of net generation by fuel. Coal supplied 86% of Iowa's power in 1990 and 21% in 2024, while clean sources rose from 13% to 66%. West Virginia still makes 85% of its power from coal. Delaware swapped coal for gas.",
-      note:'Clean is nuclear, hydro, wind, solar, geothermal and biomass. Pumped storage and "other" are excluded.',
-      src:[['EIA, net generation by state by energy source','https://www.eia.gov/electricity/data/state/']]},
-    'energy-use':{tab:'Energy use',title:"Who uses each state's energy?",
-      caption:"Share of total energy consumed by sector. Industry uses 70% of Louisiana's energy and 56% of Texas's. Transportation takes 59% in Hawaii. In DC, industry fell from 28% in 1960 to 3%.",
-      note:'Homes & businesses = residential + commercial. Energy measured in Btu.',
-      src:[['EIA State Energy Data System (SEDS)','https://www.eia.gov/state/seds/']]},
-    taxes:{tab:'Taxes',title:'How does each state collect its taxes?',
-      caption:"State government tax revenue by type. Light blue appears when a state adopts an income tax: Nebraska and Illinois had none in 1960 and over 40% of revenue from it by 2025. Texas and Nevada still have none. Most of Alaska's orange is oil severance tax.",
-      note:'State taxes only; local taxes, including most property tax, are excluded. Biennial until 1950. DC has no state government.',
-      src:[['Census Bureau, Annual Survey of State Tax Collections','https://www.census.gov/programs-surveys/stc/data/datasets.html']]},
-    earnings:{tab:'Earnings',title:'How does each state earn a living?',
-      caption:"Earnings by industry. Farming was 42% of North Dakota's earnings in 1929 and 6% in 2025. Manufacturing was 48% of Michigan's earnings in 1950 and is 15% now.",
-      note:'Industry definitions change from SIC to NAICS in 2001. Negative farm earnings are set to zero.',
-      src:[['BEA, SAINC5 earnings by industry','https://apps.bea.gov/regional/downloadzip.htm']]},
-    paychecks:{tab:'Paychecks',title:'Who signs the paychecks?',
-      caption:"Earnings by employer. World War II shows in nearly every tile: federal pay was 45% of Virginia's earnings in 1944 and 56% of DC's. In 1960 the federal government paid 43% of Alaska's earnings.",
-      note:'Federal = federal civilian + military. A few suppressed values are interpolated.',
-      src:[['BEA, SAINC5 earnings by industry','https://apps.bea.gov/regional/downloadzip.htm']]},
-    income:{tab:'Income',title:'Where does the money come from?',
-      caption:'Personal income by source. Government benefits were 2% of income in most states in 1929. They are 31% in West Virginia and 28% in Mississippi today. Florida gets 32% of its income from dividends, interest and rent.',
-      note:'Work = net earnings by place of residence. Benefits = personal current transfer receipts (Social Security, Medicare, Medicaid and others).',
-      src:[['BEA, SAINC4 personal income by major component','https://apps.bea.gov/regional/downloadzip.htm']]}
-  };
-  var COL=['#0783c8','#7bccf9','#fe5e32'];
-  var T=100,GAP=7,STEP=T+GAP,W=11*STEP-GAP,H=7*STEP-GAP,NS='http://www.w3.org/2000/svg';
-  var svg=document.getElementById('grid');
-  svg.setAttribute('viewBox','0 0 '+W+' '+H);
-  var DATA=null,cur=null,cross=null,sel=null,last=null;
-
-  function el(tag,attrs){var e=document.createElementNS(NS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);return e;}
-  function fmt(v){return v==null?'-':(v<10?v.toFixed(1):Math.round(v))+'%';}
-  function $(id){return document.getElementById(id);}
-
-  function draw(slug){
-    cur=slug;var set=DATA.sets[slug],yrs=set.years,y0=yrs[0],y1=yrs[yrs.length-1],m=META[slug];
-    $('title').textContent=m.title;
-    $('years').textContent=y0+'-'+y1;
-    var lg=$('legend');lg.innerHTML='';
-    for(var i=2;i>=0;i--){var s=document.createElement('span');s.style.color=COL[i];s.textContent=set.labels[i];lg.appendChild(s);}
-    $('caption').textContent=m.caption;
-    $('note').textContent=m.note;
-    var L='<a href="img/'+slug+'.png">Poster (PNG)</a><a href="data/'+slug+'.csv">Data (CSV)</a>';
-    m.src.forEach(function(s){L+='<a href="'+s[1]+'">'+s[0]+'</a>';});
-    $('links').innerHTML=L;
-    [].forEach.call(document.querySelectorAll('#tabs button'),function(b){b.classList.toggle('active',b.dataset.k===slug);});
-    if(history.replaceState)history.replaceState(null,'','#'+slug);
-    while(svg.firstChild)svg.removeChild(svg.firstChild);
-    Object.keys(G).forEach(function(st){
-      var c=G[st],ox=c[0]*STEP,oy=c[1]*STEP,rows=set.s[st]||[];
-      var g=el('g',{transform:'translate('+ox+','+oy+')'});
-      g.appendChild(el('rect',{x:0,y:0,width:T,height:T,fill:'#dddddd'}));
-      var X=function(yr){return (yr-y0)/(y1-y0)*T;};
-      var seg=[],segs=[];
-      for(var i=0;i<yrs.length;i++){var r=rows[i];if(r&&r[0]!=null){seg.push(i);}else if(seg.length){segs.push(seg);seg=[];}}
-      if(seg.length)segs.push(seg);
-      segs.forEach(function(sg){
-        var xs=sg.map(function(i){return X(yrs[i]);});
-        if(sg.length===1){var x=xs[0];xs=[Math.max(0,x-0.8),Math.min(T,x+0.8)];sg=[sg[0],sg[0]];}
-        var a=sg.map(function(i){return T-rows[i][0]/100*T;});
-        var b=sg.map(function(i){return T-(rows[i][0]+rows[i][1])/100*T;});
-        var top='M'+xs[0]+',0 '+xs.map(function(x,j){return 'L'+x+','+b[j];}).join(' ')+' L'+xs[xs.length-1]+',0Z';
-        var fwdB=xs.map(function(x,j){return x+','+b[j];}),revA=xs.map(function(x,j){return x+','+a[j];}).reverse();
-        var mid='M'+fwdB.join(' L')+' L'+revA.join(' L')+'Z';
-        var bot='M'+xs[0]+','+T+' '+xs.map(function(x,j){return 'L'+x+','+a[j];}).join(' ')+' L'+xs[xs.length-1]+','+T+'Z';
-        g.appendChild(el('path',{d:top,fill:COL[2]}));
-        g.appendChild(el('path',{d:mid,fill:COL[1]}));
-        g.appendChild(el('path',{d:bot,fill:COL[0]}));
-      });
-      var t=el('text',{x:T-6,y:T-7,'text-anchor':'end','class':'lbl'});t.textContent=st;g.appendChild(t);
-      var hit=el('rect',{x:0,y:0,width:T,height:T,'class':'hit'});hit.dataset.st=st;g.appendChild(hit);
-      svg.appendChild(g);
-    });
-    cross=el('line',{'class':'cross',x1:0,x2:0,y1:0,y2:T,visibility:'hidden'});svg.appendChild(cross);
-    sel=el('rect',{'class':'sel',width:T,height:T,visibility:'hidden'});svg.appendChild(sel);
-    if(last)show(last.st,last.fx);
-  }
-
-  function show(st,fx){
-    var set=DATA.sets[cur],yrs=set.years,rows=set.s[st]||[],c=G[st];
-    fx=Math.max(0,Math.min(1,fx));
-    var yr=yrs[0]+fx*(yrs[yrs.length-1]-yrs[0]),best=0;
-    for(var i=1;i<yrs.length;i++)if(Math.abs(yrs[i]-yr)<Math.abs(yrs[best]-yr))best=i;
-    var x=c[0]*STEP+(yrs[best]-yrs[0])/(yrs[yrs.length-1]-yrs[0])*T;
-    cross.setAttribute('x1',x);cross.setAttribute('x2',x);cross.setAttribute('y1',c[1]*STEP);cross.setAttribute('y2',c[1]*STEP+T);cross.setAttribute('visibility','visible');
-    sel.setAttribute('x',c[0]*STEP);sel.setAttribute('y',c[1]*STEP);sel.setAttribute('visibility','visible');
-    var r=rows[best],h='<b>'+DATA.names[st]+', '+yrs[best]+'</b>';
-    if(!r||r[0]==null){h+=' <span class="hint">no data</span>';}
-    else{var v=[r[0],r[1],Math.max(0,100-r[0]-r[1])];
-      for(var k=2;k>=0;k--)h+='<span class="v"><i style="background:'+COL[k]+'"></i>'+set.labels[k]+' '+fmt(v[k])+'</span>';}
-    $('readout').innerHTML=h;last={st:st,fx:fx};
-  }
-  function onMove(e){
-    var t=e.target;if(!t.dataset||!t.dataset.st)return;
-    var pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;
-    var p=pt.matrixTransform(svg.getScreenCTM().inverse()),c=G[t.dataset.st];
-    show(t.dataset.st,(p.x-c[0]*STEP)/T);
-  }
-  svg.addEventListener('pointermove',onMove);
-  svg.addEventListener('pointerdown',onMove);
-
-  fetch('data/tiles.json').then(function(r){return r.json();}).then(function(d){
-    DATA=d;var tabs=$('tabs');
-    Object.keys(META).forEach(function(k){var b=document.createElement('button');b.textContent=META[k].tab;b.dataset.k=k;b.onclick=function(){draw(k);};tabs.appendChild(b);});
-    var h=location.hash.slice(1);
-    draw(META[h]?h:'president');
-  });
-})();
-</script>
+<script src="app.js"></script>
 </body>
 </html>
