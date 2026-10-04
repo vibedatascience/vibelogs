@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Rahul">
+<title>The jobs number, from first principles | Rahul's Site</title>
+<meta name="description" content="What US payroll growth is, why the monthly jobs report leads the front page, how to read the headline, and 87 years of monthly job growth.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<style>
+:root{--paper:#FAFAF8;--ink:#17171C;--muted:#64748b;--rule:#E7E7E2;--red:#E60023;--navy:#0a3069;--teal:#0d9488;--chip:#FDE8EC}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:17px;line-height:1.65}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px}
+.txt{max-width:680px}
+.top{padding:36px 0 0;font-family:'IBM Plex Mono',monospace;font-size:0.8rem}
+.top a{color:var(--muted);text-decoration:none}
+.top a:hover{color:var(--red)}
+header.post{padding:28px 0 22px}
+.meta{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted);display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.tag{background:var(--chip);color:var(--red);padding:1px 8px;border-radius:4px;font-weight:500}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.8rem,5.4vw,2.8rem);letter-spacing:-0.025em;line-height:1.12;max-width:780px}
+.lede{margin-top:14px;color:#3a3a44;max-width:680px}
+section{padding:34px 0 8px;border-top:1px solid var(--rule)}
+.k{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--red);margin-bottom:6px}
+h2{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.45rem;letter-spacing:-0.015em;line-height:1.2;margin-bottom:10px}
+p{margin:0 0 14px}
+a{color:var(--red)}
+.fig{background:#fff;border:1px solid var(--rule);border-radius:10px;padding:10px 10px 6px;margin:6px 0 8px;position:relative}
+.fig svg{display:block;width:100%}
+@keyframes fade{from{opacity:0}to{opacity:1}}@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.sq{animation:fade .3s ease both}.grow{transform-box:fill-box;transform-origin:left;animation:grow .8s 1s ease both}
+.cap{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted);margin:4px 0 18px;line-height:1.5}
+svg text{font-family:'IBM Plex Mono',monospace}
+/* kpis */
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:1px solid var(--rule);border-radius:10px;background:#fff;overflow:hidden;margin:22px 0 10px}
+.kpi{padding:14px 14px 12px;border-right:1px solid var(--rule)}
+.kpi:last-child{border-right:0}
+.kpi .v{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.9rem;letter-spacing:-0.03em;line-height:1;font-variant-numeric:tabular-nums}
+.kpi .l{font-family:'IBM Plex Mono',monospace;font-size:0.66rem;color:var(--muted);margin-top:6px;line-height:1.35}
+.kpi.hot .v{color:var(--red)}
+@media (max-width:700px){.kpis{grid-template-columns:repeat(2,1fr)}.kpi{border-bottom:1px solid var(--rule)}.kpi:nth-child(2n){border-right:0}.kpi.hot{grid-column:1/-1;border-right:0}.kpi.hot .v{font-size:2.6rem}}
+/* equation */
+.eq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:0.82rem;margin:4px 0 14px}
+.eq b{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;letter-spacing:-0.01em}
+.eq .box{background:#fff;border:1px solid var(--rule);border-radius:8px;padding:6px 10px;line-height:1.2}
+.eq .box small{display:block;color:var(--muted);font-size:0.64rem}
+.eq .op{color:var(--muted)}
+.eq .res{border-color:var(--red)}
+.eq .res b{color:var(--red)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--muted);margin:2px 2px 6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+/* flow */
+.flow{display:flex;align-items:stretch;gap:0;margin:8px 0 16px;flex-wrap:wrap}
+.node{flex:1 1 0;min-width:130px;background:#fff;border:1px solid var(--rule);border-radius:10px;padding:10px 12px}
+.node .t{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.98rem;line-height:1.2}
+.node .s{font-family:'IBM Plex Mono',monospace;font-size:0.66rem;color:var(--muted);margin-top:4px;line-height:1.4}
+.node.first{border-color:var(--red)}
+.node.first .t{color:var(--red)}
+.arr{display:flex;align-items:center;padding:0 6px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+@media (max-width:640px){.flow{flex-direction:column}.arr{justify-content:center;padding:2px 0;transform:rotate(90deg);height:18px}}
+.two{display:grid;grid-template-columns:1.25fr 1fr;gap:18px;align-items:start}
+@media (max-width:760px){.two{grid-template-columns:1fr}}
+ul.why{list-style:none;margin:0 0 14px}
+ul.why li{position:relative;padding:0 0 10px 18px;font-size:0.95rem}
+ul.why li:before{content:"";position:absolute;left:0;top:0.62em;width:8px;height:8px;border-radius:2px;background:var(--navy)}
+ul.why li b{font-weight:500}
+/* calendar */
+.cal{background:#fff;border:1px solid var(--rule);border-radius:10px;padding:12px}
+.cal .h{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted);margin-bottom:8px;display:flex;justify-content:space-between}
+.cal .g{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal .d,.cal .w{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;text-align:center;border-radius:5px;padding:5px 0}
+.cal .w{color:var(--muted);font-size:0.6rem}
+.cal .d{background:#f8fafc;color:#94a3b8}
+.cal .d.j{background:var(--red);color:#fff;font-weight:500}
+.cal .d.f{background:var(--navy);color:#fff;font-weight:500}
+.cal .d.t{outline:1.5px solid var(--ink);color:var(--ink)}
+/* checks */
+ol.checks{list-style:none;counter-reset:c;margin:4px 0 14px}
+ol.checks li{counter-increment:c;position:relative;padding:0 0 12px 34px;font-size:0.95rem}
+ol.checks li:before{content:counter(c);position:absolute;left:0;top:1px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:0.7rem;display:flex;align-items:center;justify-content:center}
+.verdict{border-left:3px solid var(--red);padding:6px 0 6px 14px;margin:6px 0 18px;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:1.08rem;line-height:1.4;max-width:680px}
+/* toggle */
+.ctl{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 8px;font-family:'IBM Plex Mono',monospace;font-size:0.74rem}
+.ctl button{font:inherit;border:1px solid var(--rule);background:#fff;color:var(--ink);padding:5px 12px;border-radius:6px;cursor:pointer}
+.ctl button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:0.68rem;line-height:1.45;padding:6px 8px;border-radius:6px;opacity:0;transition:opacity .12s;white-space:nowrap;z-index:3}
+/* table */
+.tbl{width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:0.72rem;background:#fff;border:1px solid var(--rule);border-radius:10px;overflow:hidden;margin:4px 0 6px}
+.tbl th{font-weight:500;color:var(--muted);text-align:right;padding:8px 8px;border-bottom:1px solid var(--rule);font-size:0.64rem;text-transform:uppercase;letter-spacing:0.04em}
+.tbl td{padding:6px 8px;text-align:right;border-bottom:1px solid #f1f1ee;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbl th:first-child,.tbl td:first-child{text-align:left}
+.tbl tr:last-child td{border-bottom:0}
+.tbl tr.hl td{background:#fff5f7}
+.bar{display:inline-block;height:8px;background:var(--red);border-radius:2px;vertical-align:0;margin-left:6px;opacity:.85}
+.neg{color:var(--red)}
+.tblwrap{overflow-x:auto}
+/* timeline */
+.tl{position:relative;margin:10px 0 18px;padding-left:4px}
+.tl:before{content:"";position:absolute;left:84px;top:6px;bottom:6px;width:1px;background:var(--rule)}
+.ev{display:grid;grid-template-columns:72px 24px 1fr;align-items:start;padding:6px 0}
+.ev .y{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--muted);text-align:right;padding-top:2px}
+.ev .dot{width:11px;height:11px;border-radius:50%;background:#fff;border:2px solid var(--navy);margin:5px 0 0 9px;position:relative;z-index:1}
+.ev.r .dot{background:var(--red);border-color:var(--red)}
+.ev.t .dot{border-color:var(--teal)}
+.ev .b{font-size:0.92rem;line-height:1.45}
+.ev .b b{font-family:'Space Grotesk',sans-serif;font-weight:700}
+.ev .b .n{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;font-weight:500;margin-right:6px}
+.ev.r .n{color:var(--red)}
+details{margin:22px 0 10px;font-size:0.86rem;color:var(--muted)}
+summary{cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:0.76rem}
+details p,details ul{margin-top:10px}
+details li{margin:0 0 6px 18px}
+footer{border-top:1px solid var(--rule);padding:22px 0 56px;font-family:'IBM Plex Mono',monospace;font-size:0.76rem;color:var(--muted);margin-top:24px}
+footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><a href="../../">&larr; Rahul's Site</a></div>
+
+<header class="post">
+  <div class="meta"><span>[2026-10-04]</span><span>Rahul</span><span>updated 2026-10-04</span><span class="tag">DATA-SCIENCE</span></div>
+  <h1>The jobs number, from first principles</h1>
+  <p class="lede">Once a month the US government counts how many more people are on payrolls than the month before. For September 2026 the count was 29,000. This page covers what that number is, why it leads the front page, how to read it, and how it compares with 87 years of months.</p>
+
+  <div class="kpis">
+    <div class="kpi hot"><div class="v">+29k</div><div class="l">jobs added in September 2026</div></div>
+    <div class="kpi"><div class="v">84k</div><div class="l">what forecasters expected</div></div>
+    <div class="kpi"><div class="v">4.2%</div><div class="l">unemployment, up from 4.1%</div></div>
+    <div class="kpi"><div class="v neg">-60k</div><div class="l">revisions to July and August</div></div>
+    <div class="kpi"><div class="v">159.0M</div><div class="l">jobs on US payrolls</div></div>
+  </div>
+  <div class="fig"><svg id="recent"></svg></div>
+  <div class="cap">Monthly change in nonfarm payrolls, last 24 months. September 2026 in red.</div>
+</header>
+
+<section>
+  <div class="k">01 / what it is</div>
+  <h2>A headcount of paid jobs, minus last month's headcount</h2>
+  <div class="txt">
+  <p>The Bureau of Labor Statistics surveys around 120,000 businesses and government agencies about the pay period that includes the 12th of the month. Add up the jobs, compare with the month before, and you have the headline.</p>
+  </div>
+  <div class="eq">
+    <div class="box"><small>September total</small><b>159,044k</b></div><span class="op">-</span>
+    <div class="box"><small>August total</small><b>159,015k</b></div><span class="op">=</span>
+    <div class="box res"><small>the headline</small><b>+29k</b></div>
+  </div>
+  <div class="fig"><svg id="waffle"></svg></div>
+  <div class="legend"><span><i style="background:#cbd5e1"></i>1 million jobs</span><span><i style="background:var(--red)"></i>added in the last 12 months (0.5M)</span><span><i style="background:#fff;border:1.5px solid var(--teal)"></i>added in 2019, for scale (2.0M)</span></div>
+  <div class="cap">Each square is one million jobs. A full year of hiring now fills half a square.</div>
+  <div class="txt"><p style="font-size:0.9rem;color:#3a3a44">Farm workers, the self-employed and household staff are left out. A second survey, of about 60,000 households, produces the unemployment rate. The two surveys come out together and sometimes disagree.</p></div>
+</section>
+
+<section>
+  <div class="k">02 / why it leads the front page</div>
+  <h2>It is the first hard number each month, and it sets the Fed's path</h2>
+  <div class="flow">
+    <div class="node first"><div class="t">Jobs report</div><div class="s">first Friday, 8:30 a.m. ET</div></div>
+    <div class="arr">&rarr;</div>
+    <div class="node"><div class="t">Fed rate decision</div><div class="s">maximum employment is half its mandate</div></div>
+    <div class="arr">&rarr;</div>
+    <div class="node"><div class="t">Treasury yields</div><div class="s">reprice within minutes</div></div>
+    <div class="arr">&rarr;</div>
+    <div class="node"><div class="t">Mortgages, stocks, the dollar</div><div class="s">what households feel</div></div>
+  </div>
+  <div class="two">
+    <ul class="why">
+      <li><b>It comes first.</b> It is published about three weeks after the survey week, before most other data for the same month.</li>
+      <li><b>It is broad.</b> It covers every industry and every state, with a sample big enough to report sector detail.</li>
+      <li><b>The Fed is in a bind.</b> It raised rates on Sep 16 to a 3.75% to 4% range to fight inflation. Weak hiring argues for the opposite.</li>
+      <li><b>Markets react.</b> On Oct 2, stock futures rose and Treasury yields fell, as traders read the miss as a reason for the Fed to hold in October.</li>
+      <li><b>It became political.</b> In August 2025 the BLS commissioner was fired the day a weak report came out.</li>
+    </ul>
+    <div class="cal">
+      <div class="h"><span>October 2026</span><span><span style="color:var(--red)">&#9632;</span> jobs report &nbsp;<span style="color:var(--navy)">&#9632;</span> Fed meeting</span></div>
+      <div class="g" id="cal"></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="k">03 / how to read the headline</div>
+  <h2>Three comparisons do most of the work</h2>
+  <div class="fig"><svg id="line"></svg></div>
+  <div class="cap">September's gain against the forecast, recent averages, the 2019 pace, and Fed estimates of breakeven job growth.</div>
+  <ol class="checks txt">
+    <li><b>Against the forecast.</b> 29k against 84k is a 55k miss, which is why the headlines called it weak.</li>
+    <li><b>Against breakeven.</b> Breakeven is the job growth needed to keep unemployment flat as the labor force grows. With immigration down, the St. Louis Fed puts it at 15k to 87k a month for 2026, and the Dallas Fed estimated about zero for late 2025. By this test, 29k is soft but sits inside the range.</li>
+    <li><b>Against revisions and unemployment.</b> July and August were cut by 60k combined, and unemployment rose to 4.2%. Both point the same way as the headline.</li>
+  </ol>
+  <div class="verdict">What to make of it: hiring has slowed to roughly the pace a slower-growing labor force needs, and unemployment is starting to drift up while the Fed is raising rates.</div>
+</section>
+
+<section>
+  <div class="k">04 / 87 years, month by month</div>
+  <h2>Every monthly change since 1939</h2>
+  <div class="ctl"><button class="on" data-m="chg">monthly change</button><button data-m="lvl">total jobs</button></div>
+  <div class="fig" id="bigfig"><svg id="big"></svg><div class="tip" id="tip"></div></div>
+  <div class="cap">Nonfarm payrolls, seasonally adjusted, Feb 1939 to Sep 2026. Gray bands are NBER recessions. Bars past the frame are marked with their values. Hover or tap for any month.</div>
+</section>
+
+<section>
+  <div class="k">05 / the shape of a month, by decade</div>
+  <h2>Distribution of monthly job growth</h2>
+  <div class="txt"><p>The workforce is five times larger than in 1939, so each month is shown as a percent of all jobs.</p></div>
+  <div class="fig"><svg id="ridge"></svg></div>
+  <div class="cap">Density of monthly percent change by decade. Dots mark medians. The 2020 lockdown months fall off the edges.</div>
+  <div class="tblwrap"><table class="tbl" id="dec"></table></div>
+  <div class="cap">The 2000s are the only decade with a median month near zero. The 2010s lost jobs in just 5 of 120 months.</div>
+</section>
+
+<section>
+  <div class="k">06 / where today sits</div>
+  <h2>Slower than almost any stretch outside a recession</h2>
+  <div class="txt"><p>Payrolls grew 0.31% over the last 12 months. The chart shows 12-month growth for every month since 1950 where no recession touched the prior two years.</p></div>
+  <div class="fig"><svg id="hist"></svg></div>
+  <div class="cap">Count of months by 12-month payroll growth, recession-free periods only. 2025 added 116,000 jobs in total, the weakest calendar year outside a recession since 2002.</div>
+</section>
+
+<section>
+  <div class="k">07 / timeline</div>
+  <h2>The months that made the record</h2>
+  <div class="tl" id="tl"></div>
+</section>
+
+<details class="txt">
+  <summary>method and sources</summary>
+  <ul>
+    <li>Payrolls: BLS Current Employment Statistics, series PAYEMS via <a href="https://fred.stlouisfed.org/series/PAYEMS">FRED</a>, latest vintage as of Oct 2, 2026. Earlier months include all revisions and benchmarks.</li>
+    <li>Recessions: NBER dates via <a href="https://fred.stlouisfed.org/series/USREC">FRED USREC</a>. Unemployment: <a href="https://fred.stlouisfed.org/series/UNRATE">FRED UNRATE</a>.</li>
+    <li>Section 06 keeps a month only if no recession month falls in the 24 months ending with it. That leaves 545 months from 1950 on.</li>
+    <li>Breakeven: <a href="https://www.stlouisfed.org/on-the-economy/2026/mar/breakeven-employment-growth-estimate-range-widens-2026">St. Louis Fed, Mar 2026</a>; <a href="https://www.dallasfed.org/research/economics/2026/0331">Dallas Fed, Mar 2026</a>.</li>
+    <li>September report details: <a href="https://finance.yahoo.com/economy/articles/september-2026-jobs-report-payrolls-123334753.html">Yahoo Finance</a>. Fed decision: <a href="https://www.cnbc.com/2026/09/16/fed-rate-decision-september-2026.html">CNBC, Sep 16, 2026</a>.</li>
+    <li>Data for this page: <a href="jobs.json">jobs.json</a>.</li>
+  </ul>
+</details>
+
+<footer><a href="../../">Rahul's Site</a> &middot; opinions are my own</footer>
+</div>
+
+<script>
+const C={red:'#E60023',navy:'#0a3069',teal:'#0d9488',slate:'#64748b',rule:'#E7E7E2',ink:'#17171C',light:'#cbd5e1'};
+const fmtK=v=>{const a=Math.abs(v),s=v>0?'+':v<0?'-':'';return a>=1000?s+(a/1000).toFixed(1)+'M':s+d3.format(',')(Math.round(a))+'k'};
+const mo=d3.timeFormat('%b %Y');
+let R=[];
+function W(id){return document.getElementById(id).parentNode.clientWidth-20}
+function svgOf(id,w,h){return d3.select('#'+id).attr('viewBox',`0 0 ${w} ${h}`).attr('height',h).html('')}
+
+fetch('jobs.json').then(r=>r.json()).then(J=>{
+  const [y0,m0]=J.start.split('-').map(Number);
+  R=J.lvl.map((v,i)=>({date:new Date(y0,m0-1+i,1),lvl:v,rec:J.rec[i],ur:J.ur[i]}));
+  R.forEach((r,i)=>{if(i){r.chg=r.lvl-R[i-1].lvl;r.pct=(r.lvl/R[i-1].lvl-1)*100}
+    if(i>=12)r.g12=(r.lvl/R[i-12].lvl-1)*100;
+    let any=0;for(let j=Math.max(0,i-23);j<=i;j++)any=Math.max(any,R[j].rec);r.rec24=i>=23?any:1});
+  cal();timeline();table();drawAll();
+  let t;window.addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(drawAll,150)});
+});
+function drawAll(){recent();waffle();numline();big();ridge();hist()}
+
+/* recent 24 months */
+function recent(){
+  const w=W('recent'),h=w<600?190:220,m={l:38,r:8,t:20,b:24};
+  const d=R.slice(-24),s=svgOf('recent',w,h);
+  const x=d3.scaleBand().domain(d.map(r=>r.date)).range([m.l,w-m.r]).padding(0.22);
+  const y=d3.scaleLinear().domain([Math.min(-200,d3.min(d,r=>r.chg)),Math.max(250,d3.max(d,r=>r.chg))]).nice().range([h-m.b,m.t]);
+  y.ticks(4).forEach(t=>{s.append('line').attr('x1',m.l).attr('x2',w-m.r).attr('y1',y(t)).attr('y2',y(t)).attr('stroke',t?'#f1f1ee':C.slate).attr('stroke-width',t?1:0.8);
+    s.append('text').attr('x',m.l-6).attr('y',y(t)+3).attr('text-anchor','end').attr('font-size',9).attr('fill',C.slate).text(t?fmtK(t):'0')});
+  const last=d[d.length-1];
+  s.selectAll('rect').data(d).join('rect').attr('x',r=>x(r.date)).attr('width',x.bandwidth())
+    .attr('y',r=>y(Math.max(0,r.chg))).attr('height',r=>Math.abs(y(r.chg)-y(0))).attr('rx',1.5)
+    .attr('fill',r=>r===last?C.red:r.chg<0?C.slate:C.navy).attr('opacity',r=>r===last?1:r.chg<0?0.55:0.8);
+  const mx=d3.max(d,r=>r.chg),mn=d3.min(d,r=>r.chg);
+  d.forEach(r=>{if(r===last||r.chg===mx||r.chg===mn){const up=r.chg>=0;
+    s.append('text').attr('x',x(r.date)+x.bandwidth()/2).attr('y',up?y(r.chg)-4:y(r.chg)+10).attr('text-anchor','middle')
+     .attr('font-size',9).attr('font-weight',r===last?500:400).attr('fill',r===last?C.red:C.slate).text(fmtK(r.chg))}});
+  d.forEach((r,i)=>{if(r.date.getMonth()%6===0)s.append('text').attr('x',x(r.date)+x.bandwidth()/2).attr('y',h-8).attr('text-anchor','middle').attr('font-size',9).attr('fill',C.slate).text(d3.timeFormat("%b '%y")(r.date))});
+}
+
+/* waffle */
+function waffle(){
+  const w=W('waffle'),cols=w<520?16:w<760?20:27,gap=3,sz=(w-gap*(cols-1))/cols;
+  const n=159,rows=Math.ceil((n+2)/cols),h=rows*(sz+gap);
+  const s=svgOf('waffle',w,h);
+  for(let i=0;i<n;i++){const cx=(i%cols)*(sz+gap),cy=Math.floor(i/cols)*(sz+gap);
+    s.append('rect').attr('x',cx).attr('y',cy).attr('width',sz).attr('height',sz).attr('rx',2).attr('fill',C.light).attr('class',i===n-1?null:'sq').style('animation-delay',(i*5)+'ms');
+    if(i===n-1){const g12=R[R.length-1].lvl-R[R.length-13].lvl;
+      s.append('rect').attr('x',cx).attr('y',cy).attr('height',sz).attr('rx',2).attr('fill',C.red).attr('width',sz*g12/1000).attr('class','grow')}}
+  for(let k=0;k<2;k++){const i=n+k,cx=(i%cols)*(sz+gap),cy=Math.floor(i/cols)*(sz+gap);
+    s.append('rect').attr('x',cx+0.75).attr('y',cy+0.75).attr('width',sz-1.5).attr('height',sz-1.5).attr('rx',2).attr('fill','#fff').attr('stroke',C.teal).attr('stroke-width',1.5)}
+}
+
+/* number line */
+function numline(){
+  const w=W('line'),narrow=w<560,h=196,m={l:14,r:14},ay=74,s=svgOf('line',w,h);
+  const x=d3.scaleLinear().domain([-20,200]).range([m.l,w-m.r]);
+  const L=R.length,a3=d3.mean(R.slice(L-3),r=>r.chg),a12=d3.mean(R.slice(L-12),r=>r.chg);
+  const y19=d3.mean(R.filter(r=>r.date.getFullYear()===2019),r=>r.chg);
+  s.append('rect').attr('x',x(15)).attr('width',x(87)-x(15)).attr('y',ay-11).attr('height',22).attr('fill',C.teal).attr('opacity',0.16).attr('rx',3);
+  s.append('text').attr('x',x(15)).attr('y',ay-46).attr('font-size',9).attr('fill',C.teal).text('breakeven range, St. Louis Fed 2026');
+  s.append('line').attr('x1',x(15)).attr('x2',x(15)).attr('y1',ay-43).attr('y2',ay-11).attr('stroke',C.teal).attr('stroke-width',0.8);
+  s.append('line').attr('x1',m.l).attr('x2',w-m.r).attr('y1',ay).attr('y2',ay).attr('stroke',C.ink).attr('stroke-width',1);
+  [0,50,100,150,200].forEach(t=>{s.append('line').attr('x1',x(t)).attr('x2',x(t)).attr('y1',ay-3).attr('y2',ay+3).attr('stroke',C.ink);
+    s.append('text').attr('x',x(t)).attr('y',h-6).attr('text-anchor','middle').attr('font-size',9).attr('fill',C.slate).text(t?t+'k':'0')});
+  const it=[
+    {v:-3,lab:'Dallas Fed breakeven, late 2025: ~0',c:C.teal,row:4,sh:'tick'},
+    {v:29,lab:'September: +29k',c:C.red,row:3,big:1},
+    {v:a12,lab:'12-month average: '+fmtK(a12),c:C.slate,row:2},
+    {v:a3,lab:'3-month average: '+fmtK(a3),c:C.slate,row:1},
+    {v:84,lab:'forecast: +84k',c:C.navy,row:-1,sh:'dia'},
+    {v:y19,lab:'2019 average: '+fmtK(y19),c:C.slate,row:-2}];
+  it.forEach(o=>{const px=x(o.v),ly=o.row<0?ay-16-(-o.row-1)*14:ay+8+(o.row-1)*16+8,right=px>w*0.62;
+    s.append('line').attr('x1',px).attr('x2',px).attr('y1',ay).attr('y2',o.row<0?ly+3:ly-3).attr('stroke',o.c).attr('stroke-width',0.8).attr('opacity',0.7);
+    s.append('text').attr('x',px+(right?-4:4)).attr('y',ly+3).attr('text-anchor',right?'end':'start').attr('font-size',o.big?10:9).attr('font-weight',o.big?500:400).attr('fill',o.c).text(o.lab);
+    if(o.sh==='dia')s.append('path').attr('d',d3.symbol(d3.symbolDiamond,46)()).attr('transform',`translate(${px},${ay})`).attr('fill',o.c);
+    else if(o.sh==='tick')s.append('line').attr('x1',px).attr('x2',px).attr('y1',ay-8).attr('y2',ay+8).attr('stroke',o.c).attr('stroke-width',2);
+    else s.append('circle').attr('cx',px).attr('cy',ay).attr('r',o.big?7:3.5).attr('fill',o.c).attr('stroke','#fff').attr('stroke-width',1.5)});
+}
+
+/* big timeline */
+let MODE='chg';
+document.querySelectorAll('.ctl button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.ctl button').forEach(z=>z.classList.toggle('on',z===b));MODE=b.dataset.m;big()});
+function big(){
+  const w=W('big'),narrow=w<600,h=narrow?300:400,m={l:42,r:narrow?52:64,t:22,b:22},s=svgOf('big',w,h);
+  const d=R.slice(1),x=d3.scaleTime().domain([d[0].date,d[d.length-1].date]).range([m.l,w-m.r]);
+  const LO=-1100,HI=1300;
+  const y=MODE==='chg'?d3.scaleLinear().domain([LO,HI]).range([h-m.b,m.t]):d3.scaleLinear().domain([0,170]).range([h-m.b,m.t]);
+  // recessions
+  let st=null;R.forEach((r,i)=>{if(r.rec&&st===null)st=r.date;if((!r.rec||i===R.length-1)&&st!==null){s.append('rect').attr('x',x(st)).attr('width',Math.max(1,x(r.date)-x(st))).attr('y',m.t).attr('height',h-m.t-m.b).attr('fill','#e2e8f0').attr('opacity',0.7);st=null}});
+  const ticks=MODE==='chg'?[-1000,-500,0,500,1000]:[0,50,100,150];
+  ticks.forEach(t=>{s.append('line').attr('x1',m.l).attr('x2',w-m.r).attr('y1',y(t)).attr('y2',y(t)).attr('stroke',t===0&&MODE==='chg'?C.slate:'#eef0f2').attr('stroke-width',t===0?0.8:1);
+    s.append('text').attr('x',m.l-6).attr('y',y(t)+3).attr('text-anchor','end').attr('font-size',9).attr('fill',C.slate).text(MODE==='chg'?(t?fmtK(t):'0'):t+'M')});
+  d3.range(1940,2030,narrow?20:10).forEach(yr=>{const dt=new Date(yr,0,1);s.append('text').attr('x',x(dt)).attr('y',h-6).attr('text-anchor','middle').attr('font-size',9).attr('fill',C.slate).text(yr)});
+  const last=d[d.length-1];
+  if(MODE==='chg'){
+    const bw=Math.max(0.7,(w-m.l-m.r)/d.length*0.85);
+    const cl=v=>Math.max(LO,Math.min(HI,v));
+    s.append('g').selectAll('rect').data(d).join('rect').attr('x',r=>x(r.date)-bw/2).attr('width',bw)
+      .attr('y',r=>y(Math.max(0,cl(r.chg)))).attr('height',r=>Math.abs(y(cl(r.chg))-y(0)))
+      .attr('fill',r=>r.chg<0?C.red:C.navy).attr('opacity',r=>r.chg<0?0.85:0.55);
+    d.filter(r=>r.chg<LO||r.chg>HI).forEach(r=>{const up=r.chg>HI;
+      s.append('path').attr('d',d3.symbol(d3.symbolTriangle,18)()).attr('transform',`translate(${x(r.date)},${up?m.t-4:h-m.b+4}) rotate(${up?0:180})`).attr('fill',up?C.navy:C.red)});
+    const lab=(dt,txt,top,col,anc)=>s.append('text').attr('x',x(dt)).attr('y',top?m.t-9:h-m.b-6).attr('text-anchor',anc||'middle').attr('font-size',9).attr('fill',col).text(txt);
+    lab(new Date(2020,3,1),'Apr 2020 -20.5M',false,C.red,'end');
+    lab(new Date(2020,5,1),'Jun 2020 +4.6M',true,C.navy,'end');
+    lab(new Date(1945,8,1),'Sep 1945 -2.0M',false,C.red,'start');
+    if(!narrow){s.append('text').attr('x',x(new Date(1983,8,1))).attr('y',y(1118)-5).attr('text-anchor','middle').attr('font-size',9).attr('fill',C.slate).text('1983 strike ends');
+      s.append('text').attr('x',x(new Date(2009,0,1))).attr('y',y(-860)).attr('text-anchor','middle').attr('font-size',9).attr('fill',C.red).text('2008-09');}
+    s.append('circle').attr('cx',x(last.date)).attr('cy',y(last.chg)).attr('r',3.5).attr('fill',C.red);
+    s.append('text').attr('x',x(last.date)+6).attr('y',y(last.chg)+3).attr('font-size',10).attr('font-weight',500).attr('fill',C.red).text(fmtK(last.chg));
+  }else{
+    const ln=d3.line().x(r=>x(r.date)).y(r=>y(r.lvl/1000));
+    s.append('path').datum(d).attr('d',ln).attr('fill','none').attr('stroke',C.navy).attr('stroke-width',1.6);
+    s.append('circle').attr('cx',x(last.date)).attr('cy',y(last.lvl/1000)).attr('r',3.5).attr('fill',C.red);
+    s.append('text').attr('x',x(last.date)+6).attr('y',y(last.lvl/1000)+3).attr('font-size',10).attr('font-weight',500).attr('fill',C.red).text((last.lvl/1000).toFixed(1)+'M');
+    s.append('text').attr('x',x(d[0].date)+4).attr('y',y(d[0].lvl/1000)-8).attr('font-size',9).attr('fill',C.slate).text('29.9M in 1939');
+    const c=R.find(r=>+r.date===+new Date(2020,3,1));
+    s.append('text').attr('x',x(c.date)-4).attr('y',y(c.lvl/1000)+14).attr('text-anchor','end').attr('font-size',9).attr('fill',C.red).text('Apr 2020: '+(c.lvl/1000).toFixed(1)+'M');
+  }
+  // hover
+  const tip=document.getElementById('tip'),fig=document.getElementById('bigfig');
+  const rule=s.append('line').attr('y1',m.t).attr('y2',h-m.b).attr('stroke',C.ink).attr('stroke-width',0.6).attr('opacity',0);
+  const bis=d3.bisector(r=>r.date).center;
+  s.append('rect').attr('x',m.l).attr('y',m.t).attr('width',w-m.l-m.r).attr('height',h-m.t-m.b).attr('fill','transparent')
+   .on('pointermove',ev=>{const [px]=d3.pointer(ev),r=d[bis(d,x.invert(px))];rule.attr('x1',x(r.date)).attr('x2',x(r.date)).attr('opacity',1);
+     tip.innerHTML=`<b>${mo(r.date)}</b><br>change ${fmtK(r.chg)}<br>total ${(r.lvl/1000).toFixed(1)}M${r.ur!=null?'<br>unemployment '+r.ur.toFixed(1)+'%':''}${r.rec?'<br>recession':''}`;
+     const sc=fig.clientWidth/w;let left=10+x(r.date)*sc+10;if(left>fig.clientWidth-150)left-=170;
+     tip.style.left=left+'px';tip.style.top='18px';tip.style.opacity=1})
+   .on('pointerleave',()=>{rule.attr('opacity',0);tip.style.opacity=0});
+}
+
+/* ridgeline */
+function decs(){return d3.range(1940,2030,10).map(dc=>({dc,v:R.filter(r=>r.pct!=null&&r.date.getFullYear()>=dc&&r.date.getFullYear()<dc+10)}))}
+function ridge(){
+  const w=W('ridge'),narrow=w<560,rh=narrow?30:36,D=decs(),m={l:44,r:narrow?92:130,t:26,b:24},h=m.t+D.length*rh+m.b,s=svgOf('ridge',w,h);
+  const x=d3.scaleLinear().domain([-0.6,0.8]).range([m.l,w-m.r]);
+  const grid=d3.range(-0.6,0.8001,0.01);
+  const ker=u=>Math.abs(u)<=1?0.75*(1-u*u):0;
+  (narrow?[-0.4,0,0.4]:[-0.4,-0.2,0,0.2,0.4,0.6]).forEach(t=>{s.append('line').attr('x1',x(t)).attr('x2',x(t)).attr('y1',m.t-8).attr('y2',h-m.b).attr('stroke',t===0?C.slate:'#f1f1ee').attr('stroke-dasharray',t===0?'3,3':null);
+    s.append('text').attr('x',x(t)).attr('y',h-8).attr('text-anchor','middle').attr('font-size',9).attr('fill',C.slate).text((t>0?'+':'')+t.toFixed(1)+'%')});
+  s.append('text').attr('x',x(0)-4).attr('y',m.t-12).attr('text-anchor','end').attr('font-size',9).attr('fill',C.red).text('jobs lost');
+  s.append('text').attr('x',x(0)+4).attr('y',m.t-12).attr('font-size',9).attr('fill',C.navy).text('jobs added');
+  s.append('text').attr('x',w-m.r+8).attr('y',m.t-12).attr('font-size',9).attr('fill',C.slate).text(narrow?'median':'median · months lost');
+  D.forEach((g,i)=>{const vals=g.v.map(r=>r.pct),base=m.t+(i+1)*rh;
+    const q=d3.quantile(vals.slice().sort(d3.ascending),0.75)-d3.quantile(vals.slice().sort(d3.ascending),0.25),bw=Math.max(0.04,1.6*Math.min(d3.deviation(vals),q/1.34)*Math.pow(vals.length,-0.2));
+    const den=grid.map(z=>[z,d3.sum(vals,v=>ker((z-v)/bw))/(vals.length*bw)]);
+    const mxd=d3.max(den,p=>p[1]),yy=v=>base-v/mxd*rh*1.45;
+    const hot=g.dc===2020,col=hot?C.red:C.navy;
+    s.append('path').datum(den).attr('d',d3.area().x(p=>x(p[0])).y0(base).y1(p=>yy(p[1])).curve(d3.curveBasis)).attr('fill',col).attr('opacity',hot?0.2:0.1);
+    s.append('path').datum(den).attr('d',d3.line().x(p=>x(p[0])).y(p=>yy(p[1])).curve(d3.curveBasis)).attr('fill','none').attr('stroke',col).attr('stroke-width',1.2);
+    s.append('line').attr('x1',m.l).attr('x2',w-m.r).attr('y1',base).attr('y2',base).attr('stroke','#e5e7eb');
+    const med=d3.median(vals),neg=vals.filter(v=>v<0).length/vals.length;
+    s.append('circle').attr('cx',x(med)).attr('cy',base).attr('r',3).attr('fill',col);
+    s.append('text').attr('x',m.l-6).attr('y',base-2).attr('text-anchor','end').attr('font-size',10).attr('font-weight',hot?500:400).attr('fill',hot?C.red:C.ink).text(g.dc+'s');
+    s.append('text').attr('x',w-m.r+8).attr('y',base-2).attr('font-size',9).attr('fill',col).text((med>0?'+':'')+med.toFixed(2)+'%'+(narrow?'':' · '+Math.round(neg*100)+'%'));
+  });
+}
+
+/* table */
+function table(){
+  const D=decs();
+  let html='<tr><th>decade</th><th>median month</th><th>median %</th><th>months lost</th><th>best month</th><th>worst month</th></tr>';
+  D.forEach(g=>{const v=g.v,ch=v.map(r=>r.chg),neg=ch.filter(c=>c<0).length/ch.length;
+    const b=v.reduce((a,r)=>r.chg>a.chg?r:a),wv=v.reduce((a,r)=>r.chg<a.chg?r:a);
+    html+=`<tr class="${g.dc===2020?'hl':''}"><td>${g.dc}s</td><td>${fmtK(d3.median(ch))}</td><td>${(d3.median(v,r=>r.pct)>0?'+':'')+d3.median(v,r=>r.pct).toFixed(2)}%</td><td>${Math.round(neg*100)}%<span class="bar" style="width:${Math.round(neg*60)}px"></span></td><td>${fmtK(b.chg)} <span style="color:#94a3b8">${d3.timeFormat("%b '%y")(b.date)}</span></td><td class="neg">${fmtK(wv.chg)} <span style="color:#94a3b8">${d3.timeFormat("%b '%y")(wv.date)}</span></td></tr>`});
+  document.getElementById('dec').innerHTML=html;
+}
+
+/* histogram */
+function hist(){
+  const w=W('hist'),narrow=w<560,h=narrow?230:260,m={l:34,r:12,t:30,b:26},s=svgOf('hist',w,h);
+  const pool=R.filter(r=>r.date.getFullYear()>=1950&&r.rec24===0&&r.g12!=null),now=R[R.length-1];
+  const below=pool.filter(r=>r.g12<now.g12).length/pool.length;
+  const bins=d3.bin().domain([-0.5,6.5]).thresholds(d3.range(-0.5,6.5,0.25)).value(r=>r.g12)(pool);
+  const x=d3.scaleLinear().domain([-0.5,6.5]).range([m.l,w-m.r]),y=d3.scaleLinear().domain([0,d3.max(bins,b=>b.length)]).nice().range([h-m.b,m.t]);
+  y.ticks(4).forEach(t=>{s.append('line').attr('x1',m.l).attr('x2',w-m.r).attr('y1',y(t)).attr('y2',y(t)).attr('stroke','#f1f1ee');
+    s.append('text').attr('x',m.l-5).attr('y',y(t)+3).attr('text-anchor','end').attr('font-size',9).attr('fill',C.slate).text(t)});
+  s.selectAll('rect.b').data(bins).join('rect').attr('x',b=>x(b.x0)+0.5).attr('width',b=>Math.max(0,x(b.x1)-x(b.x0)-1)).attr('rx',1.5)
+    .attr('y',b=>y(b.length)).attr('height',b=>y(0)-y(b.length)).attr('fill',b=>b.x0<=now.g12&&now.g12<b.x1?C.red:b.x1<=now.g12?'#f4a3b4':C.navy).attr('opacity',b=>b.x0<=now.g12&&now.g12<b.x1?1:0.55);
+  [0,1,2,3,4,5,6].forEach(t=>s.append('text').attr('x',x(t)).attr('y',h-8).attr('text-anchor','middle').attr('font-size',9).attr('fill',C.slate).text((t?'+':'')+t+'%'));
+  const px=x(now.g12);
+  s.append('line').attr('x1',px).attr('x2',px).attr('y1',m.t-14).attr('y2',h-m.b).attr('stroke',C.red).attr('stroke-width',1.2);
+  s.append('text').attr('x',px+5).attr('y',m.t-18).attr('font-size',10).attr('font-weight',500).attr('fill',C.red).text(`Sep 2026: +${now.g12.toFixed(2)}%`);
+  s.append('text').attr('x',px+5).attr('y',m.t-6).attr('font-size',9).attr('fill',C.red).text(`slower than ${Math.round((1-below)*100)}% of comparable months`);
+  const med=d3.median(pool,r=>r.g12);
+  s.append('line').attr('x1',x(med)).attr('x2',x(med)).attr('y1',m.t+30).attr('y2',h-m.b).attr('stroke',C.navy).attr('stroke-dasharray','3,3');
+  s.append('text').attr('x',x(med)+4).attr('y',m.t+38).attr('font-size',9).attr('fill',C.navy).text(`median +${med.toFixed(1)}%`);
+}
+
+/* calendar */
+function cal(){
+  const g=document.getElementById('cal');let h='';['S','M','T','W','T','F','S'].forEach(d=>h+=`<div class="w">${d}</div>`);
+  for(let i=0;i<4;i++)h+='<div></div>';
+  for(let dd=1;dd<=31;dd++){const c=dd===2?'d j':(dd===27||dd===28)?'d f':dd===4?'d t':'d';h+=`<div class="${c}">${dd}</div>`}
+  g.innerHTML=h;
+}
+
+/* timeline */
+function timeline(){
+  const E=[
+    ['1939','',`<span class="n">29.9M</span>The monthly series begins.`],
+    ['Sep 1945','r',`<span class="n">-2.0M</span>War production shuts down after the Japanese surrender.`],
+    ['Sep 1983','',`<span class="n">+1.1M</span>Striking telephone workers return. It stood as the biggest month until 2020.`],
+    ['2008-10','r',`<span class="n">-8.7M</span>Jobs lost from January 2008 to February 2010, the deepest slide between 1945 and 2020.`],
+    ['Apr 2020','r',`<span class="n">-20.5M</span>Lockdowns. Ten times the previous record loss, in one month.`],
+    ['Jun 2020','',`<span class="n">+4.6M</span>Reopening brings the largest gain on record.`],
+    ['Aug 2025','t',`<span class="n">BLS</span>The commissioner is fired after a weak July report and 258k of downward revisions.`],
+    ['Oct 2025','t',`<span class="n">43 days</span>A government shutdown delays reports. October's unemployment rate is never published.`],
+    ['2025','r',`<span class="n">+116k</span>Jobs added in the full year, the weakest year outside a recession since 2002.`],
+    ['Sep 2026','t',`<span class="n">3.75-4%</span>The Fed raises rates for the first time in three years.`],
+    ['Oct 2026','r',`<span class="n">+29k</span>September's gain misses the 84k forecast. Unemployment rises to 4.2%.`]];
+  document.getElementById('tl').innerHTML=E.map(e=>`<div class="ev ${e[1]}"><div class="y">${e[0]}</div><div class="dot"></div><div class="b">${e[2]}</div></div>`).join('');
+}
+</script>
+</body>
+</html>
