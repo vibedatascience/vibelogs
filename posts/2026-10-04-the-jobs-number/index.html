@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="Rahul">
-<title>How to read the US jobs report | Rahul's Site</title>
+<title>What is the US jobs report? | Rahul's Site</title>
 <meta name="description" content="What US payroll growth is, why the monthly jobs report leads the front page, how to read the headline, and 87 years of monthly job growth.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -125,6 +125,15 @@ h3{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;lette
 .bind .up{border-top:3px solid var(--navy)}.bind .up .h,.bind .up .t{color:var(--navy)}
 .bind .dn{border-top:3px solid var(--red)}.bind .dn .h,.bind .dn .t{color:var(--red)}
 @media (max-width:560px){.bind{grid-template-columns:1fr}.bind .vs{justify-content:center}}
+/* 12th strip, sample stats, bind chart */
+.why12{display:grid;grid-template-columns:1fr;gap:6px;margin:2px 0 14px}
+.stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:2px 0 16px}
+.stats3>div{background:#fff;border:1px solid var(--rule);border-radius:10px;padding:10px 12px}
+.stats3 .v{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.35rem;letter-spacing:-0.02em;line-height:1.1}
+.stats3 .l{font-size:0.78rem;color:#3a3a44;line-height:1.4;margin-top:4px}
+@media (max-width:560px){.stats3{grid-template-columns:1fr}}
+.mini{font-size:0.86rem;color:#3a3a44;margin:0 0 6px}
+.mini b{font-weight:500;color:var(--ink)}
 /* toggle */
 .ctl{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 8px;font-family:'IBM Plex Mono',monospace;font-size:0.74rem}
 .ctl button{font:inherit;border:1px solid var(--rule);background:#fff;color:var(--ink);padding:5px 12px;border-radius:6px;cursor:pointer}
@@ -166,8 +175,8 @@ footer a{color:var(--muted)}
 
 <header class="post">
   <div class="meta"><span>[2026-10-04]</span><span>Rahul</span><span>updated 2026-10-04</span><span class="tag">ECONOMICS</span></div>
-  <h1>How to read the US jobs report</h1>
-  <p class="lede">Once a month the US counts how many more people are on payrolls than the month before. For September 2026 the answer was 29,000. Here is what that means and how it compares with 87 years of data.</p>
+  <h1>What is the US jobs report?</h1>
+  <p class="lede">The jobs report is the government's monthly count of how many jobs the US gained or lost. For September 2026, it was +29,000.</p>
 
   <div class="kpis">
     <div class="kpi hot"><div class="v">+29k</div><div class="l">jobs added in September 2026</div></div>
@@ -184,6 +193,14 @@ footer a{color:var(--muted)}
   <div class="k">01 / what it is</div>
   <h2>A headcount of paid jobs, minus last month's headcount</h2>
   <div class="txt"><p>Every month BLS asks about 120,000 employers one question: how many people did you pay in the pay period that includes the 12th?</p></div>
+  <div class="fig"><svg id="cal12"></svg></div>
+  <div class="txt"><p class="mini"><b>Why the 12th?</b> Every employer reports the same mid-month moment, clear of month-end and big holidays, and it matches the week the household survey asks about. So the report is a snapshot of one week: a layoff on Sep 20 shows up in October's number.</p></div>
+  <h3>Is 120,000 employers enough?</h3>
+  <div class="stats3">
+    <div><div class="v">26%</div><div class="l">of all US payroll jobs are in the sample each month</div></div>
+    <div><div class="v">by industry &amp; size</div><div class="l">picked from 12.1M worksites; big employers sampled more often</div></div>
+    <div><div class="v">once a year</div><div class="l">checked against tax records that cover nearly every employer, and revised</div></div>
+  </div>
   <div class="eq">
     <div class="box"><small>September total</small><b>159,044k</b></div><span class="op">-</span>
     <div class="box"><small>August total</small><b>159,015k</b></div><span class="op">=</span>
@@ -226,6 +243,8 @@ footer a{color:var(--muted)}
     <div class="vs">vs</div>
     <div class="dn"><div class="h">jobs say</div><div class="t">cut rates</div><div class="s">+29k jobs, unemployment up to 4.2%.</div></div>
   </div>
+  <div class="fig"><svg id="bindc"></svg></div>
+  <div class="cap">Higher rates slow borrowing and spending. That cools prices, and it also cools hiring. Inflation is back above the 2% goal, so the Fed hiked; hiring is already weak, so the hike risks more job losses.</div>
   <div class="two">
     <ul class="why">
       <li><b>First.</b> The earliest hard data for each month.</li>
@@ -245,7 +264,7 @@ footer a{color:var(--muted)}
   <div class="fig"><svg id="line"></svg></div>
   <div class="cap">September vs the forecast, recent averages, 2019, and the breakeven range.</div>
   <ol class="checks txt">
-    <li><b>Forecast: 84k.</b> The median guess of economists polled before the release (Bloomberg's poll had 90k). They expected more because August first came in at +162k. It was later cut to +133k.</li>
+    <li><b>Forecast: 84k.</b> The median guess of economists at banks and research firms, polled by news services like Bloomberg before the release (Bloomberg's poll had 90k). They expected more because August first came in at +162k. It was later cut to +133k.</li>
     <li><b>Breakeven: about 0 to 87k.</b> The jobs needed each month to keep unemployment flat. Less immigration means fewer new workers, so the bar is low. 29k sits inside that range.</li>
     <li><b>Revisions: -60k.</b> July and August were cut, and unemployment rose to 4.2%.</li>
   </ol>
@@ -304,7 +323,8 @@ footer a{color:var(--muted)}
 const C={red:'#E60023',navy:'#0a3069',teal:'#0d9488',slate:'#64748b',rule:'#E7E7E2',ink:'#17171C',light:'#cbd5e1'};
 const fmtK=v=>{const a=Math.abs(v),s=v>0?'+':v<0?'-':'';return a>=1000?s+(a/1000).toFixed(1)+'M':s+d3.format(',')(Math.round(a))+'k'};
 const mo=d3.timeFormat('%b %Y');
-let R=[];
+let R=[],B=null;
+fetch('bind.json').then(r=>r.json()).then(j=>{const [y,m]=j.start.split('-').map(Number);B=j.inf.map((v,i)=>({date:new Date(y,m-1+i,1),inf:v,fed:j.fed[i],ur:j.ur[i]}));bindc()});
 function W(id){return document.getElementById(id).parentNode.clientWidth-20}
 function svgOf(id,w,h){return d3.select('#'+id).attr('viewBox',`0 0 ${w} ${h}`).attr('height',h).html('')}
 
@@ -317,7 +337,7 @@ fetch('jobs.json').then(r=>r.json()).then(J=>{
   cal();timeline();table();drawAll();
   let t;window.addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(drawAll,150)});
 });
-function drawAll(){recent();waffle();numline();big();ridge();hist()}
+function drawAll(){recent();cal12();if(B)bindc();waffle();numline();big();ridge();hist()}
 
 /* recent 24 months */
 function recent(){
@@ -349,6 +369,46 @@ function waffle(){
       s.append('rect').attr('x',cx).attr('y',cy).attr('height',sz).attr('rx',2).attr('fill',C.red).attr('width',sz*g12/1000).attr('class','grow')}}
   for(let k=0;k<2;k++){const i=n+k,cx=(i%cols)*(sz+gap),cy=Math.floor(i/cols)*(sz+gap);
     s.append('rect').attr('x',cx+0.75).attr('y',cy+0.75).attr('width',sz-1.5).attr('height',sz-1.5).attr('rx',2).attr('fill','#fff').attr('stroke',C.teal).attr('stroke-width',1.5)}
+}
+
+
+/* why-the-12th strip: Sep 2026 */
+function cal12(){
+  const w=W('cal12'),h=78,m={l:4,r:4},s=svgOf('cal12',w,h);
+  const days=[...Array(30)].map((_,i)=>({d:i+1,mo:'Sep'})).concat([{d:1,mo:'Oct'},{d:2,mo:'Oct'}]);
+  const n=days.length,cw=(w-m.l-m.r)/n,y0=26,ch=20;
+  s.append('rect').attr('x',m.l+5*cw).attr('y',y0-4).attr('width',7*cw).attr('height',ch+8).attr('rx',4).attr('fill',C.navy).attr('opacity',0.12);
+  s.append('text').attr('x',m.l+5*cw).attr('y',y0-9).attr('font-size',9).attr('fill',C.navy).text('a weekly pay period, Sep 6-12');
+  days.forEach((o,i)=>{const hot=(o.mo==='Sep'&&o.d===12)||(o.mo==='Oct'&&o.d===2);
+    s.append('rect').attr('x',m.l+i*cw+1).attr('y',y0).attr('width',cw-2).attr('height',ch).attr('rx',2).attr('fill',hot?C.red:o.mo==='Oct'?'#fde8ec':'#eef0f2');
+    if(hot||o.d===1||(o.mo==='Sep'&&o.d%5===0&&cw>9))s.append('text').attr('x',m.l+i*cw+cw/2).attr('y',y0+ch/2+3).attr('text-anchor','middle').attr('font-size',cw<12?7:9).attr('fill',hot?'#fff':C.slate).text(o.d)});
+  const xa=m.l+11*cw+cw/2,xb=m.l+31*cw+cw/2;
+  s.append('text').attr('x',xa).attr('y',y0+ch+16).attr('text-anchor','middle').attr('font-size',9).attr('fill',C.red).text('the 12th');
+  s.append('text').attr('x',xb).attr('y',y0+ch+16).attr('text-anchor','end').attr('font-size',9).attr('fill',C.red).text('report out Oct 2');
+  s.append('text').attr('x',m.l).attr('y',y0+ch+16).attr('font-size',9).attr('fill',C.slate).text('Sep 1');
+}
+/* the bind: inflation, Fed rate, unemployment */
+function bindc(){
+  if(!B)return;
+  const w=W('bindc'),narrow=w<560,h=narrow?240:280,m={l:30,r:narrow?92:120,t:14,b:22},s=svgOf('bindc',w,h);
+  const d=B.filter(r=>r.date>=new Date(2022,0,1));
+  const x=d3.scaleTime().domain([d[0].date,d[d.length-1].date]).range([m.l,w-m.r]),y=d3.scaleLinear().domain([0,10]).range([h-m.b,m.t]);
+  [0,2,4,6,8,10].forEach(t=>{s.append('line').attr('x1',m.l).attr('x2',w-m.r).attr('y1',y(t)).attr('y2',y(t)).attr('stroke',t===2?C.red:'#f1f1ee').attr('stroke-dasharray',t===2?'3,3':null).attr('opacity',t===2?0.5:1);
+    s.append('text').attr('x',m.l-5).attr('y',y(t)+3).attr('text-anchor','end').attr('font-size',9).attr('fill',C.slate).text(t+'%')});
+  s.append('text').attr('x',x(new Date(2023,8,1))).attr('y',y(2)+12).attr('font-size',9).attr('fill',C.red).attr('opacity',0.8).text('2% inflation goal');
+  [2022,2023,2024,2025,2026].forEach(yr=>s.append('text').attr('x',x(new Date(yr,0,1))).attr('y',h-6).attr('text-anchor','middle').attr('font-size',9).attr('fill',C.slate).text(yr));
+  const S=[{k:'inf',c:C.red,lab:'inflation',curve:d3.curveMonotoneX},{k:'fed',c:C.teal,lab:narrow?'Fed':'Fed rate',curve:d3.curveStepAfter},{k:'ur',c:C.navy,lab:narrow?'jobless':'unemployment',curve:d3.curveMonotoneX}];
+  const ends=[];
+  S.forEach(o=>{const pts=d.filter(r=>r[o.k]!=null);
+    s.append('path').datum(pts).attr('d',d3.line().defined(r=>r[o.k]!=null).x(r=>x(r.date)).y(r=>y(r[o.k])).curve(o.curve)).attr('fill','none').attr('stroke',o.c).attr('stroke-width',2);
+    const L=pts[pts.length-1];s.append('circle').attr('cx',x(L.date)).attr('cy',y(L[o.k])).attr('r',3).attr('fill',o.c);
+    ends.push({y:y(L[o.k]),x:x(L.date),t:`${o.lab} ${L[o.k].toFixed(1)}%`,c:o.c})});
+  ends.sort((a,b)=>a.y-b.y);for(let i=1;i<ends.length;i++)if(ends[i].y-ends[i-1].y<12)ends[i].y=ends[i-1].y+12;
+  ends.forEach(e=>s.append('text').attr('x',w-m.r+8).attr('y',e.y+3).attr('font-size',9.5).attr('font-weight',500).attr('fill',e.c).text(e.t));
+  const pk=d.reduce((a,r)=>r.inf>a.inf?r:a);
+  s.append('text').attr('x',x(pk.date)+6).attr('y',y(pk.inf)+3).attr('font-size',9).attr('fill',C.red).text('9.0% in Jun 2022');
+  const hk=new Date(2026,8,1);
+  s.append('line').attr('x1',x(hk)).attr('x2',x(hk)).attr('y1',y(5.3)).attr('y2',y(4.25)).attr('stroke',C.teal).attr('stroke-width',0.8);s.append('text').attr('x',x(hk)).attr('y',y(5.3)-4).attr('text-anchor','end').attr('font-size',9).attr('fill',C.teal).text('Sep 2026 hike');
 }
 
 /* number line */
