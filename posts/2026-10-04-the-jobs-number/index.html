@@ -321,6 +321,9 @@ footer a{color:var(--muted)}
 <section>
   <div class="k">08 / what markets do with it</div>
   <h2>Stocks used to cheer strong jobs. Now they don't.</h2>
+  <div class="txt"><p class="mini"><b>What this is.</b> For every report since Nov 2016: compare the jobs number with what was expected, then see what the S&amp;P 500 and the 2-year Treasury yield did that day and over the next month. The last ten:</p></div>
+  <div class="tblwrap"><table class="tbl" id="evt"></table></div>
+  <div class="cap">Expected = average of the prior three months. Next month = S&amp;P 500 from the close before the report to 20 trading days after. Blank = market closed or not enough days yet.</div>
   <div class="stats3">
     <div><div class="v">+20%</div><div class="l">bigger S&amp;P 500 moves on jobs Fridays than other days (0.88% vs 0.73%)</div></div>
     <div><div class="v">1.7&times;</div><div class="l">bigger 2-year Treasury yield moves (5.9 vs 3.5 basis points)</div></div>
@@ -332,8 +335,13 @@ footer a{color:var(--muted)}
   <div class="fig"><svg id="eras"></svg></div>
   <div class="legend"><span><i style="background:var(--navy);border-radius:50%"></i>S&amp;P 500</span><span><i style="background:var(--teal);border-radius:50%"></i>2-year Treasury yield</span></div>
   <div class="cap">Correlation between the surprise and each market's move on the day. Bonds still react the way theory says; stocks flipped as inflation came back.</div>
-  <div class="txt"><p class="mini"><b>How to read it.</b> Strong jobs mean a stronger economy, which is good for profits, but also more pressure to keep rates high. When inflation is low the first effect wins. When inflation is above target, as in 2026, the second does, so a miss can lift stocks.</p></div>
-  <div class="cap">Expected = average of the prior three months, a stand-in for economists' forecasts, whose history is paywalled. The rough stand-in weakens every correlation. 2020-21 left out. 2026 is nine reports.</div>
+  <h3>What comes before a sustained rise?</h3>
+  <div class="txt"><p class="mini">The surprise itself barely predicts the next month. How the market closes on Friday does. Average S&amp;P 500 path after each kind of Friday:</p></div>
+  <div class="fig"><svg id="paths"></svg></div>
+  <div class="tblwrap"><table class="tbl" id="ptbl"></table></div>
+  <div class="verdict">Watch Friday's close, not the headline. Stocks down with yields up is a rate scare, and it is the one pattern that kept sliding. Oct 2 was stocks up, yields down.</div>
+  <div class="txt"><p class="mini"><b>Why the sign flips.</b> Strong jobs mean a stronger economy, which is good for profits, but also more pressure to keep rates high. When inflation is low the first effect wins. When inflation is above target, as in 2026, the second does, so a miss can lift stocks.</p></div>
+  <div class="cap">Expected = average of the prior three months, a stand-in for economists' forecasts, whose history is paywalled. The rough stand-in weakens every correlation. 2020-21 left out. 2026 is nine reports. Small groups (19 to 30 reports) in a mostly rising market, so treat these as tendencies, not rules.</div>
 </section>
 
 <details class="txt">
@@ -357,8 +365,9 @@ footer a{color:var(--muted)}
 const C={red:'#E60023',navy:'#0a3069',teal:'#0d9488',slate:'#64748b',rule:'#E7E7E2',ink:'#17171C',light:'#cbd5e1'};
 const fmtK=v=>{const a=Math.abs(v),s=v>0?'+':v<0?'-':'';return a>=1000?s+(a/1000).toFixed(1)+'M':s+d3.format(',')(Math.round(a))+'k'};
 const mo=d3.timeFormat('%b %Y');
-let R=[],B=null,EV=null;
-fetch('event.json').then(r=>r.json()).then(j=>{EV=j.rows.map(a=>Object.fromEntries(j.cols.map((c,i)=>[c,a[i]])));scat();eras()});
+let R=[],B=null,EV=null,PA=null;
+fetch('paths.json').then(r=>r.json()).then(j=>{PA=j;paths()});
+fetch('event.json').then(r=>r.json()).then(j=>{EV=j.rows.map(a=>Object.fromEntries(j.cols.map((c,i)=>[c,a[i]])));scat();eras();evt()});
 fetch('bind.json').then(r=>r.json()).then(j=>{const [y,m]=j.start.split('-').map(Number);B=j.inf.map((v,i)=>({date:new Date(y,m-1+i,1),inf:v,fed:j.fed[i],ur:j.ur[i]}));bindc()});
 function W(id){return document.getElementById(id).parentNode.clientWidth-20}
 function svgOf(id,w,h){return d3.select('#'+id).attr('viewBox',`0 0 ${w} ${h}`).attr('height',h).html('')}
@@ -372,7 +381,7 @@ fetch('jobs.json').then(r=>r.json()).then(J=>{
   cal();timeline();table();drawAll();
   let t;window.addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(drawAll,150)});
 });
-function drawAll(){if(EV){scat();eras()}recent();cal12();if(B)bindc();waffle();numline();big();ridge();hist()}
+function drawAll(){if(EV){scat();eras()}if(PA)paths();recent();cal12();if(B)bindc();waffle();numline();big();ridge();hist()}
 
 /* recent 24 months */
 function recent(){
@@ -484,6 +493,38 @@ function eras(){
     s.append('text').attr('x',x(cs)+(cs<cy?-9:9)).attr('y',yy+3).attr('text-anchor',cs<cy?'end':'start').attr('font-size',9).attr('fill',e==='2026'?C.red:C.navy).text((cs>0?'+':'')+cs.toFixed(2));
     s.append('text').attr('x',x(cy)+(cs<cy?9:-9)).attr('y',yy+3).attr('text-anchor',cs<cy?'start':'end').attr('font-size',9).attr('fill',C.teal).text('+'+cy.toFixed(2));
   });
+}
+
+
+function evt(){
+  const mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const f=(v,suf,dp)=>v==null?'<span style="color:#cbd5e1">&ndash;</span>':`<span class="${v<0?'neg':''}">${v>0?'+':''}${dp!=null?v.toFixed(dp):Math.round(v)}${suf}</span>`;
+  let h='<tr><th>report</th><th>month</th><th>jobs</th><th>expected</th><th>surprise</th><th>S&amp;P that day</th><th>2y yield</th><th>S&amp;P next month</th></tr>';
+  EV.slice(-10).reverse().forEach(r=>{const d=new Date(r.rel+'T12:00');
+    h+=`<tr class="${r.rel==='2026-10-02'?'hl':''}"><td>${mn[d.getMonth()]} ${d.getDate()}</td><td>${mn[+r.ref.slice(5,7)-1]} '${r.ref.slice(2,4)}</td><td>${f(r.first,'k')}</td><td>${f(r.exp,'k')}</td><td><b>${f(r.surp,'k')}</b></td><td>${f(r.ret,'%',2)}</td><td>${f(r.dy2,' bp')}</td><td>${f(r.f20,'%',1)}</td></tr>`});
+  document.getElementById('evt').innerHTML=h;
+}
+const PB=[['up_yup','stocks up, yields up',C.navy],['up_ydn','stocks up, yields down',C.teal],['down_ydn','stocks down, yields down','#94a3b8'],['down_yup','stocks down, yields up',C.red]];
+function paths(){
+  const w=W('paths'),narrow=w<560,h=narrow?240:280,m={l:36,r:narrow?78:92,t:14,b:26},s=svgOf('paths',w,h);
+  const x=d3.scaleLinear().domain([0,20]).range([m.l,w-m.r]),y=d3.scaleLinear().domain([-2,2.2]).range([h-m.b,m.t]);
+  [-2,-1,0,1,2].forEach(t=>{s.append('line').attr('x1',m.l).attr('x2',w-m.r).attr('y1',y(t)).attr('y2',y(t)).attr('stroke',t?'#f1f1ee':C.slate).attr('stroke-width',t?1:0.8);
+    s.append('text').attr('x',m.l-5).attr('y',y(t)+3).attr('text-anchor','end').attr('font-size',9).attr('fill',C.slate).text((t>0?'+':'')+t+'%')});
+  [0,5,10,15,20].forEach(t=>s.append('text').attr('x',x(t)).attr('y',h-8).attr('text-anchor','middle').attr('font-size',9).attr('fill',C.slate).text(t?'+'+t+' days':'Friday'));
+  const ln=d3.line().x((v,i)=>x(i)).y(v=>y(v)).curve(d3.curveMonotoneX);
+  s.append('path').attr('d',ln(PA.paths.all)).attr('fill','none').attr('stroke',C.slate).attr('stroke-width',1.2).attr('stroke-dasharray','4,3');
+  const ends=[{y:y(PA.paths.all[20]),t:'any day '+(PA.paths.all[20]>0?'+':'')+PA.paths.all[20].toFixed(1)+'%',c:C.slate}];
+  PB.forEach(([k,lab,c])=>{const p=PA.paths[k];s.append('path').attr('d',ln(p)).attr('fill','none').attr('stroke',c).attr('stroke-width',k==='down_yup'?2.6:2);
+    s.append('circle').attr('cx',x(20)).attr('cy',y(p[20])).attr('r',3).attr('fill',c);
+    ends.push({y:y(p[20]),t:(p[20]>0?'+':'')+p[20].toFixed(1)+'%',c})});
+  ends.sort((a,b)=>a.y-b.y);for(let i=1;i<ends.length;i++)if(ends[i].y-ends[i-1].y<12)ends[i].y=ends[i-1].y+12;
+  ends.forEach(e=>s.append('text').attr('x',x(20)+7).attr('y',e.y+3).attr('font-size',9.5).attr('font-weight',500).attr('fill',e.c).text(e.t));
+  // table
+  const pos={up_yup:80,up_ydn:67,down_ydn:68,down_yup:42};
+  let t='<tr><th>Friday close</th><th>reports</th><th>Friday</th><th>20 days later</th><th>up after 20 days</th></tr>';
+  PB.forEach(([k,lab,c])=>{const p=PA.paths[k];t+=`<tr class="${k==='down_yup'?'hl':''}"><td><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${c};margin-right:6px"></span>${lab}</td><td>${PA.n[k]}</td><td class="${p[0]<0?'neg':''}">${p[0]>0?'+':''}${p[0].toFixed(1)}%</td><td class="${p[20]<0?'neg':''}"><b>${p[20]>0?'+':''}${p[20].toFixed(1)}%</b></td><td>${pos[k]}%</td></tr>`});
+  t+=`<tr><td style="color:#64748b">any 20-day stretch</td><td style="color:#64748b">all days</td><td></td><td style="color:#64748b">+${PA.paths.all[20].toFixed(1)}%</td><td style="color:#64748b">69%</td></tr>`;
+  document.getElementById('ptbl').innerHTML=t;
 }
 
 /* number line */
