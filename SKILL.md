@@ -21,6 +21,6 @@ Every new page gets one entry inside `#entries` in index.html. Order does not ma
 </a>
 ```
 
-- `data-tags` must match a filter button on index.html: apps-tools, data-visualizations, learning-tutorials, walks-places, books-art-essays, reference.
+- `data-tags` must match a filter button on index.html: apps-tools, data-visualizations, economics, learning-tutorials, walks-places, books-art-essays, reference.
 - `data-pin="1"` pins a reference page to the top.
 - Gallery view shows `<href>thumb.jpg`, so put a thumb.jpg in the page's folder.
