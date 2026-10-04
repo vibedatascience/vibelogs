@@ -1,0 +1,2039 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Talent Based Residencies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;1,6..72,400&display=swap">
+<style>
+  /* Single-theme by request: plain white page, one column, each residency is a block of label/value rows */
+  :root {
+    --bg: #ffffff;
+    --ink: #0f172a;
+    --muted: #64748b;
+    --rule: #e2e8f0;
+    --tint: #f8fafc;
+    --link: #0a3069;
+    --accent: #e60023;
+    --accent-tint: #fff1f3;
+    --yes: #0d9488;
+    --yes-tint: #e6f6f4;
+    --font-display: "Newsreader", Georgia, "Times New Roman", serif;
+    --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color-scheme: light;
+  }
+  html, body { height: 100%; margin: 0; background: var(--bg); color: var(--ink); }
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding-inline: 24px;
+    padding-block: 48px;
+    font-family: var(--font-body);
+  }
+  h1 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  .title-block { display: grid; gap: 6px; min-width: 0; }
+  .title-line { display: flex; align-items: center; gap: 12px; }
+  .flag {
+    flex: none;
+    width: 36px;
+    height: 18px;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px var(--rule);
+  }
+  .glance {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    margin-block: 8px 4px;
+    overflow: hidden;
+  }
+  .tile {
+    display: grid;
+    align-content: start;
+    gap: 4px;
+    padding: 14px 16px;
+    background: var(--bg);
+  }
+  .t-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .t-value {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-display);
+    font-size: 1.45rem;
+    font-weight: 500;
+    line-height: 1.15;
+    font-variant-numeric: tabular-nums;
+  }
+  .usd {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0.01em;
+  }
+  .t-sub { font-size: 0.78rem; line-height: 1.35; color: var(--muted); }
+  .row > dd.age { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .row > dd.acts { display: grid; gap: 10px; }
+  .act { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; }
+  .act > span:first-child { flex: 1 1 280px; min-width: 0; }
+  .tag {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--tint);
+    color: var(--muted);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    box-shadow: inset 0 0 0 1px var(--rule);
+  }
+  .tag.ok { background: var(--yes-tint); color: var(--yes); box-shadow: none; }
+  .note {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-block: 10px 4px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: var(--accent-tint);
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
+  .note-tag {
+    flex: none;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .maybe {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #fef6e4;
+    color: #a16207;
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .mini-wrap { overflow-x: auto; margin-top: 8px; }
+  .mini { border-collapse: collapse; font-size: 0.9rem; font-variant-numeric: tabular-nums; min-width: 360px; }
+  .mini th {
+    text-align: left;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 6px 14px 6px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .mini td { padding: 6px 14px 6px 0; border-bottom: 1px solid var(--rule); }
+  .mini td strong { color: var(--yes); }
+  /* table of contents + sort */
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  .entry { scroll-margin-top: 16px; }
+  .toc {
+    margin-top: 28px;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .toc-head {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: 8px 16px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .toc-title, .sort-label, .toc-cols {
+    font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  .sort { display: inline-flex; align-items: center; gap: 4px; }
+  .sort-label { margin-right: 6px; }
+  .sort button {
+    font: inherit; font-size: 0.8rem; font-weight: 600;
+    padding: 4px 10px; border-radius: 999px;
+    border: 1px solid var(--rule); background: var(--bg); color: var(--muted);
+    cursor: pointer;
+  }
+  .sort button:hover { color: var(--ink); }
+  .sort button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+  .sort button:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+  .toc-cols, .toc-list a {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr) 84px 84px 84px 64px;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+  }
+  .toc-cols { padding-block: 8px 4px; }
+  .toc-cols span:nth-child(n+4), .toc-list .num { text-align: right; }
+  .toc-list { list-style: none; margin: 0; padding: 0 0 6px; }
+  .toc-list a {
+    color: var(--ink); text-decoration: none;
+    font-variant-numeric: tabular-nums;
+  }
+  .toc-list a:hover { background: var(--tint); }
+  .toc-list a:focus-visible { outline: 2px solid var(--link); outline-offset: -2px; }
+  .toc-list .flag { width: 28px; height: 14px; }
+  .toc-list .nm { font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .toc-list .stars { font-size: 0.85rem; letter-spacing: 2px; }
+  .toc-list .num { font-size: 0.85rem; color: var(--muted); }
+  @media (max-width: 560px) {
+    .toc-cols, .toc-list a { grid-template-columns: 22px minmax(0, 1fr) 66px 66px; gap: 8px; padding-inline: 12px; }
+    .toc-cols span:nth-child(n+5), .toc-list .num { display: none; }
+    .toc-list .stars { font-size: 0.75rem; letter-spacing: 1px; }
+  }
+  .ratings { display: grid; gap: 4px; justify-items: end; }
+  .fit-label { min-width: 34px; text-align: right; }
+  .ease .stars .on { color: var(--yes); }
+  .toc-list .ez .on { color: var(--yes); }
+  @media (max-width: 560px) { .ratings { justify-items: start; } }
+  .no {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--tint);
+    color: var(--muted);
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    box-shadow: inset 0 0 0 1px var(--rule);
+  }
+  .yes {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--yes-tint);
+    color: var(--yes);
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  @media (max-width: 720px) {
+    .glance { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  .asof {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .entry { margin-top: 32px; border-top: 1px solid var(--rule); }
+  .entry-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px 16px;
+    padding-block: 20px 8px;
+  }
+  .fit { display: inline-flex; align-items: center; gap: 10px; }
+  .fit-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .stars { font-size: 1.05rem; letter-spacing: 3px; line-height: 1; }
+  .stars .on { color: var(--accent); }
+  .stars .off { color: var(--rule); }
+  .entry h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.6rem;
+    line-height: 1.2;
+  }
+  .rows { margin: 0; }
+  .row {
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 16px;
+    padding-block: 18px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .row > dt {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-top: 3px;
+  }
+  .row > dd { margin: 0; font-size: 1rem; line-height: 1.55; max-width: 68ch; min-width: 0; }
+
+  /* generic lists */
+  .stack { margin: 0; padding: 0; list-style: none; display: grid; gap: 14px; }
+  .label { font-weight: 600; }
+  .bullets { margin: 6px 0 0; padding-left: 1.1em; display: grid; gap: 4px; font-size: 0.95rem; }
+
+  /* official quotes */
+  .q {
+    margin: 8px 0 0;
+    padding: 10px 14px;
+    border-left: 2px solid var(--accent);
+    background: var(--tint);
+    border-radius: 0 6px 6px 0;
+  }
+  .q blockquote {
+    margin: 0;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.12rem;
+    line-height: 1.4;
+  }
+  .q figcaption {
+    margin-top: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .q figcaption a { color: var(--muted); text-decoration: none; }
+  .q figcaption a:hover { color: var(--link); text-decoration: underline; }
+
+  /* route checkboxes */
+  .routes { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+  .routes li { display: flex; align-items: center; gap: 10px; color: var(--muted); }
+  .routes li.on { color: var(--ink); font-weight: 600; }
+  .routes .box {
+    flex: none; width: 16px; height: 16px;
+    border: 1.5px solid var(--muted); border-radius: 3px;
+    background: var(--bg); position: relative;
+  }
+  .routes li.on .box { background: var(--link); border-color: var(--link); }
+  .routes li.on .box::after {
+    content: ""; position: absolute; left: 4.5px; top: 1px;
+    width: 4px; height: 8px;
+    border: solid var(--bg); border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  /* evidence groups */
+  .ev { display: grid; gap: 16px; }
+  .ev h3 {
+    margin: 0;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.95rem; font-weight: 600;
+  }
+  .count {
+    display: inline-grid; place-items: center;
+    min-width: 22px; height: 22px; padding-inline: 6px;
+    border-radius: 11px;
+    background: var(--ink); color: var(--bg);
+    font-size: 0.75rem; font-variant-numeric: tabular-nums;
+  }
+
+  /* steps timeline */
+  .steps { margin: 0; padding: 0; list-style: none; counter-reset: step; }
+  .steps li {
+    counter-increment: step;
+    position: relative;
+    padding-left: 40px;
+    padding-bottom: 20px;
+  }
+  .steps li:last-child { padding-bottom: 0; }
+  .steps li::before {
+    content: counter(step);
+    position: absolute; left: 0; top: 0;
+    width: 24px; height: 24px; border-radius: 50%;
+    display: grid; place-items: center;
+    border: 1.5px solid var(--ink);
+    background: var(--bg);
+    font-size: 0.75rem; font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .steps li:not(:last-child)::after {
+    content: ""; position: absolute;
+    left: 12px; top: 28px; bottom: 4px;
+    border-left: 1px solid var(--rule);
+  }
+  .step-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+  .step-title { font-weight: 600; }
+  .time {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 2px 10px;
+    border-radius: 999px;
+    background: var(--accent-tint);
+    color: var(--accent);
+    font-size: 0.75rem; font-weight: 600;
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .time::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: currentColor;
+  }
+  .time.soft { background: var(--tint); color: var(--muted); }
+  .step-body { margin-top: 4px; font-size: 0.95rem; color: var(--ink); }
+
+  .src-link { display: inline-block; margin-top: 10px; font-size: 0.8rem; }
+  a { color: var(--link); text-underline-offset: 3px; }
+  a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+  @media (max-width: 560px) {
+    .row { grid-template-columns: 1fr; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Talent Based Residencies</h1>
+
+  <nav class="toc" aria-label="Countries">
+    <div class="toc-head">
+      <span class="toc-title">Countries</span>
+      <div class="sort" role="group" aria-label="Sort by">
+        <span class="sort-label">Sort</span>
+        <button type="button" data-sort="fit" aria-pressed="true">Fit</button>
+        <button type="button" data-sort="ease" aria-pressed="false">Ease</button>
+        <button type="button" data-sort="cost" aria-pressed="false">Cost</button>
+        <button type="button" data-sort="time" aria-pressed="false">Time</button>
+        <button type="button" data-sort="name" aria-pressed="false">A&ndash;Z</button>
+      </div>
+    </div>
+    <div class="toc-cols" aria-hidden="true"><span></span><span>Country</span><span>Fit</span><span>Ease</span><span>Cost (3 ppl)</span><span>Time</span></div>
+    <ol class="toc-list" id="toc-list"></ol>
+  </nav>
+
+  <section class="entry" id="uk-global-talent" data-name="UK Global Talent" data-fit="5" data-cost="21.9" data-weeks="8" data-time="~8 wks" data-ease="4">
+    <div class="entry-head">
+      <div class="title-block">
+        <div class="title-line">
+          <svg class="flag" viewBox="0 0 60 30" role="img" aria-label="United Kingdom flag">
+            <clipPath id="uk-s"><path d="M0,0 v30 h60 v-30 z"/></clipPath>
+            <clipPath id="uk-t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>
+            <g clip-path="url(#uk-s)">
+              <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
+              <path d="M0,0 L60,30 M60,0 L0,30" stroke="#ffffff" stroke-width="6"/>
+              <path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#uk-t)" stroke="#C8102E" stroke-width="4"/>
+              <path d="M30,0 v30 M0,15 h60" stroke="#ffffff" stroke-width="10"/>
+              <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>
+            </g>
+          </svg>
+          <h2>UK Global Talent</h2>
+        </div>
+        <p class="asof">Current as of <time datetime="2026-10-03">Oct 3, 2026</time></p>
+      </div>
+      <div class="ratings">
+      <div class="fit" role="img" aria-label="Fit: 5 out of 5">
+        <span class="fit-label">Fit</span>
+        <span class="stars" aria-hidden="true"><span class="on">&#9733;&#9733;&#9733;&#9733;&#9733;</span></span>
+      </div>
+      <div class="fit ease" role="img" aria-label="Ease: 4 out of 5">
+        <span class="fit-label">Ease</span>
+        <span class="stars" aria-hidden="true"><span class="on">&#9733;&#9733;&#9733;&#9733;</span><span class="off">&#9733;</span></span>
+      </div>
+      </div>
+    </div>
+
+    <div class="glance">
+      <div class="tile">
+        <span class="t-label">Visa granted</span>
+        <span class="t-value">Up to 5 yrs</span>
+        <span class="t-sub">Renewable</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Min time, post evidence</span>
+        <span class="t-value">~8 wks</span>
+        <span class="t-sub">5 wk endorsement + 3 wk visa</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Total cost, you + spouse + child</span>
+        <span class="t-value">&pound;16.5k <span class="usd">&asymp; $21.9k</span></span>
+        <span class="t-sub">5-yr visa: &pound;2.3k fees + &pound;14.2k health surcharge</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Path to PR</span>
+        <span class="t-value"><span class="yes">Yes</span> 3 yrs</span>
+        <span class="t-sub">Indefinite leave to remain</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Citizenship</span>
+        <span class="t-value"><span class="yes">Yes</span> ~5 yrs</span>
+        <span class="t-sub">1 yr after PR</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">If you live outside the UK</span>
+        <span class="t-value">Visa stays valid</span>
+        <span class="t-sub">But PR needs you in the UK all but 180 days a year. Once you have PR, 2 yrs away cancels it.</span>
+      </div>
+    </div>
+    <dl class="rows">
+
+      <div class="row">
+        <dt>Official link</dt>
+        <dd><a href="https://www.gov.uk/global-talent">gov.uk/global-talent</a></dd>
+      </div>
+
+      <div class="row">
+        <dt>Route</dt>
+        <dd>
+          <ul class="routes">
+            <li class="on" aria-current="true"><span class="box" aria-hidden="true"></span><span>Talent Route (Endorsement Based)</span></li>
+            <li><span class="box" aria-hidden="true"></span><span>Talent Route (Job Offer Needed)</span></li>
+            <li><span class="box" aria-hidden="true"></span><span>Investment Route</span></li>
+          </ul>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Age</dt>
+        <dd class="age"><span class="yes">No bias</span><span>Only rule: 18 or older.</span></dd>
+      </div>
+
+      <div class="row">
+        <dt>Work rights</dt>
+        <dd class="age"><span class="yes">Any job</span><span>Any employer or self-employed. Change jobs freely.</span></dd>
+      </div>
+
+      <div class="row">
+        <dt>Basic qualifications</dt>
+        <dd>
+          <ul class="stack">
+            <li>
+              <span class="label">Field: digital technology</span>
+              <figure class="q">
+                <blockquote>"technical, for example you're a developer, engineer or data scientist"</blockquote>
+                <figcaption><a href="https://www.gov.uk/global-talent-digital-technology">GOV.UK &middot; Global Talent: digital technology</a></figcaption>
+              </figure>
+              <figure class="q">
+                <blockquote>"Experienced data scientists/data engineers"</blockquote>
+                <figcaption><a href="https://www.gov.uk/government/publications/global-talent-endorsing-bodies/technical-or-business-skills-covered-by-tech-nation">GOV.UK &middot; Skills covered by Tech Nation</a></figcaption>
+              </figure>
+            </li>
+            <li>
+              <span class="label">Track: Leader (Exceptional Talent). Mandatory criterion, recognised by others as:</span>
+              <figure class="q">
+                <blockquote>"a leading talent in the digital technology field in the last 5 years"</blockquote>
+                <figcaption><a href="https://www.gov.uk/global-talent-digital-technology/eligibility">GOV.UK &middot; Eligibility</a></figcaption>
+              </figure>
+            </li>
+            <li>
+              <span class="label">Plus at least 2 optional criteria:</span>
+              <ul class="bullets">
+                <li>Innovation as a founder or senior executive of a product-led digital tech company</li>
+                <li><strong>Innovation as an employee working on a new digital field or concept</strong></li>
+                <li><strong>Contributions to the sector outside your job (for example mentoring or collaborative projects)</strong></li>
+                <li><strong>Significant technical, commercial or entrepreneurial contributions at a product-led company</strong></li>
+                <li>Published or expert-endorsed research</li>
+              </ul>
+            </li>
+          </ul>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Evidence needed</dt>
+        <dd>
+          <div class="ev">
+            <div>
+              <h3><span class="count">3</span>Recommendation letters</h3>
+              <ul class="bullets">
+                <li>Each author is an established expert in digital technology who has known your work for at least 12 months.</li>
+                <li>Written for this Global Talent application, not reused from another purpose.</li>
+                <li>Must cover: how the author knows you; your achievements in digital technology and how you are a leader; how you would benefit from living in the UK; how you would contribute to UK digital technology; your future work plans.</li>
+                <li>Format: typed, dated and signed; up to 3 single sides of A4 (author credentials and contact details excluded); author phone and email, plus organisation logo and registered address if applicable; attach the author's CV or other proof of credentials.</li>
+              </ul>
+            </div>
+            <div>
+              <h3><span class="count">10</span>Evidence documents (maximum)</h3>
+              <ul class="bullets">
+                <li>At least 2 documents for the mandatory criterion (recognised as a leading talent).</li>
+                <li>At least 4 documents covering 2 of the optional criteria.</li>
+                <li>Each document up to 3 sides of A4.</li>
+                <li>One document cannot be used for more than one criterion.</li>
+              </ul>
+            </div>
+            <div>
+              <h3><span class="count">1</span>CV</h3>
+              <ul class="bullets">
+                <li>Typed, up to 3 sides of A4, covering your career and any relevant publication history.</li>
+              </ul>
+            </div>
+          </div>
+          <a class="src-link" href="https://www.gov.uk/global-talent-digital-technology/documents-you-need-to-apply-endorsement">GOV.UK: Documents you need to apply for endorsement</a>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Broad steps</dt>
+        <dd>
+          <ol class="steps">
+            <li>
+              <div class="step-head"><span class="step-title">Build the evidence pack</span><span class="time soft">Self-paced</span></div>
+              <div class="step-body">Letters, documents and CV as listed under Evidence needed.</div>
+            </li>
+            <li>
+              <div class="step-head"><span class="step-title">Stage 1: Endorsement</span><span class="time">5 to 8 weeks</span></div>
+              <div class="step-body">Apply on GOV.UK (&pound;561). Tech Nation reviews it for the Home Office.</div>
+            </li>
+            <li>
+              <div class="step-head"><span class="step-title">Stage 2: Visa</span><span class="time">About 3 weeks</span></div>
+              <div class="step-body">Apply from outside the UK (&pound;205) plus the healthcare surcharge (&pound;1,035 per year). Earliest is 3 months before travel.</div>
+            </li>
+            <li>
+              <div class="step-head"><span class="step-title">Settlement (indefinite leave to remain)</span><span class="time">After 3 years</span></div>
+              <div class="step-body">Available after 3 years on the Leader track.</div>
+            </li>
+          </ol>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Activation after approval</dt>
+        <dd class="acts">
+          <div class="act"><span>Create a UKVI account, link your passport. No sticker or card: the eVisa is your status.</span><span class="time">Same day</span></div>
+          <div class="act"><span>ID: none issued. You prove status with an eVisa share code.</span><span class="time">Instant</span></div>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Spouse and child</dt>
+        <dd>
+          <ul class="bullets" style="margin-top:0">
+            <li>Apply as your dependants. Spouse can work.</li>
+            <li>Spouse PR after 5 yrs, not 3.</li>
+          </ul>
+          <a class="src-link" href="https://www.gov.uk/global-talent/your-partner-and-children">GOV.UK: Your partner and children</a>
+        </dd>
+      </div>
+
+    </dl>
+  </section>
+
+  <section class="entry" id="australia-niv" data-name="Australia 858" data-fit="3" data-cost="7.6" data-weeks="22" data-time="~5 mo" data-ease="2">
+    <div class="entry-head">
+      <div class="title-block">
+        <div class="title-line">
+          <svg class="flag" viewBox="0 0 60 30" role="img" aria-label="Australia flag">
+            <clipPath id="au-s"><path d="M0,0 v30 h60 v-30 z"/></clipPath>
+            <clipPath id="au-t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>
+            <rect width="60" height="30" fill="#012169"/>
+            <g transform="scale(0.5)">
+              <g clip-path="url(#au-s)">
+                <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
+                <path d="M0,0 L60,30 M60,0 L0,30" stroke="#ffffff" stroke-width="6"/>
+                <path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#au-t)" stroke="#E4002B" stroke-width="4"/>
+                <path d="M30,0 v30 M0,15 h60" stroke="#ffffff" stroke-width="10"/>
+                <path d="M30,0 v30 M0,15 h60" stroke="#E4002B" stroke-width="6"/>
+              </g>
+            </g>
+            <path fill="#ffffff" d="M15.00,16.07 L16.24,19.93 L20.03,18.49 L17.79,21.86 L21.27,23.93 L17.23,24.28 L17.79,28.29 L15.00,25.36 L12.21,28.29 L12.77,24.28 L8.73,23.93 L12.21,21.86 L9.97,18.49 L13.76,19.93 Z M45.00,21.25 L45.72,23.50 L47.93,22.66 L46.62,24.63 L48.66,25.83 L46.30,26.04 L46.63,28.38 L45.00,26.67 L43.37,28.38 L43.70,26.04 L41.34,25.83 L43.38,24.63 L42.07,22.66 L44.28,23.50 Z M37.50,9.38 L38.22,11.62 L40.43,10.79 L39.12,12.75 L41.16,13.96 L38.80,14.16 L39.13,16.50 L37.50,14.79 L35.87,16.50 L36.20,14.16 L33.84,13.96 L35.88,12.75 L34.57,10.79 L36.78,11.62 Z M45.00,1.25 L45.72,3.50 L47.93,2.66 L46.62,4.63 L48.66,5.83 L46.30,6.04 L46.63,8.38 L45.00,6.67 L43.37,8.38 L43.70,6.04 L41.34,5.83 L43.38,4.63 L42.07,2.66 L44.28,3.50 Z M51.85,7.38 L52.57,9.62 L54.78,8.79 L53.48,10.75 L55.51,11.96 L53.15,12.16 L53.48,14.50 L51.85,12.79 L50.22,14.50 L50.55,12.16 L48.20,11.96 L50.23,10.75 L48.92,8.79 L51.13,9.62 Z M48.38,14.38 L48.82,15.64 L50.16,15.67 L49.09,16.48 L49.48,17.77 L48.38,17.00 L47.28,17.77 L47.67,16.48 L46.60,15.67 L47.94,15.64 Z"/>
+          </svg>
+          <h2>Australia National Innovation Visa (858)</h2>
+        </div>
+        <p class="asof">Current as of <time datetime="2026-10-03">Oct 3, 2026</time></p>
+      </div>
+      <div class="ratings">
+      <div class="fit" role="img" aria-label="Fit: 3 out of 5">
+        <span class="fit-label">Fit</span>
+        <span class="stars" aria-hidden="true"><span class="on">&#9733;&#9733;&#9733;</span><span class="off">&#9733;&#9733;</span></span>
+      </div>
+      <div class="fit ease" role="img" aria-label="Ease: 2 out of 5">
+        <span class="fit-label">Ease</span>
+        <span class="stars" aria-hidden="true"><span class="on">&#9733;&#9733;</span><span class="off">&#9733;&#9733;&#9733;</span></span>
+      </div>
+      </div>
+    </div>
+
+    <div class="glance">
+      <div class="tile">
+        <span class="t-label">Visa granted</span>
+        <span class="t-value">Permanent</span>
+        <span class="t-sub">PR on grant, 5-yr travel window</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Min time, post evidence</span>
+        <span class="t-value">~5 mo</span>
+        <span class="t-sub">~1 mo to invite + ~4 mo processing</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Total cost, you + spouse + child</span>
+        <span class="t-value">A$10.9k <span class="usd">&asymp; $7.6k</span></span>
+        <span class="t-sub">A$6,235 + A$3,120 + A$1,560. No health surcharge.</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Path to PR</span>
+        <span class="t-value"><span class="yes">Yes</span> Day 1</span>
+        <span class="t-sub">The visa is PR</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Citizenship</span>
+        <span class="t-value"><span class="yes">Yes</span> ~4 yrs</span>
+        <span class="t-sub">4 yrs living there, max 1 yr away</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">If you live outside Australia</span>
+        <span class="t-value">PR stays valid</span>
+        <span class="t-sub">But re-entry after 5 yrs needs a return visa: 2 of last 5 yrs there, or strong ties.</span>
+      </div>
+    </div>
+
+    <dl class="rows">
+
+      <div class="row">
+        <dt>Official link</dt>
+        <dd><a href="https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/national-innovation-visa-858">immi.homeaffairs.gov.au &middot; Subclass 858</a></dd>
+      </div>
+
+      <div class="row">
+        <dt>Route</dt>
+        <dd>
+          <ul class="routes">
+            <li class="on" aria-current="true"><span class="box" aria-hidden="true"></span><span>Talent Route (Endorsement Based)</span></li>
+            <li><span class="box" aria-hidden="true"></span><span>Talent Route (Job Offer Needed)</span></li>
+            <li><span class="box" aria-hidden="true"></span><span>Investment Route</span></li>
+          </ul>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Age</dt>
+        <dd class="age"><span class="yes">No bias</span><span>Only under 18 or over 55 face a higher bar.</span></dd>
+      </div>
+
+      <div class="row">
+        <dt>Work rights</dt>
+        <dd class="age"><span class="yes">Any job</span><span>Permanent resident: any employer, any time.</span></dd>
+      </div>
+
+      <div class="row">
+        <dt>Basic qualifications</dt>
+        <dd>
+          <ul class="stack">
+            <li>
+              <span class="label">Core requirement</span>
+              <figure class="q">
+                <blockquote>"internationally recognised record of exceptional and outstanding achievement in an eligible field"</blockquote>
+                <figcaption><a href="https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/national-innovation-visa-858">Home Affairs &middot; Subclass 858</a></figcaption>
+              </figure>
+            </li>
+            <li>
+              <span class="label">Your likely priority: Priority Three, Tier One sector (Critical technologies)</span>
+              <figure class="q">
+                <blockquote>"Candidates with exceptional and outstanding achievements in a Tier One sector."</blockquote>
+                <figcaption><a href="https://immi.homeaffairs.gov.au/visas/working-in-australia/visas-for-innovation/national-innovation-visa/current-invitation-round">Home Affairs &middot; Current invitation round</a></figcaption>
+              </figure>
+            </li>
+            <li>
+              <span class="label">Critical technologies includes AI:</span>
+              <figure class="q">
+                <blockquote>"Machine learning, including neural networks and deep learning"</blockquote>
+                <figcaption><a href="https://www.industry.gov.au/publications/list-critical-technologies-national-interest">Australian Government &middot; List of Critical Technologies</a></figcaption>
+              </figure>
+            </li>
+            <li>
+              <span class="label">Also:</span>
+              <ul class="bullets">
+                <li>Nominated by an Australian individual or organisation with a national reputation in your field.</li>
+                <li>Invitation only: you need an invite from your Expression of Interest.</li>
+              </ul>
+            </li>
+          </ul>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Evidence needed</dt>
+        <dd>
+          <div class="ev">
+            <div>
+              <h3><span class="count">1</span>Nomination (Form 1000)</h3>
+              <ul class="bullets">
+                <li>From an Australian citizen, permanent resident, eligible NZ citizen, or Australian organisation with a national reputation in your field.</li>
+              </ul>
+            </div>
+            <div>
+              <h3><span class="count">1</span>Expression of Interest</h3>
+              <ul class="bullets">
+                <li>Evidence of international recognition: awards, publications, patents, senior roles, media.</li>
+                <li>Stays active for 2 years.</li>
+              </ul>
+            </div>
+          </div>
+          <a class="src-link" href="https://immi.homeaffairs.gov.au/visas/working-in-australia/visas-for-innovation/national-innovation-visa">Home Affairs: National Innovation Visa</a>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Broad steps</dt>
+        <dd>
+          <ol class="steps">
+            <li>
+              <div class="step-head"><span class="step-title">Line up a nominator and evidence</span><span class="time soft">Self-paced</span></div>
+            </li>
+            <li>
+              <div class="step-head"><span class="step-title">Submit Expression of Interest, wait for invite</span><span class="time">1 to 4 months</span></div>
+            </li>
+            <li>
+              <div class="step-head"><span class="step-title">Lodge visa application</span><span class="time">Within 60 days of invite</span></div>
+            </li>
+            <li>
+              <div class="step-head"><span class="step-title">Processing to grant (PR)</span><span class="time">4 to 6 months</span></div>
+            </li>
+          </ol>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Activation after approval</dt>
+        <dd class="acts">
+          <div class="act"><span>Make your first entry before the date on your grant letter. Visa is digital, linked to passport.</span><span class="time">By deadline</span></div>
+          <div class="act"><span>ID: none issued. Enrol in Medicare for a health card.</span><span class="time">~3 wks</span></div>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Spouse and child</dt>
+        <dd>
+          <ul class="bullets" style="margin-top:0">
+            <li>Included in your application. Both get PR on grant.</li>
+            <li>Spouse can work.</li>
+          </ul>
+        </dd>
+      </div>
+
+    </dl>
+  </section>
+  <section class="entry" id="dubai-golden-visa" data-name="Dubai Golden Visa" data-fit="4" data-cost="4.4" data-weeks="" data-time="Unclear" data-ease="3">
+    <div class="entry-head">
+      <div class="title-block">
+        <div class="title-line">
+          <svg class="flag" viewBox="0 0 60 30" role="img" aria-label="United Arab Emirates flag">
+            <rect x="15" y="0" width="45" height="10" fill="#00732F"/>
+            <rect x="15" y="10" width="45" height="10" fill="#ffffff"/>
+            <rect x="15" y="20" width="45" height="10" fill="#000000"/>
+            <rect x="0" y="0" width="15" height="30" fill="#FF0000"/>
+          </svg>
+          <h2>Dubai Golden Visa</h2>
+        </div>
+        <p class="asof">Current as of <time datetime="2026-10-03">Oct 3, 2026</time></p>
+      </div>
+      <div class="ratings">
+      <div class="fit" role="img" aria-label="Fit: 4 out of 5">
+        <span class="fit-label">Fit</span>
+        <span class="stars" aria-hidden="true"><span class="on">&#9733;&#9733;&#9733;&#9733;</span><span class="off">&#9733;</span></span>
+      </div>
+      <div class="fit ease" role="img" aria-label="Ease: 3 out of 5">
+        <span class="fit-label">Ease</span>
+        <span class="stars" aria-hidden="true"><span class="on">&#9733;&#9733;&#9733;</span><span class="off">&#9733;&#9733;</span></span>
+      </div>
+      </div>
+    </div>
+
+    <div class="glance">
+      <div class="tile">
+        <span class="t-label">Visa granted</span>
+        <span class="t-value">10 yrs</span>
+        <span class="t-sub">Renewable residence</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Min time, post evidence</span>
+        <span class="t-value">Weeks</span>
+        <span class="t-sub">AI Council review (varies) + 5-day visa</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Total cost, you + spouse + child</span>
+        <span class="t-value">~AED 16k <span class="usd">&asymp; $4.4k</span></span>
+        <span class="t-sub">~AED 5.3k each: permit, medical, Emirates ID</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Path to PR</span>
+        <span class="t-value"><span class="no">No</span></span>
+        <span class="t-sub">UAE has no PR. The 10-yr renewable visa is the closest.</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Citizenship</span>
+        <span class="t-value"><span class="no">No</span></span>
+        <span class="t-sub">Only by rare government nomination</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">If you live outside the UAE</span>
+        <span class="t-value">Visa stays valid</span>
+        <span class="t-sub">Exempt from the usual 6-month absence rule</span>
+      </div>
+    </div>
+
+    <div class="note"><span class="note-tag">Unclear</span><span>No public way to get the AI Council letter. People abroad report silence and unexplained rejections. Likely needs a UAE immigration lawyer or agent.</span></div>
+
+    <dl class="rows">
+
+      <div class="row">
+        <dt>Official link</dt>
+        <dd><a href="https://www.gdrfad.gov.ae/en/services/2e7da546-f815-11eb-0320-0050569629e8">GDRFA Dubai &middot; Golden residence (Talented Geniuses)</a></dd>
+      </div>
+
+      <div class="row">
+        <dt>Route</dt>
+        <dd>
+          <ul class="routes">
+            <li class="on" aria-current="true"><span class="box" aria-hidden="true"></span><span>Talent Route (Endorsement Based)</span></li>
+            <li><span class="box" aria-hidden="true"></span><span>Talent Route (Job Offer Needed)</span></li>
+            <li><span class="box" aria-hidden="true"></span><span>Investment Route</span></li>
+          </ul>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Age</dt>
+        <dd class="age"><span class="yes">No bias</span><span>No age limit on the talent route.</span></dd>
+      </div>
+
+      <div class="row">
+        <dt>Work rights</dt>
+        <dd class="age"><span class="yes">Any job</span><span>Any UAE employer or self-employed. No sponsor tie.</span></dd>
+      </div>
+
+      <div class="row">
+        <dt>Basic qualifications</dt>
+        <dd>
+          <ul class="stack">
+            <li>
+              <span class="label">Category: digital technology specialist. Key requirement:</span>
+              <figure class="q">
+                <blockquote>"A recommendation from Emirates Council for Artificial Intelligence and Digital Transactions"</blockquote>
+                <figcaption><a href="https://www.added.gov.ae/en/live/long-term-residency/abu-dhabi-golden-visa/for-brilliant-talents/for-talents-in-digital-technology">UAE Government &middot; Talents in digital technology</a></figcaption>
+              </figure>
+            </li>
+            <li>
+              <span class="label">Also:</span>
+              <ul class="bullets">
+                <li>Degree in a listed field: AI, big data, computer, software or electrical engineering.</li>
+                <li>No UAE job needed on this route.</li>
+              </ul>
+            </li>
+          </ul>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Evidence needed</dt>
+        <dd>
+          <div class="ev">
+            <div>
+              <h3>For the AI Council recommendation <span class="tag">Reported, not officially published</span></h3>
+              <ul class="bullets">
+                <li>CV, 2 pages</li>
+                <li>Summary of AI/ML accomplishments</li>
+                <li>2 to 3 professional references</li>
+                <li>Code portfolio: GitHub, open source, shipped products</li>
+                <li>Degree, attested</li>
+              </ul>
+            </div>
+            <div>
+              <h3>For the visa itself <span class="tag ok">Official</span></h3>
+              <ul class="bullets">
+                <li>Passport (6+ months valid) and photo</li>
+                <li>AI Council recommendation</li>
+                <li>Valid UAE health insurance</li>
+              </ul>
+            </div>
+          </div>
+          <a class="src-link" href="https://icp.gov.ae/en/services-details/?serviceid=68e34f2a5ae59b00117383dc">ICP: Residence visa for specialized talents</a>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Broad steps</dt>
+        <dd>
+          <ol class="steps">
+            <li>
+              <div class="step-head"><span class="step-title">Get the AI Council nomination letter</span><span class="time soft">Unclear</span></div>
+              <div class="step-body">No public form. Applicants report unanswered emails to info@ai.gov.ae, and UAE Pass can't be verified from abroad. Applying on <a href="https://smartservices.icp.gov.ae/">ICP Smart Services</a> without the letter gets rejected. Coder program page: <a href="https://ai.gov.ae/np4c/">ai.gov.ae/np4c</a>.</div>
+            </li>
+            <li>
+              <div class="step-head"><span class="step-title">Apply on GDRFA (Dubai Now app or Amer centre)</span><span class="time">5 days</span></div>
+            </li>
+          </ol>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Activation after approval</dt>
+        <dd class="acts">
+          <div class="act"><span>Enter the UAE, do the medical test and Emirates ID biometrics.</span><span class="time">~1 week</span></div>
+          <div class="act"><span>ID: Emirates ID card.</span><span class="time">~1 to 2 wks</span></div>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Spouse and child</dt>
+        <dd>
+          <ul class="bullets" style="margin-top:0">
+            <li>Sponsored on your visa, same 10-yr term.</li>
+          </ul>
+        </dd>
+      </div>
+
+    </dl>
+  </section>
+  <section class="entry" id="taiwan-gold-card" data-name="Taiwan Gold Card" data-fit="3" data-cost="0.5" data-weeks="13" data-time="~3 mo" data-ease="5">
+    <div class="entry-head">
+      <div class="title-block">
+        <div class="title-line">
+          <svg class="flag" viewBox="0 0 60 30" role="img" aria-label="Taiwan flag">
+            <rect width="60" height="30" fill="#FE0000"/>
+            <rect width="30" height="15" fill="#000095"/>
+            <path fill="#ffffff" d="M15.00,1.50 L15.85,4.31 L18.00,2.30 L17.33,5.17 L20.20,4.50 L18.19,6.65 L21.00,7.50 L18.19,8.35 L20.20,10.50 L17.33,9.83 L18.00,12.70 L15.85,10.69 L15.00,13.50 L14.15,10.69 L12.00,12.70 L12.67,9.83 L9.80,10.50 L11.81,8.35 L9.00,7.50 L11.81,6.65 L9.80,4.50 L12.67,5.17 L12.00,2.30 L14.15,4.31 Z"/>
+            <circle cx="15" cy="7.5" r="3.4" fill="#000095"/>
+            <circle cx="15" cy="7.5" r="2.9" fill="#ffffff"/>
+          </svg>
+          <h2>Taiwan Employment Gold Card</h2>
+        </div>
+        <p class="asof">Current as of <time datetime="2026-10-03">Oct 3, 2026</time></p>
+      </div>
+      <div class="ratings">
+      <div class="fit" role="img" aria-label="Fit: 3 out of 5">
+        <span class="fit-label">Fit</span>
+        <span class="stars" aria-hidden="true"><span class="on">&#9733;&#9733;&#9733;</span><span class="off">&#9733;&#9733;</span></span>
+      </div>
+      <div class="fit ease" role="img" aria-label="Ease: 5 out of 5">
+        <span class="fit-label">Ease</span>
+        <span class="stars" aria-hidden="true"><span class="on">&#9733;&#9733;&#9733;&#9733;&#9733;</span></span>
+      </div>
+      </div>
+    </div>
+
+    <div class="glance">
+      <div class="tile">
+        <span class="t-label">Visa granted</span>
+        <span class="t-value">1 to 3 yrs</span>
+        <span class="t-sub">Renewable. Work permit, residence and re-entry in one card.</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Min time, post evidence</span>
+        <span class="t-value">~3 mo</span>
+        <span class="t-sub">30 working-day review + passport check</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Total cost, you + spouse + child</span>
+        <span class="t-value">~NT$16k <span class="usd">&asymp; $0.5k</span></span>
+        <span class="t-sub">3-yr cards. Varies by nationality.</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Path to PR</span>
+        <span class="t-value"><span class="yes">Yes</span> 3 yrs</span>
+        <span class="t-sub">183+ days a year in Taiwan</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Citizenship</span>
+        <span class="t-value"><span class="yes">Yes</span> ~5 yrs</span>
+        <span class="t-sub">5 yrs living there</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">If you live outside Taiwan</span>
+        <span class="t-value">Card stays valid</span>
+        <span class="t-sub">But PR needs 183+ days a year in Taiwan.</span>
+      </div>
+    </div>
+
+    <dl class="rows">
+
+      <div class="row">
+        <dt>Official link</dt>
+        <dd><a href="https://goldcard.nat.gov.tw/en/">goldcard.nat.gov.tw</a></dd>
+      </div>
+
+      <div class="row">
+        <dt>Route</dt>
+        <dd>
+          <ul class="routes">
+            <li class="on" aria-current="true"><span class="box" aria-hidden="true"></span><span>Talent Route (Endorsement Based)</span></li>
+            <li><span class="box" aria-hidden="true"></span><span>Talent Route (Job Offer Needed)</span></li>
+            <li><span class="box" aria-hidden="true"></span><span>Investment Route</span></li>
+          </ul>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Age</dt>
+        <dd class="age"><span class="yes">No bias</span><span>Only rule: 18 or older.</span></dd>
+      </div>
+
+      <div class="row">
+        <dt>Work rights</dt>
+        <dd class="age"><span class="yes">Any job</span><span>Open work permit: any employer, freelance, change freely.</span></dd>
+      </div>
+
+      <div class="row">
+        <dt>Basic qualifications</dt>
+        <dd>
+          <ul class="stack">
+            <li>
+              <span class="label">Field: digital. Meet any 1 of these 4:</span>
+              <ul class="bullets">
+                <li><strong>8+ years in digital economy industries</strong></li>
+                <li><strong>Most recent monthly salary NT$160,000+ (&asymp; $5k) in a digital role</strong></li>
+                <li>Doctorate from a top-500 university</li>
+                <li>Related doctorate plus a recognised award or 4+ years' experience</li>
+              </ul>
+              <figure class="q">
+                <blockquote>"at least eight years of relevant professional experience in the digital economy-related industries"</blockquote>
+                <figcaption><a href="https://foreigntalentact.ndc.gov.tw/en/nc_11383_36892">Taiwan NDC &middot; Gold Card digital field</a></figcaption>
+              </figure>
+            </li>
+          </ul>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Evidence needed</dt>
+        <dd>
+          <div class="ev">
+            <div>
+              <h3><span class="count">1</span>Proof for your criterion</h3>
+              <ul class="bullets">
+                <li>Experience: employer letters covering 8+ years.</li>
+                <li>Salary: recent pay slips, tax return or employment contract.</li>
+              </ul>
+            </div>
+            <div>
+              <h3><span class="count">1</span>Passport (6+ months valid) and photo</h3>
+            </div>
+          </div>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Broad steps</dt>
+        <dd>
+          <ol class="steps">
+            <li>
+              <div class="step-head"><span class="step-title">Gather proof</span><span class="time soft">Self-paced</span></div>
+            </li>
+            <li>
+              <div class="step-head"><span class="step-title">Apply online on the Gold Card platform</span><span class="time">30 working days</span></div>
+              <div class="step-body">The digital ministry reviews your qualification.</div>
+            </li>
+            <li>
+              <div class="step-head"><span class="step-title">Passport check at a Taiwan office abroad (TECO)</span><span class="time">1 to 2 wks</span></div>
+            </li>
+          </ol>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Activation after approval</dt>
+        <dd class="acts">
+          <div class="act"><span>Enter Taiwan and collect the card.</span><span class="time">On arrival</span></div>
+          <div class="act"><span>ID: the Gold Card itself is your resident certificate.</span><span class="time">Same card</span></div>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Spouse and child</dt>
+        <dd>
+          <ul class="bullets" style="margin-top:0">
+            <li>Apply for dependant resident visas.</li>
+            <li>Spouse can get a work permit (2026 rules).</li>
+          </ul>
+        </dd>
+      </div>
+
+    </dl>
+  </section>
+  <section class="entry" id="singapore-one-pass" data-name="Singapore ONE Pass" data-fit="4" data-cost="0.8" data-weeks="5" data-time="~5 wks" data-ease="1">
+    <div class="entry-head">
+      <div class="title-block">
+        <div class="title-line">
+          <svg class="flag" viewBox="0 0 60 30" role="img" aria-label="Singapore flag">
+            <rect width="60" height="15" fill="#EF3340"/>
+            <rect y="15" width="60" height="15" fill="#ffffff"/>
+            <circle cx="8" cy="7.5" r="5" fill="#ffffff"/>
+            <circle cx="10" cy="7.5" r="4.6" fill="#EF3340"/>
+            <path fill="#ffffff" d="M13.60,4.05 L13.81,4.71 L14.50,4.71 L13.94,5.11 L14.16,5.77 L13.60,5.36 L13.04,5.77 L13.26,5.11 L12.70,4.71 L13.39,4.71 Z M16.07,5.85 L16.28,6.50 L16.98,6.50 L16.42,6.91 L16.63,7.57 L16.07,7.16 L15.51,7.57 L15.73,6.91 L15.17,6.50 L15.86,6.50 Z M15.13,8.75 L15.34,9.41 L16.03,9.41 L15.47,9.81 L15.69,10.47 L15.13,10.06 L14.57,10.47 L14.78,9.81 L14.22,9.41 L14.92,9.41 Z M12.07,8.75 L12.28,9.41 L12.98,9.41 L12.42,9.81 L12.63,10.47 L12.07,10.06 L11.51,10.47 L11.73,9.81 L11.17,9.41 L11.86,9.41 Z M11.13,5.85 L11.34,6.50 L12.03,6.50 L11.47,6.91 L11.69,7.57 L11.13,7.16 L10.57,7.57 L10.78,6.91 L10.22,6.50 L10.92,6.50 Z"/>
+          </svg>
+          <h2>Singapore ONE Pass</h2>
+        </div>
+        <p class="asof">Current as of <time datetime="2026-10-03">Oct 3, 2026</time></p>
+      </div>
+      <div class="ratings">
+      <div class="fit" role="img" aria-label="Fit: 4 out of 5">
+        <span class="fit-label">Fit</span>
+        <span class="stars" aria-hidden="true"><span class="on">&#9733;&#9733;&#9733;&#9733;</span><span class="off">&#9733;</span></span>
+      </div>
+      <div class="fit ease" role="img" aria-label="Ease: 1 out of 5">
+        <span class="fit-label">Ease</span>
+        <span class="stars" aria-hidden="true"><span class="on">&#9733;</span><span class="off">&#9733;&#9733;&#9733;&#9733;</span></span>
+      </div>
+      </div>
+    </div>
+
+    <div class="glance">
+      <div class="tile">
+        <span class="t-label">Visa granted</span>
+        <span class="t-value">5 yrs</span>
+        <span class="t-sub">Work for any employer, or several</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Min time, post evidence</span>
+        <span class="t-value">~5 wks</span>
+        <span class="t-sub">~4 wk decision + ~1 wk card</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Total cost, you + spouse + child</span>
+        <span class="t-value">S$990 <span class="usd">&asymp; $0.8k</span></span>
+        <span class="t-sub">S$330 per pass</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Path to PR</span>
+        <span class="t-value"><span class="maybe">Maybe</span></span>
+        <span class="t-sub">Apply any time. Discretionary, no set timeline.</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Citizenship</span>
+        <span class="t-value"><span class="maybe">Maybe</span></span>
+        <span class="t-sub">After 2+ yrs as PR. Discretionary.</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">If you live outside Singapore</span>
+        <span class="t-value">No renewal</span>
+        <span class="t-sub">Renewal needs a Singapore salary averaging S$30k/mo over 5 yrs.</span>
+      </div>
+    </div>
+
+    <dl class="rows">
+
+      <div class="row">
+        <dt>Official link</dt>
+        <dd><a href="https://www.mom.gov.sg/passes-and-permits/overseas-networks-expertise-pass">mom.gov.sg &middot; ONE Pass</a></dd>
+      </div>
+
+      <div class="row">
+        <dt>Route</dt>
+        <dd>
+          <ul class="routes">
+            <li class="on" aria-current="true"><span class="box" aria-hidden="true"></span><span>Talent Route (Endorsement Based)</span></li>
+            <li><span class="box" aria-hidden="true"></span><span>Talent Route (Job Offer Needed)</span></li>
+            <li><span class="box" aria-hidden="true"></span><span>Investment Route</span></li>
+          </ul>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Age</dt>
+        <dd class="age"><span class="yes">No bias</span><span>No age limit.</span></dd>
+      </div>
+
+      <div class="row">
+        <dt>Work rights</dt>
+        <dd class="age"><span class="yes">Any job</span><span>Several employers at once, or your own company.</span></dd>
+      </div>
+
+      <div class="row">
+        <dt>Basic qualifications</dt>
+        <dd>
+          <ul class="stack">
+            <li>
+              <span class="label">Salary route, you need both:</span>
+              <figure class="q">
+                <blockquote>"a fixed monthly salary of at least S$30,000, or its equivalent in foreign currency"</blockquote>
+                <figcaption><a href="https://www.mom.gov.sg/passes-and-permits/overseas-networks-expertise-pass/eligibility">MOM &middot; ONE Pass eligibility</a></figcaption>
+              </figure>
+              <ul class="bullets">
+                <li>S$30k/mo is about $23.5k/mo, or $281k a year in base pay, for the last 12 months. Bonus excluded. RSUs aren't named but don't fit the definition.</li>
+                <li><strong>12 straight months at an established company: market cap US$500M+ or revenue US$200M+</strong></li>
+              </ul>
+            </li>
+            <li>
+              <span class="label">Or the outstanding achievements route:</span>
+              <ul class="bullets">
+                <li>Sports, arts and culture, or academia and research</li>
+              </ul>
+            </li>
+          </ul>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Evidence needed</dt>
+        <dd>
+          <div class="ev">
+            <div>
+              <h3><span class="count">1</span>Salary proof, last 12 months</h3>
+              <ul class="bullets">
+                <li>Payslips and employment contract showing fixed monthly pay.</li>
+              </ul>
+            </div>
+            <div>
+              <h3><span class="count">1</span>Employer letter</h3>
+              <ul class="bullets">
+                <li>Confirms 12+ months of employment.</li>
+              </ul>
+            </div>
+            <div>
+              <h3><span class="count">1</span>Passport</h3>
+            </div>
+          </div>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Broad steps</dt>
+        <dd>
+          <ol class="steps">
+            <li>
+              <div class="step-head"><span class="step-title">Gather salary and employer proof</span><span class="time soft">Self-paced</span></div>
+            </li>
+            <li>
+              <div class="step-head"><span class="step-title">Apply online with MOM</span><span class="time">~4 weeks</span></div>
+            </li>
+          </ol>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Activation after approval</dt>
+        <dd class="acts">
+          <div class="act"><span>Enter Singapore within 6 months of approval, then register photo and fingerprints with MOM.</span><span class="time">~1 week</span></div>
+          <div class="act"><span>ID: ONE Pass card.</span><span class="time">5 working days</span></div>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Spouse and child</dt>
+        <dd>
+          <ul class="bullets" style="margin-top:0">
+            <li>Dependant's Pass for spouse and children under 21.</li>
+            <li>Spouse can work with a Letter of Consent.</li>
+          </ul>
+        </dd>
+      </div>
+
+    </dl>
+  </section>
+  <section class="entry" id="canada-express-entry" data-name="Canada Express Entry" data-fit="3" data-cost="2.5" data-weeks="30" data-time="~7 mo" data-ease="1">
+    <div class="entry-head">
+      <div class="title-block">
+        <div class="title-line">
+          <svg class="flag" viewBox="0 0 60 30" role="img" aria-label="Canada flag">
+            <rect width="60" height="30" fill="#ffffff"/>
+            <rect width="15" height="30" fill="#D52B1E"/>
+            <rect x="45" width="15" height="30" fill="#D52B1E"/>
+            <path fill="#D52B1E" d="M30,4 L31.6,7.1 L33.2,6.3 L32.5,10.4 L34.9,8.1 L35.6,9.7 L38,9.3 L37.1,12.1 L38.4,12.8 L34.4,15.9 L35,17.5 L31.1,16.9 L30.4,17.2 L30.4,24.5 L29.6,24.5 L29.6,17.2 L28.9,16.9 L25,17.5 L25.6,15.9 L21.6,12.8 L22.9,12.1 L22,9.3 L24.4,9.7 L25.1,8.1 L27.5,10.4 L26.8,6.3 L28.4,7.1 Z"/>
+          </svg>
+          <h2>Canada Express Entry (French route)</h2>
+        </div>
+        <p class="asof">Current as of <time datetime="2026-10-04">Oct 4, 2026</time></p>
+      </div>
+      <div class="ratings">
+      <div class="fit" role="img" aria-label="Fit: 3 out of 5">
+        <span class="fit-label">Fit</span>
+        <span class="stars" aria-hidden="true"><span class="on">&#9733;&#9733;&#9733;</span><span class="off">&#9733;&#9733;</span></span>
+      </div>
+      <div class="fit ease" role="img" aria-label="Ease: 1 out of 5">
+        <span class="fit-label">Ease</span>
+        <span class="stars" aria-hidden="true"><span class="on">&#9733;</span><span class="off">&#9733;&#9733;&#9733;&#9733;</span></span>
+      </div>
+      </div>
+    </div>
+
+    <div class="glance">
+      <div class="tile">
+        <span class="t-label">Visa granted</span>
+        <span class="t-value">Permanent</span>
+        <span class="t-sub">PR on landing. PR card renews every 5 yrs.</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Min time, post evidence</span>
+        <span class="t-value">~7 mo</span>
+        <span class="t-sub">Invite in weeks + ~6 mo processing. French first: 1 to 2 yrs.</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Total cost, you + spouse + child</span>
+        <span class="t-value">C$3.6k <span class="usd">&asymp; $2.5k</span></span>
+        <span class="t-sub">Govt fees + biometrics. Excludes tests.</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Path to PR</span>
+        <span class="t-value"><span class="yes">Yes</span> Day 1</span>
+        <span class="t-sub">The visa is PR</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Citizenship</span>
+        <span class="t-value"><span class="yes">Yes</span> ~3 yrs</span>
+        <span class="t-sub">3 of last 5 yrs living there</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">If you live outside Canada</span>
+        <span class="t-value">PR at risk</span>
+        <span class="t-sub">Keeping PR needs 2 of every 5 yrs in Canada.</span>
+      </div>
+    </div>
+
+    <dl class="rows">
+
+      <div class="row">
+        <dt>Official link</dt>
+        <dd><a href="https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry.html">canada.ca &middot; Express Entry</a></dd>
+      </div>
+
+      <div class="row">
+        <dt>Route</dt>
+        <dd>
+          <ul class="routes">
+            <li class="on" aria-current="true"><span class="box" aria-hidden="true"></span><span>Talent Route (Endorsement Based)</span></li>
+            <li><span class="box" aria-hidden="true"></span><span>Talent Route (Job Offer Needed)</span></li>
+            <li><span class="box" aria-hidden="true"></span><span>Investment Route</span></li>
+          </ul>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Age</dt>
+        <dd class="age"><span class="maybe">Strong bias</span><span>Points drop 5 a year to 40, then 10 a year. Zero at 45.</span></dd>
+      </div>
+
+      <div class="row">
+        <dt>Work rights</dt>
+        <dd class="age"><span class="yes">Any job</span><span>Permanent resident: any employer, any time.</span></dd>
+      </div>
+
+      <div class="row">
+        <dt>Basic qualifications</dt>
+        <dd>
+          <ul class="stack">
+            <li>
+              <span class="label">Only open draw for you: French. Principal needs NCLC 7 in all four skills.</span>
+              <ul class="bullets">
+                <li>2026 French draw cutoffs: 382 to 420. No STEM or all-program draws this year.</li>
+              </ul>
+            </li>
+            <li>
+              <span class="label">Your estimated score (max English, Master's, max work experience):</span>
+              <div class="mini-wrap">
+                <table class="mini">
+                  <thead><tr><th>Principal</th><th>Now</th><th>+2 yrs</th><th>+2 yrs, French NCLC 7</th></tr></thead>
+                  <tbody>
+                    <tr><td>Principal A</td><td>439</td><td>429</td><td><strong>491</strong></td></tr>
+                    <tr><td>Principal B (3 yrs younger)</td><td>454</td><td>444</td><td><strong>506</strong></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </li>
+            <li>
+              <span class="label">Also:</span>
+              <ul class="bullets">
+                <li>1+ yr skilled work in the last 10 yrs, and 67/100 on the federal skilled worker grid.</li>
+                <li>Only one of you needs French.</li>
+              </ul>
+            </li>
+          </ul>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Evidence needed</dt>
+        <dd>
+          <div class="ev">
+            <div><h3><span class="count">1</span>French test: TEF Canada or TCF Canada</h3></div>
+            <div><h3><span class="count">1</span>English test: IELTS General or CELPIP</h3></div>
+            <div><h3><span class="count">2</span>Degree assessments (ECA), one each</h3></div>
+            <div><h3><span class="count">1</span>Employer reference letters</h3></div>
+            <div><h3><span class="count">1</span>Proof of settlement funds</h3></div>
+          </div>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Broad steps</dt>
+        <dd>
+          <ol class="steps">
+            <li>
+              <div class="step-head"><span class="step-title">Learn French to NCLC 7</span><span class="time soft">1 to 2 yrs</span></div>
+            </li>
+            <li>
+              <div class="step-head"><span class="step-title">Language tests and degree assessments</span><span class="time">~2 months</span></div>
+            </li>
+            <li>
+              <div class="step-head"><span class="step-title">Create Express Entry profile, wait for a French draw</span><span class="time">Weeks</span></div>
+            </li>
+            <li>
+              <div class="step-head"><span class="step-title">Submit PR application after the invite</span><span class="time">Within 60 days</span></div>
+            </li>
+            <li>
+              <div class="step-head"><span class="step-title">Processing to PR</span><span class="time">~6 months</span></div>
+            </li>
+          </ol>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Provincial nomination (no French needed)</dt>
+        <dd>
+          <ul class="bullets" style="margin-top:0">
+            <li><strong>Permanent Pinterest Toronto role, nominated by Ontario: +600 points, guaranteed invite, no French.</strong></li>
+            <li>Without an offer: Saskatchewan, Alberta or Newfoundland tech streams.</li>
+          </ul>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Activation after approval</dt>
+        <dd class="acts">
+          <div class="act"><span>Land in Canada before your confirmation of PR expires.</span><span class="time">Within ~1 yr</span></div>
+          <div class="act"><span>ID: PR card, mailed after landing.</span><span class="time">~1 to 2 mo</span></div>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Spouse and child</dt>
+        <dd>
+          <ul class="bullets" style="margin-top:0">
+            <li>On the same application. Both get PR on landing. Spouse can work.</li>
+          </ul>
+        </dd>
+      </div>
+
+    </dl>
+  </section>
+  <section class="entry" id="hong-kong-ttps" data-name="Hong Kong Top Talent" data-fit="4" data-ease="5" data-cost="0.089" data-weeks="5" data-time="~5 wks">
+    <div class="entry-head">
+      <div class="title-block">
+        <div class="title-line">
+          <svg class="flag" viewBox="0 0 60 30" role="img" aria-label="Hong Kong flag">
+            <rect width="60" height="30" fill="#DE2910"/>
+            <ellipse cx="0" cy="-5.2" rx="2.3" ry="4.6" fill="#ffffff" transform="translate(30 15) rotate(0) skewX(-12)"/><ellipse cx="0" cy="-5.2" rx="2.3" ry="4.6" fill="#ffffff" transform="translate(30 15) rotate(72) skewX(-12)"/><ellipse cx="0" cy="-5.2" rx="2.3" ry="4.6" fill="#ffffff" transform="translate(30 15) rotate(144) skewX(-12)"/><ellipse cx="0" cy="-5.2" rx="2.3" ry="4.6" fill="#ffffff" transform="translate(30 15) rotate(216) skewX(-12)"/><ellipse cx="0" cy="-5.2" rx="2.3" ry="4.6" fill="#ffffff" transform="translate(30 15) rotate(288) skewX(-12)"/>
+            <circle cx="30" cy="15" r="1.2" fill="#DE2910"/>
+          </svg>
+          <h2>Hong Kong Top Talent Pass</h2>
+        </div>
+        <p class="asof">Current as of <time datetime="2026-10-04">Oct 4, 2026</time></p>
+      </div>
+      <div class="ratings">
+      <div class="fit" role="img" aria-label="Fit: 4 out of 5">
+        <span class="fit-label">Fit</span>
+        <span class="stars" aria-hidden="true"><span class="on">&#9733;&#9733;&#9733;&#9733;</span><span class="off">&#9733;</span></span>
+      </div>
+      <div class="fit ease" role="img" aria-label="Ease: 5 out of 5">
+        <span class="fit-label">Ease</span>
+        <span class="stars" aria-hidden="true"><span class="on">&#9733;&#9733;&#9733;&#9733;&#9733;</span></span>
+      </div>
+      </div>
+    </div>
+
+    <div class="glance">
+      <div class="tile">
+        <span class="t-label">Visa granted</span>
+        <span class="t-value">3 yrs</span>
+        <span class="t-sub">Category A. Work for anyone or run a business.</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Min time, post evidence</span>
+        <span class="t-value">~5 wks</span>
+        <span class="t-sub">~4 wk decision + ID registration</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Total cost, you + spouse + child</span>
+        <span class="t-value">HK$690 <span class="usd">&asymp; $89</span></span>
+        <span class="t-sub">HK$230 visa fee each</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Path to PR</span>
+        <span class="t-value"><span class="yes">Yes</span> 7 yrs</span>
+        <span class="t-sub">7 continuous yrs of residence</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Citizenship</span>
+        <span class="t-value"><span class="no">No</span></span>
+        <span class="t-sub">PR only. HK passport needs Chinese nationality.</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">If you live outside Hong Kong</span>
+        <span class="t-value">No renewal</span>
+        <span class="t-sub">Extension needs a Hong Kong job or business.</span>
+      </div>
+    </div>
+
+    <dl class="rows">
+
+      <div class="row">
+        <dt>Official link</dt>
+        <dd><a href="https://www.immd.gov.hk/eng/services/visas/TTPS.html">immd.gov.hk &middot; Top Talent Pass Scheme</a></dd>
+      </div>
+
+      <div class="row">
+        <dt>Route</dt>
+        <dd>
+          <ul class="routes">
+            <li class="on" aria-current="true"><span class="box" aria-hidden="true"></span><span>Talent Route (Endorsement Based)</span></li>
+            <li><span class="box" aria-hidden="true"></span><span>Talent Route (Job Offer Needed)</span></li>
+            <li><span class="box" aria-hidden="true"></span><span>Investment Route</span></li>
+          </ul>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Age</dt>
+        <dd class="age"><span class="yes">No bias</span><span>No age limit.</span></dd>
+      </div>
+
+      <div class="row">
+        <dt>Work rights</dt>
+        <dd class="age"><span class="yes">Any job</span><span>No conditions on work. Extension needs a local job.</span></dd>
+      </div>
+
+      <div class="row">
+        <dt>Basic qualifications</dt>
+        <dd>
+          <ul class="stack">
+            <li>
+              <span class="label">Meet any 1 of 3 categories. Yours is A: HK$2.5M+ (&asymp; $320k) income last year. Counts:</span>
+              <figure class="q">
+                <blockquote>"taxable employment or business income including salary, allowances, stock options"</blockquote>
+                <figcaption><a href="https://www.immd.gov.hk/eng/services/visas/TTPS.html">Hong Kong ImmD &middot; TTPS</a></figcaption>
+              </figure>
+              <ul class="bullets">
+                <li>RSUs are taxable employment income, so they likely count.</li>
+              </ul>
+            </li>
+            <li>
+              <span class="label">B and C (degree from a listed top university) don't apply to you. Not needed.</span>
+            </li>
+          </ul>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Evidence needed</dt>
+        <dd>
+          <div class="ev">
+            <div><h3><span class="count">1</span>IRS tax return transcript for last year (official tax proof)</h3></div>
+            <div><h3><span class="count">1</span>W-2, plus a Pinterest letter or statement showing RSU vest values</h3></div>
+            <div><h3><span class="count">1</span>Passport and recent photo</h3></div>
+            <div><h3><span class="count">1</span>For spouse and child: passports, photos, marriage and birth certificates</h3></div>
+          </div>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Broad steps</dt>
+        <dd>
+          <ol class="steps">
+            <li>
+              <div class="step-head"><span class="step-title">Gather income proof</span><span class="time soft">Self-paced</span></div>
+            </li>
+            <li>
+              <div class="step-head"><span class="step-title">Apply online on GovHK (from anywhere)</span><span class="time">~4 weeks</span></div>
+            </li>
+          </ol>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Activation after approval</dt>
+        <dd class="acts">
+          <div class="act"><span>Enter Hong Kong on the e-Visa, register for an ID card within 30 days.</span><span class="time">Within 30 days</span></div>
+          <div class="act"><span>ID: Hong Kong identity card.</span><span class="time">~10 working days</span></div>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Spouse and child</dt>
+        <dd>
+          <ul class="bullets" style="margin-top:0">
+            <li>Join as dependants, same length of stay. Spouse can work.</li>
+          </ul>
+        </dd>
+      </div>
+
+    </dl>
+  </section>
+  <section class="entry" id="thailand-ltr" data-name="Thailand LTR" data-fit="2" data-ease="5" data-cost="4.5" data-weeks="5" data-time="~5 wks">
+    <div class="entry-head">
+      <div class="title-block">
+        <div class="title-line">
+          <svg class="flag" viewBox="0 0 60 30" role="img" aria-label="Thailand flag">
+            <rect width="60" height="30" fill="#A51931"/>
+            <rect y="5" width="60" height="20" fill="#F4F5F8"/>
+            <rect y="10" width="60" height="10" fill="#2D2A4A"/>
+          </svg>
+          <h2>Thailand Long-Term Resident (LTR)</h2>
+        </div>
+        <p class="asof">Current as of <time datetime="2026-10-04">Oct 4, 2026</time></p>
+      </div>
+      <div class="ratings">
+      <div class="fit" role="img" aria-label="Fit: 2 out of 5">
+        <span class="fit-label">Fit</span>
+        <span class="stars" aria-hidden="true"><span class="on">&#9733;&#9733;</span><span class="off">&#9733;&#9733;&#9733;</span></span>
+      </div>
+      <div class="fit ease" role="img" aria-label="Ease: 5 out of 5">
+        <span class="fit-label">Ease</span>
+        <span class="stars" aria-hidden="true"><span class="on">&#9733;&#9733;&#9733;&#9733;&#9733;</span></span>
+      </div>
+      </div>
+    </div>
+
+    <div class="glance">
+      <div class="tile">
+        <span class="t-label">Visa granted</span>
+        <span class="t-value">10 yrs</span>
+        <span class="t-sub">5 yrs + 5-yr renewal</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Min time, post evidence</span>
+        <span class="t-value">~5 wks</span>
+        <span class="t-sub">~20 working-day endorsement + visa</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Total cost, you + spouse + child</span>
+        <span class="t-value">&#3647;150k <span class="usd">&asymp; $4.5k</span></span>
+        <span class="t-sub">&#3647;50k per person</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Path to PR</span>
+        <span class="t-value"><span class="maybe">Maybe</span></span>
+        <span class="t-sub">Thai PR has a small yearly quota. Discretionary.</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Citizenship</span>
+        <span class="t-value"><span class="no">No</span></span>
+        <span class="t-sub">Only after PR, rarely granted</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">If you live outside Thailand</span>
+        <span class="t-value">Visa stays valid</span>
+        <span class="t-sub">No minimum stay</span>
+      </div>
+    </div>
+
+    <dl class="rows">
+
+      <div class="row">
+        <dt>Official link</dt>
+        <dd><a href="https://ltr.boi.go.th/">ltr.boi.go.th &middot; Work-from-Thailand Professional</a></dd>
+      </div>
+
+      <div class="row">
+        <dt>Route</dt>
+        <dd>
+          <ul class="routes">
+            <li class="on" aria-current="true"><span class="box" aria-hidden="true"></span><span>Talent Route (Endorsement Based)</span></li>
+            <li><span class="box" aria-hidden="true"></span><span>Talent Route (Job Offer Needed)</span></li>
+            <li><span class="box" aria-hidden="true"></span><span>Investment Route</span></li>
+          </ul>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Age</dt>
+        <dd class="age"><span class="yes">No bias</span><span>No age limit.</span></dd>
+      </div>
+
+      <div class="row">
+        <dt>Work rights</dt>
+        <dd class="age"><span class="maybe">Remote only</span><span>Work for your foreign employer. No Thai local jobs.</span></dd>
+      </div>
+
+      <div class="row">
+        <dt>Basic qualifications</dt>
+        <dd>
+          <ul class="stack">
+            <li>
+              <span class="label">Work-from-Thailand Professional. Need all:</span>
+              <figure class="q">
+                <blockquote>"Minimum average personal income of USD 80,000 / year in the past two years"</blockquote>
+                <figcaption><a href="https://ltr.boi.go.th/">Thailand BOI &middot; LTR visa</a></figcaption>
+              </figure>
+              <ul class="bullets">
+                <li><strong>Income $80k+ a year, last 2 yrs</strong></li>
+                <li><strong>Employer publicly listed, or $50M+ revenue</strong></li>
+                <li><strong>5+ yrs experience in the field</strong></li>
+                <li>Health insurance with $50k+ coverage in Thailand</li>
+              </ul>
+            </li>
+          </ul>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Evidence needed</dt>
+        <dd>
+          <div class="ev">
+            <div><h3><span class="count">2</span>Years of income proof: tax returns and W-2s</h3></div>
+            <div><h3><span class="count">1</span>Employment contract and employer letter</h3></div>
+            <div><h3><span class="count">1</span>Health insurance policy, $50k+ coverage</h3></div>
+            <div><h3><span class="count">1</span>Passport and photo. Marriage and birth certificates for family.</h3></div>
+          </div>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Broad steps</dt>
+        <dd>
+          <ol class="steps">
+            <li>
+              <div class="step-head"><span class="step-title">Gather documents, buy health insurance</span><span class="time soft">Self-paced</span></div>
+            </li>
+            <li>
+              <div class="step-head"><span class="step-title">Apply on the LTR portal for endorsement</span><span class="time">~20 working days</span></div>
+            </li>
+            <li>
+              <div class="step-head"><span class="step-title">Get the LTR visa at a Thai embassy</span><span class="time">Within 60 days</span></div>
+            </li>
+          </ol>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Activation after approval</dt>
+        <dd class="acts">
+          <div class="act"><span>Enter Thailand on the LTR visa.</span><span class="time">1 day</span></div>
+          <div class="act"><span>ID: none needed. The visa is in your passport.</span><span class="time">Instant</span></div>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Spouse and child</dt>
+        <dd>
+          <ul class="bullets" style="margin-top:0">
+            <li>Up to 4 dependants: spouse and children under 20. Same insurance needed.</li>
+          </ul>
+        </dd>
+      </div>
+
+    </dl>
+  </section>
+  <section class="entry" id="mexico-temporary-residency" data-name="Mexico Residency" data-fit="2" data-ease="4" data-cost="2.0" data-weeks="17" data-time="~4 mo">
+    <div class="entry-head">
+      <div class="title-block">
+        <div class="title-line">
+          <svg class="flag" viewBox="0 0 60 30" role="img" aria-label="Mexico flag">
+            <rect width="20" height="30" fill="#006847"/>
+            <rect x="20" width="20" height="30" fill="#ffffff"/>
+            <rect x="40" width="20" height="30" fill="#CE1126"/>
+            <circle cx="30" cy="15" r="3.6" fill="#8C5A2B"/>
+            <circle cx="30" cy="15" r="2.2" fill="#3F7D3A"/>
+          </svg>
+          <h2>Mexico Temporary Residency</h2>
+        </div>
+        <p class="asof">Current as of <time datetime="2026-10-04">Oct 4, 2026</time></p>
+      </div>
+      <div class="ratings">
+      <div class="fit" role="img" aria-label="Fit: 2 out of 5">
+        <span class="fit-label">Fit</span>
+        <span class="stars" aria-hidden="true"><span class="on">&#9733;&#9733;</span><span class="off">&#9733;&#9733;&#9733;</span></span>
+      </div>
+      <div class="fit ease" role="img" aria-label="Ease: 4 out of 5">
+        <span class="fit-label">Ease</span>
+        <span class="stars" aria-hidden="true"><span class="on">&#9733;&#9733;&#9733;&#9733;</span><span class="off">&#9733;</span></span>
+      </div>
+      </div>
+    </div>
+
+    <div class="glance">
+      <div class="tile">
+        <span class="t-label">Visa granted</span>
+        <span class="t-value">1 to 4 yrs</span>
+        <span class="t-sub">1-yr card first, then renew up to 3 more</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Min time, post evidence</span>
+        <span class="t-value">~4 mo</span>
+        <span class="t-sub">3 to 6 mo consulate wait + ~1 mo in Mexico</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Total cost, you + spouse + child</span>
+        <span class="t-value">~$2k</span>
+        <span class="t-sub">MXN 11,141 card each + consulate fees. 2026 fees doubled.</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Path to PR</span>
+        <span class="t-value"><span class="yes">Yes</span> 4 yrs</span>
+        <span class="t-sub">Permanent residency after 4 yrs temporary</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">Citizenship</span>
+        <span class="t-value"><span class="yes">Yes</span> ~5 yrs</span>
+        <span class="t-sub">5 yrs living there, plus Spanish and history test</span>
+      </div>
+      <div class="tile">
+        <span class="t-label">If you live outside Mexico</span>
+        <span class="t-value">Card stays valid</span>
+        <span class="t-sub">No minimum stay. Renew in Mexico before expiry.</span>
+      </div>
+    </div>
+
+    <dl class="rows">
+
+      <div class="row">
+        <dt>Official link</dt>
+        <dd><a href="https://consulmex.sre.gob.mx/nuevayork/">Consulate of Mexico in New York</a></dd>
+      </div>
+
+      <div class="row">
+        <dt>Route</dt>
+        <dd>
+          <ul class="routes">
+            <li class="on" aria-current="true"><span class="box" aria-hidden="true"></span><span>Talent Route (Endorsement Based)</span></li>
+            <li><span class="box" aria-hidden="true"></span><span>Talent Route (Job Offer Needed)</span></li>
+            <li><span class="box" aria-hidden="true"></span><span>Investment Route</span></li>
+          </ul>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Age</dt>
+        <dd class="age"><span class="yes">No bias</span><span>No age limit.</span></dd>
+      </div>
+
+      <div class="row">
+        <dt>Work rights</dt>
+        <dd class="age"><span class="maybe">Remote only</span><span>Local jobs need a work permit through a Mexican employer.</span></dd>
+      </div>
+
+      <div class="row">
+        <dt>Basic qualifications</dt>
+        <dd>
+          <ul class="stack">
+            <li>
+              <span class="label">Economic solvency. Meet one:</span>
+              <ul class="bullets">
+                <li><strong>Income ~$4,400/mo for the last 6 months, plus ~$1,400/mo per dependant (~$7.3k/mo for 3 of you)</strong></li>
+                <li>Or savings ~$75k held for 12 months</li>
+              </ul>
+            </li>
+            <li>
+              <span class="label">Thresholds vary 5 to 10% by consulate. Check New York's posted figures.</span>
+            </li>
+          </ul>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Evidence needed</dt>
+        <dd>
+          <div class="ev">
+            <div><h3><span class="count">6</span>Months of bank statements or payslips</h3></div>
+            <div><h3><span class="count">1</span>Passport, photo and consulate form</h3></div>
+            <div><h3><span class="count">1</span>Marriage and birth certificates for family</h3></div>
+          </div>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Broad steps</dt>
+        <dd>
+          <ol class="steps">
+            <li>
+              <div class="step-head"><span class="step-title">Book and attend the Mexican consulate interview</span><span class="time">3 to 6 mo wait</span></div>
+            </li>
+            <li>
+              <div class="step-head"><span class="step-title">Enter Mexico on the visa</span><span class="time">Within 180 days</span></div>
+            </li>
+            <li>
+              <div class="step-head"><span class="step-title">Exchange it for a resident card at immigration (INM)</span><span class="time">Within 30 days of entry</span></div>
+            </li>
+          </ol>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Activation after approval</dt>
+        <dd class="acts">
+          <div class="act"><span>File the exchange at INM, give fingerprints, collect the card. Often more than one visit.</span><span class="time">~2 to 4 wks</span></div>
+          <div class="act"><span>ID: temporary resident card.</span><span class="time">Same visit</span></div>
+        </dd>
+      </div>
+
+      <div class="row">
+        <dt>Spouse and child</dt>
+        <dd>
+          <ul class="bullets" style="margin-top:0">
+            <li>Apply with you as dependants. Each adds ~$1,400/mo to the income bar.</li>
+          </ul>
+        </dd>
+      </div>
+
+    </dl>
+  </section>
+</main>
+
+<script>
+(function () {
+  var main = document.querySelector("main");
+  var list = document.getElementById("toc-list");
+  var buttons = Array.prototype.slice.call(document.querySelectorAll(".sort button"));
+  var sections = Array.prototype.slice.call(document.querySelectorAll("section.entry"));
+  var rank = {
+    fit: function (a, b) { return (+b.dataset.fit) - (+a.dataset.fit) || a.dataset.name.localeCompare(b.dataset.name); },
+    ease: function (a, b) { return (+b.dataset.ease) - (+a.dataset.ease) || (+b.dataset.fit) - (+a.dataset.fit); },
+    cost: function (a, b) { return (+a.dataset.cost) - (+b.dataset.cost); },
+    time: function (a, b) {
+      var x = a.dataset.weeks === "" ? Infinity : +a.dataset.weeks;
+      var y = b.dataset.weeks === "" ? Infinity : +b.dataset.weeks;
+      return x - y;
+    },
+    name: function (a, b) { return a.dataset.name.localeCompare(b.dataset.name); }
+  };
+  function money(v) { return v < 1 ? "$" + Math.round(v * 1000) : "$" + v + "k"; }
+  function render(key) {
+    sections.sort(rank[key]);
+    list.textContent = "";
+    sections.forEach(function (sec) {
+      main.appendChild(sec);
+      var a = document.createElement("a");
+      a.href = "#" + sec.id;
+      var flag = sec.querySelector(".flag").cloneNode(true);
+      flag.removeAttribute("role");
+      flag.setAttribute("aria-hidden", "true");
+      Array.prototype.forEach.call(flag.querySelectorAll("[id]"), function (n) { n.removeAttribute("id"); });
+      Array.prototype.forEach.call(flag.querySelectorAll("[clip-path]"), function (n) { n.removeAttribute("clip-path"); });
+      var nm = document.createElement("span"); nm.className = "nm"; nm.textContent = sec.dataset.name;
+      var st = sec.querySelector(".fit:not(.ease) .stars").cloneNode(true);
+      st.setAttribute("aria-label", "Fit " + sec.dataset.fit + " of 5");
+      var ez = sec.querySelector(".fit.ease .stars").cloneNode(true);
+      ez.classList.add("ez");
+      ez.setAttribute("aria-label", "Ease " + sec.dataset.ease + " of 5");
+      var cs = document.createElement("span"); cs.className = "num"; cs.textContent = money(+sec.dataset.cost);
+      var tm = document.createElement("span"); tm.className = "num tm"; tm.textContent = sec.dataset.time;
+      a.append(flag, nm, st, ez, cs, tm);
+      var li = document.createElement("li"); li.appendChild(a); list.appendChild(li);
+    });
+    buttons.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.sort === key)); });
+    try { localStorage.setItem("residency-sort", key); } catch (e) {}
+  }
+  buttons.forEach(function (b) { b.addEventListener("click", function () { render(b.dataset.sort); }); });
+  var saved = "fit";
+  try { saved = localStorage.getItem("residency-sort") || "fit"; } catch (e) {}
+  render(rank[saved] ? saved : "fit");
+})();
+</script>
+</body>
+</html>
