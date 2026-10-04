@@ -111,6 +111,20 @@ h3{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;lette
 .co .bar12{height:6px;border-radius:3px;background:#eef0f2;margin-top:10px;position:relative;overflow:hidden}
 .co .bar12 i{position:absolute;left:0;top:0;bottom:0;border-radius:3px}
 @media (max-width:640px){.co{grid-template-columns:1fr}.co>div{border-right:0;border-bottom:1px solid var(--rule)}.co>div:last-child{border-bottom:0}}
+/* concise blocks */
+.chain{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:4px 0 14px;font-family:'IBM Plex Mono',monospace;font-size:0.72rem}
+.chain span{background:#fff;border:1px solid var(--rule);border-radius:999px;padding:4px 10px}
+.chain i{font-style:normal;color:var(--muted)}
+.chain span.r{border-color:var(--red);color:var(--red);font-weight:500}
+.bind{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch;margin:4px 0 16px}
+.bind>div{background:#fff;border:1px solid var(--rule);border-radius:10px;padding:12px 14px}
+.bind .vs{background:none;border:0;display:flex;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--muted);padding:0}
+.bind .h{font-family:'IBM Plex Mono',monospace;font-size:0.66rem;text-transform:uppercase;letter-spacing:0.06em}
+.bind .t{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.25rem;line-height:1.15;margin:4px 0}
+.bind .s{font-size:0.8rem;color:#3a3a44;line-height:1.4}
+.bind .up{border-top:3px solid var(--navy)}.bind .up .h,.bind .up .t{color:var(--navy)}
+.bind .dn{border-top:3px solid var(--red)}.bind .dn .h,.bind .dn .t{color:var(--red)}
+@media (max-width:560px){.bind{grid-template-columns:1fr}.bind .vs{justify-content:center}}
 /* toggle */
 .ctl{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 8px;font-family:'IBM Plex Mono',monospace;font-size:0.74rem}
 .ctl button{font:inherit;border:1px solid var(--rule);background:#fff;color:var(--ink);padding:5px 12px;border-radius:6px;cursor:pointer}
@@ -153,7 +167,7 @@ footer a{color:var(--muted)}
 <header class="post">
   <div class="meta"><span>[2026-10-04]</span><span>Rahul</span><span>updated 2026-10-04</span><span class="tag">ECONOMICS</span></div>
   <h1>The jobs number, from first principles</h1>
-  <p class="lede">Once a month the US government counts how many more people are on payrolls than the month before. For September 2026 the count was 29,000. This page covers what that number is, why it leads the front page, how to read it, and how it compares with 87 years of months.</p>
+  <p class="lede">Once a month the US counts how many more people are on payrolls than the month before. For September 2026 the answer was 29,000. Here is what that means and how it compares with 87 years of data.</p>
 
   <div class="kpis">
     <div class="kpi hot"><div class="v">+29k</div><div class="l">jobs added in September 2026</div></div>
@@ -169,44 +183,30 @@ footer a{color:var(--muted)}
 <section>
   <div class="k">01 / what it is</div>
   <h2>A headcount of paid jobs, minus last month's headcount</h2>
-  <div class="txt">
-  <p>The Bureau of Labor Statistics surveys around 120,000 businesses and government agencies, covering about 629,000 worksites. Each one reports how many people it paid in the pay period that includes the 12th of the month. Add up the jobs, compare with the month before, and you have the headline.</p>
-  </div>
+  <div class="txt"><p>Every month BLS asks about 120,000 employers one question: how many people did you pay in the pay period that includes the 12th?</p></div>
   <div class="eq">
     <div class="box"><small>September total</small><b>159,044k</b></div><span class="op">-</span>
     <div class="box"><small>August total</small><b>159,015k</b></div><span class="op">=</span>
     <div class="box res"><small>the headline</small><b>+29k</b></div>
   </div>
-  <h3>From one payroll office to the headline</h3>
-  <div class="steps">
-    <div class="step"><div class="n">step 1</div><div class="t">Pick the week</div><div class="s">Each worksite uses its own pay period that includes the 12th. A weekly payroll reports one week; a biweekly payroll reports two.</div></div>
-    <div class="step"><div class="n">step 2</div><div class="t">Count who was paid</div><div class="s">Anyone paid for any part of that pay period counts as one job, whatever their hours.</div></div>
-    <div class="step"><div class="n">step 3</div><div class="t">Send it in</div><div class="s">Small firms fill a short web form. Big employers send a file from their payroll system, worksite by worksite.</div></div>
-    <div class="step"><div class="n">step 4</div><div class="t">Scale it up</div><div class="s">Each sampled worksite stands in for similar ones BLS did not survey. A model adds firms that opened or closed.</div></div>
-    <div class="step"><div class="n">step 5</div><div class="t">Adjust and subtract</div><div class="s">Regular patterns, like holiday retail hiring, are taken out. Then this month's total minus last month's is the headline.</div></div>
-  </div>
+  <div class="chain"><span>payrolls report</span><i>&rarr;</i><span>scaled up to all employers</span><i>&rarr;</i><span>seasonal swings removed</span><i>&rarr;</i><span>minus last month</span><i>=</i><span class="r">headline</span></div>
   <div class="rules">
-    <div class="yes"><div class="h">counts as a job</div><ul><li>Full-time and part-time workers, one each</li><li>A person with two jobs, counted twice</li><li>Someone on paid vacation or paid sick leave</li><li>A worker who quit on the 13th, if paid for the period</li></ul></div>
-    <div class="no"><div class="h">does not count</div><ul><li>Workers on strike for the whole pay period</li><li>Anyone on unpaid leave for the whole pay period</li><li>Owners, the self-employed and farm workers</li><li>Contractors, who are counted at the firm that pays them</li></ul></div>
+    <div class="yes"><div class="h">counts as a job</div><ul><li>Anyone paid for any part of the pay period</li><li>Part-timers, one each</li><li>Two jobs, counted twice</li></ul></div>
+    <div class="no"><div class="h">does not count</div><ul><li>On strike or unpaid leave all period</li><li>Self-employed and farm workers</li><li>Business owners</li></ul></div>
   </div>
-  <h3>A real case: Boeing's machinists, fall 2024</h3>
-  <div class="txt"><p>BLS never names the firms in its sample, but this strike was large enough that BLS called it out in its own releases. About 33,000 machinists in the Seattle area walked out on Sep 13, 2024, the day after the 12th.</p></div>
+  <h3>A real case: Boeing's strike, fall 2024</h3>
   <div class="co">
-    <div><div class="m">September 2024</div><div class="st">Strike starts Sep 13</div><span class="pill y">counted</span>
-      <div class="d">They were paid for part of the pay period that includes Sep 12, so they stayed on the books.</div>
-      <div class="bar12"><i style="width:100%;background:var(--navy)"></i></div><div class="bl">machinists on payroll in the reference period</div></div>
+    <div><div class="m">September 2024</div><div class="st">33,000 walk out Sep 13</div><span class="pill y">counted</span>
+      <div class="d">Paid for part of the pay period with Sep 12.</div></div>
     <div><div class="m">October 2024</div><div class="st">On strike all month</div><span class="pill x">not counted</span>
-      <div class="d">No pay in the period that includes Oct 12, so their jobs drop out. The headline was +12k.</div>
-      <div class="big neg">-44k</div><div class="bl">transportation equipment, "largely due to strike activity"</div></div>
-    <div><div class="m">November 2024</div><div class="st">Deal ratified Nov 4</div><span class="pill y">counted again</span>
-      <div class="d">Back on payroll by the period that includes Nov 12. The headline jumped to +227k.</div>
-      <div class="big pos">+32k</div><div class="bl">transportation equipment, as strikers returned</div></div>
+      <div class="big neg">-44k</div><div class="bl">transportation equipment &middot; headline +12k</div></div>
+    <div><div class="m">November 2024</div><div class="st">Back after Nov 4 deal</div><span class="pill y">counted again</span>
+      <div class="big pos">+32k</div><div class="bl">transportation equipment &middot; headline +227k</div></div>
   </div>
-  <div class="cap">No one was fired and no one was hired, yet the count fell and rose by tens of thousands. A monthly headline is a snapshot of paychecks, so one-off events like strikes and storms can swing it. Figures are BLS first estimates.</div>
+  <div class="cap">Nobody was hired or fired. The count tracks paychecks, so strikes and storms swing it. BLS first estimates.</div>
   <div class="fig"><svg id="waffle"></svg></div>
-  <div class="legend"><span><i style="background:#cbd5e1"></i>1 million jobs</span><span><i style="background:var(--red)"></i>added in the last 12 months (0.5M)</span><span><i style="background:#fff;border:1.5px solid var(--teal)"></i>added in 2019, for scale (2.0M)</span></div>
-  <div class="cap">Each square is one million jobs. A full year of hiring now fills half a square.</div>
-  <div class="txt"><p style="font-size:0.9rem;color:#3a3a44">Farm workers, the self-employed and household staff are left out. A second survey, of about 60,000 households, produces the unemployment rate. The two surveys come out together and sometimes disagree.</p></div>
+  <div class="legend"><span><i style="background:#cbd5e1"></i>1 million jobs</span><span><i style="background:var(--red)"></i>jobs gained in the past 12 months: 0.5M</span><span><i style="background:#fff;border:1.5px solid var(--teal)"></i>jobs gained in 2019, a normal year: 2.0M</span></div>
+  <div class="cap">A year of hiring used to fill two squares. Now it fills half of one.</div>
 </section>
 
 <section>
@@ -215,19 +215,22 @@ footer a{color:var(--muted)}
   <div class="flow">
     <div class="node first"><div class="t">Jobs report</div><div class="s">first Friday, 8:30 a.m. ET</div></div>
     <div class="arr">&rarr;</div>
-    <div class="node"><div class="t">Fed rate decision</div><div class="s">maximum employment is half its mandate</div></div>
+    <div class="node"><div class="t">The Fed</div><div class="s">its two jobs: steady prices and as many people working as possible</div></div>
     <div class="arr">&rarr;</div>
-    <div class="node"><div class="t">Treasury yields</div><div class="s">reprice within minutes</div></div>
+    <div class="node"><div class="t">Treasury yields</div><div class="s">interest on US government debt, moves within minutes</div></div>
     <div class="arr">&rarr;</div>
-    <div class="node"><div class="t">Mortgages, stocks, the dollar</div><div class="s">what households feel</div></div>
+    <div class="node"><div class="t">Your rates</div><div class="s">mortgages, car loans, stocks</div></div>
+  </div>
+  <div class="bind">
+    <div class="up"><div class="h">inflation says</div><div class="t">raise rates</div><div class="s">The Fed hiked on Sep 16, to 3.75% to 4%.</div></div>
+    <div class="vs">vs</div>
+    <div class="dn"><div class="h">jobs say</div><div class="t">cut rates</div><div class="s">+29k jobs, unemployment up to 4.2%.</div></div>
   </div>
   <div class="two">
     <ul class="why">
-      <li><b>It comes first.</b> It is published about three weeks after the survey week, before most other data for the same month.</li>
-      <li><b>It is broad.</b> It covers every industry and every state, with a sample big enough to report sector detail.</li>
-      <li><b>The Fed is in a bind.</b> It raised rates on Sep 16 to a 3.75% to 4% range to fight inflation. Weak hiring argues for the opposite.</li>
-      <li><b>Markets react.</b> On Oct 2, stock futures rose and Treasury yields fell, as traders read the miss as a reason for the Fed to hold in October.</li>
-      <li><b>It became political.</b> In August 2025 the BLS commissioner was fired the day a weak report came out.</li>
+      <li><b>First.</b> The earliest hard data for each month.</li>
+      <li><b>Markets move.</b> On Oct 2, stocks rose and yields fell on bets the Fed holds.</li>
+      <li><b>Political.</b> The BLS chief was fired after a weak report in Aug 2025.</li>
     </ul>
     <div class="cal">
       <div class="h"><span>October 2026</span><span><span style="color:var(--red)">&#9632;</span> jobs report &nbsp;<span style="color:var(--navy)">&#9632;</span> Fed meeting</span></div>
@@ -240,13 +243,13 @@ footer a{color:var(--muted)}
   <div class="k">03 / how to read the headline</div>
   <h2>Three comparisons do most of the work</h2>
   <div class="fig"><svg id="line"></svg></div>
-  <div class="cap">September's gain against the forecast, recent averages, the 2019 pace, and Fed estimates of breakeven job growth.</div>
+  <div class="cap">September vs the forecast, recent averages, 2019, and the breakeven range.</div>
   <ol class="checks txt">
-    <li><b>Against the forecast.</b> 29k against 84k is a 55k miss, which is why the headlines called it weak.</li>
-    <li><b>Against breakeven.</b> Breakeven is the job growth needed to keep unemployment flat as the labor force grows. With immigration down, the St. Louis Fed puts it at 15k to 87k a month for 2026, and the Dallas Fed estimated about zero for late 2025. By this test, 29k is soft but sits inside the range.</li>
-    <li><b>Against revisions and unemployment.</b> July and August were cut by 60k combined, and unemployment rose to 4.2%. Both point the same way as the headline.</li>
+    <li><b>Forecast: 84k.</b> The median guess of economists polled before the release (Bloomberg's poll had 90k). They expected more because August first came in at +162k. It was later cut to +133k.</li>
+    <li><b>Breakeven: about 0 to 87k.</b> The jobs needed each month to keep unemployment flat. Less immigration means fewer new workers, so the bar is low. 29k sits inside that range.</li>
+    <li><b>Revisions: -60k.</b> July and August were cut, and unemployment rose to 4.2%.</li>
   </ol>
-  <div class="verdict">What to make of it: hiring has slowed to roughly the pace a slower-growing labor force needs, and unemployment is starting to drift up while the Fed is raising rates.</div>
+  <div class="verdict">Verdict: hiring is slow but near the new normal, and unemployment is creeping up while the Fed raises rates.</div>
 </section>
 
 <section>
@@ -289,6 +292,7 @@ footer a{color:var(--muted)}
     <li>Section 06 keeps a month only if no recession month falls in the 24 months ending with it. That leaves 545 months from 1950 on.</li>
     <li>Breakeven: <a href="https://www.stlouisfed.org/on-the-economy/2026/mar/breakeven-employment-growth-estimate-range-widens-2026">St. Louis Fed, Mar 2026</a>; <a href="https://www.dallasfed.org/research/economics/2026/0331">Dallas Fed, Mar 2026</a>.</li>
     <li>September report details: <a href="https://finance.yahoo.com/economy/articles/september-2026-jobs-report-payrolls-123334753.html">Yahoo Finance</a>. Fed decision: <a href="https://www.cnbc.com/2026/09/16/fed-rate-decision-september-2026.html">CNBC, Sep 16, 2026</a>.</li>
+    <li>Forecast polls: <a href="https://www.bloomberg.com/news/articles/2026-09-26/us-jobs-report-seen-showing-90-000-payrolls-4-1-unemployment-rate">Bloomberg, Sep 26, 2026</a>. Boeing strike: BLS releases for <a href="https://www.bls.gov/news.release/archives/empsit_11012024.htm">Oct 2024</a> and <a href="https://www.bls.gov/news.release/archives/empsit_12062024.htm">Nov 2024</a>.</li>
     <li>Data for this page: <a href="jobs.json">jobs.json</a>.</li>
   </ul>
 </details>
