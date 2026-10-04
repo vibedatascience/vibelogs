@@ -513,7 +513,7 @@ function paths(){
   [0,5,10,15,20].forEach(t=>s.append('text').attr('x',x(t)).attr('y',h-8).attr('text-anchor','middle').attr('font-size',9).attr('fill',C.slate).text(t?'+'+t+' days':'Friday'));
   const ln=d3.line().x((v,i)=>x(i)).y(v=>y(v)).curve(d3.curveMonotoneX);
   s.append('path').attr('d',ln(PA.paths.all)).attr('fill','none').attr('stroke',C.slate).attr('stroke-width',1.2).attr('stroke-dasharray','4,3');
-  const ends=[{y:y(PA.paths.all[20]),t:'any day '+(PA.paths.all[20]>0?'+':'')+PA.paths.all[20].toFixed(1)+'%',c:C.slate}];
+  const ends=[{y:y(PA.paths.all[20]),t:(narrow?'avg ':'any day ')+(PA.paths.all[20]>0?'+':'')+PA.paths.all[20].toFixed(1)+'%',c:C.slate}];
   PB.forEach(([k,lab,c])=>{const p=PA.paths[k];s.append('path').attr('d',ln(p)).attr('fill','none').attr('stroke',c).attr('stroke-width',k==='down_yup'?2.6:2);
     s.append('circle').attr('cx',x(20)).attr('cy',y(p[20])).attr('r',3).attr('fill',c);
     ends.push({y:y(p[20]),t:(p[20]>0?'+':'')+p[20].toFixed(1)+'%',c})});
