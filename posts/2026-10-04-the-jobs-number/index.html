@@ -82,6 +82,35 @@ ol.checks{list-style:none;counter-reset:c;margin:4px 0 14px}
 ol.checks li{counter-increment:c;position:relative;padding:0 0 12px 34px;font-size:0.95rem}
 ol.checks li:before{content:counter(c);position:absolute;left:0;top:1px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:0.7rem;display:flex;align-items:center;justify-content:center}
 .verdict{border-left:3px solid var(--red);padding:6px 0 6px 14px;margin:6px 0 18px;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:1.08rem;line-height:1.4;max-width:680px}
+/* company walk-through */
+h3{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;letter-spacing:-0.01em;margin:22px 0 8px}
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:6px 0 16px}
+.step{background:#fff;border:1px solid var(--rule);border-radius:10px;padding:10px 11px}
+.step .n{font-family:'IBM Plex Mono',monospace;font-size:0.64rem;color:var(--red);margin-bottom:3px}
+.step .t{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.9rem;line-height:1.2;margin-bottom:4px}
+.step .s{font-size:0.78rem;line-height:1.4;color:#3a3a44}
+@media (max-width:760px){.steps{grid-template-columns:1fr 1fr}.step:last-child{grid-column:1/-1}}
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:4px 0 16px}
+.rules>div{background:#fff;border:1px solid var(--rule);border-radius:10px;padding:10px 12px;font-size:0.84rem;line-height:1.5}
+.rules .h{font-family:'IBM Plex Mono',monospace;font-size:0.66rem;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+.rules .yes{border-top:3px solid var(--navy)}.rules .yes .h{color:var(--navy)}
+.rules .no{border-top:3px solid var(--red)}.rules .no .h{color:var(--red)}
+.rules ul{list-style:none}.rules li{padding-left:14px;position:relative}.rules li:before{content:"";position:absolute;left:0;top:0.6em;width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.35}
+@media (max-width:560px){.rules{grid-template-columns:1fr}}
+.co{display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:#fff;border:1px solid var(--rule);border-radius:10px;overflow:hidden;margin:6px 0 6px}
+.co>div{padding:12px 14px;border-right:1px solid var(--rule)}
+.co>div:last-child{border-right:0}
+.co .m{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--muted)}
+.co .st{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.02rem;margin:4px 0 6px;line-height:1.2}
+.co .pill{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:0.66rem;padding:2px 8px;border-radius:999px;color:#fff}
+.co .pill.y{background:var(--navy)}.co .pill.x{background:var(--red)}
+.co .d{font-size:0.8rem;line-height:1.45;color:#3a3a44;margin-top:8px}
+.co .big{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.5rem;letter-spacing:-0.02em;line-height:1;margin-top:10px}
+.co .big.neg{color:var(--red)}.co .big.pos{color:var(--navy)}
+.co .bl{font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--muted);margin-top:3px}
+.co .bar12{height:6px;border-radius:3px;background:#eef0f2;margin-top:10px;position:relative;overflow:hidden}
+.co .bar12 i{position:absolute;left:0;top:0;bottom:0;border-radius:3px}
+@media (max-width:640px){.co{grid-template-columns:1fr}.co>div{border-right:0;border-bottom:1px solid var(--rule)}.co>div:last-child{border-bottom:0}}
 /* toggle */
 .ctl{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 8px;font-family:'IBM Plex Mono',monospace;font-size:0.74rem}
 .ctl button{font:inherit;border:1px solid var(--rule);background:#fff;color:var(--ink);padding:5px 12px;border-radius:6px;cursor:pointer}
@@ -141,13 +170,39 @@ footer a{color:var(--muted)}
   <div class="k">01 / what it is</div>
   <h2>A headcount of paid jobs, minus last month's headcount</h2>
   <div class="txt">
-  <p>The Bureau of Labor Statistics surveys around 120,000 businesses and government agencies about the pay period that includes the 12th of the month. Add up the jobs, compare with the month before, and you have the headline.</p>
+  <p>The Bureau of Labor Statistics surveys around 120,000 businesses and government agencies, covering about 629,000 worksites. Each one reports how many people it paid in the pay period that includes the 12th of the month. Add up the jobs, compare with the month before, and you have the headline.</p>
   </div>
   <div class="eq">
     <div class="box"><small>September total</small><b>159,044k</b></div><span class="op">-</span>
     <div class="box"><small>August total</small><b>159,015k</b></div><span class="op">=</span>
     <div class="box res"><small>the headline</small><b>+29k</b></div>
   </div>
+  <h3>From one payroll office to the headline</h3>
+  <div class="steps">
+    <div class="step"><div class="n">step 1</div><div class="t">Pick the week</div><div class="s">Each worksite uses its own pay period that includes the 12th. A weekly payroll reports one week; a biweekly payroll reports two.</div></div>
+    <div class="step"><div class="n">step 2</div><div class="t">Count who was paid</div><div class="s">Anyone paid for any part of that pay period counts as one job, whatever their hours.</div></div>
+    <div class="step"><div class="n">step 3</div><div class="t">Send it in</div><div class="s">Small firms fill a short web form. Big employers send a file from their payroll system, worksite by worksite.</div></div>
+    <div class="step"><div class="n">step 4</div><div class="t">Scale it up</div><div class="s">Each sampled worksite stands in for similar ones BLS did not survey. A model adds firms that opened or closed.</div></div>
+    <div class="step"><div class="n">step 5</div><div class="t">Adjust and subtract</div><div class="s">Regular patterns, like holiday retail hiring, are taken out. Then this month's total minus last month's is the headline.</div></div>
+  </div>
+  <div class="rules">
+    <div class="yes"><div class="h">counts as a job</div><ul><li>Full-time and part-time workers, one each</li><li>A person with two jobs, counted twice</li><li>Someone on paid vacation or paid sick leave</li><li>A worker who quit on the 13th, if paid for the period</li></ul></div>
+    <div class="no"><div class="h">does not count</div><ul><li>Workers on strike for the whole pay period</li><li>Anyone on unpaid leave for the whole pay period</li><li>Owners, the self-employed and farm workers</li><li>Contractors, who are counted at the firm that pays them</li></ul></div>
+  </div>
+  <h3>A real case: Boeing's machinists, fall 2024</h3>
+  <div class="txt"><p>BLS never names the firms in its sample, but this strike was large enough that BLS called it out in its own releases. About 33,000 machinists in the Seattle area walked out on Sep 13, 2024, the day after the 12th.</p></div>
+  <div class="co">
+    <div><div class="m">September 2024</div><div class="st">Strike starts Sep 13</div><span class="pill y">counted</span>
+      <div class="d">They were paid for part of the pay period that includes Sep 12, so they stayed on the books.</div>
+      <div class="bar12"><i style="width:100%;background:var(--navy)"></i></div><div class="bl">machinists on payroll in the reference period</div></div>
+    <div><div class="m">October 2024</div><div class="st">On strike all month</div><span class="pill x">not counted</span>
+      <div class="d">No pay in the period that includes Oct 12, so their jobs drop out. The headline was +12k.</div>
+      <div class="big neg">-44k</div><div class="bl">transportation equipment, "largely due to strike activity"</div></div>
+    <div><div class="m">November 2024</div><div class="st">Deal ratified Nov 4</div><span class="pill y">counted again</span>
+      <div class="d">Back on payroll by the period that includes Nov 12. The headline jumped to +227k.</div>
+      <div class="big pos">+32k</div><div class="bl">transportation equipment, as strikers returned</div></div>
+  </div>
+  <div class="cap">No one was fired and no one was hired, yet the count fell and rose by tens of thousands. A monthly headline is a snapshot of paychecks, so one-off events like strikes and storms can swing it. Figures are BLS first estimates.</div>
   <div class="fig"><svg id="waffle"></svg></div>
   <div class="legend"><span><i style="background:#cbd5e1"></i>1 million jobs</span><span><i style="background:var(--red)"></i>added in the last 12 months (0.5M)</span><span><i style="background:#fff;border:1.5px solid var(--teal)"></i>added in 2019, for scale (2.0M)</span></div>
   <div class="cap">Each square is one million jobs. A full year of hiring now fills half a square.</div>
