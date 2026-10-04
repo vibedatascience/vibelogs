@@ -333,9 +333,6 @@ footer a{color:var(--muted)}
   <div class="legend"><span><i style="background:var(--navy)"></i>2016-19, low inflation</span><span><i style="background:#94a3b8"></i>2022-25</span><span><i style="background:var(--red)"></i>2026, labeled by month covered</span></div>
   <div class="legend" id="fitlg"></div>
   <div class="cap">Each dot is one jobs report since Nov 2016: how far it beat or missed expectations, and the S&amp;P 500 that day. Lines are straight-line fits; R&sup2; is the share of the day's move the surprise explains (0 to 1).</div>
-  <div class="fig"><svg id="eras"></svg></div>
-  <div class="legend"><span><i style="background:var(--navy);border-radius:50%"></i>S&amp;P 500</span><span><i style="background:var(--teal);border-radius:50%"></i>2-year Treasury yield</span></div>
-  <div class="cap">Correlation between the surprise and each market's move on the day. Bonds still react the way theory says; stocks flipped as inflation came back.</div>
   <h3>What comes before a sustained rise?</h3>
   <div class="txt"><p class="mini">The surprise itself barely predicts the next month. How the market closes on Friday does. Average S&amp;P 500 path after each kind of Friday:</p></div>
   <div class="fig"><svg id="paths"></svg></div>
@@ -368,7 +365,7 @@ const fmtK=v=>{const a=Math.abs(v),s=v>0?'+':v<0?'-':'';return a>=1000?s+(a/1000
 const mo=d3.timeFormat('%b %Y');
 let R=[],B=null,EV=null,PA=null;
 fetch('paths.json').then(r=>r.json()).then(j=>{PA=j;paths()});
-fetch('event.json').then(r=>r.json()).then(j=>{EV=j.rows.map(a=>Object.fromEntries(j.cols.map((c,i)=>[c,a[i]])));scat();eras();evt()});
+fetch('event.json').then(r=>r.json()).then(j=>{EV=j.rows.map(a=>Object.fromEntries(j.cols.map((c,i)=>[c,a[i]])));scat();evt()});
 fetch('bind.json').then(r=>r.json()).then(j=>{const [y,m]=j.start.split('-').map(Number);B=j.inf.map((v,i)=>({date:new Date(y,m-1+i,1),inf:v,fed:j.fed[i],ur:j.ur[i]}));bindc()});
 function W(id){return document.getElementById(id).parentNode.clientWidth-20}
 function svgOf(id,w,h){return d3.select('#'+id).attr('viewBox',`0 0 ${w} ${h}`).attr('height',h).html('')}
@@ -382,7 +379,7 @@ fetch('jobs.json').then(r=>r.json()).then(J=>{
   cal();timeline();table();drawAll();
   let t;window.addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(drawAll,150)});
 });
-function drawAll(){if(EV){scat();eras()}if(PA)paths();recent();cal12();if(B)bindc();waffle();numline();big();ridge();hist()}
+function drawAll(){if(EV){scat()}if(PA)paths();recent();cal12();if(B)bindc();waffle();numline();big();ridge();hist()}
 
 /* recent 24 months */
 function recent(){
@@ -484,27 +481,6 @@ function scat(){
     s.append('circle').attr('cx',cx).attr('cy',cy).attr('r',last?6:4.6).attr('fill',C.red).attr('stroke','#fff').attr('stroke-width',1.5);
     s.append('text').attr('x',cx+(r.surp>250||last?-9:8)).attr('y',cy+(last?-6:3)).attr('text-anchor',r.surp>250||last?'end':'start').attr('font-size',last?10:9).attr('font-weight',last?500:400).attr('fill',C.red).text(mn[+r.ref.slice(5,7)-1])});
 }
-function eras(){
-  const w=W('eras'),narrow=w<560,rows=['2016-19','2022-23','2024-25','2026'],rh=30,m={l:62,r:16,t:30,b:26},h=m.t+rows.length*rh+m.b,s=svgOf('eras',w,h);
-  const corr=(a,b)=>{const n=a.length,ma=d3.mean(a),mb=d3.mean(b);let c=0,va=0,vb=0;for(let i=0;i<n;i++){c+=(a[i]-ma)*(b[i]-mb);va+=(a[i]-ma)**2;vb+=(b[i]-mb)**2}return c/Math.sqrt(va*vb)};
-  const x=d3.scaleLinear().domain([-1,1]).range([m.l,w-m.r]);
-  [-1,-0.5,0,0.5,1].forEach(t=>{s.append('line').attr('x1',x(t)).attr('x2',x(t)).attr('y1',m.t-6).attr('y2',h-m.b).attr('stroke',t?'#f1f1ee':C.slate).attr('stroke-dasharray',t?null:'3,3');
-    s.append('text').attr('x',x(t)).attr('y',h-8).attr('text-anchor','middle').attr('font-size',9).attr('fill',C.slate).text(t>0?'+'+t:t)});
-  s.append('text').attr('x',x(-1)).attr('y',m.t-14).attr('font-size',9).attr('fill',C.slate).text(narrow?'\u2190 strong jobs push it down':'\u2190 strong jobs push it down');
-  s.append('text').attr('x',x(1)).attr('y',m.t-14).attr('text-anchor','end').attr('font-size',9).attr('fill',C.slate).text(narrow?'up \u2192':'strong jobs push it up \u2192');
-  rows.forEach((e,i)=>{const d=EV.filter(r=>r.era===e&&!r.covid),yy=m.t+i*rh+rh/2;
-    const a=d.filter(r=>r.ret!=null),b=d.filter(r=>r.dy2!=null);
-    const cs=corr(a.map(r=>r.surp),a.map(r=>r.ret)),cy=corr(b.map(r=>r.surp),b.map(r=>r.dy2));
-    s.append('line').attr('x1',x(Math.min(cs,cy))).attr('x2',x(Math.max(cs,cy))).attr('y1',yy).attr('y2',yy).attr('stroke','#e2e8f0').attr('stroke-width',3);
-    s.append('circle').attr('cx',x(cy)).attr('cy',yy).attr('r',5.5).attr('fill',C.teal);
-    s.append('circle').attr('cx',x(cs)).attr('cy',yy).attr('r',5.5).attr('fill',e==='2026'?C.red:C.navy);
-    s.append('text').attr('x',m.l-8).attr('y',yy+3).attr('text-anchor','end').attr('font-size',10).attr('font-weight',e==='2026'?500:400).attr('fill',e==='2026'?C.red:C.ink).text(e);
-    s.append('text').attr('x',x(cs)+(cs<cy?-9:9)).attr('y',yy+3).attr('text-anchor',cs<cy?'end':'start').attr('font-size',9).attr('fill',e==='2026'?C.red:C.navy).text((cs>0?'+':'')+cs.toFixed(2));
-    s.append('text').attr('x',x(cy)+(cs<cy?9:-9)).attr('y',yy+3).attr('text-anchor',cs<cy?'start':'end').attr('font-size',9).attr('fill',C.teal).text('+'+cy.toFixed(2));
-  });
-}
-
-
 function evt(){
   const mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const f=(v,suf,dp)=>v==null?'<span style="color:#cbd5e1">&ndash;</span>':`<span class="${v<0?'neg':''}">${v>0?'+':''}${dp!=null?v.toFixed(dp):Math.round(v)}${suf}</span>`;
