@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Rahul">
+<title>USA Treasury bill: a primer | Rahul's Site</title>
+<meta name="description" content="What a US Treasury bill is, how it pays, what it yields today, how much exists, and 90 years of the 3-month bill rate.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<style>
+/* single column on pure white; red marks the bill, navy and slate everything else */
+:root{color-scheme:light;--bg:#ffffff;--ink:#17171C;--muted:#64748b;--rule:#eceef1;--red:#E60023;--navy:#0a3069;--teal:#0d9488;--soft:#f8fafc;
+--display:'Space Grotesk',system-ui,sans-serif;--body:'Inter',system-ui,sans-serif;--mono:'IBM Plex Mono',ui-monospace,monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding:56px 16px 64px}
+.k{font-family:var(--mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--red);margin-bottom:8px}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(2rem,6vw,3.1rem);letter-spacing:-0.03em;line-height:1.05;text-wrap:balance}
+.lede{margin-top:14px;max-width:620px;color:#33343c}
+.nums{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:28px 0 8px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.nums>div{padding:14px 12px 12px 0}
+.nums .v{font-family:var(--display);font-weight:700;font-size:1.8rem;letter-spacing:-0.03em;line-height:1;font-variant-numeric:tabular-nums}
+.nums .v.r{color:var(--red)}
+.nums .l{font-family:var(--mono);font-size:0.64rem;color:var(--muted);margin-top:6px;line-height:1.4}
+@media (max-width:640px){.nums{grid-template-columns:1fr 1fr}.nums>div:nth-child(-n+2){border-bottom:1px solid var(--rule)}}
+section{padding-top:44px}
+h2{font-family:var(--display);font-weight:700;font-size:1.35rem;letter-spacing:-0.015em;line-height:1.2;margin-bottom:6px;text-wrap:balance}
+.note{font-size:0.92rem;color:#3a3b44;max-width:620px;margin-bottom:10px}
+svg{display:block;width:100%}
+svg text{font-family:var(--mono)}
+.cap{font-family:var(--mono);font-size:0.68rem;color:var(--muted);margin-top:6px;line-height:1.5;max-width:680px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
+.chips span{font-family:var(--mono);font-size:0.72rem;border:1px solid var(--rule);border-radius:999px;padding:3px 10px}
+.legend{display:flex;flex-wrap:wrap;gap:4px 16px;font-family:var(--mono);font-size:0.68rem;color:var(--muted);margin-top:6px}
+.legend i{display:inline-block;width:14px;height:2px;margin-right:6px;vertical-align:3px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:8px}
+.three .v{font-family:var(--display);font-weight:700;font-size:1.25rem;letter-spacing:-0.015em;line-height:1.15}
+.three .v.r{color:var(--red)}
+.three .l{font-size:0.86rem;color:#3a3b44;line-height:1.45;margin-top:4px}
+@media (max-width:640px){.three{grid-template-columns:1fr;gap:16px}}
+.src{margin-top:56px;font-family:var(--mono);font-size:0.64rem;color:var(--muted);line-height:1.7}
+.src a{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="k">Primer</div>
+<h1>USA Treasury bill: a primer</h1>
+<p class="lede">A Treasury bill is a short loan to the US government. You pay a bit less than face value today and get the full amount back in 4 to 52 weeks. The difference is your interest.</p>
+
+<div class="nums">
+  <div><div class="v r" id="n3m">4.17%</div><div class="l">3-month bill yield, Oct 1, 2026</div></div>
+  <div><div class="v">4-52</div><div class="l">weeks to maturity</div></div>
+  <div><div class="v">$100</div><div class="l">minimum at TreasuryDirect</div></div>
+  <div><div class="v">$7.2T</div><div class="l">bills outstanding, Aug 2026</div></div>
+</div>
+
+<section>
+  <h2>How a bill pays</h2>
+  <p class="note">No coupons. The discount is the interest. A 26-week bill at today's 4.27%:</p>
+  <svg id="pay"></svg>
+</section>
+
+<section>
+  <h2>The menu</h2>
+  <div class="chips"><span>4 wk</span><span>6 wk</span><span>8 wk</span><span>13 wk</span><span>17 wk</span><span>26 wk</span><span>52 wk</span></div>
+  <svg id="curve"></svg>
+  <div class="legend"><span><i style="background:var(--red)"></i>Oct 1, 2026</span><span><i style="background:repeating-linear-gradient(90deg,#64748b 0 4px,transparent 4px 7px)"></i>a year earlier</span></div>
+  <p class="cap">Yield by term. A year ago shorter bills paid more, as markets priced in rate cuts. Now longer bills pay more, as they price in hikes.</p>
+</section>
+
+<section>
+  <h2>How much exists</h2>
+  <svg id="stack"></svg>
+  <p class="cap">Marketable US government debt, Aug 31, 2026: $31.8T. Bills are the short end.</p>
+</section>
+
+<section>
+  <h2>90 years of the 3-month bill</h2>
+  <svg id="hist"></svg>
+  <div class="legend"><span><i style="background:var(--red)"></i>3-month bill yield</span><span><i style="background:#94a3b8"></i>inflation, year over year</span></div>
+  <div class="three" style="margin-top:22px">
+    <div><div class="v">62%</div><div class="l">of months since 1948, bills beat inflation</div></div>
+    <div><div class="v">38%</div><div class="l">of months since 2000</div></div>
+    <div><div class="v r">+0.4%</div><div class="l">today: 3.7% yield vs 3.3% inflation (Aug)</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>Buying and taxes</h2>
+  <div class="three">
+    <div><div class="v">Where</div><div class="l">TreasuryDirect from $100, any brokerage, or a money market fund that holds bills.</div></div>
+    <div><div class="v">Auctions</div><div class="l">Most terms every week, 52-week every four. Bid non-competitively to take the auction rate.</div></div>
+    <div><div class="v">Taxes</div><div class="l">Federal income tax, yes. State and local income tax, no.</div></div>
+  </div>
+</section>
+
+<div class="src">
+  Yields: FRED <a href="https://fred.stlouisfed.org/series/DGS3MO">DGS1MO, DGS3MO, DGS6MO, DGS1</a> (constant maturity) and <a href="https://fred.stlouisfed.org/series/TB3MS">TB3MS</a> (monthly, secondary market, since 1934). Inflation: <a href="https://fred.stlouisfed.org/series/CPIAUCSL">CPI</a>. Debt: Treasury <a href="https://fiscaldata.treasury.gov/datasets/monthly-statement-public-debt/">Monthly Statement of the Public Debt</a>, Aug 2026. Terms, minimums, taxes: <a href="https://www.treasurydirect.gov/marketable-securities/treasury-bills/">TreasuryDirect</a>, <a href="https://www.fidelity.com/learning-center/smart-money/treasury-bills-vs-bonds">Fidelity</a>. Data: <a href="tbill.json">tbill.json</a>. Not financial advice.
+</div>
+</div>
+
+<script>
+const C={red:'#E60023',navy:'#0a3069',slate:'#64748b',light:'#cbd5e1',ink:'#17171C',grid:'#f1f2f4'};
+let D=null;
+const W=id=>document.getElementById(id).parentNode.clientWidth;
+const S=(id,w,h)=>d3.select('#'+id).attr('viewBox',`0 0 ${w} ${h}`).attr('height',h).html('');
+fetch('tbill.json').then(r=>r.json()).then(j=>{const [y,m]=j.start.split('-').map(Number);
+  D={c:j.curve,s:j.tb.map((v,i)=>({date:new Date(y,m-1+i,1),tb:v,inf:j.inf[i]}))};draw()});
+let t;window.addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(draw,150)});
+function draw(){if(!D)return;pay();curve();stack();hist()}
+
+function pay(){
+  const w=W('pay'),narrow=w<560,h=118,s=S('pay',w,h),face=1000,price=1000/(1+D.c.now.DGS6MO/100*182/365);
+  const x=d3.scaleLinear().domain([0,1000]).range([0,w-(narrow?64:90)]);
+  const row=(y,lab,val,fillW,color,extra)=>{
+    s.append('text').attr('x',0).attr('y',y-6).attr('font-size',10).attr('fill',C.slate).text(lab);
+    s.append('rect').attr('x',0).attr('y',y).attr('height',22).attr('width',x(fillW)).attr('fill',color).attr('rx',2);
+    if(extra)s.append('rect').attr('x',x(fillW)).attr('y',y).attr('height',22).attr('width',x(face)-x(fillW)).attr('fill',C.red).attr('rx',2);
+    s.append('text').attr('x',x(face)+8).attr('y',y+15).attr('font-size',12).attr('font-weight',500).attr('fill',C.ink).text(val)};
+  row(20,'you pay today','$'+price.toFixed(0),price,C.light,false);
+  row(76,'you get back in 26 weeks','$1,000',price,C.light,true);
+  const g=face-price;
+  s.append('text').attr('x',x(face)-4).attr('y',76-6).attr('text-anchor','end').attr('font-size',10).attr('font-weight',500).attr('fill',C.red).text('+$'+g.toFixed(0)+' interest');
+}
+
+function curve(){
+  const w=W('curve'),narrow=w<560,h=narrow?220:250,m={l:36,r:narrow?44:56,t:16,b:26},s=S('curve',w,h);
+  const terms=[['DGS1MO','1 mo',1],['DGS3MO','3 mo',3],['DGS6MO','6 mo',6],['DGS1','12 mo',12]];
+  const x=d3.scaleLinear().domain([1,12]).range([m.l,w-m.r]),y=d3.scaleLinear().domain([3.4,4.7]).range([h-m.b,m.t]);
+  [3.5,4,4.5].forEach(v=>{s.append('line').attr('x1',m.l).attr('x2',w-m.r).attr('y1',y(v)).attr('y2',y(v)).attr('stroke',C.grid);
+    s.append('text').attr('x',m.l-6).attr('y',y(v)+3).attr('text-anchor','end').attr('font-size',9).attr('fill',C.slate).text(v.toFixed(1)+'%')});
+  terms.forEach(([k,l,mo])=>s.append('text').attr('x',x(mo)).attr('y',h-8).attr('text-anchor','middle').attr('font-size',9).attr('fill',C.slate).text(l));
+  const ln=d3.line().x(d=>x(d[0])).y(d=>y(d[1]));
+  [['ya',C.slate,'5,4',1.6],['now',C.red,null,2.4]].forEach(([k,c,da,sw])=>{const pts=terms.map(([id,,mo])=>[mo,D.c[k][id]]);
+    s.append('path').attr('d',ln(pts)).attr('fill','none').attr('stroke',c).attr('stroke-width',sw).attr('stroke-dasharray',da);
+    pts.forEach(p=>s.append('circle').attr('cx',x(p[0])).attr('cy',y(p[1])).attr('r',k==='now'?3.6:2.6).attr('fill',k==='now'?c:'#fff').attr('stroke',c).attr('stroke-width',1.4));
+    if(k==='now')pts.forEach((p,i)=>s.append('text').attr('x',x(p[0])).attr('y',(D.c.ya[terms[i][0]]>p[1]-0.02&&D.c.ya[terms[i][0]]<p[1]+0.15)?y(p[1])+16:y(p[1])-9).attr('text-anchor',i===pts.length-1?'end':i===0?'start':'middle').attr('font-size',9.5).attr('font-weight',500).attr('fill',c).text(p[1].toFixed(2)+'%'));
+    const L=pts[pts.length-1];if(k==='ya')s.append('text').attr('x',x(L[0])+6).attr('y',y(L[1])+3).attr('font-size',9).attr('fill',c).text(L[1].toFixed(2)+'%');
+    if(k==='now')s.append('text').attr('x',x(L[0])+6).attr('y',y(L[1])+3).attr('font-size',9).attr('font-weight',500).attr('fill',c).text('now')});
+}
+
+function stack(){
+  const w=W('stack'),narrow=w<560,h=narrow?96:84,s=S('stack',w,h);
+  const parts=[['Bills',7.248,C.red],['Notes',16.218,C.navy],['Bonds',5.525,'#475569'],['TIPS',2.153,'#94a3b8'],['FRNs',0.680,'#cbd5e1']];
+  const tot=d3.sum(parts,p=>p[1]),x=d3.scaleLinear().domain([0,tot]).range([0,w]);let acc=0;
+  parts.forEach(([n,v,c],i)=>{const x0=x(acc),bw=x(v)-1,pct=Math.round(v/tot*100);
+    s.append('rect').attr('x',x0).attr('y',26).attr('width',bw).attr('height',26).attr('fill',c);
+    if(i===0)s.append('text').attr('x',x0).attr('y',18).attr('font-size',11).attr('font-weight',500).attr('fill',C.red).text(`Bills $${v.toFixed(1)}T \u00b7 ${pct}%`);
+    else if(bw>(narrow?48:80))s.append('text').attr('x',x0+6).attr('y',43).attr('font-size',9.5).attr('fill','#fff').text(`${n} ${pct}%`);
+    acc+=v});
+  if(narrow)s.append('text').attr('x',w).attr('y',70).attr('text-anchor','end').attr('font-size',9).attr('fill',C.slate).text('TIPS 7%, FRNs 2%');
+  else s.append('text').attr('x',w).attr('y',70).attr('text-anchor','end').attr('font-size',9).attr('fill',C.slate).text('TIPS = inflation-protected, FRNs = floating-rate notes');
+}
+
+function hist(){
+  const w=W('hist'),narrow=w<560,h=narrow?260:320,m={l:34,r:narrow?42:50,t:16,b:24},s=S('hist',w,h);
+  const d=D.s,x=d3.scaleTime().domain([d[0].date,d[d.length-1].date]).range([m.l,w-m.r]),y=d3.scaleLinear().domain([-4,18]).range([h-m.b,m.t]);
+  [0,5,10,15].forEach(v=>{s.append('line').attr('x1',m.l).attr('x2',w-m.r).attr('y1',y(v)).attr('y2',y(v)).attr('stroke',v?C.grid:C.slate).attr('stroke-width',v?1:0.8);
+    s.append('text').attr('x',m.l-6).attr('y',y(v)+3).attr('text-anchor','end').attr('font-size',9).attr('fill',C.slate).text(v+'%')});
+  d3.range(1940,2030,narrow?20:10).forEach(yr=>s.append('text').attr('x',x(new Date(yr,0,1))).attr('y',h-6).attr('text-anchor','middle').attr('font-size',9).attr('fill',C.slate).text(yr));
+  const lnI=d3.line().defined(r=>r.inf!=null&&r.inf>-4).x(r=>x(r.date)).y(r=>y(Math.min(18,r.inf)));
+  s.append('path').attr('d',lnI(d)).attr('fill','none').attr('stroke','#94a3b8').attr('stroke-width',1);
+  s.append('path').attr('d',d3.line().x(r=>x(r.date)).y(r=>y(r.tb))(d)).attr('fill','none').attr('stroke',C.red).attr('stroke-width',1.8);
+  const L=d[d.length-1];s.append('circle').attr('cx',x(L.date)).attr('cy',y(L.tb)).attr('r',3.5).attr('fill',C.red);
+  s.append('text').attr('x',x(L.date)+6).attr('y',y(L.tb)+3).attr('font-size',10).attr('font-weight',500).attr('fill',C.red).text(L.tb.toFixed(1)+'%');
+  const pk=d.reduce((a,r)=>r.tb>a.tb?r:a);
+  s.append('text').attr('x',x(pk.date)+6).attr('y',y(pk.tb)+3).attr('font-size',9).attr('fill',C.red).text('16.3% in 1981');
+}
+</script>
+</body>
+</html>
