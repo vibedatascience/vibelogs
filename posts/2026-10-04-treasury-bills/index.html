@@ -44,6 +44,13 @@ svg text{font-family:var(--mono)}
 .three .v.r{color:var(--red)}
 .three .l{font-size:0.86rem;color:#3a3b44;line-height:1.45;margin-top:4px}
 @media (max-width:640px){.three{grid-template-columns:1fr;gap:16px}}
+.off{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:22px 0 0;font-family:var(--mono);font-size:0.72rem;align-items:baseline}
+.off .g{color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;font-size:0.62rem}
+.off .ls{display:flex;flex-wrap:wrap;gap:6px}
+.off a{color:var(--ink);text-decoration:none;border:1px solid var(--rule);border-radius:999px;padding:3px 10px;white-space:nowrap}
+.off a:after{content:" \2197";color:var(--red)}
+.off a:hover{border-color:var(--red);color:var(--red)}
+.off a:focus-visible{outline:2px solid var(--red);outline-offset:2px}
 .src{margin-top:56px;font-family:var(--mono);font-size:0.64rem;color:var(--muted);line-height:1.7}
 .src a{color:var(--muted)}
 </style>
@@ -54,6 +61,12 @@ svg text{font-family:var(--mono)}
 <div class="k">Primer</div>
 <h1>USA Treasuries: bills, notes and bonds</h1>
 <p class="lede">A Treasury is a loan to the US government. Bills last up to a year, notes 2 to 10 years, bonds 20 or 30. Same borrower, same promise. They differ in how long you wait and how you get paid.</p>
+
+<div class="off">
+  <div class="g">Buy</div><div class="ls"><a href="https://www.treasurydirect.gov/" target="_blank" rel="noopener">TreasuryDirect</a></div>
+  <div class="g">Learn</div><div class="ls"><a href="https://www.treasurydirect.gov/marketable-securities/treasury-bills/" target="_blank" rel="noopener">Bills</a><a href="https://www.treasurydirect.gov/marketable-securities/treasury-notes/" target="_blank" rel="noopener">Notes</a><a href="https://www.treasurydirect.gov/marketable-securities/treasury-bonds/" target="_blank" rel="noopener">Bonds</a><a href="https://www.treasurydirect.gov/marketable-securities/tips/" target="_blank" rel="noopener">TIPS</a></div>
+  <div class="g">Data</div><div class="ls"><a href="https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&amp;field_tdr_date_value=202610" target="_blank" rel="noopener">Daily yields</a><a href="https://fiscaldata.treasury.gov/datasets/upcoming-auctions/" target="_blank" rel="noopener">Upcoming auctions</a><a href="https://www.treasurydirect.gov/auctions/announcements-data-results/" target="_blank" rel="noopener">Auction results</a><a href="https://fiscaldata.treasury.gov/datasets/monthly-statement-public-debt/" target="_blank" rel="noopener">Debt outstanding</a></div>
+</div>
 
 <div class="nums">
   <div><div class="v" style="color:var(--red)">4.17%</div><div class="l">3-month bill</div></div>
