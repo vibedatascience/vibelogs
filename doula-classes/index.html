@@ -1,0 +1,2051 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  body { margin: 0; font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+<title>Doula Classes</title>
+<style>
+  /* Layout: one quiet white column; each class is a section, each topic a calm visual */
+  :root {
+    --bg: #ffffff;
+    --fg: #16181d;
+    --muted: #6b7280;
+    --faint: #b4bac3;
+    --line: #e7e9ed;
+    --chip: #f3f4f6;
+    --accent: #E60023;
+    --accent-soft: rgba(230, 0, 35, 0.12);
+    --teal: #0d9488;
+    --teal-row: #f1f9f8;
+    --teal-chip: #dcf1ee;
+    --navy: #0a3069;
+    --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color-scheme: light;
+  }
+  body { background: var(--bg); color: var(--fg); font-family: var(--sans); }
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding-inline: 24px;
+    padding-block: 40px 64px;
+  }
+  h1 {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  .class { margin-top: 36px; }
+  h2 {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.375rem;
+  }
+  .date {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .topic { margin-top: 36px; }
+  .topic-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px 16px;
+    margin-bottom: 28px;
+  }
+  h3 {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.125rem;
+  }
+  .countdown {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .countdown b { color: var(--accent); font-weight: 600; }
+
+  /* Overview track: weeks 33 to 42 mapped onto 0-100% */
+  .track-wrap { padding-inline: 18px; }
+  .track { position: relative; height: 74px; }
+  .rail, .progress, .window {
+    position: absolute;
+    top: 30px;
+    height: 4px;
+    border-radius: 2px;
+  }
+  .rail { left: 0; right: 0; background: var(--line); }
+  .progress { left: 0; width: 9.52%; background: var(--fg); }
+  .window {
+    left: 55.56%;
+    width: 44.44%;
+    background: linear-gradient(90deg, var(--teal-chip), var(--teal-chip) 75%, var(--teal-row));
+  }
+  .window-label {
+    position: absolute;
+    top: 6px;
+    left: 55.56%;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--teal);
+    white-space: nowrap;
+  }
+  .mk {
+    position: absolute;
+    top: 25px;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 9px;
+  }
+  .mk i {
+    display: block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--faint);
+    box-sizing: border-box;
+  }
+  .mk span {
+    font-size: 0.68rem;
+    color: var(--muted);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .mk.today i { border-color: var(--fg); background: var(--fg); }
+  .mk.today span { color: var(--fg); font-weight: 600; }
+  .mk.due i {
+    width: 16px; height: 16px;
+    margin-top: -1px;
+    border: none;
+    background: var(--accent);
+    box-shadow: 0 0 0 5px var(--accent-soft);
+  }
+  .mk.due span { color: var(--accent); font-weight: 600; }
+
+  /* Weekly calendar: one row per pregnancy week, Monday to Sunday */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    margin: 36px 0 14px;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .sw { width: 12px; height: 12px; border-radius: 4px; display: inline-block; }
+  .sw.today { background: var(--fg); }
+  .sw.due { background: var(--accent); }
+  .sw.window { background: var(--teal-chip); }
+  .sw.event { width: 6px; height: 6px; border-radius: 50%; background: var(--navy); }
+
+  .cal { display: grid; gap: 4px; }
+  .wk {
+    --cell: 34px;
+    display: grid;
+    grid-template-columns: 52px repeat(7, var(--cell)) minmax(0, 1fr);
+    column-gap: 5px;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: 12px;
+  }
+  .wk.head { padding-block: 0 2px; }
+  .wk.head span {
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+    text-align: center;
+  }
+  .wk.head .exp { text-align: left; padding-left: 14px; }
+  .wk.in-window { background: var(--teal-row); }
+
+  .wn {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 0.95rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .wn small {
+    display: block;
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: 0.62rem;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+  .in-window .wn small { color: var(--teal); }
+
+  .d {
+    position: relative;
+    width: var(--cell);
+    height: var(--cell);
+    max-width: 100%;
+    border-radius: 9px;
+    display: grid;
+    place-content: center;
+    text-align: center;
+    font-size: 0.78rem;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    box-sizing: border-box;
+  }
+  .d .mo {
+    display: block;
+    font-size: 0.5rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+  .d.past { color: var(--faint); border-color: transparent; background: transparent; }
+  .d.today {
+    background: var(--fg);
+    color: #ffffff;
+    border-color: var(--fg);
+    font-weight: 600;
+  }
+  .d.due {
+    background: var(--accent);
+    color: #ffffff;
+    border-color: var(--accent);
+    font-weight: 700;
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+  .d.due .mo { color: rgba(255,255,255,0.85); }
+  .d.ev::after {
+    content: "";
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    margin-left: -2px;
+    border-radius: 50%;
+    background: var(--navy);
+  }
+  .d.hol { color: var(--muted); }
+
+  .exp-cell {
+    min-width: 0;
+    padding-left: 14px;
+    font-size: 0.8rem;
+    line-height: 1.45;
+    color: var(--muted);
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 3px; }
+  .chip {
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--fg);
+    background: var(--chip);
+    padding: 2px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .in-window .chip { background: var(--teal-chip); color: #0b5f58; }
+  .chip.red { background: var(--accent-soft); color: var(--accent); }
+  .chip.navy { background: #e8edf6; color: var(--navy); }
+  .exp-cell p { margin: 0; }
+
+  .glossary { margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--line); }
+  .g-head {
+    margin: 0 0 14px;
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  .glossary dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px 28px;
+  }
+  .glossary dl > div { min-width: 0; }
+  .glossary.g4 dl { grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 16px 22px; }
+  .glossary dt {
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+  .glossary dd {
+    margin: 2px 0 0;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--muted);
+  }
+
+  /* Topic separation and placeholders */
+  .topic + .topic { margin-top: 48px; padding-top: 36px; border-top: 1px solid var(--line); }
+  .placeholder + .placeholder { margin-top: 0; padding-top: 18px; border-top: none; }
+  .placeholder .topic-head { margin-bottom: 0; }
+  .placeholder h3 { color: var(--faint); }
+
+  /* Section 2 */
+  .lede {
+    margin: -12px 0 0;
+    max-width: 60ch;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  .sub {
+    margin: 32px 0 12px;
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  .fluids {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+  }
+  .fluid {
+    min-width: 0;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px 16px;
+  }
+  .f-name { margin: 0; font-weight: 600; font-size: 0.9rem; }
+  .f-desc { margin: 2px 0 14px; font-size: 0.78rem; color: var(--muted); }
+  .swatches { display: flex; flex-wrap: wrap; gap: 14px; }
+  .sw-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.68rem;
+    color: var(--muted);
+  }
+  .sw-item i {
+    display: block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    box-sizing: border-box;
+  }
+  .sw-item.bad { color: var(--accent); font-weight: 600; }
+  .sw-item.bad i { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); }
+
+  .rule-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-top: 10px;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .fluids + .rule-row { margin-top: 16px; }
+  .rule-txt { min-width: 0; }
+  .pill {
+    flex: none;
+    justify-self: start;
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 999px;
+    background: var(--chip);
+    color: var(--fg);
+    white-space: nowrap;
+  }
+  .pill.ok { background: var(--teal-chip); color: #0b5f58; }
+  .pill.bad { background: var(--accent-soft); color: var(--accent); }
+
+  .ctypes { display: grid; gap: 2px; }
+  .ct, .ct-head {
+    display: grid;
+    grid-template-columns: 190px minmax(0, 1fr) 96px 64px;
+    column-gap: 16px;
+    align-items: center;
+  }
+  .ct-head span {
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  .ct { padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .ct:last-child { border-bottom: none; }
+  .ct-name { font-weight: 600; font-size: 0.86rem; }
+  .ct-name small {
+    display: block;
+    margin-top: 2px;
+    font-weight: 400;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  .ct.real .ct-name { color: var(--accent); }
+  .ct.real .ct-name small { color: var(--muted); }
+
+  .strip {
+    position: relative;
+    height: 34px;
+    border-bottom: 1px solid var(--line);
+  }
+  .strip i {
+    position: absolute;
+    bottom: 0;
+    border-radius: 6px 6px 0 0;
+    background: #c6ccd5;
+  }
+  .strip.navy i { background: #8597b8; }
+  .strip.red i { background: var(--accent); }
+  .gap-label {
+    position: absolute;
+    bottom: 6px;
+    font-size: 0.62rem;
+    color: var(--faint);
+    font-style: italic;
+    white-space: nowrap;
+  }
+
+  .timing {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 20px 28px;
+    align-items: center;
+  }
+  .timer { position: relative; height: 104px; }
+  .timer i {
+    position: absolute;
+    top: 34px;
+    height: 34px;
+    border-radius: 8px 8px 0 0;
+    background: var(--accent);
+    opacity: 0.85;
+  }
+  .timer::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0;
+    top: 68px;
+    height: 1px;
+    background: var(--line);
+  }
+  .br {
+    position: absolute;
+    height: 8px;
+    box-sizing: border-box;
+    border: 1px solid var(--muted);
+  }
+  .br.top { top: 18px; border-bottom: none; }
+  .br.bottom { top: 76px; border-top: none; }
+  .br b {
+    position: absolute;
+    left: 0;
+    font-size: 0.66rem;
+    font-weight: 600;
+    color: var(--fg);
+    white-space: nowrap;
+  }
+  .br.top b { bottom: 10px; }
+  .br.bottom b { top: 10px; }
+  .go {
+    min-width: 0;
+    border-radius: 12px;
+    background: #fff5f6;
+    padding: 16px 18px;
+  }
+  .go-label {
+    margin: 0;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .go-big {
+    margin: 6px 0 0;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.15rem;
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+  .go-note { margin: 6px 0 0; font-size: 0.78rem; color: var(--muted); line-height: 1.45; }
+
+  /* Section 4: after birth */
+  .phases {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+  }
+  .phase {
+    min-width: 0;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px 16px;
+  }
+  .ph-head {
+    margin: 0 0 12px;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .ph-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    display: grid;
+    gap: 12px;
+  }
+  .ph-list::before {
+    content: "";
+    position: absolute;
+    left: 4px; top: 6px; bottom: 6px;
+    width: 1px;
+    background: var(--line);
+  }
+  .ph-list li {
+    position: relative;
+    display: grid;
+    grid-template-columns: 62px minmax(0, 1fr);
+    column-gap: 8px;
+    padding-left: 18px;
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+  .ph-list li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 5px;
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--faint);
+    box-sizing: border-box;
+  }
+  .ph-list li.you::before { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .ph-t { font-size: 0.7rem; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; padding-top: 1px; }
+  .ph-e { min-width: 0; }
+
+  .apgar {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .ap {
+    min-width: 0;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 12px 14px;
+    display: grid;
+    gap: 6px;
+  }
+  .ap-l {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.9rem;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .ap-n { margin: 0; font-weight: 600; font-size: 0.82rem; }
+  .ap-d { margin: 2px 0 0; font-size: 0.74rem; line-height: 1.4; color: var(--muted); }
+  .score { margin-top: 14px; max-width: 520px; }
+  .score-bar, .score-key {
+    display: grid;
+    grid-template-columns: repeat(11, minmax(0, 1fr));
+    gap: 3px;
+  }
+  .score-bar span {
+    display: grid;
+    place-items: center;
+    height: 28px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .score-bar .lo { background: #fde4e7; color: #b4233a; }
+  .score-bar .mid { background: #fdf1d8; color: #8a5a00; }
+  .score-bar .ok { background: var(--teal); color: #ffffff; }
+  .score-key { margin-top: 5px; font-size: 0.68rem; color: var(--muted); }
+  .score-key span { text-align: center; }
+  .score-key .ok-k { color: var(--teal); font-weight: 600; }
+
+  .choices {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 0 28px;
+  }
+  .ch {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .ch-main { min-width: 0; }
+  .ch-n { margin: 0; font-weight: 600; font-size: 0.86rem; }
+  .ch-d { margin: 2px 0 0; font-size: 0.78rem; line-height: 1.45; color: var(--muted); }
+  .pill.navy-p { background: #e8edf6; color: var(--navy); }
+
+  @media (max-width: 640px) {
+    .apgar { grid-template-columns: minmax(0, 1fr); }
+    .ap { grid-template-columns: 34px minmax(0, 1fr); align-items: start; gap: 10px; }
+  }
+
+  /* 3D birth viewer */
+  .b3 { margin-top: 24px; outline: none; }
+  .b3:focus-visible .b3-view { box-shadow: 0 0 0 2px var(--navy); }
+  .b3-view {
+    position: relative;
+    height: clamp(440px, 66vh, 660px);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+    background: #ffffff;
+  }
+  .b3-canvas, .b3-canvas canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .b3-canvas canvas { cursor: grab; touch-action: none; }
+  .b3-canvas canvas:active { cursor: grabbing; }
+  .b3-labels { position: absolute; inset: 0; pointer-events: none; }
+  .b3-lab {
+    position: absolute;
+    left: 0; top: 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.66rem;
+    font-weight: 600;
+    color: var(--fg);
+    white-space: nowrap;
+    background: rgba(255,255,255,0.86);
+    padding: 2px 7px 2px 5px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    transition: opacity .2s;
+  }
+  .b3-lab::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--lab, var(--muted)); }
+  .b3.no-labels .b3-lab { opacity: 0; }
+  .b3-tools {
+    position: absolute;
+    top: 12px; left: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+    background: rgba(255,255,255,0.9);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 3px;
+  }
+  .b3-btn {
+    font: inherit;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--muted);
+    background: transparent;
+    border: 0;
+    border-radius: 999px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  .b3-btn.is-on { background: var(--fg); color: #ffffff; }
+  .b3-btn:focus-visible, .b3-round:focus-visible, .b3-play:focus-visible, .b3-step:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+  .b3-sep { width: 1px; height: 16px; background: var(--line); margin-inline: 2px; }
+  .b3-hint {
+    position: absolute;
+    right: 14px; bottom: 10px;
+    margin: 0;
+    font-size: 0.66rem;
+    color: var(--faint);
+    pointer-events: none;
+  }
+  .b3-info {
+    position: absolute;
+    left: 12px; bottom: 12px;
+    max-width: min(300px, calc(100% - 24px));
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 10px 12px;
+    box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
+  }
+  .b3-info-name { margin: 0; font-weight: 600; font-size: 0.82rem; }
+  .b3-info-text { margin: 3px 0 0; font-size: 0.76rem; color: var(--muted); line-height: 1.45; }
+  .b3-fallback { position: absolute; inset: 0; margin: 0; display: grid; place-items: center; color: var(--muted); font-size: 0.85rem; }
+  .b3 [hidden] { display: none !important; }
+
+  .b3-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 14px 24px;
+    margin-top: 16px;
+  }
+  .b3-caption { min-width: 0; flex: 1 1 320px; }
+  .b3-kicker {
+    margin: 0;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .b3-title {
+    margin: 4px 0 0;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.2rem;
+    line-height: 1.25;
+    text-wrap: balance;
+  }
+  .b3-text { margin: 4px 0 0; font-size: 0.84rem; color: var(--muted); line-height: 1.5; max-width: 60ch; }
+  .b3-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .b3-chip {
+    font-size: 0.7rem;
+    background: var(--chip);
+    border-radius: 999px;
+    padding: 3px 9px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .b3-chip b { color: var(--fg); font-weight: 600; }
+  .b3-ctrl { display: flex; gap: 6px; align-items: center; }
+  .b3-round, .b3-play {
+    font: inherit;
+    border: 1px solid var(--line);
+    background: #ffffff;
+    color: var(--fg);
+    cursor: pointer;
+    height: 38px;
+  }
+  .b3-round { width: 38px; border-radius: 50%; font-size: 1rem; }
+  .b3-play {
+    min-width: 76px;
+    border-radius: 999px;
+    padding: 0 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: var(--fg);
+    color: #ffffff;
+    border-color: var(--fg);
+  }
+  .b3-round:disabled { opacity: 0.35; cursor: default; }
+  .b3-steps {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 4px;
+    margin-top: 16px;
+  }
+  .b3-step {
+    font: inherit;
+    text-align: left;
+    background: transparent;
+    border: 0;
+    border-top: 3px solid var(--line);
+    padding: 8px 2px 0;
+    cursor: pointer;
+    min-width: 0;
+  }
+  .b3-step span { display: block; font-size: 0.6rem; color: var(--faint); font-variant-numeric: tabular-nums; }
+  .b3-step b {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .b3-step.done { border-top-color: #f3a6b3; }
+  .b3-step.is-on { border-top-color: var(--accent); }
+  .b3-step.is-on b { color: var(--fg); }
+  .b3-note { margin: 12px 0 0; font-size: 0.68rem; color: var(--faint); }
+  @media (max-width: 640px) {
+    .b3-view { height: 460px; }
+    .b3-hint { display: none; }
+    .b3-steps { grid-template-columns: repeat(4, minmax(0, 1fr)); row-gap: 10px; }
+  }
+
+  /* Section 3: stage map sized by cm (0-3, 3-7, 7-10) plus pushing and placenta */
+  .s-early { background: #cdebe6; }
+  .s-active { background: #6cc0b5; }
+  .s-trans { background: var(--teal); }
+  .s-push { background: var(--accent); }
+  .s-plac { background: #f4c3cb; }
+
+  .smap, .scards {
+    display: grid;
+    grid-template-columns: 3fr 4fr 3fr 2.6fr 2.2fr;
+    column-gap: 4px;
+  }
+  .smap { margin-top: 24px; row-gap: 6px; }
+  .grp {
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--faint);
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .seg { height: 14px; border-radius: 4px; }
+  .scale { position: relative; height: 16px; }
+  .scale span {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    font-size: 0.66rem;
+    color: var(--muted);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .scale span:first-child { transform: none; }
+  .scale span:last-child { transform: translateX(-100%); }
+  .scale .go-in { color: var(--fg); font-weight: 600; }
+  .scale-end { font-size: 0.66rem; color: var(--muted); white-space: nowrap; }
+
+  .epi { position: relative; height: 34px; margin-top: 4px; }
+  .epi-band, .epi-sweet {
+    position: absolute;
+    top: 0;
+    height: 6px;
+    border-radius: 3px;
+  }
+  .epi-band { left: 0; width: 80%; background: #dfe5ef; }
+  .epi-sweet { left: 40%; width: 10%; background: var(--navy); }
+  .epi-stop {
+    position: absolute;
+    left: 80%;
+    top: -4px;
+    width: 2px;
+    height: 14px;
+    background: var(--navy);
+  }
+  .epi-lab, .epi-tip, .epi-no {
+    position: absolute;
+    top: 13px;
+    font-size: 0.64rem;
+    white-space: nowrap;
+  }
+  .epi-lab { color: var(--muted); }
+  .epi-tip { transform: translateX(-50%); color: var(--navy); font-weight: 600; }
+  .epi-no { transform: translateX(-50%); color: var(--muted); }
+
+  .scards { margin-top: 18px; row-gap: 8px; }
+  .scard {
+    min-width: 0;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 12px 14px;
+  }
+  .sc-name {
+    margin: 0 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-weight: 600;
+    font-size: 0.86rem;
+  }
+  .sc-name i { width: 9px; height: 9px; border-radius: 3px; flex: none; }
+  .scard dl { margin: 0; display: grid; gap: 8px; }
+  .scard dt {
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  .scard dd { margin: 1px 0 0; font-size: 0.78rem; line-height: 1.4; }
+
+  .duo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+    margin-top: 28px;
+  }
+  .panel {
+    min-width: 0;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px 16px;
+  }
+  .sub.flush { margin-top: 0; }
+  .station {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 4px;
+  }
+  .st {
+    display: grid;
+    place-items: center;
+    height: 34px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    background: var(--chip);
+    color: var(--muted);
+  }
+  .st.wait { background: #f7f8fa; color: var(--faint); }
+  .st.push { background: var(--teal); color: #ffffff; }
+  .st-key {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 4px;
+    margin-top: 6px;
+    font-size: 0.68rem;
+    color: var(--muted);
+  }
+  .st-key span { text-align: center; }
+  .st-key .push-k { color: var(--teal); font-weight: 600; }
+  .panel-note { margin: 12px 0 0; font-size: 0.76rem; color: var(--muted); line-height: 1.45; }
+  .asks {
+    margin: 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 8px;
+    font-size: 0.82rem;
+    line-height: 1.45;
+  }
+  .asks li::marker { color: var(--faint); font-size: 0.75rem; }
+
+  .tips {
+    margin: 20px 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 8px;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: var(--fg);
+  }
+  .tips li { display: flex; gap: 10px; }
+  .tips li::before {
+    content: "";
+    flex: none;
+    width: 6px;
+    height: 6px;
+    margin-top: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .mk.due i, .d.due { animation: breathe 3.2s ease-in-out infinite; }
+    @keyframes breathe {
+      0%, 100% { box-shadow: 0 0 0 4px var(--accent-soft); }
+      50% { box-shadow: 0 0 0 8px rgba(230, 0, 35, 0.04); }
+    }
+  }
+
+  @media (max-width: 640px) {
+    .page { padding-inline: 16px; }
+    .track-wrap { padding-inline: 14px; }
+    .mk span { font-size: 0.62rem; }
+    .wk {
+      grid-template-columns: 40px repeat(7, minmax(0, 1fr));
+      column-gap: 4px;
+      row-gap: 8px;
+      padding: 10px 8px;
+    }
+    .d { width: 100%; height: auto; aspect-ratio: 1; }
+    .wk.head .exp { display: none; }
+    .exp-cell { grid-column: 2 / -1; padding-left: 0; }
+
+    .ct, .ct-head { grid-template-columns: minmax(0, 1fr) 84px 60px; column-gap: 10px; row-gap: 10px; }
+    .ct-head span:nth-child(2) { display: none; }
+    .ct-head span { white-space: normal; line-height: 1.3; }
+    .strip { grid-column: 1 / -1; grid-row: 2; }
+    .timing { grid-template-columns: minmax(0, 1fr); }
+
+    .scards { grid-template-columns: minmax(0, 1fr); }
+    .scale-end { white-space: normal; line-height: 1.2; font-size: 0.6rem; }
+    .scale span { font-size: 0.6rem; }
+    .epi { height: 50px; }
+    .epi-lab { display: none; }
+    .epi-tip { transform: none; left: 0 !important; }
+    .epi-no { top: 30px; transform: none; left: 0 !important; }
+  }
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600&display=swap">
+</head>
+<body>
+<main class="page">
+  <h1>Doula Classes</h1>
+
+  <section class="class">
+    <h2>Doula Class 1</h2>
+    <p class="date"><time datetime="2026-10-04">Sunday, October 4, 2026</time></p>
+
+    <section class="topic">
+      <div class="topic-head">
+        <h3>1. Body changes from 36 to 40 weeks</h3>
+        <p class="countdown">Due <b>Mon, Nov 16</b> &middot; 6 weeks to go</p>
+      </div>
+
+      <div class="track-wrap" aria-hidden="true">
+        <div class="track">
+          <div class="rail"></div>
+          <div class="window"></div>
+          <div class="progress"></div>
+          <span class="window-label">Labor window</span>
+          <div class="mk today" style="left: 9.52%"><i></i><span>Today</span></div>
+          <div class="mk" style="left: 33.33%"><i></i><span>36w<br>Oct 19</span></div>
+          <div class="mk" style="left: 55.56%"><i></i><span>38w<br>Nov 2</span></div>
+          <div class="mk due" style="left: 77.78%"><i></i><span>Due<br>Nov 16</span></div>
+          <div class="mk" style="left: 100%"><i></i><span>42w<br>Nov 30</span></div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <span><i class="sw today"></i>Today</span>
+        <span><i class="sw due"></i>Due date</span>
+        <span><i class="sw window"></i>Labor window</span>
+      </div>
+
+      <div class="cal">
+        <div class="wk head" aria-hidden="true">
+          <span></span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span><span class="exp">What Pavi may feel</span>
+        </div>
+
+        <div class="wk">
+          <div class="wn">33w<small>Now</small></div>
+          <div class="d past"><span class="mo">Sep</span>28</div>
+          <div class="d past">29</div>
+          <div class="d past">30</div>
+          <div class="d past"><span class="mo">Oct</span>1</div>
+          <div class="d past">2</div>
+          <div class="d past">3</div>
+          <div class="d today" title="Today: Doula Class 1">4</div>
+          <div class="exp-cell">
+            <div class="chips"><span class="chip">Braxton Hicks</span><span class="chip">Peeing often</span></div>
+            <p>Rest, water or a new position should stop them.</p>
+          </div>
+        </div>
+
+        <div class="wk">
+          <div class="wn">34w</div>
+          <div class="d">5</div>
+          <div class="d">6</div>
+          <div class="d">7</div>
+          <div class="d">8</div>
+          <div class="d">9</div>
+          <div class="d">10</div>
+          <div class="d">11</div>
+          <div class="exp-cell">
+            <div class="chips"><span class="chip">Discomfort after meals</span></div>
+            <p>This is normal while baby sits high.</p>
+          </div>
+        </div>
+
+        <div class="wk">
+          <div class="wn">35w</div>
+          <div class="d">12</div>
+          <div class="d">13</div>
+          <div class="d">14</div>
+          <div class="d">15</div>
+          <div class="d">16</div>
+          <div class="d">17</div>
+          <div class="d">18</div>
+          <div class="exp-cell">
+            <div class="chips"><span class="chip">More Braxton Hicks</span></div>
+            <p>They stay irregular and painless, so this is not labor.</p>
+          </div>
+        </div>
+
+        <div class="wk">
+          <div class="wn">36w</div>
+          <div class="d">19</div>
+          <div class="d">20</div>
+          <div class="d">21</div>
+          <div class="d">22</div>
+          <div class="d">23</div>
+          <div class="d">24</div>
+          <div class="d">25</div>
+          <div class="exp-cell">
+            <div class="chips"><span class="chip">Practice time</span></div>
+            <p>Start practicing breathing and birth ball circles.</p>
+          </div>
+        </div>
+
+        <div class="wk">
+          <div class="wn">37w</div>
+          <div class="d">26</div>
+          <div class="d">27</div>
+          <div class="d">28</div>
+          <div class="d">29</div>
+          <div class="d">30</div>
+          <div class="d">31</div>
+          <div class="d"><span class="mo">Nov</span>1</div>
+          <div class="exp-cell">
+            <div class="chips"><span class="chip">Stronger practice runs</span></div>
+            <p>If they fade with rest, it is still not labor.</p>
+          </div>
+        </div>
+
+        <div class="wk in-window">
+          <div class="wn">38w<small>Window</small></div>
+          <div class="d">2</div>
+          <div class="d">3</div>
+          <div class="d">4</div>
+          <div class="d">5</div>
+          <div class="d">6</div>
+          <div class="d">7</div>
+          <div class="d">8</div>
+          <div class="exp-cell">
+            <div class="chips"><span class="chip">Baby drops</span><span class="chip">Nesting</span><span class="chip">Back cramps</span></div>
+            <p>Breathing eases and bathroom trips increase. Labor can start any day.</p>
+          </div>
+        </div>
+
+        <div class="wk in-window">
+          <div class="wn">39w</div>
+          <div class="d">9</div>
+          <div class="d">10</div>
+          <div class="d">11</div>
+          <div class="d">12</div>
+          <div class="d">13</div>
+          <div class="d">14</div>
+          <div class="d">15</div>
+          <div class="exp-cell">
+            <div class="chips"><span class="chip">Wear a pad</span><span class="chip">Mucus plug</span><span class="chip">Water may break</span></div>
+            <p>Clear, pink or brown is normal. Green means go to the hospital.</p>
+          </div>
+        </div>
+
+        <div class="wk in-window">
+          <div class="wn">40w</div>
+          <div class="d due" title="Due date"><span class="mo">Due</span>16</div>
+          <div class="d">17</div>
+          <div class="d">18</div>
+          <div class="d">19</div>
+          <div class="d">20</div>
+          <div class="d">21</div>
+          <div class="d">22</div>
+          <div class="exp-cell">
+            <div class="chips"><span class="chip red">Due date</span></div>
+            <p>In real labor, contractions get longer, stronger and closer together.</p>
+          </div>
+        </div>
+
+        <div class="wk in-window">
+          <div class="wn">41w</div>
+          <div class="d">23</div>
+          <div class="d">24</div>
+          <div class="d">25</div>
+          <div class="d hol" title="Thanksgiving">26</div>
+          <div class="d">27</div>
+          <div class="d">28</div>
+          <div class="d">29</div>
+          <div class="exp-cell">
+            <div class="chips"><span class="chip">Common for first babies</span></div>
+            <p>The doctor may offer a membrane sweep.</p>
+          </div>
+        </div>
+
+        <div class="wk in-window">
+          <div class="wn">42w</div>
+          <div class="d">30</div>
+          <div class="d"><span class="mo">Dec</span>1</div>
+          <div class="d">2</div>
+          <div class="d">3</div>
+          <div class="d">4</div>
+          <div class="d">5</div>
+          <div class="d">6</div>
+          <div class="exp-cell">
+            <div class="chips"><span class="chip">Latest point</span></div>
+            <p>Doctors won't let a pregnancy go past this week.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="glossary">
+        <p class="g-head">Words to know</p>
+        <dl>
+          <div><dt>Braxton Hicks</dt><dd>Practice contractions. They are irregular and stop with rest or water.</dd></div>
+          <div><dt>Baby drops</dt><dd>Baby moves lower. Breathing gets easier and labor is near.</dd></div>
+          <div><dt>Nesting</dt><dd>A sudden urge to clean and organize. Labor is near.</dd></div>
+          <div><dt>Mucus plug</dt><dd>Thick discharge that comes out before labor. Text the doula a photo.</dd></div>
+          <div><dt>Water breaking</dt><dd>A gush or trickle of clear fluid. Call the doula first.</dd></div>
+          <div><dt>Membrane sweep</dt><dd>A quick exam the doctor can do to help labor start.</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="topic">
+      <div class="topic-head">
+        <h3>2. Signs of labor and types of contractions</h3>
+      </div>
+      <p class="lede">Signs come in any order. Labor starts with the first real contraction, not when the water breaks.</p>
+
+      <p class="sub">What might come out</p>
+      <div class="fluids">
+        <div class="fluid">
+          <p class="f-name">Mucus plug</p>
+          <p class="f-desc">Thick discharge, sometimes with a tint.</p>
+          <div class="swatches">
+            <span class="sw-item"><i style="background:#ffffff;border-color:#d6dae0"></i>Clear</span>
+            <span class="sw-item"><i style="background:#f4c3cb"></i>Pink</span>
+            <span class="sw-item"><i style="background:#a97d57"></i>Brown</span>
+            <span class="sw-item bad"><i style="background:#7d8d3c"></i>Green</span>
+          </div>
+        </div>
+        <div class="fluid">
+          <p class="f-name">Water breaking</p>
+          <p class="f-desc">A trickle or a gush. Both are normal.</p>
+          <div class="swatches">
+            <span class="sw-item"><i style="background:#ffffff;border-color:#d6dae0"></i>Clear</span>
+            <span class="sw-item"><i style="background:#f3e7b8"></i>Straw</span>
+            <span class="sw-item bad"><i style="background:#7d8d3c"></i>Green</span>
+            <span class="sw-item bad"><i style="background:#8a6a3f"></i>Brown</span>
+          </div>
+        </div>
+      </div>
+      <div class="rule-row">
+        <span class="pill ok">Normal colors</span><span class="rule-txt">Text the doula a photo. If there are no contractions yet, carry on with the day.</span>
+      </div>
+      <div class="rule-row">
+        <span class="pill bad">Circled in red</span><span class="rule-txt">Go to the hospital right away.</span>
+      </div>
+
+      <p class="sub">Four kinds of contractions</p>
+      <div class="ctypes">
+        <div class="ct-head" aria-hidden="true">
+          <span></span><span></span><span>Stops with rest?</span><span>Labor?</span>
+        </div>
+
+        <div class="ct">
+          <div class="ct-name">Braxton Hicks<small>Random and painless</small></div>
+          <div class="strip" aria-hidden="true">
+            <i style="left:3%;width:3%;height:34%"></i>
+            <i style="left:16%;width:2.5%;height:26%"></i>
+            <i style="left:23%;width:3%;height:40%"></i>
+            <i style="left:47%;width:2.5%;height:30%"></i>
+            <i style="left:69%;width:3%;height:38%"></i>
+            <i style="left:80%;width:2%;height:24%"></i>
+          </div>
+          <span class="pill ok">Yes</span>
+          <span class="pill">No</span>
+        </div>
+
+        <div class="ct">
+          <div class="ct-name">Prodromal labor<small>Painful for hours, stops, repeats for days</small></div>
+          <div class="strip navy" aria-hidden="true">
+            <i style="left:2%;width:3%;height:60%"></i>
+            <i style="left:9%;width:3%;height:64%"></i>
+            <i style="left:16%;width:3%;height:58%"></i>
+            <i style="left:23%;width:3%;height:62%"></i>
+            <span class="gap-label" style="left:33%">next day</span>
+            <i style="left:58%;width:3%;height:60%"></i>
+            <i style="left:65%;width:3%;height:64%"></i>
+            <i style="left:72%;width:3%;height:58%"></i>
+            <i style="left:79%;width:3%;height:62%"></i>
+          </div>
+          <span class="pill">No</span>
+          <span class="pill">Not yet</span>
+        </div>
+
+        <div class="ct">
+          <div class="ct-name">False labor<small>Regular and painful, then fizzles out</small></div>
+          <div class="strip navy" aria-hidden="true">
+            <i style="left:2%;width:3%;height:56%"></i>
+            <i style="left:10%;width:3%;height:60%"></i>
+            <i style="left:18%;width:3%;height:56%"></i>
+            <i style="left:26%;width:3%;height:52%"></i>
+            <i style="left:34%;width:2.5%;height:36%"></i>
+            <i style="left:42%;width:2%;height:20%"></i>
+          </div>
+          <span class="pill">Eventually</span>
+          <span class="pill">Not yet</span>
+        </div>
+
+        <div class="ct real">
+          <div class="ct-name">Real labor<small>Longer, stronger, closer together</small></div>
+          <div class="strip red" aria-hidden="true">
+            <i style="left:2%;width:2%;height:24%"></i>
+            <i style="left:22%;width:2.5%;height:34%"></i>
+            <i style="left:38%;width:3%;height:44%"></i>
+            <i style="left:51%;width:3.5%;height:54%"></i>
+            <i style="left:62%;width:4%;height:64%"></i>
+            <i style="left:71%;width:4.5%;height:74%"></i>
+            <i style="left:79%;width:5%;height:84%"></i>
+            <i style="left:86%;width:5%;height:92%"></i>
+            <i style="left:92.5%;width:5.5%;height:100%"></i>
+          </div>
+          <span class="pill">No</span>
+          <span class="pill bad">Yes</span>
+        </div>
+      </div>
+
+      <p class="sub">How to time them</p>
+      <div class="timing">
+        <div class="timer" aria-hidden="true">
+          <span class="br top" style="left:8%;width:16%"><b>How long</b></span>
+          <i style="left:8%;width:16%"></i>
+          <i style="left:58%;width:16%"></i>
+          <span class="br bottom" style="left:8%;width:50%"><b>How far apart (start to start)</b></span>
+        </div>
+        <div class="go">
+          <p class="go-label">Time to head in</p>
+          <p class="go-big">About 1 min long, under 5 min apart</p>
+          <p class="go-note">Use the contraction timer app the doula sent, and call her first.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="topic">
+      <div class="topic-head">
+        <h3>3. Three stages of labor, epidural timing, pushing</h3>
+      </div>
+      <p class="lede">Labor is measured by how open the cervix is, from 0 to 10 cm.</p>
+
+      <div class="b3" id="birth3d" tabindex="0" aria-label="Interactive 3D model of labor and birth">
+        <div class="b3-view">
+          <div class="b3-canvas"></div>
+          <div class="b3-labels" aria-hidden="true"></div>
+          <div class="b3-tools">
+            <button type="button" class="b3-btn is-on" data-view="angle">Angle</button>
+            <button type="button" class="b3-btn" data-view="side">Side</button>
+            <button type="button" class="b3-btn" data-view="front">Front</button>
+            <span class="b3-sep"></span>
+            <button type="button" class="b3-btn is-on" id="b3-label-toggle" aria-pressed="true">Labels</button>
+          </div>
+          <div class="b3-info" hidden>
+            <p class="b3-info-name"></p>
+            <p class="b3-info-text"></p>
+          </div>
+          <p class="b3-hint">Drag to rotate. Scroll or pinch to zoom. Tap a part to name it.</p>
+          <p class="b3-fallback" hidden>This browser can't show the 3D model.</p>
+        </div>
+
+        <div class="b3-bottom">
+          <div class="b3-caption">
+            <p class="b3-kicker">Step <span id="b3-num">1</span> of 8</p>
+            <p class="b3-title" id="b3-title"></p>
+            <p class="b3-text" id="b3-text"></p>
+            <div class="b3-chips" id="b3-chips"></div>
+          </div>
+          <div class="b3-ctrl">
+            <button type="button" class="b3-round" id="b3-prev" aria-label="Previous step">&larr;</button>
+            <button type="button" class="b3-play" id="b3-play">Play</button>
+            <button type="button" class="b3-round" id="b3-next" aria-label="Next step">&rarr;</button>
+          </div>
+        </div>
+        <div class="b3-steps" id="b3-steps" role="tablist"></div>
+        <p class="b3-note">Simplified model. Sizes are roughly to scale in cm; shapes are approximate.</p>
+      </div>
+
+      <div class="smap" aria-hidden="true">
+        <span class="grp" style="grid-column: 1 / 4">Stage 1 &middot; Labor</span>
+        <span class="grp" style="grid-column: 4">Stage 2 &middot; Birth</span>
+        <span class="grp" style="grid-column: 5">Stage 3</span>
+
+        <div class="seg s-early"></div>
+        <div class="seg s-active"></div>
+        <div class="seg s-trans"></div>
+        <div class="seg s-push"></div>
+        <div class="seg s-plac"></div>
+
+        <div class="scale" style="grid-column: 1 / 4">
+          <span style="left:0%">0 cm</span>
+          <span class="go-in" style="left:30%">3 cm &middot; go in</span>
+          <span style="left:70%">7</span>
+          <span style="left:100%">10</span>
+        </div>
+        <div class="scale-end" style="grid-column: 4">Fully open</div>
+        <div class="scale-end" style="grid-column: 5">Baby is out</div>
+
+        <div class="epi" style="grid-column: 1 / 4">
+          <div class="epi-band"></div>
+          <div class="epi-sweet"></div>
+          <div class="epi-stop"></div>
+          <span class="epi-lab" style="left:0">Epidural possible</span>
+          <span class="epi-tip" style="left:45%">Doula's tip: 4-5 cm</span>
+          <span class="epi-no" style="left:80%">Usually not after 8 cm</span>
+        </div>
+      </div>
+
+      <div class="scards">
+        <div class="scard">
+          <p class="sc-name"><i class="s-early"></i>Early</p>
+          <dl>
+            <div><dt>Lasts</dt><dd>Hours to 2 days</dd></div>
+            <div><dt>Contractions</dt><dd>30-60s, every 5-20 min</dd></div>
+            <div><dt>Helps</dt><dd>Stay home. Walk, shower, snack, back massage, heat pack.</dd></div>
+          </dl>
+        </div>
+        <div class="scard">
+          <p class="sc-name"><i class="s-active"></i>Active</p>
+          <dl>
+            <div><dt>Lasts</dt><dd>3-8 hours</dd></div>
+            <div><dt>Contractions</dt><dd>45-60s, every 2-4 min</dd></div>
+            <div><dt>Helps</dt><dd>Head to the hospital. Breathing, birth ball, epidural.</dd></div>
+          </dl>
+        </div>
+        <div class="scard">
+          <p class="sc-name"><i class="s-trans"></i>Transition</p>
+          <dl>
+            <div><dt>Lasts</dt><dd>15 min to 3 hours</dd></div>
+            <div><dt>Contractions</dt><dd>Up to 90s, back to back</dd></div>
+            <div><dt>Helps</dt><dd>Cool cloth, quiet, little touch. Don't push yet.</dd></div>
+          </dl>
+        </div>
+        <div class="scard">
+          <p class="sc-name"><i class="s-push"></i>Pushing</p>
+          <dl>
+            <div><dt>Lasts</dt><dd>Minutes to 3 hours</dd></div>
+            <div><dt>How</dt><dd>Push from the belly like pooping, not from the face.</dd></div>
+          </dl>
+        </div>
+        <div class="scard">
+          <p class="sc-name"><i class="s-plac"></i>Placenta</p>
+          <dl>
+            <div><dt>Lasts</dt><dd>5-30 min</dd></div>
+            <div><dt>How</dt><dd>One or two pushes or a cough. Skin-to-skin.</dd></div>
+          </dl>
+        </div>
+      </div>
+
+      <div class="duo">
+        <div class="panel">
+          <p class="sub flush">When to start pushing</p>
+          <div class="station" aria-label="Baby's station from minus 3 to plus 3">
+            <span class="st wait">-3</span><span class="st wait">-2</span><span class="st wait">-1</span><span class="st wait">0</span><span class="st push">+1</span><span class="st push">+2</span><span class="st">+3</span>
+          </div>
+          <div class="st-key">
+            <span style="grid-column: 1 / 5">Wait 30-40 min sitting upright</span>
+            <span class="push-k" style="grid-column: 5 / 7">Push</span>
+          </div>
+          <p class="panel-note">Station is how low the baby's head is. Doctors only say it if asked.</p>
+        </div>
+
+        <div class="panel">
+          <p class="sub flush">Questions to ask the nurse</p>
+          <ol class="asks">
+            <li>"What's the baby's station?" at every check.</li>
+            <li>"Can we wait upright a bit?" if it's 0 or lower.</li>
+            <li>"Can we raise the Pitocin every 45 min instead of 30?"</li>
+          </ol>
+        </div>
+      </div>
+
+      <ul class="tips">
+        <li>Press the epidural button sparingly so Pavi can still move her legs.</li>
+        <li>She doesn't have to push every contraction. Resting between helps avoid tearing.</li>
+        <li>A burning feeling as the head comes out (the "ring of fire") means it's almost over.</li>
+      </ul>
+
+      <div class="glossary g4">
+        <p class="g-head">Words to know</p>
+        <dl>
+          <div><dt>Epidural</dt><dd>Numbing medicine through a thin tube in the lower back. She stays awake and can still push.</dd></div>
+          <div><dt>Dilation</dt><dd>How open the cervix is, from 0 to 10 cm.</dd></div>
+          <div><dt>Effacement</dt><dd>How thin the cervix is, given as a percent. 100% is the goal.</dd></div>
+          <div><dt>Station</dt><dd>How low the baby's head is, from -3 (high) to +3 (crowning).</dd></div>
+          <div><dt>Pitocin</dt><dd>An IV drip that makes contractions stronger and more frequent.</dd></div>
+        </dl>
+      </div>
+    </section>
+    <section class="topic">
+      <div class="topic-head">
+        <h3>4. After birth: placenta, Apgar score, newborn tests, vaccines</h3>
+      </div>
+      <p class="lede">What happens from the first minute until the first pediatrician visit. Red dots are things you two decide or do.</p>
+
+      <div class="phases">
+        <div class="phase">
+          <p class="ph-head">First 30 minutes</p>
+          <ol class="ph-list">
+            <li><span class="ph-t">0 min</span><span class="ph-e">Baby goes on Pavi's chest, skin-to-skin</span></li>
+            <li><span class="ph-t">1 min</span><span class="ph-e">Apgar check #1</span></li>
+            <li class="you"><span class="ph-t">1-3 min</span><span class="ph-e">Cord is cut. Ask them to wait.</span></li>
+            <li><span class="ph-t">5 min</span><span class="ph-e">Apgar check #2</span></li>
+            <li><span class="ph-t">5-30 min</span><span class="ph-e">Placenta comes out</span></li>
+          </ol>
+        </div>
+        <div class="phase">
+          <p class="ph-head">First day</p>
+          <ol class="ph-list">
+            <li class="you"><span class="ph-t">1st hour</span><span class="ph-e">First feed of colostrum</span></li>
+            <li><span class="ph-t">1st hour</span><span class="ph-e">ID bands, footprints, vitamin K, eye ointment</span></li>
+            <li><span class="ph-t">2 hours</span><span class="ph-e">Doula heads home</span></li>
+            <li><span class="ph-t">Later</span><span class="ph-e">Hearing test, bilirubin check, Hep B shot</span></li>
+          </ol>
+        </div>
+        <div class="phase">
+          <p class="ph-head">Going home</p>
+          <ol class="ph-list">
+            <li><span class="ph-t">Day 1-2</span><span class="ph-e">Discharge, 24 to 48 hours after birth</span></li>
+            <li><span class="ph-t">Day 3-5</span><span class="ph-e">Milk comes in</span></li>
+            <li class="you"><span class="ph-t">Week 1</span><span class="ph-e">First pediatrician visit</span></li>
+            <li><span class="ph-t">Week 2</span><span class="ph-e">Second checkup</span></li>
+            <li class="you"><span class="ph-t">30 days</span><span class="ph-e">Add baby to health insurance</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <p class="sub">The Apgar score, checked at 1 and 5 minutes</p>
+      <div class="apgar">
+        <div class="ap"><span class="ap-l">A</span><div><p class="ap-n">Appearance</p><p class="ap-d">Skin color. Blue hands and feet are normal at first.</p></div></div>
+        <div class="ap"><span class="ap-l">P</span><div><p class="ap-n">Pulse</p><p class="ap-d">Heart rate. Over 100 gets full marks.</p></div></div>
+        <div class="ap"><span class="ap-l">G</span><div><p class="ap-n">Grimace</p><p class="ap-d">Reaction when the nose is suctioned.</p></div></div>
+        <div class="ap"><span class="ap-l">A</span><div><p class="ap-n">Activity</p><p class="ap-d">Muscle tone. Moving arms and legs.</p></div></div>
+        <div class="ap"><span class="ap-l">R</span><div><p class="ap-n">Respiration</p><p class="ap-d">Breathing. A strong cry gets full marks.</p></div></div>
+      </div>
+      <div class="score">
+        <div class="score-bar" aria-hidden="true">
+          <span class="lo">0</span><span class="lo">1</span><span class="lo">2</span><span class="lo">3</span><span class="mid">4</span><span class="mid">5</span><span class="mid">6</span><span class="ok">7</span><span class="ok">8</span><span class="ok">9</span><span class="ok">10</span>
+        </div>
+        <div class="score-key">
+          <span style="grid-column: 1 / 5">Needs help</span>
+          <span style="grid-column: 5 / 8">Some help</span>
+          <span class="ok-k" style="grid-column: 8 / 12">Normal</span>
+        </div>
+        <p class="panel-note">Each check gets 0, 1 or 2, for a total out of 10. A lower 1-minute score is common. The 5-minute score matters more.</p>
+      </div>
+
+      <p class="sub">Shots, ointment and choices</p>
+      <div class="choices">
+        <div class="ch"><div class="ch-main"><p class="ch-n">Delayed cord clamping</p><p class="ch-d">Lets extra blood flow into the baby. Ask for 1 to 3 min.</p></div><span class="pill bad">Ask</span></div>
+        <div class="ch"><div class="ch-main"><p class="ch-n">Cutting the cord</p><p class="ch-d">Rahul can cut it. It doesn't hurt the baby or Pavi.</p></div><span class="pill bad">Your call</span></div>
+        <div class="ch"><div class="ch-main"><p class="ch-n">Vitamin K shot</p><p class="ch-d">Helps the blood clot. Given soon after birth.</p></div><span class="pill">Routine</span></div>
+        <div class="ch"><div class="ch-main"><p class="ch-n">Eye ointment</p><p class="ch-d">Prevents an eye infection. New York State requires it.</p></div><span class="pill navy-p">Required</span></div>
+        <div class="ch"><div class="ch-main"><p class="ch-n">Hep B vaccine</p><p class="ch-d">At the hospital, or at the first pediatrician visit.</p></div><span class="pill bad">Your call</span></div>
+      </div>
+
+      <div class="glossary g4">
+        <p class="g-head">Words to know</p>
+        <dl>
+          <div><dt>Colostrum</dt><dd>The thick, yellow first milk. Small amounts, full of antibodies.</dd></div>
+          <div><dt>Bilirubin</dt><dd>Too much turns the skin yellow (jaundice). Treated with a blue light.</dd></div>
+          <div><dt>Skin-to-skin</dt><dd>Baby lies bare on a parent's bare chest. Calms and warms the baby.</dd></div>
+          <div><dt>Postpartum floor</dt><dd>The recovery unit you move to after delivery.</dd></div>
+        </dl>
+      </div>
+    </section>
+    <section class="topic placeholder">
+      <div class="topic-head"><h3>5. Prep at home: birth ball, dates, primrose oil, okra</h3></div>
+    </section>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function () {
+  var root = document.getElementById('birth3d');
+  if (!root) return;
+  var host = root.querySelector('.b3-canvas');
+  var labelsHost = root.querySelector('.b3-labels');
+  var infoBox = root.querySelector('.b3-info');
+  var fallback = root.querySelector('.b3-fallback');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- Stage data (parent-facing copy + model parameters) ---------- */
+  var STAGES = [
+    { name: '36 weeks', title: 'Baby is head down but still high',
+      text: 'The cervix is long and closed, sealed by the mucus plug.',
+      chips: [['Cervix', 'Closed'], ['Station', 'Above pelvis'], ['Water', 'Intact']],
+      p: { t: 2/9, rot: 1.57, flex: 0.25, dil: 0.2, len: 3.4, sac: 1, plug: 1, k: 1, canal: 1.3, out: 0, plac: 0 } },
+    { name: 'Baby drops', title: 'The head settles into the pelvis',
+      text: 'Usually 38 to 40 weeks. Breathing gets easier and peeing gets more frequent.',
+      chips: [['Cervix', 'Closed'], ['Station', '-2'], ['Water', 'Intact']],
+      p: { t: 3/9, rot: 1.57, flex: 0.35, dil: 0.5, len: 3.0, sac: 1, plug: 1, k: 1, canal: 1.3, out: 0, plac: 0 } },
+    { name: 'Early labor', title: 'The cervix thins and starts to open',
+      text: 'Up to about 3 cm. The mucus plug may come out now.',
+      chips: [['Cervix', '0-3 cm'], ['Station', '-1'], ['Water', 'Intact']],
+      p: { t: 4/9, rot: 1.2, flex: 0.45, dil: 3, len: 1.3, sac: 1, plug: 0, k: 1, canal: 1.4, out: 0, plac: 0 } },
+    { name: 'Active labor', title: 'The cervix opens and the head starts turning',
+      text: 'From 3 to about 7 cm. The water often breaks around now.',
+      chips: [['Cervix', '3-7 cm'], ['Station', '0'], ['Water', 'Broken']],
+      p: { t: 5/9, rot: 0.7, flex: 0.45, dil: 7, len: 0.5, sac: 0, plug: 0, k: 1, canal: 1.8, out: 0, plac: 0 } },
+    { name: 'Transition', title: 'Fully open at 10 cm',
+      text: "Baby now faces mom's back, the best angle to fit through.",
+      chips: [['Cervix', '10 cm'], ['Station', '+1 to +2'], ['Next', 'Pushing']],
+      p: { t: 6/9, rot: 0, flex: 0.45, dil: 10, len: 0.3, sac: 0, plug: 0, k: 1, canal: 2.6, out: 0, plac: 0 } },
+    { name: 'Crowning', title: 'The head slides under the pubic bone',
+      text: 'The head tips back to get out. This is the "ring of fire."',
+      chips: [['Cervix', '10 cm'], ['Head', 'Visible'], ['Pushing', 'Up to 3 hrs']],
+      p: { t: 8/9, rot: 0, flex: -0.5, dil: 10, len: 0.3, sac: 0, plug: 0, k: 1, canal: 4.9, out: 0, plac: 0 } },
+    { name: 'Birth', title: 'Baby is born',
+      text: 'The head turns to the side, then one shoulder at a time, then the body slides out.',
+      chips: [['Cord', 'Wait 1-3 min to cut'], ['Next', 'Skin-to-skin']],
+      p: { t: 1, rot: 1.57, flex: 0.1, dil: 6, len: 1, sac: 0, plug: 0, k: 0.72, canal: 2.2, out: 1, plac: 0 } },
+    { name: 'Placenta', title: 'The placenta comes out',
+      text: 'One or two pushes, 5 to 30 min after birth. The womb starts shrinking right away.',
+      chips: [['Lasts', '5-30 min'], ['How', 'A push or a cough']],
+      p: { t: 1, rot: 1.57, flex: 0.1, dil: 3, len: 1.6, sac: 0, plug: 0, k: 0.52, canal: 1.6, out: 1, plac: 1 } }
+  ];
+
+  var INFO = {
+    uterus: ['Uterus (womb)', 'It squeezes with every contraction to move the baby down.'],
+    sac: ['Amniotic sac', 'The bag of water. "Water breaking" means it opened.'],
+    cervix: ['Cervix', 'The opening at the bottom of the womb. It thins and opens to 10 cm.'],
+    plug: ['Mucus plug', 'Seals the cervix. It often comes out in early labor.'],
+    canal: ['Birth canal', 'Stretches as the head comes through.'],
+    placenta: ['Placenta', 'Feeds the baby. It comes out 5 to 30 min after birth.'],
+    cord: ['Umbilical cord', 'Connects baby to the placenta. Ask to wait 1 to 3 min before cutting.'],
+    baby: ['Baby', 'Head down with chin tucked. The head turns to face mom\'s back to fit.'],
+    pelvis: ['Pelvis', 'The bony ring the baby squeezes through.'],
+    pubic: ['Pubic bone', 'Front of the pelvis. The head slides under it at birth.'],
+    sacrum: ['Sacrum and tailbone', 'Back of the pelvis. Pressure here causes back labor.'],
+    spines: ['Ischial spines', 'Two bony points inside the pelvis. They mark station 0.']
+  };
+
+  /* ---------- Caption + step UI (works even without WebGL) ---------- */
+  var stepsEl = document.getElementById('b3-steps');
+  var idx = 0;
+  STAGES.forEach(function (s, i) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'b3-step';
+    b.id = 'b3-step-' + (i + 1);
+    b.setAttribute('role', 'tab');
+    b.innerHTML = '<span>' + (i + 1) + '</span><b>' + s.name + '</b>';
+    b.addEventListener('click', function () { stopPlay(); go(i); });
+    stepsEl.appendChild(b);
+  });
+  function caption() {
+    var s = STAGES[idx];
+    document.getElementById('b3-num').textContent = idx + 1;
+    document.getElementById('b3-title').textContent = s.title;
+    document.getElementById('b3-text').textContent = s.text;
+    document.getElementById('b3-chips').innerHTML = s.chips.map(function (c) {
+      return '<span class="b3-chip">' + c[0] + ' <b>' + c[1] + '</b></span>';
+    }).join('');
+    Array.prototype.forEach.call(stepsEl.children, function (b, i) {
+      b.classList.toggle('is-on', i === idx);
+      b.classList.toggle('done', i < idx);
+      b.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+    });
+    document.getElementById('b3-prev').disabled = idx === 0;
+    document.getElementById('b3-next').disabled = idx === STAGES.length - 1;
+  }
+
+  var playing = false, playTimer = null;
+  var playBtn = document.getElementById('b3-play');
+  function stopPlay() { playing = false; clearTimeout(playTimer); playBtn.textContent = 'Play'; }
+  function scheduleNext() {
+    clearTimeout(playTimer);
+    if (!playing) return;
+    playTimer = setTimeout(function () {
+      if (idx < STAGES.length - 1) { go(idx + 1); scheduleNext(); } else { stopPlay(); }
+    }, reduce ? 2600 : 3400);
+  }
+  playBtn.addEventListener('click', function () {
+    if (playing) { stopPlay(); return; }
+    playing = true; playBtn.textContent = 'Pause';
+    if (idx === STAGES.length - 1) go(0);
+    scheduleNext();
+  });
+  document.getElementById('b3-prev').addEventListener('click', function () { stopPlay(); if (idx > 0) go(idx - 1); });
+  document.getElementById('b3-next').addEventListener('click', function () { stopPlay(); if (idx < STAGES.length - 1) go(idx + 1); });
+  root.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' && idx < STAGES.length - 1) { stopPlay(); go(idx + 1); e.preventDefault(); }
+    if (e.key === 'ArrowLeft' && idx > 0) { stopPlay(); go(idx - 1); e.preventDefault(); }
+  });
+
+  var go = function (i) { idx = i; caption(); };
+  caption();
+
+  /* ---------- 3D scene ---------- */
+  var renderer;
+  try {
+    if (!window.THREE || !THREE.OrbitControls) throw new Error('no three');
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+  } catch (e) {
+    fallback.hidden = false;
+    return;
+  }
+  var V = function (x, y, z) { return new THREE.Vector3(x, y, z); };
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setClearColor(0xffffff, 1);
+  host.appendChild(renderer.domElement);
+
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(30, 1, 1, 800);
+  var controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.08;
+  controls.minDistance = 22;
+  controls.maxDistance = 220;
+  var TARGET = V(-1, 3, 6);
+  var VIEWS = { angle: V(0.62, 0.2, 0.76), side: V(1, 0.08, 0.02), front: V(0.02, 0.1, 1) };
+  var currentView = 'angle';
+  function setView(name) {
+    currentView = name;
+    var aspect = host.clientWidth / Math.max(host.clientHeight, 1);
+    var dist = 112 * Math.max(1, 0.85 / aspect);
+    camera.position.copy(TARGET).addScaledVector(VIEWS[name].clone().normalize(), dist);
+    controls.target.copy(TARGET);
+    controls.update();
+    root.querySelectorAll('[data-view]').forEach(function (b) { b.classList.toggle('is-on', b.dataset.view === name); });
+  }
+  root.querySelectorAll('[data-view]').forEach(function (b) {
+    b.addEventListener('click', function () { setView(b.dataset.view); });
+  });
+  var labelToggle = document.getElementById('b3-label-toggle');
+  labelToggle.addEventListener('click', function () {
+    var on = !root.classList.toggle('no-labels');
+    labelToggle.classList.toggle('is-on', on);
+    labelToggle.setAttribute('aria-pressed', on ? 'true' : 'false');
+    stationRing.visible = on;
+  });
+
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xdde2ea, 0.85));
+  var key = new THREE.DirectionalLight(0xffffff, 0.7); key.position.set(40, 60, 50); scene.add(key);
+  var rim = new THREE.DirectionalLight(0xffe4ec, 0.35); rim.position.set(-50, 10, -40); scene.add(rim);
+
+  // Soft floor shadow
+  (function () {
+    var c = document.createElement('canvas'); c.width = c.height = 128;
+    var g = c.getContext('2d');
+    var grad = g.createRadialGradient(64, 64, 4, 64, 64, 64);
+    grad.addColorStop(0, 'rgba(20,24,40,0.10)'); grad.addColorStop(1, 'rgba(20,24,40,0)');
+    g.fillStyle = grad; g.fillRect(0, 0, 128, 128);
+    var m = new THREE.Mesh(new THREE.PlaneGeometry(90, 90), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), transparent: true, depthWrite: false }));
+    m.rotation.x = -Math.PI / 2; m.position.set(0, -21, 8); scene.add(m);
+  })();
+
+  function mat(color, o) { return new THREE.MeshStandardMaterial(Object.assign({ color: color, roughness: 0.6, metalness: 0 }, o || {})); }
+  function glass(color, opacity) { return mat(color, { transparent: true, opacity: opacity, depthWrite: false, side: THREE.DoubleSide, roughness: 0.35 }); }
+  var pickables = [];
+  function tag(m, part) { m.userData.part = part; m.userData.baseEmissive = m.material.emissive ? m.material.emissive.getHex() : 0; pickables.push(m); return m; }
+  function lathe(pts, seg) { return new THREE.LatheGeometry(pts.map(function (p) { return new THREE.Vector2(p[0], p[1]); }), seg || 56); }
+  function smoothLathe(pts, seg) { return new THREE.LatheGeometry(new THREE.SplineCurve(pts.map(function (p) { return new THREE.Vector2(p[0], p[1]); })).getPoints(60), seg || 72); }
+
+  /* Pelvis: inlet about 13 cm wide x 11 cm front-to-back; ischial spines mark station 0 */
+  var bone = mat(0xeee3cf, { roughness: 0.8, transparent: true, opacity: 0.85, side: THREE.DoubleSide, depthWrite: false });
+  var boneSoft = mat(0xe9dcc4, { roughness: 0.8, transparent: true, opacity: 0.72, side: THREE.DoubleSide, depthWrite: false });
+  var pelvis = new THREE.Group(); scene.add(pelvis);
+  function tube(points, r, material, part, closed) {
+    var m = tag(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points, !!closed), 64, r, 14, !!closed), material), part);
+    pelvis.add(m); return m;
+  }
+  function ball(pos, r, scl, material, part) {
+    var m = tag(new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16), material), part);
+    m.position.copy(pos); if (scl) m.scale.set(scl[0], scl[1], scl[2]); pelvis.add(m); return m;
+  }
+  // Pelvic brim (inlet)
+  var brimPts = [];
+  for (var bi = 0; bi < 24; bi++) { var ba = bi / 24 * Math.PI * 2; brimPts.push(V(Math.sin(ba) * 6.6, 0.15 * Math.cos(ba) - 0.3, 0.6 + Math.cos(ba) * 5.5)); }
+  tube(brimPts, 0.7, bone, 'pelvis', true);
+  // Iliac wings: thin flaring shells with a rounded crest
+  var wingProfile = new THREE.SplineCurve([[6.7, 0.2], [7.7, 1.8], [9.3, 4.2], [11.1, 6.5], [12.4, 8.2], [12.9, 9.1]].map(function (q) { return new THREE.Vector2(q[0], q[1]); })).getPoints(30);
+  [[Math.PI * 0.36, Math.PI * 0.48], [Math.PI * 1.16, Math.PI * 0.48]].forEach(function (w) {
+    var m = tag(new THREE.Mesh(new THREE.LatheGeometry(wingProfile, 40, w[0], w[1]), boneSoft), 'pelvis');
+    m.scale.z = 0.84; m.position.z = 0.6; pelvis.add(m);
+    var crest = [];
+    for (var ci = 0; ci <= 20; ci++) { var ca = w[0] + w[1] * ci / 20; crest.push(V(Math.sin(ca) * 12.9, 9.1, 0.6 + Math.cos(ca) * 12.9 * 0.84)); }
+    tube(crest, 0.42, bone, 'pelvis');
+    ball(crest[0], 0.6, null, bone, 'pelvis');
+  });
+  // Sacrum and tailbone, curving forward at the bottom
+  var sacrum = tag(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([V(0, 3.5, -5.0), V(0, 0, -6.2), V(0, -4, -6.2), V(0, -7.5, -4.8), V(0, -9.8, -2.8)]), 48, 1.5, 16, false), bone), 'sacrum');
+  sacrum.scale.x = 2.3; pelvis.add(sacrum);
+  // Pubic bone (symphysis) and the rami that form the pubic arch
+  ball(V(0, -3.6, 6.3), 1, [1.25, 2.4, 1.05], bone, 'pubic');
+  [-1, 1].forEach(function (sd) {
+    tube([V(0, -5.6, 6.0), V(sd * 2.6, -7.4, 4.6), V(sd * 5.2, -8.6, 1.6), V(sd * 5.8, -7.0, 0.0), V(sd * 6.3, -3.0, -0.4), V(sd * 6.6, -0.4, 0.2)], 0.75, bone, 'pelvis');
+    ball(V(sd * 5.6, -8.6, 0.8), 1.35, [1, 1.3, 1.25], bone, 'pelvis');
+    ball(V(sd * 7.6, -2.6, 1.2), 1.7, [0.6, 1, 1], bone, 'pelvis');
+    var spine = tag(new THREE.Mesh(new THREE.ConeGeometry(0.6, 2.2, 14), bone), 'spines');
+    spine.position.set(sd * 5.4, -4, -1.6); spine.rotation.z = sd * Math.PI / 2; pelvis.add(spine);
+  });
+  // Station 0 ring at the level of the spines
+  var ringPts = [];
+  for (var a = 0; a <= 64; a++) { var th = a / 64 * Math.PI * 2; ringPts.push(V(Math.cos(th) * 5.0, -4, 0.4 + Math.sin(th) * 4.3)); }
+  var stationRing = new THREE.Line(new THREE.BufferGeometry().setFromPoints(ringPts), new THREE.LineDashedMaterial({ color: 0x0d9488, dashSize: 0.6, gapSize: 0.45 }));
+  stationRing.computeLineDistances(); scene.add(stationRing);
+
+  /* Soft tissue (rebuilt as the cervix opens) */
+  var uterus = tag(new THREE.Mesh(new THREE.BufferGeometry(), glass(0xf08aa3, 0.15)), 'uterus');
+  var sac = tag(new THREE.Mesh(new THREE.BufferGeometry(), glass(0x8fd0ea, 0.16)), 'sac');
+  var cervix = tag(new THREE.Mesh(new THREE.BufferGeometry(), mat(0xd9546f, { transparent: true, opacity: 0.9, roughness: 0.45 })), 'cervix');
+  var canal = tag(new THREE.Mesh(new THREE.BufferGeometry(), glass(0xeb8ea6, 0.2)), 'canal');
+  var plug = tag(new THREE.Mesh(new THREE.SphereGeometry(1, 16, 12), mat(0xf3e3a6, { transparent: true, opacity: 0.92, roughness: 0.3 })), 'plug');
+  var placenta = tag(new THREE.Mesh(new THREE.SphereGeometry(1, 36, 24), mat(0x9c3346, { roughness: 0.75, transparent: true, opacity: 0.9 })), 'placenta');
+  var cord = tag(new THREE.Mesh(new THREE.BufferGeometry(), mat(0xbfa6cf, { roughness: 0.4 })), 'cord');
+  [uterus, sac, cervix, canal, plug, placenta, cord].forEach(function (m) { scene.add(m); });
+  uterus.rotation.x = 0.12; sac.rotation.x = 0.12;
+  var canalCurve = new THREE.CatmullRomCurve3([V(0, -3.2, 0.5), V(0, -6.4, 2.0), V(0, -9.2, 4.4), V(0, -11.8, 7.9)]);
+
+  function uterusPts(r0) {
+    var a = Math.max(r0 + 1.3, 1.4);
+    return [[a, 0], [Math.max(a + 0.8, 4.2), 1.4], [Math.max(a + 1.2, 7.0), 4.2], [10.6, 9.5], [12.5, 15.5], [12.1, 22.5], [9.3, 28.2], [4.6, 31.4], [0.01, 32.4]];
+  }
+  function sacPts(r0) {
+    var u = uterusPts(r0).slice(2).map(function (p) { return [p[0] * 0.9, p[1] * 0.97 + 0.4]; });
+    return [[0.01, 0.6], [Math.max(r0 * 0.9, 0.9), 1.0], [Math.max(r0 + 1.0, 3.6), 2.0]].concat(u);
+  }
+  function setGeo(m, g) { if (m.geometry) m.geometry.dispose(); m.geometry = g; }
+
+  /* Baby: head about 9.5 cm across (11 cm front to back), curled, head down */
+  var skin = mat(0xf1bf9f, { roughness: 0.55 });
+  var featureMat = mat(0x9a6352, { roughness: 0.6 });
+  var baby = new THREE.Group(); scene.add(baby);
+  var headG = new THREE.Group(); baby.add(headG);
+  var head = tag(new THREE.Mesh(new THREE.SphereGeometry(4.7, 44, 32), skin), 'baby');
+  head.scale.set(0.98, 1, 1.12); headG.add(head);
+  var nose = tag(new THREE.Mesh(new THREE.SphereGeometry(0.55, 14, 10), skin), 'baby'); nose.position.set(0, -0.7, 5.15); headG.add(nose);
+  [-1, 1].forEach(function (s) {
+    var eye = tag(new THREE.Mesh(new THREE.SphereGeometry(0.5, 12, 8), featureMat), 'baby');
+    eye.scale.set(1.2, 0.22, 0.4); eye.position.set(s * 1.55, 0.55, 4.82); eye.rotation.x = -0.3; headG.add(eye);
+    var ear = tag(new THREE.Mesh(new THREE.SphereGeometry(1, 14, 10), skin), 'baby');
+    ear.scale.set(0.45, 1.2, 0.85); ear.position.set(s * 4.5, 0.4, 0.4); headG.add(ear);
+  });
+  var mouth = tag(new THREE.Mesh(new THREE.TorusGeometry(0.6, 0.12, 8, 16, Math.PI), featureMat), 'baby');
+  mouth.position.set(0, -2.1, 4.75); mouth.rotation.set(-0.35, 0, Math.PI); headG.add(mouth);
+  function limb(a, b, r) {
+    var d = b.clone().sub(a), len = d.length();
+    var cyl = tag(new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, 18), skin), 'baby');
+    cyl.position.copy(a).addScaledVector(d, 0.5);
+    cyl.quaternion.setFromUnitVectors(V(0, 1, 0), d.normalize());
+    var s1 = tag(new THREE.Mesh(new THREE.SphereGeometry(r, 18, 12), skin), 'baby'); s1.position.copy(a);
+    var s2 = tag(new THREE.Mesh(new THREE.SphereGeometry(r, 18, 12), skin), 'baby'); s2.position.copy(b);
+    baby.add(cyl, s1, s2);
+  }
+  function blob(pos, scl) {
+    var m = tag(new THREE.Mesh(new THREE.SphereGeometry(1, 40, 28), skin), 'baby');
+    m.position.copy(pos); m.scale.set(scl[0], scl[1], scl[2]); baby.add(m); return m;
+  }
+  blob(V(0, 9.2, -1.0), [4.6, 6.4, 4.0]);   // chest and back, chin tucked into it
+  blob(V(0, 10.8, 0.6), [4.2, 4.6, 3.8]);   // belly
+  blob(V(0, 14.2, -1.2), [4.4, 3.9, 4.2]);  // bottom
+  [-1, 1].forEach(function (s) {
+    limb(V(s * 3.9, 6.0, 0.2), V(s * 4.6, 9.0, 3.6), 1.05);
+    limb(V(s * 4.6, 9.0, 3.6), V(s * 1.5, 6.0, 5.3), 0.95);
+    blob(V(s * 1.5, 5.9, 5.5), [1.15, 1.05, 1.15]);
+    limb(V(s * 2.8, 14.5, 0.6), V(s * 3.4, 9.6, 5.6), 1.6);
+    limb(V(s * 3.4, 9.6, 5.6), V(s * 1.6, 14.8, 6.4), 1.2);
+    blob(V(s * 1.2, 15.6, 5.6), [0.9, 0.75, 1.6]);
+  });
+  var NAVEL = V(0, 11.4, 4.3);
+
+  /* Path of the head through the pelvis: down, then forward under the pubic bone (curve of Carus) */
+  var path = new THREE.CatmullRomCurve3([
+    V(0, 30, 4.5), V(0, 20, 2.8), V(0, 9, 1.3), V(0, 2.7, 0.7), V(0, 1.7, 0.6),
+    V(0, 0.7, 0.6), V(0, -1.0, 0.9), V(0, -5.4, 2.6), V(0, -9.6, 6.4), V(0, -12.6, 10.6)
+  ], false, 'centripetal');
+  var OUT_HEAD = V(-10, -15.5, 13.5);
+  function basis(Y, ref, rot) {
+    var F = ref.clone().sub(Y.clone().multiplyScalar(ref.dot(Y))).normalize().applyAxisAngle(Y, rot);
+    var X = new THREE.Vector3().crossVectors(Y, F);
+    return new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(X, Y, F));
+  }
+  function curvePose(t, rot) {
+    var h = path.getPoint(t), tb = t, p = h.clone();
+    while (tb > 0 && p.distanceTo(h) < 11) { tb -= 0.003; p = path.getPoint(Math.max(tb, 0)); }
+    return { pos: h, quat: basis(p.sub(h).normalize(), V(0, 0, -1), rot) };
+  }
+  function outPose(rot) {
+    return { pos: OUT_HEAD.clone(), quat: basis(V(1, 0, 0), V(0, 1, 0), 0) };
+  }
+  var placPath = null;
+
+  /* Apply parameters to the scene */
+  var cur = Object.assign({}, STAGES[0].p);
+  var last = {};
+  var tmp = new THREE.Vector3();
+  function apply(force) {
+    var p = cur;
+    var r0 = Math.max(p.dil / 2, 0.12);
+    var base = -3 + p.len;
+    if (force || last.dil !== p.dil || last.len !== p.len) {
+      setGeo(uterus, smoothLathe(uterusPts(r0)));
+      setGeo(sac, smoothLathe(sacPts(r0)));
+      setGeo(cervix, lathe([[r0, 0], [r0 + 1.5, 0], [r0 + 1.7, p.len], [r0 + 0.15, p.len], [r0, 0]], 48));
+    }
+    uterus.position.set(0, base, 0.4); sac.position.set(0, base, 0.4); cervix.position.set(0, -3, 0.4);
+    uterus.scale.set(p.k, p.k, 0.84 * p.k); sac.scale.set(p.k, p.k, 0.84 * p.k);
+    sac.material.opacity = 0.16 * p.sac; sac.visible = p.sac > 0.02;
+    if (force || last.canal !== p.canal) setGeo(canal, new THREE.TubeGeometry(canalCurve, 48, p.canal, 24, false));
+    plug.visible = p.plug > 0.03;
+    plug.scale.set(0.7 * p.plug, Math.max(p.len * 0.45, 0.3) * p.plug, 0.7 * p.plug);
+    plug.position.set(0, -3 + p.len * 0.5, 0.4);
+
+    // Baby
+    var a = curvePose(Math.min(p.t, 1), p.rot);
+    var pose = a;
+    if (p.out > 0) {
+      var b = outPose(p.rot);
+      pose = { pos: a.pos.clone().lerp(b.pos, p.out), quat: a.quat.clone().slerp(b.quat, p.out) };
+      pose.pos.y -= Math.sin(p.out * Math.PI) * 2.5;
+    }
+    baby.position.copy(pose.pos); baby.quaternion.copy(pose.quat);
+    headG.rotation.x = -p.flex;
+    baby.updateMatrixWorld(true);
+
+    // Placenta: on the back wall of the womb, then out through the canal
+    uterus.updateMatrixWorld(true);
+    var wall = uterus.localToWorld(V(0, 22.0, -8.6));
+    var ps = Math.max(p.k, 0.78);
+    if (p.plac > 0) {
+      placPath = new THREE.CatmullRomCurve3([wall, V(0, 6, 0.6), V(0, -3, 0.8), V(0, -9.5, 6), V(0, -13.8, 16)]);
+      placenta.position.copy(placPath.getPoint(p.plac));
+      ps *= 1 - 0.3 * Math.sin(p.plac * Math.PI);
+    } else {
+      placenta.position.copy(wall);
+    }
+    placenta.scale.set(7.6 * ps, 7.2 * ps, 2.4 * ps);
+    placenta.rotation.x = 0.12 + p.plac * 1.2;
+
+    // Cord from placenta to navel
+    var navel = baby.localToWorld(NAVEL.clone());
+    var start = placenta.position.clone().add(V(0, -1.2, 1.8));
+    var pts;
+    if (p.out > 0.3 && p.plac < 0.5) {
+      pts = [start, V(3, 8, 1.2), V(0.6, -3, 0.9), V(0.6, -9.5, 6.2), V(0.6, -13, 12), navel.clone().add(V(0, 2, 0)), navel];
+    } else if (p.plac >= 0.5) {
+      pts = [start, start.clone().lerp(navel, 0.5).add(V(6, 3, 0)), navel];
+    } else {
+      pts = [start, start.clone().lerp(navel, 0.35).add(V(6.5, -2, 2)), start.clone().lerp(navel, 0.7).add(V(5.5, 2, 1)), navel];
+    }
+    var baseCurve = new THREE.CatmullRomCurve3(pts, false, 'catmullrom', 0.4);
+    var coil = baseCurve.getPoints(90).map(function (q, i, arr) {
+      var u = i / (arr.length - 1), fade = Math.min(1, u * 8, (1 - u) * 8);
+      return q.add(V(Math.sin(u * 46) * 0.5 * fade, Math.cos(u * 46) * 0.25 * fade, Math.cos(u * 46) * 0.5 * fade));
+    });
+    setGeo(cord, new THREE.TubeGeometry(new THREE.CatmullRomCurve3(coil), 160, 0.62, 10, false));
+    last = Object.assign({}, p);
+  }
+
+  /* Tweening between steps */
+  var KEYS = Object.keys(cur);
+  var from = null, to = null, t0 = 0, dur = 1700;
+  function clamp01(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
+  function ease(x) { return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
+  go = function (i) {
+    var jump = Math.abs(i - idx);
+    idx = i; caption();
+    from = Object.assign({}, cur); to = Object.assign({}, STAGES[i].p);
+    t0 = performance.now();
+    dur = reduce ? 1 : Math.min(1700 + (jump - 1) * 500, 3200);
+  };
+  function step(now) {
+    if (!to) return;
+    var s = clamp01((now - t0) / dur);
+    var goingOut = to.out > from.out, goingIn = to.out < from.out;
+    KEYS.forEach(function (k) {
+      var w = s;
+      if (goingOut) { if (k === 't') w = clamp01(s / 0.5); if (k === 'out') w = clamp01((s - 0.45) / 0.55); }
+      if (goingIn) { if (k === 'out') w = clamp01(s / 0.55); if (k === 't') w = clamp01((s - 0.45) / 0.55); }
+      cur[k] = from[k] + (to[k] - from[k]) * ease(w);
+    });
+    apply(false);
+    if (s >= 1) to = null;
+  }
+
+  /* Labels */
+  var LABELS = [
+    { text: 'Uterus', part: 'uterus', color: '#f08aa3', at: function () { return uterus.localToWorld(V(-12.6, 15, 0)); } },
+    { text: 'Placenta', part: 'placenta', color: '#a3283f', at: function () { return placenta.position.clone().add(V(0, 5, 0)); } },
+    { text: 'Cervix', part: 'cervix', color: '#d9546f', at: function () { return V(Math.max(cur.dil / 2, 0.2) + 2.6, -2.6, 0.4); } },
+    { text: 'Pubic bone', part: 'pubic', color: '#b9a98c', at: function () { return V(0, -3.2, 8.2); } },
+    { text: 'Sacrum', part: 'sacrum', color: '#b9a98c', at: function () { return V(0, -2.5, -8.6); } },
+    { text: 'Station 0', part: 'spines', color: '#0d9488', at: function () { return V(6.4, -4, 0.4); } },
+    { text: 'Birth canal', part: 'canal', color: '#eb8ea6', at: function () { return V(0, -11, 10); } }
+  ];
+  LABELS.forEach(function (l) {
+    var el = document.createElement('span');
+    el.className = 'b3-lab'; el.textContent = l.text; el.style.setProperty('--lab', l.color);
+    labelsHost.appendChild(el); l.el = el;
+  });
+  function placeLabels(w, h) {
+    var shown = [];
+    LABELS.forEach(function (l) {
+      tmp.copy(l.at()).project(camera);
+      var x = (tmp.x + 1) / 2 * w, y = (1 - tmp.y) / 2 * h - 9;
+      if (!l.w) { l.w = l.el.offsetWidth || 70; }
+      var box = [x, y, x + l.w, y + 20];
+      var vis = tmp.z < 1 && x > -10 && x + l.w < w + 10 && y > 0 && y < h - 20;
+      for (var i = 0; vis && i < shown.length; i++) {
+        var o = shown[i];
+        if (box[0] < o[2] + 4 && box[2] + 4 > o[0] && box[1] < o[3] && box[3] > o[1]) vis = false;
+      }
+      l.el.style.visibility = vis ? 'visible' : 'hidden';
+      if (vis) { shown.push(box); l.el.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)'; }
+    });
+  }
+
+  /* Picking */
+  var ray = new THREE.Raycaster(), mouse = new THREE.Vector2(), downAt = null, lit = null;
+  var CONTAINERS = { uterus: 1, sac: 1, canal: 1 };
+  renderer.domElement.addEventListener('pointerdown', function (e) { downAt = [e.clientX, e.clientY]; });
+  renderer.domElement.addEventListener('pointerup', function (e) {
+    if (!downAt || Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]) > 5) return;
+    var r = renderer.domElement.getBoundingClientRect();
+    mouse.set((e.clientX - r.left) / r.width * 2 - 1, -(e.clientY - r.top) / r.height * 2 + 1);
+    ray.setFromCamera(mouse, camera);
+    var hits = ray.intersectObjects(pickables.filter(function (m) { return m.visible; }), false);
+    var hit = null;
+    for (var i = 0; i < hits.length; i++) { if (!CONTAINERS[hits[i].object.userData.part]) { hit = hits[i]; break; } }
+    if (!hit && hits.length) hit = hits[0];
+    if (lit) { lit.forEach(function (m) { m.material.emissive && m.material.emissive.setHex(m.userData.baseEmissive); }); lit = null; }
+    if (!hit) { infoBox.hidden = true; return; }
+    var part = hit.object.userData.part;
+    var info = INFO[part];
+    infoBox.querySelector('.b3-info-name').textContent = info[0];
+    infoBox.querySelector('.b3-info-text').textContent = info[1];
+    infoBox.hidden = false;
+    lit = pickables.filter(function (m) { return m.userData.part === part; });
+    var seen = [];
+    lit.forEach(function (m) { if (m.material.emissive && seen.indexOf(m.material) < 0) { seen.push(m.material); m.material.emissive.setHex(0x3a2a10); } });
+  });
+
+  /* Size + loop */
+  var W = 0, H = 0;
+  function resize() {
+    var w = host.clientWidth, h = host.clientHeight;
+    if (w === W && h === H) return;
+    var first = W === 0;
+    W = w; H = h;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / Math.max(h, 1);
+    camera.updateProjectionMatrix();
+    if (first) setView(currentView);
+  }
+  apply(true);
+  function loop(now) {
+    resize();
+    step(now);
+    controls.update();
+    renderer.render(scene, camera);
+    placeLabels(W, H);
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
