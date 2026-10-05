@@ -629,9 +629,37 @@
     overflow: hidden;
     background: #ffffff;
   }
-  .b3-canvas, .b3-canvas canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-  .b3-canvas canvas { cursor: grab; touch-action: none; }
-  .b3-canvas canvas:active { cursor: grabbing; }
+  .b3-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; user-select: none; }
+  .b3-svg:active { cursor: grabbing; }
+  .b3-svg [data-part] { cursor: pointer; }
+  .b3-svg .body-fill { fill: #fdf9f7; }
+  .b3-svg .body-line { fill: none; stroke: #3a3f4b; stroke-width: 1.6; stroke-linecap: round; }
+  .b3-svg .thigh { fill: none; stroke: #c9ced6; stroke-width: 1.2; }
+  .b3-svg .uterus { fill: #eeb1bd; stroke: #b5596d; stroke-width: 1.3; }
+  .b3-svg .cavity { fill: #fbe6ea; stroke: #c97487; stroke-width: 0.8; }
+  .b3-svg .fluid { fill: #e3f1f8; stroke: none; transition: none; }
+  .b3-svg .placenta { fill: #8e2b3c; stroke: #5e1424; stroke-width: 1; }
+  .b3-svg .pl-vein { fill: none; stroke: #c9606f; stroke-width: 1.2; stroke-linecap: round; }
+  .b3-svg .cord { fill: none; stroke: #b9a2cc; stroke-width: 6; stroke-linecap: round; }
+  .b3-svg .cord2 { fill: none; stroke: #8b6aa6; stroke-width: 1.4; stroke-dasharray: 5 6; stroke-linecap: round; }
+  .b3-svg .cervix { fill: #d9677e; stroke: #a8435a; stroke-width: 1; }
+  .b3-svg .plug { fill: #f2e2a4; stroke: #c9b46a; stroke-width: 0.8; }
+  .b3-svg .canal { fill: #f6d3da; stroke: #c97487; stroke-width: 1; }
+  .b3-svg .bladder { fill: #fff3cc; stroke: #d6bf7c; stroke-width: 1; }
+  .b3-svg .rectum { fill: #f2e4d8; stroke: #cdb3a0; stroke-width: 1; }
+  .b3-svg .bone { fill: #efe5d2; stroke: #a99978; stroke-width: 1.1; }
+  .b3-svg .spine-back { fill: none; stroke: #d6ccb8; stroke-width: 1; stroke-dasharray: 3 4; }
+  .b3-svg .inlet { fill: none; stroke: #0d9488; stroke-width: 1; stroke-dasharray: 4 4; opacity: 0.6; pointer-events: none; }
+  .b3-svg .limb-o { fill: none; stroke: #b07e70; stroke-linecap: round; stroke-linejoin: round; }
+  .b3-svg .limb-i { fill: none; stroke: #f6d5c6; stroke-linecap: round; stroke-linejoin: round; }
+  .b3-svg .is-hl .limb-o { stroke: var(--accent); }
+  .b3-svg .sk { fill: #f6d5c6; stroke: #b07e70; stroke-width: 1.2; stroke-linejoin: round; }
+  .b3-svg .ln { fill: none; stroke: #9b6a5e; stroke-width: 1.2; stroke-linecap: round; }
+  .b3-svg .hair { fill: none; stroke: #b9978b; stroke-width: 1; stroke-linecap: round; }
+  .b3-svg .is-hl .uterus, .b3-svg .is-hl.bone, .b3-svg .is-hl .bone, .b3-svg .is-hl.canal, .b3-svg .is-hl .cervix,
+  .b3-svg .is-hl .placenta, .b3-svg .is-hl.bladder, .b3-svg .is-hl.rectum, .b3-svg .is-hl.plug, .b3-svg .is-hl .sk, .b3-svg .is-hl.fluid { stroke: var(--accent); stroke-width: 2; }
+  .b3-svg .is-hl .cord { stroke: #9a7bc0; }
+  .b3.no-labels .inlet { opacity: 0; }
   .b3-labels { position: absolute; inset: 0; pointer-events: none; }
   .b3-lab {
     position: absolute;
@@ -1329,14 +1357,106 @@
       </div>
       <p class="lede">Labor is measured by how open the cervix is, from 0 to 10 cm.</p>
 
-      <div class="b3" id="birth3d" tabindex="0" aria-label="Interactive 3D model of labor and birth">
+      <div class="b3" id="birth3d" tabindex="0" aria-label="Interactive side-view drawing of labor and birth">
         <div class="b3-view">
-          <div class="b3-canvas"></div>
+          <svg class="b3-svg" id="b3-svg" viewBox="0 0 640 640" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="b3-title">
+            <defs>
+              <g id="bb-body">
+                <path class="sk" d="M 30 -38 C 60 -60, 66 -130, 48 -170 C 36 -196, -4 -202, -22 -180 C -40 -152, -46 -112, -40 -82 C -36 -62, -22 -46, -12 -40 Z"/>
+                <path class="limb-o" stroke-width="34" d="M -10 -166 L -58 -120"/>
+                <path class="limb-i" stroke-width="31.6" d="M -10 -166 L -58 -120"/>
+                <path class="limb-o" stroke-width="24" d="M -60 -118 L -40 -180"/>
+                <path class="limb-i" stroke-width="21.6" d="M -60 -118 L -40 -180"/>
+                <ellipse class="sk" cx="-34" cy="-191" rx="13" ry="7.5" transform="rotate(-25 -34 -191)"/>
+                <path class="ln" d="M 40 -150 C 50 -120, 50 -90, 38 -62"/>
+              </g>
+              <g id="bb-head">
+                <circle class="sk" cx="0" cy="0" r="46"/>
+                <path class="sk" d="M -44 6 Q -55 -2 -45 -10"/>
+                <path class="ln" d="M -34 12 Q -27 18 -19 13"/>
+                <path class="ln" d="M -42 -18 Q -37 -22 -32 -19"/>
+                <path class="ln" d="M 6 -16 C 20 -18, 24 2, 11 7 C 5 9, 3 1, 9 -4"/>
+                <path class="hair" d="M 8 44 C 22 40, 34 30, 40 18"/>
+              </g>
+              <g id="bb-arm">
+                <path class="limb-o" stroke-width="19" d="M -10 -66 L -50 -76 L -46 -44"/>
+                <path class="limb-i" stroke-width="16.6" d="M -10 -66 L -50 -76 L -46 -44"/>
+                <circle class="sk" cx="-45" cy="-38" r="9.5"/>
+              </g>
+            </defs>
+
+            <!-- Faint thigh -->
+            <path class="thigh" d="M 440 492 C 462 540, 472 600, 474 640 M 205 556 C 232 592, 258 620, 268 640"/>
+            <!-- Body silhouette fill -->
+            <path class="body-fill" d="M 175 0 C 160 60, 150 120, 160 190 C 168 250, 185 290, 180 330 C 175 370, 140 400, 130 450 C 122 495, 150 540, 205 556 C 250 562, 290 556, 318 548 C 340 552, 370 548, 395 535 C 410 520, 430 505, 440 490 C 470 470, 505 420, 515 360 C 525 290, 505 225, 455 190 C 430 172, 420 165, 418 155 C 440 140, 440 100, 400 85 C 370 75, 345 50, 335 0 Z"/>
+
+            <!-- Rectum -->
+            <path class="rectum" data-part="rectum" d="M 258 420 C 262 470, 285 515, 308 546 L 326 546 C 302 512, 282 468, 278 420 Z"/>
+
+            <!-- Uterus (scales down after birth) -->
+            <g id="u-grp" data-part="uterus">
+              <path class="uterus" d="M 322 470 C 268 442, 240 372, 242 304 C 244 222, 294 168, 366 166 C 440 164, 492 222, 494 304 C 497 382, 450 446, 360 472 Z"/>
+              <path class="cavity" d="M 327 456 C 281 431, 255 368, 256 305 C 258 234, 300 181, 366 180 C 430 179, 479 232, 480 304 C 482 372, 444 432, 356 458 Z"/>
+              <path id="fluid" class="fluid" data-part="fluid" d="M 327 456 C 281 431, 255 368, 256 305 C 258 234, 300 181, 366 180 C 430 179, 479 232, 480 304 C 482 372, 444 432, 356 458 Z"/>
+            </g>
+
+            <!-- Bladder -->
+            <path class="bladder" data-part="bladder" d="M 392 452 C 384 432, 398 418, 418 422 C 434 426, 438 446, 430 458 C 420 468, 400 468, 392 452 Z"/>
+
+            <!-- Birth canal -->
+            <path id="canal" class="canal" data-part="canal" d=""/>
+
+            <!-- Cervix lips and mucus plug -->
+            <g data-part="cervix">
+              <rect id="lip-back" class="cervix" x="318" y="458" width="18" height="38" rx="8"/>
+              <rect id="lip-front" class="cervix" x="344" y="458" width="18" height="38" rx="8"/>
+            </g>
+            <ellipse id="plug" class="plug" data-part="plug" cx="340" cy="478" rx="5" ry="13"/>
+
+            <!-- Cord, placenta -->
+            <g data-part="cord">
+              <path id="cord" class="cord" d=""/>
+              <path id="cord2" class="cord2" d=""/>
+            </g>
+            <g id="placenta" data-part="placenta">
+              <path class="placenta" d="M 258 276 C 260 226, 298 186, 356 180 L 358 199 C 312 203, 282 236, 278 280 Z"/>
+              <path class="pl-vein" d="M 268 262 C 278 248, 288 240, 298 236 M 284 224 C 298 214, 312 210, 324 208 M 310 200 C 322 196, 334 194, 346 194"/>
+            </g>
+
+            <!-- Fetus -->
+            <g id="fetal" data-part="baby">
+              <use href="#bb-body"/>
+              <g id="fhead"><use href="#bb-head"/></g>
+              <use href="#bb-arm"/>
+            </g>
+            <!-- Newborn on the chest -->
+            <g id="newborn" data-part="newborn" transform="translate(552 112) scale(1 -1)">
+              <use href="#bb-body"/>
+              <use href="#bb-head"/>
+              <use href="#bb-arm"/>
+            </g>
+
+            <!-- Bones -->
+            <g data-part="spine">
+              <rect class="bone" x="184" y="126" width="32" height="27" rx="6" transform="rotate(10 200 140)"/>
+              <rect class="bone" x="194" y="161" width="32" height="27" rx="6" transform="rotate(8 210 175)"/>
+              <rect class="bone" x="206" y="196" width="32" height="27" rx="6" transform="rotate(4 222 210)"/>
+              <rect class="bone" x="214" y="231" width="32" height="27" rx="6" transform="rotate(0 230 245)"/>
+              <rect class="bone" x="216" y="266" width="32" height="27" rx="6" transform="rotate(-6 232 280)"/>
+              <rect class="bone" x="212" y="301" width="32" height="27" rx="6" transform="rotate(-12 228 315)"/>
+              <path class="spine-back" d="M 168 120 C 176 200, 186 260, 194 330"/>
+            </g>
+            <path class="bone" data-part="sacrum" d="M 214 344 L 252 344 C 248 390, 250 440, 272 480 C 282 498, 292 508, 300 516 L 290 523 C 276 512, 256 494, 244 470 C 226 438, 216 394, 214 344 Z"/>
+            <ellipse class="bone" data-part="pubic" cx="421" cy="468" rx="13" ry="30" transform="rotate(-22 421 468)"/>
+
+            <!-- Body outline on top -->
+            <path class="body-line" d="M 175 0 C 160 60, 150 120, 160 190 C 168 250, 185 290, 180 330 C 175 370, 140 400, 130 450 C 122 495, 150 540, 205 556 C 250 562, 290 556, 318 548 C 340 552, 370 548, 395 535 C 410 520, 430 505, 440 490 C 470 470, 505 420, 515 360 C 525 290, 505 225, 455 190 C 430 172, 420 165, 418 155 C 440 140, 440 100, 400 85 C 370 75, 345 50, 335 0"/>
+                      </svg>
           <div class="b3-labels" aria-hidden="true"></div>
           <div class="b3-tools">
-            <button type="button" class="b3-btn is-on" data-view="angle">Angle</button>
-            <button type="button" class="b3-btn" data-view="side">Side</button>
-            <button type="button" class="b3-btn" data-view="front">Front</button>
+            <button type="button" class="b3-btn" id="b3-zoom-in" aria-label="Zoom in">+</button>
+            <button type="button" class="b3-btn" id="b3-zoom-out" aria-label="Zoom out">&minus;</button>
+            <button type="button" class="b3-btn" id="b3-reset">Reset</button>
             <span class="b3-sep"></span>
             <button type="button" class="b3-btn is-on" id="b3-label-toggle" aria-pressed="true">Labels</button>
           </div>
@@ -1344,8 +1464,7 @@
             <p class="b3-info-name"></p>
             <p class="b3-info-text"></p>
           </div>
-          <p class="b3-hint">Drag to rotate. Scroll or pinch to zoom. Tap a part to name it.</p>
-          <p class="b3-fallback" hidden>This browser can't show the 3D model.</p>
+          <p class="b3-hint">Drag to move. Scroll or pinch to zoom. Tap a part to name it.</p>
         </div>
 
         <div class="b3-bottom">
@@ -1362,7 +1481,7 @@
           </div>
         </div>
         <div class="b3-steps" id="b3-steps" role="tablist"></div>
-        <p class="b3-note">Simplified model. Sizes are roughly to scale in cm; shapes are approximate.</p>
+        <p class="b3-note">Side view of the body, drawn roughly to scale (the baby's head is about 9.5 cm across).</p>
       </div>
 
       <div class="smap" aria-hidden="true">
@@ -1559,77 +1678,77 @@
   </section>
 </main>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script>
 (function () {
   var root = document.getElementById('birth3d');
   if (!root) return;
-  var host = root.querySelector('.b3-canvas');
+  var svg = document.getElementById('b3-svg');
   var labelsHost = root.querySelector('.b3-labels');
   var infoBox = root.querySelector('.b3-info');
-  var fallback = root.querySelector('.b3-fallback');
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function $(id) { return document.getElementById(id); }
 
-  /* ---------- Stage data (parent-facing copy + model parameters) ---------- */
+  /* ---------- Steps: parent-facing copy + drawing parameters ---------- */
+  // hx, hy: head center; rot: baby tilt (deg); ext: head tipping back (deg); dil: cervix opening (px, 10 px = 1 cm)
+  // eff: cervix length (1 = long, 0 = fully thinned); fluid, plug, fetal, newborn: 0-1; uk: womb size; plac: placenta out 0-1; canal: stretch 0-1
   var STAGES = [
     { name: '36 weeks', title: 'Baby is head down but still high',
       text: 'The cervix is long and closed, sealed by the mucus plug.',
       chips: [['Cervix', 'Closed'], ['Station', 'Above pelvis'], ['Water', 'Intact']],
-      p: { t: 2/9, rot: 1.57, flex: 0.25, dil: 0.2, len: 3.4, sac: 1, plug: 1, k: 1, canal: 1.3, out: 0, plac: 0 } },
+      p: { hx: 345, hy: 378, rot: 11, ext: 0, dil: 0, eff: 1, fluid: 1, plug: 1, uk: 1, fetal: 1, newborn: 0, plac: 0, canal: 0 } },
     { name: 'Baby drops', title: 'The head settles into the pelvis',
       text: 'Usually 38 to 40 weeks. Breathing gets easier and peeing gets more frequent.',
       chips: [['Cervix', 'Closed'], ['Station', '-2'], ['Water', 'Intact']],
-      p: { t: 3/9, rot: 1.57, flex: 0.35, dil: 0.5, len: 3.0, sac: 1, plug: 1, k: 1, canal: 1.3, out: 0, plac: 0 } },
+      p: { hx: 345, hy: 408, rot: 12, ext: 0, dil: 2, eff: 0.9, fluid: 1, plug: 1, uk: 1, fetal: 1, newborn: 0, plac: 0, canal: 0 } },
     { name: 'Early labor', title: 'The cervix thins and starts to open',
       text: 'Up to about 3 cm. The mucus plug may come out now.',
       chips: [['Cervix', '0-3 cm'], ['Station', '-1'], ['Water', 'Intact']],
-      p: { t: 4/9, rot: 1.2, flex: 0.45, dil: 3, len: 1.3, sac: 1, plug: 0, k: 1, canal: 1.4, out: 0, plac: 0 } },
-    { name: 'Active labor', title: 'The cervix opens and the head starts turning',
+      p: { hx: 345, hy: 420, rot: 11, ext: 0, dil: 26, eff: 0.55, fluid: 1, plug: 0, uk: 1, fetal: 1, newborn: 0, plac: 0, canal: 0.05 } },
+    { name: 'Active labor', title: 'The cervix opens and the head moves down',
       text: 'From 3 to about 7 cm. The water often breaks around now.',
       chips: [['Cervix', '3-7 cm'], ['Station', '0'], ['Water', 'Broken']],
-      p: { t: 5/9, rot: 0.7, flex: 0.45, dil: 7, len: 0.5, sac: 0, plug: 0, k: 1, canal: 1.8, out: 0, plac: 0 } },
+      p: { hx: 346, hy: 440, rot: 9, ext: 0, dil: 60, eff: 0.3, fluid: 0, plug: 0, uk: 1, fetal: 1, newborn: 0, plac: 0, canal: 0.2 } },
     { name: 'Transition', title: 'Fully open at 10 cm',
-      text: "Baby now faces mom's back, the best angle to fit through.",
+      text: "The head passes the cervix. Baby turns to face mom's back, the best angle to fit.",
       chips: [['Cervix', '10 cm'], ['Station', '+1 to +2'], ['Next', 'Pushing']],
-      p: { t: 6/9, rot: 0, flex: 0.45, dil: 10, len: 0.3, sac: 0, plug: 0, k: 1, canal: 2.6, out: 0, plac: 0 } },
+      p: { hx: 350, hy: 470, rot: 4, ext: 0, dil: 100, eff: 0.12, fluid: 0, plug: 0, uk: 1, fetal: 1, newborn: 0, plac: 0, canal: 0.5 } },
     { name: 'Crowning', title: 'The head slides under the pubic bone',
       text: 'The head tips back to get out. This is the "ring of fire."',
       chips: [['Cervix', '10 cm'], ['Head', 'Visible'], ['Pushing', 'Up to 3 hrs']],
-      p: { t: 8/9, rot: 0, flex: -0.5, dil: 10, len: 0.3, sac: 0, plug: 0, k: 1, canal: 4.9, out: 0, plac: 0 } },
-    { name: 'Birth', title: 'Baby is born',
-      text: 'The head turns to the side, then one shoulder at a time, then the body slides out.',
+      p: { hx: 374, hy: 512, rot: -18, ext: 26, dil: 100, eff: 0.1, fluid: 0, plug: 0, uk: 1, fetal: 1, newborn: 0, plac: 0, canal: 1 } },
+    { name: 'Birth', title: 'Baby is born and goes on mom\'s chest',
+      text: 'The shoulders come one at a time, then the body slides out. The cord stays attached for now.',
       chips: [['Cord', 'Wait 1-3 min to cut'], ['Next', 'Skin-to-skin']],
-      p: { t: 1, rot: 1.57, flex: 0.1, dil: 6, len: 1, sac: 0, plug: 0, k: 0.72, canal: 2.2, out: 1, plac: 0 } },
+      p: { hx: 430, hy: 610, rot: -55, ext: 10, dil: 50, eff: 0.5, fluid: 0, plug: 0, uk: 0.72, fetal: 0, newborn: 1, plac: 0, canal: 0.3 } },
     { name: 'Placenta', title: 'The placenta comes out',
       text: 'One or two pushes, 5 to 30 min after birth. The womb starts shrinking right away.',
       chips: [['Lasts', '5-30 min'], ['How', 'A push or a cough']],
-      p: { t: 1, rot: 1.57, flex: 0.1, dil: 3, len: 1.6, sac: 0, plug: 0, k: 0.52, canal: 1.6, out: 1, plac: 1 } }
+      p: { hx: 430, hy: 610, rot: -55, ext: 10, dil: 24, eff: 0.75, fluid: 0, plug: 0, uk: 0.55, fetal: 0, newborn: 1, plac: 1, canal: 0.1 } }
   ];
 
   var INFO = {
     uterus: ['Uterus (womb)', 'It squeezes with every contraction to move the baby down.'],
-    sac: ['Amniotic sac', 'The bag of water. "Water breaking" means it opened.'],
+    fluid: ['Amniotic fluid', 'The water around the baby. "Water breaking" means the bag opened.'],
     cervix: ['Cervix', 'The opening at the bottom of the womb. It thins and opens to 10 cm.'],
     plug: ['Mucus plug', 'Seals the cervix. It often comes out in early labor.'],
     canal: ['Birth canal', 'Stretches as the head comes through.'],
     placenta: ['Placenta', 'Feeds the baby. It comes out 5 to 30 min after birth.'],
     cord: ['Umbilical cord', 'Connects baby to the placenta. Ask to wait 1 to 3 min before cutting.'],
-    baby: ['Baby', 'Head down with chin tucked. The head turns to face mom\'s back to fit.'],
-    pelvis: ['Pelvis', 'The bony ring the baby squeezes through.'],
+    baby: ['Baby', 'Head down with chin tucked, back toward mom\'s belly.'],
+    newborn: ['Baby, skin-to-skin', 'Placed right on mom\'s chest while the cord is still attached.'],
     pubic: ['Pubic bone', 'Front of the pelvis. The head slides under it at birth.'],
     sacrum: ['Sacrum and tailbone', 'Back of the pelvis. Pressure here causes back labor.'],
-    spines: ['Ischial spines', 'Two bony points inside the pelvis. They mark station 0.']
+    spine: ['Lower spine', 'Labor pain often spreads to the lower back.'],
+    bladder: ['Bladder', 'Squeezed by the baby, which is why peeing gets more frequent.'],
+    rectum: ['Rectum', 'Pressure here near the end feels like needing to poop. That urge means pushing is close.']
   };
 
-  /* ---------- Caption + step UI (works even without WebGL) ---------- */
-  var stepsEl = document.getElementById('b3-steps');
+  /* ---------- Caption + steps ---------- */
+  var stepsEl = $('b3-steps');
   var idx = 0;
   STAGES.forEach(function (s, i) {
     var b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'b3-step';
-    b.id = 'b3-step-' + (i + 1);
+    b.type = 'button'; b.className = 'b3-step'; b.id = 'b3-step-' + (i + 1);
     b.setAttribute('role', 'tab');
     b.innerHTML = '<span>' + (i + 1) + '</span><b>' + s.name + '</b>';
     b.addEventListener('click', function () { stopPlay(); go(i); });
@@ -1637,30 +1756,26 @@
   });
   function caption() {
     var s = STAGES[idx];
-    document.getElementById('b3-num').textContent = idx + 1;
-    document.getElementById('b3-title').textContent = s.title;
-    document.getElementById('b3-text').textContent = s.text;
-    document.getElementById('b3-chips').innerHTML = s.chips.map(function (c) {
-      return '<span class="b3-chip">' + c[0] + ' <b>' + c[1] + '</b></span>';
-    }).join('');
+    $('b3-num').textContent = idx + 1;
+    $('b3-title').textContent = s.title;
+    $('b3-text').textContent = s.text;
+    $('b3-chips').innerHTML = s.chips.map(function (c) { return '<span class="b3-chip">' + c[0] + ' <b>' + c[1] + '</b></span>'; }).join('');
     Array.prototype.forEach.call(stepsEl.children, function (b, i) {
       b.classList.toggle('is-on', i === idx);
       b.classList.toggle('done', i < idx);
       b.setAttribute('aria-selected', i === idx ? 'true' : 'false');
     });
-    document.getElementById('b3-prev').disabled = idx === 0;
-    document.getElementById('b3-next').disabled = idx === STAGES.length - 1;
+    $('b3-prev').disabled = idx === 0;
+    $('b3-next').disabled = idx === STAGES.length - 1;
   }
-
-  var playing = false, playTimer = null;
-  var playBtn = document.getElementById('b3-play');
+  var playing = false, playTimer = null, playBtn = $('b3-play');
   function stopPlay() { playing = false; clearTimeout(playTimer); playBtn.textContent = 'Play'; }
   function scheduleNext() {
     clearTimeout(playTimer);
     if (!playing) return;
     playTimer = setTimeout(function () {
       if (idx < STAGES.length - 1) { go(idx + 1); scheduleNext(); } else { stopPlay(); }
-    }, reduce ? 2600 : 3400);
+    }, reduce ? 2600 : 3200);
   }
   playBtn.addEventListener('click', function () {
     if (playing) { stopPlay(); return; }
@@ -1668,327 +1783,135 @@
     if (idx === STAGES.length - 1) go(0);
     scheduleNext();
   });
-  document.getElementById('b3-prev').addEventListener('click', function () { stopPlay(); if (idx > 0) go(idx - 1); });
-  document.getElementById('b3-next').addEventListener('click', function () { stopPlay(); if (idx < STAGES.length - 1) go(idx + 1); });
+  $('b3-prev').addEventListener('click', function () { stopPlay(); if (idx > 0) go(idx - 1); });
+  $('b3-next').addEventListener('click', function () { stopPlay(); if (idx < STAGES.length - 1) go(idx + 1); });
   root.addEventListener('keydown', function (e) {
     if (e.key === 'ArrowRight' && idx < STAGES.length - 1) { stopPlay(); go(idx + 1); e.preventDefault(); }
     if (e.key === 'ArrowLeft' && idx > 0) { stopPlay(); go(idx - 1); e.preventDefault(); }
   });
 
-  var go = function (i) { idx = i; caption(); };
-  caption();
+  /* ---------- Drawing ---------- */
+  var C = { x: 340, y: 465 };            // womb shrinks toward the cervix
+  var PLAC_ANCHOR = { x: 300, y: 222 };  // inner edge of the placenta
+  var PLAC_OUT = { x: 462, y: 582 };     // where the delivered placenta ends up
+  var NAVEL = { x: -42, y: -100 };       // baby's navel in baby coordinates
+  var NEWBORN = { x: 552, y: 112 };
+  function rotPt(p, deg) { var r = deg * Math.PI / 180, c = Math.cos(r), s = Math.sin(r); return { x: p.x * c - p.y * s, y: p.x * s + p.y * c }; }
+  function shrink(p, k) { return { x: C.x + (p.x - C.x) * k, y: C.y + (p.y - C.y) * k }; }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function f(n) { return n.toFixed(1); }
 
-  /* ---------- 3D scene ---------- */
-  var renderer;
-  try {
-    if (!window.THREE || !THREE.OrbitControls) throw new Error('no three');
-    renderer = new THREE.WebGLRenderer({ antialias: true });
-  } catch (e) {
-    fallback.hidden = false;
-    return;
-  }
-  var V = function (x, y, z) { return new THREE.Vector3(x, y, z); };
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-  renderer.setClearColor(0xffffff, 1);
-  host.appendChild(renderer.domElement);
-
-  var scene = new THREE.Scene();
-  var camera = new THREE.PerspectiveCamera(30, 1, 1, 800);
-  var controls = new THREE.OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.08;
-  controls.minDistance = 22;
-  controls.maxDistance = 220;
-  var TARGET = V(-1, 3, 6);
-  var VIEWS = { angle: V(0.62, 0.2, 0.76), side: V(1, 0.08, 0.02), front: V(0.02, 0.1, 1) };
-  var currentView = 'angle';
-  function setView(name) {
-    currentView = name;
-    var aspect = host.clientWidth / Math.max(host.clientHeight, 1);
-    var dist = 112 * Math.max(1, 0.85 / aspect);
-    camera.position.copy(TARGET).addScaledVector(VIEWS[name].clone().normalize(), dist);
-    controls.target.copy(TARGET);
-    controls.update();
-    root.querySelectorAll('[data-view]').forEach(function (b) { b.classList.toggle('is-on', b.dataset.view === name); });
-  }
-  root.querySelectorAll('[data-view]').forEach(function (b) {
-    b.addEventListener('click', function () { setView(b.dataset.view); });
-  });
-  var labelToggle = document.getElementById('b3-label-toggle');
-  labelToggle.addEventListener('click', function () {
-    var on = !root.classList.toggle('no-labels');
-    labelToggle.classList.toggle('is-on', on);
-    labelToggle.setAttribute('aria-pressed', on ? 'true' : 'false');
-    stationRing.visible = on;
-  });
-
-  scene.add(new THREE.HemisphereLight(0xffffff, 0xdde2ea, 0.85));
-  var key = new THREE.DirectionalLight(0xffffff, 0.7); key.position.set(40, 60, 50); scene.add(key);
-  var rim = new THREE.DirectionalLight(0xffe4ec, 0.35); rim.position.set(-50, 10, -40); scene.add(rim);
-
-  // Soft floor shadow
-  (function () {
-    var c = document.createElement('canvas'); c.width = c.height = 128;
-    var g = c.getContext('2d');
-    var grad = g.createRadialGradient(64, 64, 4, 64, 64, 64);
-    grad.addColorStop(0, 'rgba(20,24,40,0.10)'); grad.addColorStop(1, 'rgba(20,24,40,0)');
-    g.fillStyle = grad; g.fillRect(0, 0, 128, 128);
-    var m = new THREE.Mesh(new THREE.PlaneGeometry(90, 90), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), transparent: true, depthWrite: false }));
-    m.rotation.x = -Math.PI / 2; m.position.set(0, -21, 8); scene.add(m);
-  })();
-
-  function mat(color, o) { return new THREE.MeshStandardMaterial(Object.assign({ color: color, roughness: 0.6, metalness: 0 }, o || {})); }
-  function glass(color, opacity) { return mat(color, { transparent: true, opacity: opacity, depthWrite: false, side: THREE.DoubleSide, roughness: 0.35 }); }
-  var pickables = [];
-  function tag(m, part) { m.userData.part = part; m.userData.baseEmissive = m.material.emissive ? m.material.emissive.getHex() : 0; pickables.push(m); return m; }
-  function lathe(pts, seg) { return new THREE.LatheGeometry(pts.map(function (p) { return new THREE.Vector2(p[0], p[1]); }), seg || 56); }
-  function smoothLathe(pts, seg) { return new THREE.LatheGeometry(new THREE.SplineCurve(pts.map(function (p) { return new THREE.Vector2(p[0], p[1]); })).getPoints(60), seg || 72); }
-
-  /* Pelvis: inlet about 13 cm wide x 11 cm front-to-back; ischial spines mark station 0 */
-  var bone = mat(0xeee3cf, { roughness: 0.8, transparent: true, opacity: 0.85, side: THREE.DoubleSide, depthWrite: false });
-  var boneSoft = mat(0xe9dcc4, { roughness: 0.8, transparent: true, opacity: 0.72, side: THREE.DoubleSide, depthWrite: false });
-  var pelvis = new THREE.Group(); scene.add(pelvis);
-  function tube(points, r, material, part, closed) {
-    var m = tag(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points, !!closed), 64, r, 14, !!closed), material), part);
-    pelvis.add(m); return m;
-  }
-  function ball(pos, r, scl, material, part) {
-    var m = tag(new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16), material), part);
-    m.position.copy(pos); if (scl) m.scale.set(scl[0], scl[1], scl[2]); pelvis.add(m); return m;
-  }
-  // Pelvic brim (inlet)
-  var brimPts = [];
-  for (var bi = 0; bi < 24; bi++) { var ba = bi / 24 * Math.PI * 2; brimPts.push(V(Math.sin(ba) * 6.6, 0.15 * Math.cos(ba) - 0.3, 0.6 + Math.cos(ba) * 5.5)); }
-  tube(brimPts, 0.7, bone, 'pelvis', true);
-  // Iliac wings: thin flaring shells with a rounded crest
-  var wingProfile = new THREE.SplineCurve([[6.7, 0.2], [7.7, 1.8], [9.3, 4.2], [11.1, 6.5], [12.4, 8.2], [12.9, 9.1]].map(function (q) { return new THREE.Vector2(q[0], q[1]); })).getPoints(30);
-  [[Math.PI * 0.36, Math.PI * 0.48], [Math.PI * 1.16, Math.PI * 0.48]].forEach(function (w) {
-    var m = tag(new THREE.Mesh(new THREE.LatheGeometry(wingProfile, 40, w[0], w[1]), boneSoft), 'pelvis');
-    m.scale.z = 0.84; m.position.z = 0.6; pelvis.add(m);
-    var crest = [];
-    for (var ci = 0; ci <= 20; ci++) { var ca = w[0] + w[1] * ci / 20; crest.push(V(Math.sin(ca) * 12.9, 9.1, 0.6 + Math.cos(ca) * 12.9 * 0.84)); }
-    tube(crest, 0.42, bone, 'pelvis');
-    ball(crest[0], 0.6, null, bone, 'pelvis');
-  });
-  // Sacrum and tailbone, curving forward at the bottom
-  var sacrum = tag(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([V(0, 3.5, -5.0), V(0, 0, -6.2), V(0, -4, -6.2), V(0, -7.5, -4.8), V(0, -9.8, -2.8)]), 48, 1.5, 16, false), bone), 'sacrum');
-  sacrum.scale.x = 2.3; pelvis.add(sacrum);
-  // Pubic bone (symphysis) and the rami that form the pubic arch
-  ball(V(0, -3.6, 6.3), 1, [1.25, 2.4, 1.05], bone, 'pubic');
-  [-1, 1].forEach(function (sd) {
-    tube([V(0, -5.6, 6.0), V(sd * 2.6, -7.4, 4.6), V(sd * 5.2, -8.6, 1.6), V(sd * 5.8, -7.0, 0.0), V(sd * 6.3, -3.0, -0.4), V(sd * 6.6, -0.4, 0.2)], 0.75, bone, 'pelvis');
-    ball(V(sd * 5.6, -8.6, 0.8), 1.35, [1, 1.3, 1.25], bone, 'pelvis');
-    ball(V(sd * 7.6, -2.6, 1.2), 1.7, [0.6, 1, 1], bone, 'pelvis');
-    var spine = tag(new THREE.Mesh(new THREE.ConeGeometry(0.6, 2.2, 14), bone), 'spines');
-    spine.position.set(sd * 5.4, -4, -1.6); spine.rotation.z = sd * Math.PI / 2; pelvis.add(spine);
-  });
-  // Station 0 ring at the level of the spines
-  var ringPts = [];
-  for (var a = 0; a <= 64; a++) { var th = a / 64 * Math.PI * 2; ringPts.push(V(Math.cos(th) * 5.0, -4, 0.4 + Math.sin(th) * 4.3)); }
-  var stationRing = new THREE.Line(new THREE.BufferGeometry().setFromPoints(ringPts), new THREE.LineDashedMaterial({ color: 0x0d9488, dashSize: 0.6, gapSize: 0.45 }));
-  stationRing.computeLineDistances(); scene.add(stationRing);
-
-  /* Soft tissue (rebuilt as the cervix opens) */
-  var uterus = tag(new THREE.Mesh(new THREE.BufferGeometry(), glass(0xf08aa3, 0.15)), 'uterus');
-  var sac = tag(new THREE.Mesh(new THREE.BufferGeometry(), glass(0x8fd0ea, 0.16)), 'sac');
-  var cervix = tag(new THREE.Mesh(new THREE.BufferGeometry(), mat(0xd9546f, { transparent: true, opacity: 0.9, roughness: 0.45 })), 'cervix');
-  var canal = tag(new THREE.Mesh(new THREE.BufferGeometry(), glass(0xeb8ea6, 0.2)), 'canal');
-  var plug = tag(new THREE.Mesh(new THREE.SphereGeometry(1, 16, 12), mat(0xf3e3a6, { transparent: true, opacity: 0.92, roughness: 0.3 })), 'plug');
-  var placenta = tag(new THREE.Mesh(new THREE.SphereGeometry(1, 36, 24), mat(0x9c3346, { roughness: 0.75, transparent: true, opacity: 0.9 })), 'placenta');
-  var cord = tag(new THREE.Mesh(new THREE.BufferGeometry(), mat(0xbfa6cf, { roughness: 0.4 })), 'cord');
-  [uterus, sac, cervix, canal, plug, placenta, cord].forEach(function (m) { scene.add(m); });
-  uterus.rotation.x = 0.12; sac.rotation.x = 0.12;
-  var canalCurve = new THREE.CatmullRomCurve3([V(0, -3.2, 0.5), V(0, -6.4, 2.0), V(0, -9.2, 4.4), V(0, -11.8, 7.9)]);
-
-  function uterusPts(r0) {
-    var a = Math.max(r0 + 1.3, 1.4);
-    return [[a, 0], [Math.max(a + 0.8, 4.2), 1.4], [Math.max(a + 1.2, 7.0), 4.2], [10.6, 9.5], [12.5, 15.5], [12.1, 22.5], [9.3, 28.2], [4.6, 31.4], [0.01, 32.4]];
-  }
-  function sacPts(r0) {
-    var u = uterusPts(r0).slice(2).map(function (p) { return [p[0] * 0.9, p[1] * 0.97 + 0.4]; });
-    return [[0.01, 0.6], [Math.max(r0 * 0.9, 0.9), 1.0], [Math.max(r0 + 1.0, 3.6), 2.0]].concat(u);
-  }
-  function setGeo(m, g) { if (m.geometry) m.geometry.dispose(); m.geometry = g; }
-
-  /* Baby: head about 9.5 cm across (11 cm front to back), curled, head down */
-  var skin = mat(0xf1bf9f, { roughness: 0.55 });
-  var featureMat = mat(0x9a6352, { roughness: 0.6 });
-  var baby = new THREE.Group(); scene.add(baby);
-  var headG = new THREE.Group(); baby.add(headG);
-  var head = tag(new THREE.Mesh(new THREE.SphereGeometry(4.7, 44, 32), skin), 'baby');
-  head.scale.set(0.98, 1, 1.12); headG.add(head);
-  var nose = tag(new THREE.Mesh(new THREE.SphereGeometry(0.55, 14, 10), skin), 'baby'); nose.position.set(0, -0.7, 5.15); headG.add(nose);
-  [-1, 1].forEach(function (s) {
-    var eye = tag(new THREE.Mesh(new THREE.SphereGeometry(0.5, 12, 8), featureMat), 'baby');
-    eye.scale.set(1.2, 0.22, 0.4); eye.position.set(s * 1.55, 0.55, 4.82); eye.rotation.x = -0.3; headG.add(eye);
-    var ear = tag(new THREE.Mesh(new THREE.SphereGeometry(1, 14, 10), skin), 'baby');
-    ear.scale.set(0.45, 1.2, 0.85); ear.position.set(s * 4.5, 0.4, 0.4); headG.add(ear);
-  });
-  var mouth = tag(new THREE.Mesh(new THREE.TorusGeometry(0.6, 0.12, 8, 16, Math.PI), featureMat), 'baby');
-  mouth.position.set(0, -2.1, 4.75); mouth.rotation.set(-0.35, 0, Math.PI); headG.add(mouth);
-  function limb(a, b, r) {
-    var d = b.clone().sub(a), len = d.length();
-    var cyl = tag(new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, 18), skin), 'baby');
-    cyl.position.copy(a).addScaledVector(d, 0.5);
-    cyl.quaternion.setFromUnitVectors(V(0, 1, 0), d.normalize());
-    var s1 = tag(new THREE.Mesh(new THREE.SphereGeometry(r, 18, 12), skin), 'baby'); s1.position.copy(a);
-    var s2 = tag(new THREE.Mesh(new THREE.SphereGeometry(r, 18, 12), skin), 'baby'); s2.position.copy(b);
-    baby.add(cyl, s1, s2);
-  }
-  function blob(pos, scl) {
-    var m = tag(new THREE.Mesh(new THREE.SphereGeometry(1, 40, 28), skin), 'baby');
-    m.position.copy(pos); m.scale.set(scl[0], scl[1], scl[2]); baby.add(m); return m;
-  }
-  blob(V(0, 9.2, -1.0), [4.6, 6.4, 4.0]);   // chest and back, chin tucked into it
-  blob(V(0, 10.8, 0.6), [4.2, 4.6, 3.8]);   // belly
-  blob(V(0, 14.2, -1.2), [4.4, 3.9, 4.2]);  // bottom
-  [-1, 1].forEach(function (s) {
-    limb(V(s * 3.9, 6.0, 0.2), V(s * 4.6, 9.0, 3.6), 1.05);
-    limb(V(s * 4.6, 9.0, 3.6), V(s * 1.5, 6.0, 5.3), 0.95);
-    blob(V(s * 1.5, 5.9, 5.5), [1.15, 1.05, 1.15]);
-    limb(V(s * 2.8, 14.5, 0.6), V(s * 3.4, 9.6, 5.6), 1.6);
-    limb(V(s * 3.4, 9.6, 5.6), V(s * 1.6, 14.8, 6.4), 1.2);
-    blob(V(s * 1.2, 15.6, 5.6), [0.9, 0.75, 1.6]);
-  });
-  var NAVEL = V(0, 11.4, 4.3);
-
-  /* Path of the head through the pelvis: down, then forward under the pubic bone (curve of Carus) */
-  var path = new THREE.CatmullRomCurve3([
-    V(0, 30, 4.5), V(0, 20, 2.8), V(0, 9, 1.3), V(0, 2.7, 0.7), V(0, 1.7, 0.6),
-    V(0, 0.7, 0.6), V(0, -1.0, 0.9), V(0, -5.4, 2.6), V(0, -9.6, 6.4), V(0, -12.6, 10.6)
-  ], false, 'centripetal');
-  var OUT_HEAD = V(-10, -15.5, 13.5);
-  function basis(Y, ref, rot) {
-    var F = ref.clone().sub(Y.clone().multiplyScalar(ref.dot(Y))).normalize().applyAxisAngle(Y, rot);
-    var X = new THREE.Vector3().crossVectors(Y, F);
-    return new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(X, Y, F));
-  }
-  function curvePose(t, rot) {
-    var h = path.getPoint(t), tb = t, p = h.clone();
-    while (tb > 0 && p.distanceTo(h) < 11) { tb -= 0.003; p = path.getPoint(Math.max(tb, 0)); }
-    return { pos: h, quat: basis(p.sub(h).normalize(), V(0, 0, -1), rot) };
-  }
-  function outPose(rot) {
-    return { pos: OUT_HEAD.clone(), quat: basis(V(1, 0, 0), V(0, 1, 0), 0) };
-  }
-  var placPath = null;
-
-  /* Apply parameters to the scene */
   var cur = Object.assign({}, STAGES[0].p);
-  var last = {};
-  var tmp = new THREE.Vector3();
-  function apply(force) {
+  function apply() {
     var p = cur;
-    var r0 = Math.max(p.dil / 2, 0.12);
-    var base = -3 + p.len;
-    if (force || last.dil !== p.dil || last.len !== p.len) {
-      setGeo(uterus, smoothLathe(uterusPts(r0)));
-      setGeo(sac, smoothLathe(sacPts(r0)));
-      setGeo(cervix, lathe([[r0, 0], [r0 + 1.5, 0], [r0 + 1.7, p.len], [r0 + 0.15, p.len], [r0, 0]], 48));
-    }
-    uterus.position.set(0, base, 0.4); sac.position.set(0, base, 0.4); cervix.position.set(0, -3, 0.4);
-    uterus.scale.set(p.k, p.k, 0.84 * p.k); sac.scale.set(p.k, p.k, 0.84 * p.k);
-    sac.material.opacity = 0.16 * p.sac; sac.visible = p.sac > 0.02;
-    if (force || last.canal !== p.canal) setGeo(canal, new THREE.TubeGeometry(canalCurve, 48, p.canal, 24, false));
-    plug.visible = p.plug > 0.03;
-    plug.scale.set(0.7 * p.plug, Math.max(p.len * 0.45, 0.3) * p.plug, 0.7 * p.plug);
-    plug.position.set(0, -3 + p.len * 0.5, 0.4);
+    $('u-grp').setAttribute('transform', 'translate(' + C.x + ' ' + C.y + ') scale(' + f(p.uk) + ') translate(' + (-C.x) + ' ' + (-C.y) + ')');
+    $('fluid').style.opacity = p.fluid;
+    $('fluid').style.pointerEvents = p.fluid > 0.3 ? '' : 'none';
+
+    var len = 38 * Math.max(p.eff, 0.08);
+    var half = p.dil / 2;
+    var back = $('lip-back'), front = $('lip-front');
+    back.setAttribute('x', f(318 - half)); back.setAttribute('height', f(len));
+    front.setAttribute('x', f(344 + half)); front.setAttribute('height', f(len));
+    var lipOpacity = p.eff < 0.2 ? Math.max(p.eff * 5, 0.35) : 1;
+    back.style.opacity = front.style.opacity = lipOpacity;
+    $('plug').style.opacity = p.plug;
+    $('plug').setAttribute('ry', f(Math.max(len * 0.34, 3)));
+    $('plug').setAttribute('cy', f(458 + len / 2));
+
+    // Birth canal: front wall fixed behind the pubic bone, back wall pushed back as it stretches
+    var s = p.canal, ox = -26 * s, oy = 12 * s;
+    var top = 458 + len;
+    $('canal').setAttribute('d',
+      'M ' + f(344 + half + 14) + ' ' + f(top - 4) + ' C 366 ' + f(top + 16) + ', 382 512, 398 533' +
+      ' L ' + f(386 + ox * 0.3) + ' ' + f(544 + oy * 0.4) +
+      ' C ' + f(356 + ox) + ' ' + f(526 + oy) + ', ' + f(334 + ox) + ' ' + f(500 + oy * 0.5) + ', ' + f(322 - half) + ' ' + f(top) + ' Z');
 
     // Baby
-    var a = curvePose(Math.min(p.t, 1), p.rot);
-    var pose = a;
-    if (p.out > 0) {
-      var b = outPose(p.rot);
-      pose = { pos: a.pos.clone().lerp(b.pos, p.out), quat: a.quat.clone().slerp(b.quat, p.out) };
-      pose.pos.y -= Math.sin(p.out * Math.PI) * 2.5;
-    }
-    baby.position.copy(pose.pos); baby.quaternion.copy(pose.quat);
-    headG.rotation.x = -p.flex;
-    baby.updateMatrixWorld(true);
+    $('fetal').setAttribute('transform', 'translate(' + f(p.hx) + ' ' + f(p.hy) + ') rotate(' + f(p.rot) + ')');
+    $('fhead').setAttribute('transform', 'rotate(' + f(-p.ext) + ' 5 -40)');
+    $('fetal').style.opacity = p.fetal;
+    $('newborn').style.opacity = p.newborn;
+    $('fetal').style.pointerEvents = p.fetal > 0.3 ? '' : 'none';
+    $('newborn').style.pointerEvents = p.newborn > 0.3 ? '' : 'none';
 
-    // Placenta: on the back wall of the womb, then out through the canal
-    uterus.updateMatrixWorld(true);
-    var wall = uterus.localToWorld(V(0, 22.0, -8.6));
-    var ps = Math.max(p.k, 0.78);
-    if (p.plac > 0) {
-      placPath = new THREE.CatmullRomCurve3([wall, V(0, 6, 0.6), V(0, -3, 0.8), V(0, -9.5, 6), V(0, -13.8, 16)]);
-      placenta.position.copy(placPath.getPoint(p.plac));
-      ps *= 1 - 0.3 * Math.sin(p.plac * Math.PI);
-    } else {
-      placenta.position.copy(wall);
-    }
-    placenta.scale.set(7.6 * ps, 7.2 * ps, 2.4 * ps);
-    placenta.rotation.x = 0.12 + p.plac * 1.2;
+    // Placenta: shrinks with the womb, then slides out
+    var a = shrink(PLAC_ANCHOR, p.uk);
+    var pk = p.uk * (1 - 0.25 * Math.sin(p.plac * Math.PI));
+    var px = lerp(a.x, PLAC_OUT.x, p.plac), py = lerp(a.y, PLAC_OUT.y, p.plac);
+    $('placenta').setAttribute('transform', 'translate(' + f(px) + ' ' + f(py) + ') rotate(' + f(p.plac * 70) + ') scale(' + f(pk) + ') translate(' + (-PLAC_ANCHOR.x) + ' ' + (-PLAC_ANCHOR.y) + ')');
 
-    // Cord from placenta to navel
-    var navel = baby.localToWorld(NAVEL.clone());
-    var start = placenta.position.clone().add(V(0, -1.2, 1.8));
-    var pts;
-    if (p.out > 0.3 && p.plac < 0.5) {
-      pts = [start, V(3, 8, 1.2), V(0.6, -3, 0.9), V(0.6, -9.5, 6.2), V(0.6, -13, 12), navel.clone().add(V(0, 2, 0)), navel];
-    } else if (p.plac >= 0.5) {
-      pts = [start, start.clone().lerp(navel, 0.5).add(V(6, 3, 0)), navel];
+    // Cord: placenta to whichever baby is showing
+    var d;
+    if (p.newborn < 0.5) {
+      var nv = rotPt(NAVEL, p.rot); nv.x += p.hx; nv.y += p.hy;
+      d = 'M ' + f(px) + ' ' + f(py) + ' C ' + f(px + 60) + ' ' + f(py + 10) + ', ' + f(nv.x + 10) + ' ' + f(nv.y - 70) + ', ' + f(nv.x) + ' ' + f(nv.y);
     } else {
-      pts = [start, start.clone().lerp(navel, 0.35).add(V(6.5, -2, 2)), start.clone().lerp(navel, 0.7).add(V(5.5, 2, 1)), navel];
+      var nb = { x: NEWBORN.x + NAVEL.x, y: NEWBORN.y - NAVEL.y };
+      if (p.plac < 0.5) {
+        d = 'M ' + f(px) + ' ' + f(py) + ' C ' + f(px + 40) + ' ' + f(py + 120) + ', 336 420, 340 470 C 344 500, 372 520, 392 538 C 430 566, 520 520, 530 420 C 536 340, ' + f(nb.x) + ' 290, ' + f(nb.x) + ' ' + f(nb.y);
+      } else {
+        d = 'M ' + f(px) + ' ' + f(py) + ' C 520 630, 540 520, 534 420 C 530 340, ' + f(nb.x) + ' 290, ' + f(nb.x) + ' ' + f(nb.y);
+      }
     }
-    var baseCurve = new THREE.CatmullRomCurve3(pts, false, 'catmullrom', 0.4);
-    var coil = baseCurve.getPoints(90).map(function (q, i, arr) {
-      var u = i / (arr.length - 1), fade = Math.min(1, u * 8, (1 - u) * 8);
-      return q.add(V(Math.sin(u * 46) * 0.5 * fade, Math.cos(u * 46) * 0.25 * fade, Math.cos(u * 46) * 0.5 * fade));
-    });
-    setGeo(cord, new THREE.TubeGeometry(new THREE.CatmullRomCurve3(coil), 160, 0.62, 10, false));
-    last = Object.assign({}, p);
+    $('cord').setAttribute('d', d);
+    $('cord2').setAttribute('d', d);
   }
 
-  /* Tweening between steps */
-  var KEYS = Object.keys(cur);
-  var from = null, to = null, t0 = 0, dur = 1700;
-  function clamp01(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
+  /* ---------- Tween ---------- */
+  var KEYS = Object.keys(cur), from = null, to = null, t0 = 0, dur = 1400;
   function ease(x) { return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
-  go = function (i) {
+  function clamp01(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
+  function go(i) {
     var jump = Math.abs(i - idx);
     idx = i; caption();
     from = Object.assign({}, cur); to = Object.assign({}, STAGES[i].p);
     t0 = performance.now();
-    dur = reduce ? 1 : Math.min(1700 + (jump - 1) * 500, 3200);
-  };
-  function step(now) {
+    dur = reduce ? 1 : Math.min(1300 + (jump - 1) * 400, 2600);
+    requestAnimationFrame(tick);
+  }
+  function tick(now) {
     if (!to) return;
     var s = clamp01((now - t0) / dur);
-    var goingOut = to.out > from.out, goingIn = to.out < from.out;
     KEYS.forEach(function (k) {
       var w = s;
-      if (goingOut) { if (k === 't') w = clamp01(s / 0.5); if (k === 'out') w = clamp01((s - 0.45) / 0.55); }
-      if (goingIn) { if (k === 'out') w = clamp01(s / 0.55); if (k === 't') w = clamp01((s - 0.45) / 0.55); }
+      if (k === 'fetal' && to.fetal < from.fetal) w = clamp01((s - 0.35) / 0.5);
+      if (k === 'newborn' && to.newborn > from.newborn) w = clamp01((s - 0.45) / 0.55);
       cur[k] = from[k] + (to[k] - from[k]) * ease(w);
     });
-    apply(false);
-    if (s >= 1) to = null;
+    apply(); placeLabels();
+    if (s < 1) requestAnimationFrame(tick); else to = null;
   }
 
-  /* Labels */
+  /* ---------- Labels (HTML pills pinned to drawing points) ---------- */
   var LABELS = [
-    { text: 'Uterus', part: 'uterus', color: '#f08aa3', at: function () { return uterus.localToWorld(V(-12.6, 15, 0)); } },
-    { text: 'Placenta', part: 'placenta', color: '#a3283f', at: function () { return placenta.position.clone().add(V(0, 5, 0)); } },
-    { text: 'Cervix', part: 'cervix', color: '#d9546f', at: function () { return V(Math.max(cur.dil / 2, 0.2) + 2.6, -2.6, 0.4); } },
-    { text: 'Pubic bone', part: 'pubic', color: '#b9a98c', at: function () { return V(0, -3.2, 8.2); } },
-    { text: 'Sacrum', part: 'sacrum', color: '#b9a98c', at: function () { return V(0, -2.5, -8.6); } },
-    { text: 'Station 0', part: 'spines', color: '#0d9488', at: function () { return V(6.4, -4, 0.4); } },
-    { text: 'Birth canal', part: 'canal', color: '#eb8ea6', at: function () { return V(0, -11, 10); } }
+    { text: 'Uterus', part: 'uterus', at: function () { return shrink({ x: 486, y: 340 }, cur.uk); } },
+    { text: 'Placenta', part: 'placenta', at: function () { var a = shrink(PLAC_ANCHOR, cur.uk); return { x: lerp(a.x, PLAC_OUT.x, cur.plac) - 26, y: lerp(a.y, PLAC_OUT.y, cur.plac) - 14 }; } },
+    { text: 'Amniotic fluid', part: 'fluid', show: function () { return cur.fluid > 0.5; }, at: function () { return { x: 452, y: 250 }; } },
+    { text: 'Spine', part: 'spine', at: function () { return { x: 196, y: 228 }; } },
+    { text: 'Sacrum', part: 'sacrum', at: function () { return { x: 226, y: 410 }; } },
+    { text: 'Bladder', part: 'bladder', at: function () { return { x: 436, y: 432 }; } },
+    { text: 'Pubic bone', part: 'pubic', at: function () { return { x: 438, y: 478 }; } },
+    { text: 'Cervix', part: 'cervix', at: function () { return { x: 364 + cur.dil / 2, y: 470 }; } },
+    { text: 'Birth canal', part: 'canal', at: function () { return { x: 402, y: 530 }; } }
   ];
   LABELS.forEach(function (l) {
     var el = document.createElement('span');
-    el.className = 'b3-lab'; el.textContent = l.text; el.style.setProperty('--lab', l.color);
+    el.className = 'b3-lab'; el.textContent = l.text;
     labelsHost.appendChild(el); l.el = el;
   });
-  function placeLabels(w, h) {
+  var pt = svg.createSVGPoint();
+  function placeLabels() {
+    var ctm = svg.getScreenCTM(); if (!ctm) return;
+    var host = labelsHost.getBoundingClientRect();
     var shown = [];
     LABELS.forEach(function (l) {
-      tmp.copy(l.at()).project(camera);
-      var x = (tmp.x + 1) / 2 * w, y = (1 - tmp.y) / 2 * h - 9;
-      if (!l.w) { l.w = l.el.offsetWidth || 70; }
+      var a = l.at(); pt.x = a.x; pt.y = a.y;
+      var q = pt.matrixTransform(ctm);
+      var x = q.x - host.left, y = q.y - host.top - 9;
+      if (!l.w) l.w = l.el.offsetWidth || 70;
       var box = [x, y, x + l.w, y + 20];
-      var vis = tmp.z < 1 && x > -10 && x + l.w < w + 10 && y > 0 && y < h - 20;
+      var vis = (!l.show || l.show()) && x > -4 && x + l.w < host.width + 4 && y > 44 && y < host.height - 24;
       for (var i = 0; vis && i < shown.length; i++) {
         var o = shown[i];
         if (box[0] < o[2] + 4 && box[2] + 4 > o[0] && box[1] < o[3] && box[3] > o[1]) vis = false;
@@ -1997,54 +1920,88 @@
       if (vis) { shown.push(box); l.el.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)'; }
     });
   }
+  var labelToggle = $('b3-label-toggle');
+  labelToggle.addEventListener('click', function () {
+    var on = !root.classList.toggle('no-labels');
+    labelToggle.classList.toggle('is-on', on);
+    labelToggle.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
 
-  /* Picking */
-  var ray = new THREE.Raycaster(), mouse = new THREE.Vector2(), downAt = null, lit = null;
-  var CONTAINERS = { uterus: 1, sac: 1, canal: 1 };
-  renderer.domElement.addEventListener('pointerdown', function (e) { downAt = [e.clientX, e.clientY]; });
-  renderer.domElement.addEventListener('pointerup', function (e) {
-    if (!downAt || Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]) > 5) return;
-    var r = renderer.domElement.getBoundingClientRect();
-    mouse.set((e.clientX - r.left) / r.width * 2 - 1, -(e.clientY - r.top) / r.height * 2 + 1);
-    ray.setFromCamera(mouse, camera);
-    var hits = ray.intersectObjects(pickables.filter(function (m) { return m.visible; }), false);
-    var hit = null;
-    for (var i = 0; i < hits.length; i++) { if (!CONTAINERS[hits[i].object.userData.part]) { hit = hits[i]; break; } }
-    if (!hit && hits.length) hit = hits[0];
-    if (lit) { lit.forEach(function (m) { m.material.emissive && m.material.emissive.setHex(m.userData.baseEmissive); }); lit = null; }
-    if (!hit) { infoBox.hidden = true; return; }
-    var part = hit.object.userData.part;
-    var info = INFO[part];
+  /* ---------- Zoom and pan (viewBox) ---------- */
+  var FULL = { x: 0, y: 0, w: 640, h: 640 };
+  var vb = Object.assign({}, FULL);
+  function setVB() {
+    vb.w = Math.min(Math.max(vb.w, 150), FULL.w); vb.h = vb.w;
+    vb.x = Math.min(Math.max(vb.x, -vb.w * 0.4), FULL.w - vb.w * 0.6);
+    vb.y = Math.min(Math.max(vb.y, -vb.h * 0.4), FULL.h - vb.h * 0.6);
+    svg.setAttribute('viewBox', [vb.x, vb.y, vb.w, vb.h].map(f).join(' '));
+    placeLabels();
+  }
+  function toSvg(cx, cy) { pt.x = cx; pt.y = cy; return pt.matrixTransform(svg.getScreenCTM().inverse()); }
+  function zoomAt(cx, cy, factor) {
+    var a = toSvg(cx, cy);
+    var nw = Math.min(Math.max(vb.w * factor, 150), FULL.w), k = nw / vb.w;
+    vb.x = a.x - (a.x - vb.x) * k; vb.y = a.y - (a.y - vb.y) * k; vb.w = nw;
+    setVB();
+  }
+  function centerZoom(factor) { var r = svg.getBoundingClientRect(); zoomAt(r.left + r.width / 2, r.top + r.height / 2, factor); }
+  $('b3-zoom-in').addEventListener('click', function () { centerZoom(0.75); });
+  $('b3-zoom-out').addEventListener('click', function () { centerZoom(1 / 0.75); });
+  $('b3-reset').addEventListener('click', function () { vb = Object.assign({}, FULL); setVB(); });
+  svg.addEventListener('wheel', function (e) { e.preventDefault(); zoomAt(e.clientX, e.clientY, Math.exp(e.deltaY * 0.0015)); }, { passive: false });
+
+  var pointers = {}, downAt = null, moved = false, pinch0 = null;
+  svg.addEventListener('pointerdown', function (e) {
+    svg.setPointerCapture(e.pointerId);
+    pointers[e.pointerId] = { x: e.clientX, y: e.clientY };
+    downAt = { x: e.clientX, y: e.clientY }; moved = false;
+    var ids = Object.keys(pointers);
+    if (ids.length === 2) { var a = pointers[ids[0]], b = pointers[ids[1]]; pinch0 = { d: Math.hypot(a.x - b.x, a.y - b.y), w: vb.w }; }
+  });
+  svg.addEventListener('pointermove', function (e) {
+    if (!pointers[e.pointerId]) return;
+    var prev = pointers[e.pointerId];
+    pointers[e.pointerId] = { x: e.clientX, y: e.clientY };
+    if (downAt && Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y) > 5) moved = true;
+    var ids = Object.keys(pointers);
+    if (ids.length === 2 && pinch0) {
+      var a = pointers[ids[0]], b = pointers[ids[1]];
+      var d = Math.hypot(a.x - b.x, a.y - b.y);
+      zoomAt((a.x + b.x) / 2, (a.y + b.y) / 2, (pinch0.w * pinch0.d / Math.max(d, 1)) / vb.w);
+    } else if (ids.length === 1 && moved) {
+      var unit = 1 / svg.getScreenCTM().a;
+      vb.x -= (e.clientX - prev.x) * unit; vb.y -= (e.clientY - prev.y) * unit;
+      setVB();
+    }
+  });
+  function endPointer(e) {
+    var wasSingle = Object.keys(pointers).length === 1;
+    delete pointers[e.pointerId];
+    if (Object.keys(pointers).length < 2) pinch0 = null;
+    if (e.type === 'pointerup' && wasSingle && !moved) pick(e);
+  }
+  svg.addEventListener('pointerup', endPointer);
+  svg.addEventListener('pointercancel', endPointer);
+
+  /* ---------- Tap to name a part ---------- */
+  var lit = null;
+  function pick(e) {
+    var el = document.elementFromPoint(e.clientX, e.clientY);
+    var g = el && el.closest ? el.closest('[data-part]') : null;
+    if (lit) { lit.classList.remove('is-hl'); lit = null; }
+    if (!g || !INFO[g.dataset.part]) { infoBox.hidden = true; return; }
+    var info = INFO[g.dataset.part];
     infoBox.querySelector('.b3-info-name').textContent = info[0];
     infoBox.querySelector('.b3-info-text').textContent = info[1];
     infoBox.hidden = false;
-    lit = pickables.filter(function (m) { return m.userData.part === part; });
-    var seen = [];
-    lit.forEach(function (m) { if (m.material.emissive && seen.indexOf(m.material) < 0) { seen.push(m.material); m.material.emissive.setHex(0x3a2a10); } });
-  });
+    g.classList.add('is-hl'); lit = g;
+  }
 
-  /* Size + loop */
-  var W = 0, H = 0;
-  function resize() {
-    var w = host.clientWidth, h = host.clientHeight;
-    if (w === W && h === H) return;
-    var first = W === 0;
-    W = w; H = h;
-    renderer.setSize(w, h, false);
-    camera.aspect = w / Math.max(h, 1);
-    camera.updateProjectionMatrix();
-    if (first) setView(currentView);
-  }
-  apply(true);
-  function loop(now) {
-    resize();
-    step(now);
-    controls.update();
-    renderer.render(scene, camera);
-    placeLabels(W, H);
-    requestAnimationFrame(loop);
-  }
-  requestAnimationFrame(loop);
+  window.addEventListener('resize', placeLabels);
+  if (window.ResizeObserver) new ResizeObserver(placeLabels).observe(svg);
+  caption();
+  apply();
+  requestAnimationFrame(placeLabels);
 })();
 </script>
 </body>
