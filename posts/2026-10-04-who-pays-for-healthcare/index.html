@@ -120,6 +120,17 @@ details{margin:22px 0 10px;font-size:0.86rem;color:var(--muted)}
 summary{cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:0.76rem}
 details p,details ul{margin-top:10px}
 details li{margin:0 0 6px 18px}
+/* glossary */
+.gloss{display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:#fff;border:1px solid var(--rule);border-radius:10px;overflow:hidden;margin:20px 0 4px}
+.gloss>div{padding:12px 14px;border-right:1px solid var(--rule)}
+.gloss>div:last-child{border-right:0}
+.gloss .gh{font-family:'IBM Plex Mono',monospace;font-size:0.64rem;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px}
+.gloss .g1 .gh{color:var(--red)}.gloss .g2 .gh{color:var(--navy)}.gloss .g3 .gh{color:var(--teal)}
+.gloss dl{margin:0}
+.gloss dt{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.84rem;line-height:1.2;margin-top:7px}
+.gloss dt:first-child{margin-top:0}
+.gloss dd{font-size:0.76rem;line-height:1.4;color:#3a3a44;margin:1px 0 0}
+@media (max-width:760px){.gloss{grid-template-columns:1fr}.gloss>div{border-right:0;border-bottom:1px solid var(--rule)}.gloss>div:last-child{border-bottom:0}}
 footer{border-top:1px solid var(--rule);padding:22px 0 56px;font-family:'IBM Plex Mono',monospace;font-size:0.76rem;color:var(--muted);margin-top:24px}
 footer a{color:var(--muted)}
 </style>
@@ -132,6 +143,32 @@ footer a{color:var(--muted)}
   <div class="meta"><span>[2026-10-04]</span><span>Rahul</span><span class="tag">ECONOMICS</span></div>
   <h1>Who pays for US healthcare?</h1>
   <p class="lede">The US spent $5.3 trillion on healthcare in 2024, about $15,500 for every person. Very little of that bill is paid by the patient at the counter. How much lands on you depends mostly on how you are covered.</p>
+
+  <div class="gloss">
+    <div class="g1"><div class="gh">what you pay</div><dl>
+      <dt>Premium</dt><dd>Monthly fee to stay insured, used or not.</dd>
+      <dt>Deductible</dt><dd>What you pay each year before insurance starts paying.</dd>
+      <dt>Copay</dt><dd>Flat fee per visit or prescription, like $30.</dd>
+      <dt>Coinsurance</dt><dd>Your percent of the bill after the deductible, like 20%.</dd>
+      <dt>Out-of-pocket</dt><dd>Deductible + copays + coinsurance. Premiums are not included.</dd>
+      <dt>Out-of-pocket max</dt><dd>Yearly cap on those costs. After it, the plan pays 100%.</dd>
+    </dl></div>
+    <div class="g2"><div class="gh">ways to be covered</div><dl>
+      <dt>Employer plan</dt><dd>Insurance through a job. The employer pays most of the premium.</dd>
+      <dt>ACA marketplace</dt><dd>Plans you buy yourself on Healthcare.gov or a state site. Income-based tax credits lower the premium.</dd>
+      <dt>Medicare</dt><dd>Federal plan for 65+ and some disabled people. A: hospital, B: doctors, D: drugs.</dd>
+      <dt>Medicare Advantage / Medigap</dt><dd>Private plans that bundle Medicare (Advantage) or cover its gaps (Medigap).</dd>
+      <dt>Medicaid / CHIP</dt><dd>Federal-state coverage for low-income people. CHIP covers kids in families just above the Medicaid limit. Little or no premium.</dd>
+    </dl></div>
+    <div class="g3"><div class="gh">who pays</div><dl>
+      <dt>Payer</dt><dd>Who writes the check to the hospital: you, an insurer, Medicare or Medicaid.</dd>
+      <dt>Sponsor</dt><dd>Who funds that payer in the end: households, employers or taxpayers.</dd>
+      <dt>Subsidy / tax credit</dt><dd>Government money that lowers what you pay, such as ACA credits.</dd>
+      <dt>Uncompensated care</dt><dd>Care a hospital gives and never gets paid for.</dd>
+      <dt>DSH payments</dt><dd>Extra Medicaid money for hospitals with many low-income and uninsured patients.</dd>
+    </dl></div>
+  </div>
+  <div class="cap">Terms used on this page.</div>
 
   <div class="kpis">
     <div class="kpi hot"><div class="v">$5.3T</div><div class="l">US health spending in 2024, 18% of GDP</div></div>
