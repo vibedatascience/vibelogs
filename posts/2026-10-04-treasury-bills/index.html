@@ -51,6 +51,16 @@ svg text{font-family:var(--mono)}
 .off a:after{content:" \2197";color:var(--red)}
 .off a:hover{border-color:var(--red);color:var(--red)}
 .off a:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.dt{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:0.74rem;margin:6px 0 4px}
+.dt th{font-weight:500;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);text-align:right;padding:6px 8px;border-bottom:1px solid var(--rule)}
+.dt td{padding:7px 8px;text-align:right;border-bottom:1px solid var(--rule);font-variant-numeric:tabular-nums;white-space:nowrap}
+.dt th:first-child,.dt td:first-child{text-align:left;padding-left:0}
+.dt tr.hl td{background:#fff5f7}
+.dt .neg{color:var(--red)}
+.dt .rb{display:inline-block;height:7px;border-radius:2px;background:var(--navy);vertical-align:0;margin-left:6px}
+.dt .rb.n{background:var(--red)}
+@media (max-width:560px){.dt .hm{display:none}.dt .rb{max-width:40px}.dt{font-size:0.7rem}}
+h3{font-family:var(--display);font-weight:700;font-size:1rem;margin:22px 0 4px}
 .src{margin-top:56px;font-family:var(--mono);font-size:0.64rem;color:var(--muted);line-height:1.7}
 .src a{color:var(--muted)}
 </style>
@@ -108,6 +118,33 @@ svg text{font-family:var(--mono)}
 </section>
 
 <section>
+  <h2>Today's rates in context</h2>
+  <div class="tw"><table class="dt">
+    <tr><th></th><th>today</th><th>last this high</th></tr>
+    <tr><td>10-year note</td><td>5.24%</td><td>Jun 2007</td></tr>
+    <tr><td>30-year bond</td><td>5.61%</td><td>May 2004</td></tr>
+    <tr><td>10-year TIPS</td><td>2.88% real</td><td>Nov 2008</td></tr>
+    <tr><td>inflation priced in</td><td>2.36%</td><td>CPI now 3.3%</td></tr>
+  </table></div>
+
+  <h3>One year from now, by what rates do</h3>
+  <div class="tw"><table class="dt">
+    <tr><th></th><th>yield</th><th>rates -1 pt</th><th>flat</th><th>rates +1 pt</th></tr>
+    <tr><td style="color:var(--red)">3-month bill, rolled</td><td>4.17%</td><td>~3.7%</td><td>4.2%</td><td>~4.7%</td></tr>
+    <tr><td style="color:var(--navy)">10-year note</td><td>5.24%</td><td>+12.7%</td><td>+5.2%</td><td class="neg">-1.6%</td></tr>
+    <tr><td style="color:var(--slate)">30-year bond</td><td>5.61%</td><td>+21.5%</td><td>+5.6%</td><td class="neg">-7.2%</td></tr>
+  </table></div>
+  <p class="cap">Total return on $1,000 over 12 months: interest plus the change in price. Held to maturity, the note and bond pay exactly their yield.</p>
+
+  <h3>10-year notes held to maturity, by starting yield</h3>
+  <div class="tw"><table class="dt">
+    <tr><th>bought at</th><th class="hm">months</th><th class="hm">avg yield</th><th>inflation, next 10 yrs</th><th>real / yr</th><th>beat inflation</th></tr>
+    <tr class=""><td>Under 2%</td><td class="hm">27</td><td class="hm">1.8%</td><td>2.8%</td><td class="neg">-1.0%<span class="rb n" style="width:14px"></span></td><td>4%</td></tr><tr class=""><td>2-3%</td><td class="hm">80</td><td class="hm">2.6%</td><td>2.1%</td><td class="">+0.5%<span class="rb" style="width:7px"></span></td><td>65%</td></tr><tr class=""><td>3-4%</td><td class="hm">105</td><td class="hm">3.6%</td><td>2.2%</td><td class="">+1.4%<span class="rb" style="width:20px"></span></td><td>100%</td></tr><tr class=""><td>4-5%</td><td class="hm">129</td><td class="hm">4.4%</td><td>3.2%</td><td class="">+1.2%<span class="rb" style="width:17px"></span></td><td>71%</td></tr><tr class="hl"><td>5-6% &larr; today</td><td class="hm">84</td><td class="hm">5.5%</td><td>3.9%</td><td class="">+1.6%<span class="rb" style="width:22px"></span></td><td>66%</td></tr><tr class=""><td>6-8%</td><td class="hm">179</td><td class="hm">7.0%</td><td>5.3%</td><td class="">+1.7%<span class="rb" style="width:24px"></span></td><td>68%</td></tr><tr class=""><td>8%+</td><td class="hm">156</td><td class="hm">10.2%</td><td>4.1%</td><td class="">+6.1%<span class="rb" style="width:85px"></span></td><td>100%</td></tr>
+  </table></div>
+  <p class="cap">Purchases 1953 to 2016. Real return = yield minus actual inflation over the next 10 years; ignores coupon reinvestment and taxes. The 5-6% band covers 1966-72 and 1993-2007.</p>
+</section>
+
+<section>
   <h2>How much exists</h2>
   <svg id="stack"></svg>
   <p class="cap">Marketable US government debt, Aug 31, 2026. TIPS adjust for inflation; FRNs pay a floating rate.</p>
@@ -134,7 +171,7 @@ svg text{font-family:var(--mono)}
 </section>
 
 <div class="src">
-  Yields: FRED <a href="https://fred.stlouisfed.org/series/DGS10">DGS1MO to DGS30</a> (constant maturity), <a href="https://fred.stlouisfed.org/series/TB3MS">TB3MS</a> and <a href="https://fred.stlouisfed.org/series/GS10">GS10</a> (monthly). Inflation: <a href="https://fred.stlouisfed.org/series/CPIAUCSL">CPI</a>. Debt: Treasury <a href="https://fiscaldata.treasury.gov/datasets/monthly-statement-public-debt/">Monthly Statement of the Public Debt</a>, Aug 2026. Terms and taxes: <a href="https://www.treasurydirect.gov/marketable-securities/">TreasuryDirect</a>, <a href="https://www.fidelity.com/learning-center/smart-money/treasury-bills-vs-bonds">Fidelity</a>. Price changes assume a new issue priced at today's yield. Data: <a href="tbill.json">tbill.json</a>. Not financial advice.
+  Yields: FRED <a href="https://fred.stlouisfed.org/series/DGS10">DGS1MO to DGS30</a> (constant maturity), <a href="https://fred.stlouisfed.org/series/TB3MS">TB3MS</a> and <a href="https://fred.stlouisfed.org/series/GS10">GS10</a> (monthly). Inflation: <a href="https://fred.stlouisfed.org/series/CPIAUCSL">CPI</a>. Real yield and inflation priced in: <a href="https://fred.stlouisfed.org/series/DFII10">DFII10</a>, <a href="https://fred.stlouisfed.org/series/T10YIE">T10YIE</a>. Debt: Treasury <a href="https://fiscaldata.treasury.gov/datasets/monthly-statement-public-debt/">Monthly Statement of the Public Debt</a>, Aug 2026. Terms and taxes: <a href="https://www.treasurydirect.gov/marketable-securities/">TreasuryDirect</a>, <a href="https://www.fidelity.com/learning-center/smart-money/treasury-bills-vs-bonds">Fidelity</a>. Price changes assume a new issue priced at today's yield. Data: <a href="tbill.json">tbill.json</a>. Not financial advice.
 </div>
 </div>
 
