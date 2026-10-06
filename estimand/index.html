@@ -623,10 +623,10 @@ function fmtV(m,v){v=v??m.cur;if(m.fmt==="usd")return v>=1e6?M(v):"$"+(v/1000).t
 function chg(m){const w=m.wow*100,bad=(w<0)===m.up;return `<span class="chip ${Math.abs(w)<1?"nt":bad?"dn":"up"}">${sg(w)}</span>`}
 function spark(vals,col,w=110,h=30){const lo=Math.min(...vals),hi=Math.max(...vals),X=i=>2+i/(vals.length-1)*(w-6),Y=v=>h-3-(hi===lo?.5:(v-lo)/(hi-lo))*(h-6);const e=vals.length-1;return `<svg class="spark" viewBox="0 0 ${w} ${h}" aria-hidden="true"><path d="${vals.map((v,i)=>`${i?"L":"M"}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join("")}" style="fill:none;stroke:${col};stroke-width:1.6;stroke-linejoin:round"/><circle cx="${X(e)}" cy="${Y(vals[e])}" r="2.6" style="fill:${col}"/></svg>`}
 const FLAGS=[
- {m:"Ad revenue",cls:"",note:m=>`z = ${m.z.toFixed(1)} against the prior 8 weeks. Down from ${fmtV(m,m.prev)}.`,go:0},
- {m:"Active campaigns",cls:"",note:m=>`${Math.round(m.prev-m.cur)} fewer campaigns delivering than the week before. z = ${m.z.toFixed(1)}.`,go:0},
+ {m:"Ad revenue",cls:"",note:m=>`Down from ${fmtV(m,m.prev)} the week before. Lowest week since early January.`,go:0},
+ {m:"Active campaigns",cls:"",note:m=>`${Math.round(m.prev-m.cur)} fewer campaigns delivering than the week before.`,go:0},
  {m:"iOS save rate",cls:"am",note:()=>`Below its Oct to Apr level of ${pp(X.ios.pre)} since May. Android is flat.`,go:4,chip:()=>`<span class="chip am">since May</span>`},
- {m:"Searches",cls:"am",note:m=>`z = ${m.z.toFixed(1)}. Search engagement rate held near ${fmtV({fmt:"pct"},.6191)}.`,go:-1}];
+ {m:"Searches",cls:"am",note:m=>`Down from ${fmtV(m,m.prev)} the week before. Search engagement rate held near ${fmtV({fmt:"pct"},.6191)}.`,go:-1}];
 const CONT=[
  {tag:"rep",tl:"report",t:"Industries by ROAS",s:"Auto leads at 4.56; finance is smallest by revenue",w:"shared Sep 29"},
  {tag:"an",tl:"analysis",t:"MAU trend by user type",s:"Creator MAU up 48% since Oct; draft not shared",w:"Sep 28"},
@@ -639,15 +639,15 @@ function renderHome(){
  const own=H.own.slice().sort((a,b)=>b.q3-a.q3);
  tin.innerHTML=`<div class="home" id="home">
  <div class="hhead"><div><h2>Good morning, Jordan.</h2><p>Four metrics need a look, and two of your campaigns stopped delivering in late September.</p></div><div class="asof">Tue, Oct 6 · WBR week Sep 21 to 27<br>Pinlake data through Sep 30</div></div>
- <section class="hsec"><header><h3>Needs your attention <span class="cnt">${FLAGS.length}</span></h3><small>flagged when |z| &gt; 2 vs the prior 8 weeks, or a tested shift</small></header>
-  <div class="flags">${FLAGS.map((f,i)=>{const m=WB[f.m];return `<div class="flag ${f.cls}"><span class="fn">${f.m}</span><div class="fv"><b>${fmtV(m)}</b>${f.chip?f.chip():chg(m)}</div><p>${f.note(m)}</p><div class="ff">${spark(m.spark.slice(-12),f.cls?"var(--amber)":"var(--accent)",96,28)}<button class="inv" type="button" data-inv="${i}" data-go="${f.go}">Investigate →</button></div></div>`}).join("")}</div></section>
  <section class="hsec"><header><h3>Continue where you left off</h3></header>
   <div class="cont">${CONT.map(c=>`<button class="cc" type="button" data-cont="1"><span class="ct"><span class="tag ${c.tag}">${c.tl}</span><span>${c.w}</span></span><b>${c.t}</b><span class="s">${c.s}</span></button>`).join("")}</div></section>
- <section class="hsec"><header><h3>Weekly business review</h3><small>week of Sep 21 vs Sep 14 · 12-week trend · queries ${H.wk_q.ads_week}, ${H.wk_q.wk_eng}, ${H.wk_q.wk_grow}</small></header>
-  <div class="wbr"><table><thead><tr><th>Metric</th><th class="n">Last week</th><th class="n">WoW</th><th>12 weeks</th><th class="n">z</th><th></th></tr></thead><tbody>
-  ${H.wbr.map((m,i)=>`<tr><td class="nm">${m.name}<small>${({"Ad revenue":"ads","Active campaigns":"ads","ROAS":"ads","CPM":"ads","Weekly active users":"growth","Saves":"engagement","Save rate":"engagement","Searches":"search","iOS save rate":"engagement · ios"})[m.name]}</small></td><td class="n">${fmtV(m)}</td><td class="n">${chg(m)}</td><td>${spark(m.spark.slice(-12),Math.abs(m.z)>2?((m.wow<0)===m.up?"var(--accent)":"var(--teal)"):"var(--slate)")}</td><td class="n" style="font:500 12px var(--f-mono);color:${Math.abs(m.z)>2?"var(--ink)":"var(--faint)"}">${m.z>0?"+":""}${m.z.toFixed(1)}</td><td class="n"><button class="inv" type="button" data-wbr="${i}">Investigate</button></td></tr>`).join("")}
+ <section class="hsec"><header><h3>Needs your attention <span class="cnt">${FLAGS.length}</span></h3><small>flagged when a metric moves well outside its last 8 weeks</small></header>
+  <div class="flags">${FLAGS.map((f,i)=>{const m=WB[f.m];return `<div class="flag ${f.cls}"><span class="fn">${f.m}</span><div class="fv"><b>${fmtV(m)}</b>${f.chip?f.chip():chg(m)}</div><p>${f.note(m)}</p><div class="ff">${spark(m.spark.slice(-12),f.cls?"var(--amber)":"var(--accent)",96,28)}<button class="inv" type="button" data-inv="${i}" data-go="${f.go}">Investigate →</button></div></div>`}).join("")}</div></section>
+ <section class="hsec"><header><h3>Weekly business review</h3><small>week of Sep 21 vs Sep 14 · 12-week trend · from Pinlake</small></header>
+  <div class="wbr"><table><thead><tr><th>Metric</th><th class="n">Last week</th><th class="n">WoW</th><th>12 weeks</th><th>Signal</th><th></th></tr></thead><tbody>
+  ${H.wbr.map((m,i)=>`<tr><td class="nm">${m.name}<small>${({"Ad revenue":"ads","Active campaigns":"ads","ROAS":"ads","CPM":"ads","Weekly active users":"growth","Saves":"engagement","Save rate":"engagement","Searches":"search","iOS save rate":"engagement · ios"})[m.name]}</small></td><td class="n">${fmtV(m)}</td><td class="n">${chg(m)}</td><td>${spark(m.spark.slice(-12),Math.abs(m.z)>2?((m.wow<0)===m.up?"var(--accent)":"var(--teal)"):"var(--slate)")}</td><td>${Math.abs(m.z)>2?`<span class="chip ${(m.wow<0)===m.up?"dn":"up"}">unusual ${m.z<0?"drop":"rise"}</span>`:`<span style="font:400 11.5px var(--f-mono);color:var(--faint)">normal range</span>`}</td><td class="n"><button class="inv" type="button" data-wbr="${i}">Investigate</button></td></tr>`).join("")}
   </tbody></table></div></section>
- <section class="hsec"><header><h3>Campaigns you own</h3><small>managed accounts · Jul to Sep · query ${H.own_q}</small></header>
+ <section class="hsec"><header><h3>Campaigns you own</h3><small>managed accounts · Jul to Sep</small></header>
   <div class="wbr"><table><thead><tr><th>Campaign</th><th>Status</th><th class="n">Last week</th><th class="n">Q3 revenue</th><th class="n">ROAS</th><th>13 weeks</th><th></th></tr></thead><tbody>
   ${own.map(c=>{const wow=c.wk_prev?(c.wk_last/c.wk_prev-1)*100:0;return `<tr><td class="nm">${esc(c.c)}<small>${c.adv} · ${c.obj.replace("_"," ")}</small></td><td>${statusOf(c)}</td><td class="n">${c.wk_last?"$"+(c.wk_last/1000).toFixed(1)+"K":"none"} ${c.wk_prev&&Math.abs(wow)>=1?`<span class="chip ${wow<0?"dn":"up"}">${sg(wow)}</span>`:""}</td><td class="n">${M(c.q3)}</td><td class="n">${c.roas.toFixed(2)}</td><td>${spark(c.spark.slice(0,-1),c.last<"2026-09-30"?"var(--amber)":"var(--slate)")}</td><td class="n"><button class="inv" type="button" data-camp="${esc(c.c)}">Investigate</button></td></tr>`}).join("")}
   </tbody></table></div></section>
