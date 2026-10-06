@@ -7,24 +7,30 @@
     {
       "id": "cmuwru5foyhm",
       "created": "2026-10-06T14:25:54.180Z",
-      "status": "open",
+      "status": "resolved",
       "section": "Cake",
       "quote": "Cake\n\nBakerChristie Oxler, Ditsy Baking (ditsy.baking@gmail.com)\nCakeSmall lemon olive oil cake, mascarpone buttercream, raspberry jam and fresh raspberries\nLookBrown icing or brown accents, travel theme, fresh florals. Baker does no writing or fondant.\nPickupSat Oct 10, 11am, 109 S 4th Street, Brooklyn, NY 11249 (Williamsburg)\nCost$100: $50 deposit on Venmo @christieoxler to lock the order, $50 at pickup\nOpenSend $50 deposit. Confirm the 11am pickup time with Christie.",
       "prefix": "l (Oct 5)\nRegistryAmazon baby registry\n\n",
       "suffix": "\n\nGames\n\nBoarding passGuests guess birth",
       "context": "Cake",
-      "comment": "Make this more concise"
+      "comment": "Make this more concise",
+      "resolved": "2026-10-06T14:28:55Z",
+      "by": "Claude",
+      "reply": "Cut Cake from 6 rows to 4: merged baker and pickup, shortened cost and open item."
     },
     {
       "id": "cmuwrwwfamt5",
       "created": "2026-10-06T14:28:02.471Z",
-      "status": "open",
+      "status": "resolved",
       "section": "Games",
       "quote": "Boarding passGuests guess birth date, time, weight and hair on a boarding pass card. Closest wins after Nov.Printed cards, pens\nPavi or Rahul?Read 10 statements (\"who cries at movies\"). Guests hold up P or R. Most right wins.P/R paddles\nCustoms checkShow 5 registry items. Guests guess each price. Closest total wins.5 items, price list\nBaby photo matchShow Pavi and Rahul baby photos mixed with family ones. Guests match photo to person.8 to 10 printed photos\nLuggage tagsGuests write a wish or advice for the newest passenger. Keep as a keepsake.Blank tags, string",
       "prefix": "11am pickup time with Christie.\n\nGames\n\n",
       "suffix": "\n\n\n\n\n\n",
       "context": "Boarding pass | Guests guess birth date, time, weight and hair on a boarding pass card. Closest wins after Nov. | Printed cards, pens",
-      "comment": "can u update the latest from the artifact"
+      "comment": "can u update the latest from the artifact",
+      "resolved": "2026-10-06T14:28:55Z",
+      "by": "Claude",
+      "reply": "Synced from the artifact: 2044 time capsule replaces Baby photo match, added the capsule predictions and the 10 Pavi or Rahul? questions."
     }
   ]
 }
