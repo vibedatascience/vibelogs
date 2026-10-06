@@ -25,6 +25,17 @@
       "suffix": "Investigate →Active campaigns83−13.5%13 ",
       "context": "z = -3.8 against the prior 8 weeks. Down from $1.19M.",
       "comment": "no need to say z and all i think"
+    },
+    {
+      "id": "cmuwx1fbr3yv",
+      "created": "2026-10-06T16:51:31.671Z",
+      "status": "open",
+      "section": "Weekly business review",
+      "quote": "queries 9c7de1d0fd56, b282740bfacd, a87e10918d45",
+      "prefix": "k of Sep 21 vs Sep 14 · 12-week trend · ",
+      "suffix": "\n  MetricLast weekWoW12 weeksz\n  Ad reve",
+      "context": "Weekly business reviewweek of Sep 21 vs Sep 14 · 12-week trend · queries 9c7de1d0fd56, b282740bfacd, a87e10918d45 MetricLast weekWoW12 weeksz Ad revenueads$992.6K−16.5%-3.8InvestigateActive campaignsads83−13.5%-4.3InvestigateROASads4.16+8.9",
+      "comment": "what is this?"
     }
   ]
 }
