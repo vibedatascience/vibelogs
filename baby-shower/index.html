@@ -11,12 +11,33 @@ body{color:#16181d;font:14px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Rob
 .page{max-width:960px;margin:0 auto;padding-inline:24px;padding-block:48px}
 h1{margin:0;font-family:Georgia,"Times New Roman",serif;font-weight:500;font-size:clamp(2rem,5vw,3rem);line-height:1.1;letter-spacing:-.01em}
 .src{position:absolute;top:2px;right:6px;color:#fff;font-size:10px;text-decoration:none}
+.sub{margin:8px 0 0;color:#6b7280;font-size:14px}
+.sub b{color:#E60023;font-weight:600}
+table{border-collapse:collapse;width:100%;margin-top:28px;font-size:14px}
+th{text-align:left;font-weight:600;color:#6b7280;font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:8px 16px 8px 0;border-bottom:1px solid #e7e9ed;white-space:nowrap;vertical-align:top;width:1%}
+td{padding:8px 0;border-bottom:1px solid #e7e9ed;vertical-align:top}
+a{color:#0a3069}
+.num{font-variant-numeric:tabular-nums;font-weight:600}
+.done{color:#6b7280}
 </style>
 </head>
 <body>
 <a class="src" href="https://claude.ai/code/session_01Xp8PVrmBtKubV3gAQQjeFv">source</a>
 <main class="page">
 <h1>Baby Shower 10th October</h1>
+<p class="sub">PnR baby shower. Seemantham ceremony and baby shower together. <b id="cd"></b></p>
+<table>
+<tr><th>When</th><td>Saturday, Oct 10, 2026, 11:30am</td></tr>
+<tr><th>Where</th><td>52-03 Center Blvd, Club Room, Long Island City, NY</td></tr>
+<tr><th>Guests</th><td><span class="num">34</span> going, <span class="num">3</span> maybe (Partiful, Oct 5)</td></tr>
+<tr><th>RSVP by</th><td class="done">Oct 3 (closed)</td></tr>
+<tr><th>Invite</th><td><a href="https://partiful.com/e/eRW9HayD6nsmL09eLGhc">Partiful event</a> · <a href="https://partiful.com/events/eRW9HayD6nsmL09eLGhc/edit">edit</a></td></tr>
+<tr><th>Registry</th><td><a href="https://www.amazon.com/baby-reg/pavirahul-chaudhary-november-2026-longislandcity/TZAXTEJC38FG">Amazon baby registry</a></td></tr>
+</table>
 </main>
+<script>
+(function(){var t=new Date('2026-10-10T11:30:00-04:00'),n=new Date(),d=Math.ceil((t-n)/864e5),e=document.getElementById('cd');
+if(d>1)e.textContent=d+' days to go.';else if(d===1)e.textContent='Tomorrow.';else if(t-n>-6*36e5)e.textContent='Today.';})();
+</script>
 </body>
 </html>
