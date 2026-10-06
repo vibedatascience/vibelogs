@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Comments</title>
+<style>
+html,body{background:#fff;margin:0}
+body{color:#16181d;font:13px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;padding:16px 12px}
+.src{position:absolute;top:2px;right:6px;color:#fff;font-size:10px;text-decoration:none}
+h1{margin:0 0 4px;font:500 22px Georgia,"Times New Roman",serif}
+.sub{color:#64748b;margin-bottom:12px}
+a{color:#0a3069}
+button{font:inherit;border:1px solid #cbd5e1;background:#fff;border-radius:4px;padding:3px 8px;cursor:pointer}
+table{border-collapse:collapse;width:100%}
+th{text-align:left;color:#64748b;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;padding:6px 10px 6px 0;border-bottom:1px solid #e2e8f0}
+td{padding:6px 10px 6px 0;border-bottom:1px solid #f1f5f9;vertical-align:top}
+td.pg{white-space:nowrap}
+.q{color:#475569;font-style:italic;border-left:2px solid #E60023;padding-left:6px}
+.res td{color:#94a3b8}.res .q{border-left-color:#cbd5e1}
+.rp{color:#0d9488}
+.n{color:#E60023;font-weight:600}
+.err{color:#E60023}
+</style>
+</head>
+<body>
+<a class="src" href="https://claude.ai/code/session_01MX5NL7rmjuMgsTW54KY9Um">source</a>
+<h1>Comments</h1>
+<div class="sub">Open any page as <b>/&lt;page&gt;/comments</b> to comment on it. <span id="sum"></span> <button id="copy">Copy all open</button> <label><input type="checkbox" id="showres"> show resolved</label></div>
+<table><thead><tr><th>Page</th><th>Section</th><th>On</th><th>Comment</th><th>When</th></tr></thead><tbody id="rows"><tr><td colspan="5">Loading...</td></tr></tbody></table>
+<script>
+(function () {
+  var REPO = 'vibedatascience/vibelogs', API = 'https://api.github.com/repos/' + REPO + '/contents/comments?ref=main';
+  var tok = ''; try { tok = localStorage.getItem('vlc:token') || ''; } catch (e) {}
+  var hdr = tok ? { Authorization: 'Bearer ' + tok, Accept: 'application/vnd.github+json' } : { Accept: 'application/vnd.github+json' };
+  var files = [];
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function dec(s) { var b = atob(s.replace(/\s/g, '')), u = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return new TextDecoder().decode(u); }
+  function load(f) {
+    if (tok) return fetch(f.url, { headers: hdr, cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) { return JSON.parse(dec(j.content)); });
+    return fetch('/comments/' + f.name + '?_=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); });
+  }
+  function cmUrl(d) { return d.comment_mode || (d.page + 'comments'); }
+  function draw() {
+    var res = document.getElementById('showres').checked, rows = [], open = 0, pages = 0;
+    files.forEach(function (d) {
+      var cs = (d.comments || []).filter(function (c) { return res || c.status === 'open'; });
+      var o = (d.comments || []).filter(function (c) { return c.status === 'open'; }).length;
+      open += o; if (o) pages++;
+      cs.forEach(function (c, i) {
+        rows.push('<tr class="' + (c.status === 'open' ? '' : 'res') + '"><td class="pg">' + (i ? '' : '<a href="' + esc(cmUrl(d)) + '">' + esc(d.page) + '</a>' + (o ? ' <span class="n">' + o + '</span>' : '')) + '</td>' +
+          '<td>' + esc(c.section || (c.quote ? '' : 'Whole page')) + '</td>' +
+          '<td>' + (c.quote ? '<div class="q">' + esc(c.quote.slice(0, 160)) + '</div>' : '') + '</td>' +
+          '<td>' + esc(c.comment) + (c.reply ? '<div class="rp">&#8627; ' + esc((c.by ? c.by + ': ' : '') + c.reply) + '</div>' : '') + '</td>' +
+          '<td>' + esc((c.created || '').slice(0, 10)) + '</td></tr>');
+      });
+    });
+    document.getElementById('sum').innerHTML = '<span class="n">' + open + '</span> open on ' + pages + ' page' + (pages === 1 ? '' : 's') + '.';
+    document.getElementById('rows').innerHTML = rows.join('') || '<tr><td colspan="5">No comments.</td></tr>';
+  }
+  document.getElementById('showres').onchange = draw;
+  document.getElementById('copy').onclick = function () {
+    var out = ['Open comments on rahulch.site. Files in comments/ in github.com/' + REPO + '. Steps: COMMENTS.md.', ''];
+    files.forEach(function (d) {
+      var cs = (d.comments || []).filter(function (c) { return c.status === 'open'; });
+      if (!cs.length) return;
+      out.push(location.origin + d.page);
+      cs.forEach(function (c, i) {
+        out.push((i + 1) + '. [' + (c.section || (c.quote ? 'no heading' : 'Whole page')) + ']' + (c.quote ? ' on "' + c.quote.replace(/\s+/g, ' ').trim() + '"' : ''));
+        out.push('   Comment: ' + c.comment.replace(/\n/g, '\n   '));
+        out.push('   id: ' + c.id);
+      });
+      out.push('');
+    });
+    navigator.clipboard.writeText(out.join('\n')).then(function () { var b = document.getElementById('copy'); b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy all open'; }, 1500); });
+  };
+  fetch(API, { headers: hdr, cache: 'no-store' }).then(function (r) {
+    if (r.status === 404) return [];
+    if (!r.ok) throw new Error('GitHub ' + r.status);
+    return r.json();
+  }).then(function (list) {
+    list = list.filter(function (f) { return /\.json$/.test(f.name); });
+    return Promise.all(list.map(function (f) { return load(f).catch(function () { return null; }); }));
+  }).then(function (ds) {
+    files = ds.filter(Boolean).sort(function (a, b) { return a.page < b.page ? -1 : 1; });
+    draw();
+  }).catch(function (e) {
+    document.getElementById('rows').innerHTML = '<tr><td colspan="5" class="err">Could not list comments (' + esc(e.message) + ').</td></tr>';
+  });
+})();
+</script>
+</body>
+</html>
