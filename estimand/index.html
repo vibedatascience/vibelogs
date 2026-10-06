@@ -15,6 +15,7 @@
 :root{
   --bg:#e9ecf1; --app:#f7f8fa; --surface:#ffffff; --sunk:#f0f2f6; --ink:#0e1525; --muted:#586174; --faint:#8b93a3; --line:#e1e5ec;
   --accent:#e60023; --accent-bg:#fde6ea; --navy:#0a3069; --navy-bg:#e6edf8; --teal:#0d9488; --teal-bg:#e0f3f0; --slate:#64748b; --amber:#b45309; --amber-bg:#fdf3e2;
+  --chrome:#dfe3e9;
   --code-bg:#0e1525; --code-ink:#d7deea; --code-k:#8fb0ff; --code-s:#5fd3c2; --code-c:#7f8aa0;
   --f-display:"Schibsted Grotesk","Helvetica Neue",Arial,sans-serif;
   --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -23,11 +24,11 @@
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#05070c; --app:#0c1018; --surface:#121825; --sunk:#0f141e; --ink:#e7ebf2; --muted:#9aa3b5; --faint:#6b7486; --line:#232b3b;
   --accent:#ff3355; --accent-bg:#3a1520; --navy:#8fb0ff; --navy-bg:#16223a; --teal:#3cc9b6; --teal-bg:#0f2d2a; --slate:#8794aa; --amber:#f0b158; --amber-bg:#2e2412;
-  --code-bg:#070a10; color-scheme:dark}}
+  --chrome:#161b26; --code-bg:#070a10; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#05070c; --app:#0c1018; --surface:#121825; --sunk:#0f141e; --ink:#e7ebf2; --muted:#9aa3b5; --faint:#6b7486; --line:#232b3b;
   --accent:#ff3355; --accent-bg:#3a1520; --navy:#8fb0ff; --navy-bg:#16223a; --teal:#3cc9b6; --teal-bg:#0f2d2a; --slate:#8794aa; --amber:#f0b158; --amber-bg:#2e2412;
-  --code-bg:#070a10; color-scheme:dark}
+  --chrome:#161b26; --code-bg:#070a10; color-scheme:dark}
 *{box-sizing:border-box}
 html,body{height:100%}
 body{background:var(--bg);color:var(--ink);font:400 14.5px/1.55 var(--f-body);-webkit-font-smoothing:antialiased;padding-block:12px;padding-inline:16px}
@@ -340,6 +341,52 @@ code{font-family:var(--f-mono);font-size:.88em}
 @media (max-width:1100px){.flags{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:820px){.cont{grid-template-columns:minmax(0,1fr)} .wbr tr .inv{opacity:1}}
 @media (max-width:520px){.flags{grid-template-columns:minmax(0,1fr)}}
+/* stage, demo strip, browser */
+html,body{height:100%}
+body{margin:0}
+.stage{height:100%;max-width:1500px;margin:0 auto;display:flex;flex-direction:column;gap:10px;min-height:0}
+.demo{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;padding:2px 2px}
+.dlbl{display:inline-flex;align-items:center;gap:7px;font:600 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.dlbl i{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.demo .tour{padding:7px 11px;font-size:12.5px}
+.demo .exs{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;gap:6px;flex:1 1 300px;min-width:0;scrollbar-width:none}
+.demo .exs::-webkit-scrollbar{display:none}
+.demo .exs button{display:inline-flex;grid-template-columns:none;width:auto;gap:6px;padding:5px 9px;border:1px solid var(--line);background:var(--surface);border-radius:999px;white-space:nowrap}
+.demo .exs b{font-size:12px;font-weight:500;max-width:22ch}
+.demo .exs em{font-size:9.5px}
+.demo .exs button[aria-current="true"]{border-color:var(--ink);background:var(--ink);color:var(--surface)}
+.demo .exs button[aria-current="true"] em{background:rgba(255,255,255,.18);color:inherit}
+.dctl{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-left:auto}
+.browser{flex:1;min-height:0;width:100%;display:flex;flex-direction:column;background:var(--chrome);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 1px 0 rgba(255,255,255,.4) inset,0 40px 80px -40px rgba(10,30,60,.5)}
+.bchrome{display:flex;align-items:flex-end;gap:14px;padding:8px 12px 0}
+.lights{display:flex;gap:7px;padding-bottom:12px}
+.lights i{width:11px;height:11px;border-radius:50%;background:#ff5f57}
+.lights i:nth-child(2){background:#febc2e}.lights i:nth-child(3){background:#28c840}
+.tabs{display:flex;align-items:flex-end;gap:6px;min-width:0;flex:1}
+.tab{display:flex;align-items:center;gap:8px;background:var(--surface);border-radius:9px 9px 0 0;padding:8px 12px;min-width:0;max-width:280px;font:500 12px/1 var(--f-body);color:var(--ink)}
+.tab .tt2{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.fav{flex:none;width:16px;height:16px;border-radius:4px;background:var(--accent);color:#fff;display:grid;place-items:center;font:800 10px/1 var(--f-display)}
+.tx{color:var(--faint);font-size:13px;margin-left:auto}
+.tadd{color:var(--muted);font:400 16px/1 var(--f-mono);padding:0 4px 9px}
+.btool{display:flex;align-items:center;gap:12px;background:var(--surface);padding:7px 12px;border-bottom:1px solid var(--line)}
+.bnav{display:flex;gap:10px;font:400 16px/1 var(--f-mono);color:var(--faint)}
+.bnav b{font-weight:400}
+.url{flex:1;min-width:0;display:flex;align-items:center;gap:7px;background:var(--sunk);border-radius:999px;padding:6px 14px;font:400 12.5px/1.2 var(--f-mono);overflow:hidden;white-space:nowrap}
+.url .host{color:var(--ink)}
+.url .path{color:var(--muted);overflow:hidden;text-overflow:ellipsis;transition:color .4s}
+.url .path.new{color:var(--accent)}
+.bav{flex:none;width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font:600 9.5px/1 var(--f-mono)}
+.bload{height:2px;background:var(--surface);position:relative;overflow:hidden}
+.bload i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--accent)}
+.bload.go i{animation:load .7s ease-out forwards}
+@keyframes load{0%{width:0;opacity:1}80%{width:100%;opacity:1}100%{width:100%;opacity:0}}
+.browser .app{flex:1;height:auto;min-height:0;max-width:none;width:100%;margin:0;border:0;border-radius:0;box-shadow:none}
+.recent{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px}
+.recent button{width:100%;text-align:left;border:0;background:none;border-radius:8px;padding:7px 9px;font:400 13px/1.3 var(--f-body);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.recent button:hover{background:var(--sunk);color:var(--ink)}
+.recent button[aria-current="true"]{background:var(--sunk);color:var(--ink);font-weight:500}
+.cap{margin:0;text-align:center;font:400 11px/1.4 var(--f-mono);color:var(--faint)}
+@media (max-width:820px){.bchrome{display:none}.browser{border-radius:0;border-inline:0}.demo{padding-inline:12px}.cap{padding-inline:12px}.dctl{margin-left:0}}
 @media (max-width:1100px){
   .app,.app.dopen{grid-template-columns:232px minmax(0,1fr)}
   .drawer{position:absolute;inset:0 0 0 auto;width:min(620px,100%);z-index:25;transform:translateX(105%);transition:transform .4s ease;box-shadow:-20px 0 50px -30px rgba(0,0,0,.5)}
@@ -359,13 +406,29 @@ code{font-family:var(--f-mono);font-size:.88em}
 <body>
 
 
+<div class="stage">
+<div class="demo" aria-label="Demo controls">
+  <span class="dlbl"><i></i>Product demo</span>
+  <button class="tour" type="button" id="tour">▶ Play tour</button>
+  <ul class="exs" id="exs"></ul>
+  <div class="dctl">
+      <div class="rec" aria-live="polite"><span class="live" id="live"><i></i><span id="liveT">Replaying</span></span><span class="clock" id="clock">0:00</span></div>
+      <div class="seg" role="group" aria-label="Playback speed"><button type="button" data-sp="1" aria-pressed="false">1x</button><button type="button" data-sp="4" aria-pressed="true">4x</button><button type="button" data-sp="10" aria-pressed="false">10x</button></div>
+      <button class="pz" type="button" id="pause" aria-pressed="false">❚❚ Pause</button>
+      <button class="rp" type="button" id="replay">Replay</button>
+  </div>
+</div>
+<div class="browser">
+  <div class="bchrome"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><div class="tabs"><div class="tab"><span class="fav">E</span><span class="tt2" id="tabT">Home · Estimand</span><span class="tx" aria-hidden="true">×</span></div><span class="tadd" aria-hidden="true">+</span></div></div>
+  <div class="btool"><span class="bnav" aria-hidden="true"><b>‹</b><b>›</b><b>↻</b></span><div class="url" id="url"><svg width="11" height="12" viewBox="0 0 11 12" aria-hidden="true"><rect x="1" y="5" width="9" height="6.5" rx="1.5" style="fill:var(--muted)"/><path d="M3 5V3.6a2.5 2.5 0 015 0V5" style="fill:none;stroke:var(--muted);stroke-width:1.4"/></svg><span class="host">app.estimand.com</span><span class="path" id="urlP">/home</span></div><span class="bav" id="tbAv">JL</span></div>
+  <div class="bload" id="bload"><i></i></div>
 <div class="app" id="app">
   <aside class="side" aria-label="Sidebar">
     <span class="logo">Estim<span class="hat">a</span>nd</span>
     <button class="navb" type="button" id="homeB" aria-current="true"><i>⌂</i>Home</button>
-    <button class="tour" type="button" id="tour">▶ Play full tour</button>
-    <div class="slbl">Examples</div>
-    <ul class="exs" id="exs"></ul>
+    <button class="navb" type="button" id="newB"><i>+</i>New question</button>
+    <div class="slbl">Recent</div>
+    <ul class="recent" id="recent"></ul>
     <div class="slbl">Data source</div>
     <div class="src" id="src">
       <div class="row"><b><span class="dot"></span>Pinlake</b><span>semantic layer</span></div>
@@ -386,20 +449,19 @@ code{font-family:var(--f-mono);font-size:.88em}
   <section class="main" id="main">
     <div class="mbar">
       <h1 id="ttl">New question</h1>
-      <div class="rec" aria-live="polite"><span class="live" id="live"><i></i><span id="liveT">Replaying</span></span><span class="clock" id="clock">0:00</span></div>
-      <div class="seg" role="group" aria-label="Playback speed"><button type="button" data-sp="1" aria-pressed="false">1x</button><button type="button" data-sp="4" aria-pressed="true">4x</button><button type="button" data-sp="10" aria-pressed="false">10x</button></div>
-      <button class="pz" type="button" id="pause" aria-pressed="false">❚❚ Pause</button>
-      <button class="rp" type="button" id="replay">Replay</button>
+
     </div>
     <div class="thread" id="thread"><div class="tin" id="tin"></div></div>
     <div class="comp">
       <div class="box" id="box"><div class="inp" id="inp"><span class="ph">Ask about ads, engagement, search or growth…</span></div><button class="send" id="send" type="button" aria-label="Send">↑</button></div>
-      <div class="chint">Recorded against Pinlake on Oct 6, 2026. Queries, ids, SQL, rows and the 403 are real API responses; timing, people and sharing are simulated.</div>
     </div>
   </section>
 
   <aside class="drawer" id="drawer" aria-label="Artifact"></aside>
   <div class="cur" id="cur" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22"><path d="M3 2l14 8-6.2 1.6L8 18z" style="fill:#0e1525;stroke:#fff;stroke-width:1.4;stroke-linejoin:round"/></svg></div>
+</div>
+</div>
+<p class="cap">Recorded against Pinlake on Oct 6, 2026. Queries, ids, SQL, rows and the 403 are real API responses; timing, people and sharing are simulated.</p>
 </div>
 
 <script>
@@ -593,7 +655,7 @@ const SECS=[
  ["What to watch","chart",()=>`<div class="chart">${daily()}</div><p>Sep 30 ran at ${K(F.sep30_rev)} a day across ${F.sep30_camps} campaigns. October opens lower unless new campaigns launch.</p>`],
  ["Method","6 queries",()=>`<p>Six governed queries against Pinlake's <code>/v1/query</code>; campaigns matched across months; totals reconciled to the cent. Open question: Pinlake has no planned campaign end dates.</p>`]];
 async function buildReport(){
- openDrawer(REPORT());await sleep(700);const doc=$("#doc");
+ openDrawer(REPORT());route("/reports/sep-ad-revenue-campaign-turnover","September ad revenue report");await sleep(700);const doc=$("#doc");
  for(const [h,tag,f] of SECS){const s=el("div","sec",`<h3>${h}${tag?` <span>${tag}</span>`:""}</h3><div class="pend"></div><div class="pend"></div>`);doc.appendChild(s);$(".dbody").scrollTop=1e6;await sleep(700);s.innerHTML=`<h3>${h}${tag?` <span>${tag}</span>`:""}</h3>${f()}`;await sleep(500)}
  $(".dbody").scrollTop=0}
 
@@ -609,12 +671,17 @@ const DASH=()=>{const lowDays=D.daily.d.filter((d,i)=>D.daily.rev[i]<THR);return
 </div></div>`};
 const KPIS=[["Ad revenue, Sep",M(F.sep_total),sg(dropPct)+" vs Aug","dn"],["Daily revenue, Sep 30",K(F.sep30_rev),"below $130K alert line","dn",1],["Active campaigns, Sep 30",String(F.sep30_camps),"Aug avg "+Math.round(F.aug_avg_camps),"dn"],["ROAS, Sep",F.roas_sep.toFixed(2),"12-month high","up"]];
 async function buildDash(){
- openDrawer(DASH());await sleep(600);const k=$("#kpis");
+ openDrawer(DASH());route("/dashboards/ads-health","Ads Health");await sleep(600);const k=$("#kpis");
  for(const [l,v,d,c,a] of KPIS){k.insertAdjacentHTML("beforeend",`<div class="kpi${a?" alert":""}"><small>${l}</small><b>${v}</b><span class="${c}">${d}</span></div>`);await sleep(350)}
  $("#refT").textContent="last refresh: Oct 6, 6:00 AM ET"}
 
 /* ---------- modal ---------- */
 function modal(html){const s=el("div","scrim",`<div class="modal">${html}</div>`);app.appendChild(s);return s}
+
+/* ---------- browser routing ---------- */
+const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,48);
+function route(path,title){const p=$("#urlP");if(p.textContent!==path){p.textContent=path;p.classList.add("new");setTimeout(()=>p.classList.remove("new"),900);const b=$("#bload");b.classList.remove("go");void b.offsetWidth;b.classList.add("go")}$("#tabT").textContent=(title||"Estimand")+" · Estimand";document.title="Estimand on Pinlake"}
+function setT(t){$("#ttl").textContent=t;route("/c/"+slug(t),t)}
 
 /* ================= HOME ================= */
 const H=D.H;
@@ -635,7 +702,7 @@ function statusOf(c){if(c.last<"2026-09-01")return `<span class="st2 off"><i></i
 const mon3=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];const day=d=>mon3[+d.slice(5,7)-1]+" "+(+d.slice(8));
 function renderHome(){
  closeDrawer();tin.className="tin wide";tin.innerHTML="";setInput("",false);inp.innerHTML='<span class="ph">Ask anything about Pinlake…</span>';
- $("#ttl").textContent="Home";setUser("Jordan Lee","JL","VP, Ads");$("#roleT").textContent="analyst";$("#metT").textContent="29";$("#rfT").textContent="none";
+ route("/home","Home");$("#ttl").textContent="Home";setUser("Jordan Lee","JL","VP, Ads");$("#roleT").textContent="analyst";$("#metT").textContent="29";$("#rfT").textContent="none";
  const own=H.own.slice().sort((a,b)=>b.q3-a.q3);
  tin.innerHTML=`<div class="home" id="home">
  <div class="hhead"><div><h2>Good morning, Jordan.</h2><p>Four metrics need a look, and two of your campaigns stopped delivering in late September.</p></div><div class="asof">Tue, Oct 6 · WBR week Sep 21 to 27<br>Pinlake data through Sep 30</div></div>
@@ -658,14 +725,14 @@ async function prefill(q){goHome();await new Promise(r=>setTimeout(r,50));setInp
 
 /* ================= FLOWS ================= */
 const Q1="Why did ad revenue drop in September?";
-function setUser(n,i,r){$("#meN").textContent=n;$("#meAv").textContent=i;$("#meR").textContent=r}
+function setUser(n,i,r){$("#tbAv").textContent=i;$("#meN").textContent=n;$("#meAv").textContent=i;$("#meR").textContent=r}
 function setRole(role,met,rf){$("#roleT").textContent=role;$("#metT").textContent=met;$("#rfT").textContent=rf;const s=$("#src");s.classList.add("hot");setTimeout(()=>s.classList.remove("hot"),1400)}
-function newChat(sugg){tin.className="tin";tin.innerHTML=`<div class="empty"><h2>What do you want to know?</h2><p>Ask in plain English. Estimand reads your team's context, queries Pinlake's governed metrics, and shows every step.</p><div class="sugg">${sugg.map(s=>`<span>${s}</span>`).join("")}</div></div>`;closeDrawer();setInput("",false);$("#ttl").textContent="New question"}
+function newChat(sugg){tin.className="tin";tin.innerHTML=`<div class="empty"><h2>What do you want to know?</h2><p>Ask in plain English. Estimand reads your team's context, queries Pinlake's governed metrics, and shows every step.</p><div class="sugg">${sugg.map(s=>`<span>${s}</span>`).join("")}</div></div>`;closeDrawer();setInput("",false);$("#ttl").textContent="New question";route("/new","New question")}
 
 async function flowRevenue(){
  setUser("Jordan Lee","JL","VP, Ads");setRole("analyst","29","none");
  newChat(["Top 5 industries by ROAS in 2026","MAU trend by user type",Q1]);
- await sleep(1000);await ask(Q1);$("#ttl").textContent=Q1;agent();
+ await sleep(1000);await ask(Q1);setT(Q1);agent();
  await ctx("c1",[
   ["catalog",`Pinlake <code>/v1/catalog</code> as analyst`,"29 metrics, 29 dimensions, raw SQL allowed, no row filters"],
   ["metric",`<code>ad_revenue</code>`,"SUM(spend_usd) on marts.fct_ad_performance_daily"],
@@ -730,7 +797,7 @@ async function flowReport(){
  sysLine(`Report shared with <b>Maya Kim, Dev Patel, Sam Ortiz, Rosa Alvarez</b> and <b>#ads-leadership</b>`);await sleep(1600)}
 
 async function flowDash(){
- closeDrawer();await sleep(500);
+ closeDrawer();setT(Q1);await sleep(500);
  await ask("Publish a dashboard that tracks this daily, and alert me if revenue drops under $130K a day");agent();
  await ctx("c3",[["metric",`<code>ad_revenue</code>, <code>active_campaigns</code>, <code>roas</code>`,"grain: day; refreshed in Pinlake nightly"],["thread","this conversation","waterfall and daily charts reused as panels"]],"Reading dashboard context");
  await sql("q6","Daily revenue and active campaigns (dashboard source)","ads_day",prev("ads_day",r=>r[1]<THR),{metrics:"ad_revenue, active_campaigns",wait:900});
@@ -751,7 +818,7 @@ async function flowDash(){
  sysLine(`<b>Ads Health</b> is live · refreshes daily 6:00 AM ET · posted to #ads-leadership`);await sleep(1600)}
 
 async function flowExpert(){
- closeDrawer();await sleep(400);
+ closeDrawer();setT(Q1);await sleep(400);
  await ask("Can a data scientist check this before Monday?");agent();
  status("packaging context");const s=step("t","e1","Packaging the work for review…");await sleep(1200);
  title(s,"Packaged for review");body(s,`<ul class="as"><li>Question, answer and report link</li><li>6 queries with SQL, row counts and query ids</li><li>4 stated assumptions · 1 rejected hypothesis</li><li>Open question: campaigns are matched by name; Pinlake exposes no campaign_id dimension</li></ul>`);fin(s);await sleep(1200);
@@ -764,7 +831,7 @@ async function flowExpert(){
  const xm=$("#xm");
  for(const l of lines){const p=el("p","","");xm.appendChild(p);const w=l.split(" ");if(FAST)p.textContent=l;else for(let i=1;i<=w.length;i++){p.textContent=w.slice(0,i).join(" ");scrollEnd();await sleep(70)}await sleep(500)}
  await sleep(600);
- openDrawer(REPORT());const doc=$("#doc");SECS.forEach(([h,t,f])=>doc.insertAdjacentHTML("beforeend",`<div class="sec"><h3>${h}${t?` <span>${t}</span>`:""}</h3>${f()}</div>`));
+ openDrawer(REPORT());route("/reports/sep-ad-revenue-campaign-turnover?review=priya-raman","September ad revenue report");const doc=$("#doc");SECS.forEach(([h,t,f])=>doc.insertAdjacentHTML("beforeend",`<div class="sec"><h3>${h}${t?` <span>${t}</span>`:""}</h3>${f()}</div>`));
  $("#rStat").className="pill ok";$("#rStat").textContent="Shared · 5";await sleep(700);
  $("#revw").innerHTML=`<div class="revw"><span class="av">PR</span><span><b>Reviewed by Priya Raman</b>, Ads Data Science · Oct 6 · "Reconciliation holds; end dates requested from Sales Ops."</span></div>`;
  $("#rStat").textContent="Reviewed ✓";
@@ -774,7 +841,7 @@ async function flowExpert(){
 async function flowIOS(){
  setUser("Jordan Lee","JL","VP, Ads");setRole("analyst","29","none");
  newChat(["Monthly saves and save rate on iOS","Outbound CTR by surface","Is iOS save rate slipping?"]);
- const QI="Is iOS save rate slipping?";await sleep(900);await ask(QI);$("#ttl").textContent=QI;agent();
+ const QI="Is iOS save rate slipping?";await sleep(900);await ask(QI);setT(QI);agent();
  await ctx("c4",[["metric",`<code>save_rate</code>`,"saves / impressions on marts.fct_pin_engagement"],["dimension",`<code>pin_engagement.platform</code>, <code>.surface</code>`,"ios, android, web; 5 surfaces"],["skill",`<code>engagement-rate-tests.md</code>`,"compare rates with a two-proportion test; check other platforms as controls"],["learning","from a past chat","Pinlake has no app release log"]]);
  await assume("a4",["Save rate = saves / organic impressions","Monthly, Oct 2025 to Sep 2026","Android and web act as controls for iOS-only changes"]);
  await sql("q7","Saves, impressions and save rate by month and platform","plat_month",table(["month","platform","saves","impressions","save_rate"],[["2026-04","ios",333,7729,333/7729],["2026-05","ios",320,8504,320/8504],["2026-05","android",288,7686,288/7686]],r=>r[0]==="2026-05"&&r[1]==="ios"),{metrics:"saves, impressions, save_rate"});
@@ -803,7 +870,7 @@ async function flowGov(){
  setUser("Sam Ortiz","SO","Ads Sales, North America");setRole("ads_sales_na","13","US, CA, MX");
  newChat(["Ad revenue by country last quarter","Top advertisers by ROAS","CPM by platform"]);
  sysLine(`Signed in as <b>Sam Ortiz</b> · Pinlake role <b>ads_sales_na</b>`);
- await sleep(900);await ask(QG);$("#ttl").textContent=QG;agent();
+ await sleep(900);await ask(QG);setT(QG);agent();
  await ctx("c5",[["catalog",`Pinlake <code>/v1/catalog</code> as ads_sales_na`,"13 ads metrics; no engagement or growth metrics; raw SQL off"],["policy","row filter","ad_performance.country in (US, CA, MX), applied by Pinlake"]],"Reading role and catalog");
  await sql("q9","Ad revenue, ROAS and CPM by country, Jul 1 to Sep 30","na_country",table(["country","ad_revenue","roas","cpm"],X.na),{metrics:"ad_revenue, roas, cpm",role:"ads_sales_na",wait:1100});
  await closeWork();
@@ -839,8 +906,9 @@ const EX=[
  {t:"Ask a data scientist to review",tag:"expert",c:"exp",pre:[0,1],f:flowExpert},
  {t:"Is iOS save rate slipping?",tag:"analysis",c:"",pre:[],f:flowIOS},
  {t:"Same question, three roles",tag:"governance",c:"gov",pre:[],f:flowGov}];
+$("#recent").innerHTML=EX.map((e,i)=>`<li><button type="button" data-ex="${i}" aria-current="false">${esc(e.t)}</button></li>`).join("");
 $("#exs").innerHTML=EX.map((e,i)=>`<li><button type="button" data-ex="${i}" aria-current="false"><b>${esc(e.t)}</b><em class="${e.c}">${e.tag}</em></button></li>`).join("");
-const mark=i=>{document.querySelectorAll("#exs button").forEach(b=>b.setAttribute("aria-current",+b.dataset.ex===i));if(i>=0)$("#homeB").setAttribute("aria-current","false")};
+const mark=i=>{document.querySelectorAll("[data-ex]").forEach(b=>b.setAttribute("aria-current",+b.dataset.ex===i));if(i>=0)$("#homeB").setAttribute("aria-current","false")};
 
 async function play(i,tour){
  const my=++RUN;simT=0;running=true;FAST=false;PAUSED=false;setPause(false);hideCur();app.querySelectorAll(".scrim,.toast").forEach(x=>x.remove());
@@ -874,6 +942,7 @@ document.addEventListener("click",e=>{
 });
 $("#tour").addEventListener("click",()=>play(0,true));
 $("#homeB").addEventListener("click",goHome);
+$("#newB").addEventListener("click",()=>{goHome();newChat(["Top 5 industries by ROAS in 2026","MAU trend by user type","Why did ad revenue drop in September?"]);inp.innerHTML='<span class="ph">Ask about ads, engagement, search or growth…</span>';$("#homeB").setAttribute("aria-current","false")});
 $("#pause").addEventListener("click",()=>{if(running)setPause(!PAUSED)});
 $("#replay").addEventListener("click",()=>play(+(document.querySelector('#exs [aria-current="true"]')?.dataset.ex||0),false));
 renderHome();$("#live").className="live idle";$("#liveT").textContent="Home";
