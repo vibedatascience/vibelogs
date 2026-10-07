@@ -27,19 +27,24 @@ main{flex:1;display:flex;flex-direction:column;justify-content:center;padding-to
 h1{font-weight:400;font-size:clamp(1.7rem,3.7vw,2.85rem);line-height:1.2;letter-spacing:-.018em;max-width:23em;color:#2b2b2b}
 h1 strong{font-weight:650;color:var(--ink)}
 
-.work{margin-top:clamp(40px,7vh,72px);display:flex;flex-wrap:wrap;align-items:center;gap:16px 34px}
-.co{display:inline-flex;align-items:center;gap:9px;font-stretch:108%;font-weight:600;font-size:16.5px;color:#8a8a8a;transition:color .2s}
-.co img{width:22px;height:22px;border-radius:5px;filter:grayscale(1);opacity:.6;transition:filter .2s,opacity .2s}
-.co:hover{color:var(--ink)}
+.work{margin-top:clamp(32px,5vh,52px);font-size:18px;line-height:2;color:#8a8a8a}
+.co{position:relative;display:inline-block;vertical-align:middle;margin:0 3px;line-height:0}
+.co img{width:24px;height:24px;border-radius:6px;filter:grayscale(1);opacity:.55;transition:filter .2s,opacity .2s}
+.co.now{margin:0 0 0 4px}
+.logos{white-space:nowrap}
+.co.now img{filter:none;opacity:1}
 .co:hover img{filter:none;opacity:1}
+.co::after{content:attr(data-name);position:absolute;left:50%;top:calc(100% + 6px);transform:translateX(-50%);font-size:12px;line-height:1;white-space:nowrap;color:var(--ink);opacity:0;pointer-events:none;transition:opacity .15s}
+.co:hover::after{opacity:1}
 
 @media (max-width:600px){
   .wrap,.top{padding-left:18px;padding-right:18px}
   main{justify-content:flex-start;padding-top:12vh;padding-bottom:8vh}
-  .work{gap:14px 24px}
-  .co{font-size:15px}
+  .work{font-size:15px}
+  .co{margin:0 2px}
+  .co img{width:20px;height:20px;border-radius:5px}
 }
-@media (prefers-reduced-motion:reduce){.co,.co img{transition:none}}
+@media (prefers-reduced-motion:reduce){.co img,.co::after{transition:none}}
 </style>
 </head>
 <body>
@@ -59,15 +64,14 @@ h1 strong{font-weight:650;color:var(--ink)}
 <main class="wrap">
   <h1>Hi! I am <strong>Rahul</strong> and I work as a Data Scientist by profession and my interests lie in <strong>Agentic Data Science</strong>, <strong>Building Applied AI Products</strong>, and testing the frontiers of <strong>Data Visualization</strong>.</h1>
 
-  <div class="work" aria-label="Companies I have worked at">
-    <span class="co"><img src="https://www.google.com/s2/favicons?domain=pinterest.com&amp;sz=64" alt="">Pinterest</span>
-    <span class="co"><img src="https://www.google.com/s2/favicons?domain=grammarly.com&amp;sz=64" alt="">Grammarly</span>
-    <span class="co"><img src="https://www.google.com/s2/favicons?domain=airbnb.com&amp;sz=64" alt="">Airbnb</span>
-    <span class="co"><img src="https://www.google.com/s2/favicons?domain=facebook.com&amp;sz=64" alt="">Facebook</span>
-    <span class="co"><img src="https://www.google.com/s2/favicons?domain=amazon.com&amp;sz=64" alt="">Amazon</span>
-    <span class="co"><img src="https://www.google.com/s2/favicons?domain=8451.com&amp;sz=64" alt="">84.51°</span>
-    <span class="co"><img src="https://www.google.com/s2/favicons?domain=dunnhumby.com&amp;sz=64" alt="">dunnhumby</span>
-  </div>
+  <p class="work">Now at <span class="co now" data-name="Pinterest"><img src="https://www.google.com/s2/favicons?domain=pinterest.com&amp;sz=64" alt="Pinterest"></span>. Before that
+    <span class="logos"><span class="co" data-name="Grammarly"><img src="https://www.google.com/s2/favicons?domain=grammarly.com&amp;sz=64" alt="Grammarly"></span>
+    <span class="co" data-name="Airbnb"><img src="https://www.google.com/s2/favicons?domain=airbnb.com&amp;sz=64" alt="Airbnb"></span>
+    <span class="co" data-name="Facebook"><img src="https://www.google.com/s2/favicons?domain=facebook.com&amp;sz=64" alt="Facebook"></span>
+    <span class="co" data-name="Amazon"><img src="https://www.google.com/s2/favicons?domain=amazon.com&amp;sz=64" alt="Amazon"></span>
+    <span class="co" data-name="84.51°"><img src="https://www.google.com/s2/favicons?domain=8451.com&amp;sz=64" alt="84.51°"></span>
+    <span class="co" data-name="dunnhumby"><img src="https://www.google.com/s2/favicons?domain=dunnhumby.com&amp;sz=64" alt="dunnhumby"></span></span>
+  </p>
 </main>
 </body>
 </html>
