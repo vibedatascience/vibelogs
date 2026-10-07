@@ -7,24 +7,30 @@
     {
       "id": "cmuyqka4cv3g",
       "created": "2026-10-07T23:25:46.428Z",
-      "status": "open",
+      "status": "resolved",
       "section": "",
       "quote": "",
       "prefix": "",
       "suffix": "",
       "context": "",
-      "comment": "can u add like buy me a coffee logo very slyly on top right?"
+      "comment": "can u add like buy me a coffee logo very slyly on top right?",
+      "resolved": "2026-10-07T23:30:24.594Z",
+      "by": "Codex",
+      "reply": "Added a subtle coffee icon at the top right linking to your Buy Me a Coffee page."
     },
     {
       "id": "cmuyqkk3uzbw",
       "created": "2026-10-07T23:25:59.370Z",
-      "status": "open",
+      "status": "resolved",
       "section": "",
       "quote": "[2026-09-14]Rahul",
       "prefix": "\n\n\n\n  ",
       "suffix": "updated 2026-10-07REFERENCE\n  \n    DHS r",
       "context": "[2026-09-14]Rahulupdated 2026-10-07REFERENCE",
-      "comment": "remove this."
+      "comment": "remove this.",
+      "resolved": "2026-10-07T23:30:24.594Z",
+      "by": "Codex",
+      "reply": "Removed the original publication date and Rahul byline; kept the last-updated date."
     }
   ]
 }
