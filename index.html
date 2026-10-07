@@ -4,481 +4,70 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rahul's Site</title>
-<meta name="description" content="Rahul's apps, data visualizations, notes, and city walks.">
+<meta name="description" content="Rahul Chaudhary, data scientist. Agentic data science, applied AI products and data visualization.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
 <style>
-:root{
-  --paper:#FAFAF8;
-  --ink:#17171C;
-  --cobalt:#2545FF;
-  --muted:#6E6E76;
-  --rule:#E7E7E2;
-  --chip:#EEF1FF;
-}
+:root{--ink:#000;--muted:#757575;--rule:#e6e6e6;--focus:#1f4fff}
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  background:var(--paper);
-  color:var(--ink);
-  font-family:'Inter',system-ui,sans-serif;
-  font-size:16px;
-  line-height:1.6;
-}
-.wrap{max-width:720px;margin:0 auto;padding:0 24px}
-header{
-  padding:28px 0 20px;
-  display:flex;align-items:baseline;justify-content:space-between;gap:16px;
-}
-.brand{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
-.byline{
-  font-family:'IBM Plex Mono',monospace;
-  font-size:0.8rem;
-  letter-spacing:0.04em;
-  color:var(--muted);
-}
-.wordmark{
-  font-family:'Space Grotesk',sans-serif;
-  font-weight:700;
-  font-size:clamp(1.6rem,4vw,2.1rem);
-  letter-spacing:-0.03em;
-}
-.wordmark .cursor{
-  display:inline-block;
-  width:0.5em;height:0.08em;
-  background:var(--cobalt);
-  vertical-align:baseline;
-  margin-left:6px;
-  animation:blink 1.1s steps(1) infinite;
-}
-@keyframes blink{50%{opacity:0}}
-@media (prefers-reduced-motion:reduce){.wordmark .cursor{animation:none}}
-nav.filters{
-  display:flex;flex-wrap:wrap;gap:8px;
-  padding:20px 0 8px;
-  border-top:1px solid var(--rule);
-}
-.filters button{
-  font-family:'IBM Plex Mono',monospace;
-  font-size:0.75rem;
-  letter-spacing:0.04em;
-  background:none;border:1px solid var(--rule);
-  color:var(--muted);
-  padding:5px 12px;border-radius:999px;
-  cursor:pointer;
-  transition:all .15s;
-}
-.filters button:hover{border-color:var(--cobalt);color:var(--cobalt)}
-.filters button.active{background:var(--cobalt);border-color:var(--cobalt);color:#fff}
-.filters button:focus-visible{outline:2px solid var(--cobalt);outline-offset:2px}
-main{padding:16px 0 80px}
-.month{
-  font-family:'IBM Plex Mono',monospace;
-  font-size:0.72rem;letter-spacing:0.14em;
-  text-transform:uppercase;
-  color:var(--muted);
-  margin:36px 0 10px;
-}
-.entry{
-  display:block;
-  text-decoration:none;color:inherit;
-  padding:16px 0;
-  border-bottom:1px solid var(--rule);
-}
-.entry .meta{
-  font-family:'IBM Plex Mono',monospace;
-  font-size:0.75rem;
-  color:var(--muted);
-  display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;
-  margin-bottom:6px;
-}
-.entry .tag{
-  background:var(--chip);
-  color:var(--cobalt);
-  padding:1px 8px;border-radius:4px;
-  font-weight:500;
-}
-.entry h2{
-  font-family:'Space Grotesk',sans-serif;
-  font-weight:500;
-  font-size:1.25rem;
-  letter-spacing:-0.01em;
-  transition:color .15s;
-}
-.entry:hover h2{color:var(--cobalt)}
-.entry p{
-  color:var(--muted);
-  font-size:0.92rem;
-  margin-top:4px;
-}
-.empty{
-  font-family:'IBM Plex Mono',monospace;
-  font-size:0.85rem;color:var(--muted);
-  padding:40px 0;display:none;
-}
-footer{
-  border-top:1px solid var(--rule);
-  padding:28px 0 56px;
-  font-family:'IBM Plex Mono',monospace;
-  font-size:0.78rem;color:var(--muted);
-  display:flex;gap:20px;flex-wrap:wrap;
-}
-footer a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--rule)}
-footer a:hover{color:var(--cobalt);border-color:var(--cobalt)}
+html,body{background:#fff}
+body{color:var(--ink);font-family:'Archivo',system-ui,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+a{color:inherit;text-decoration:none}
+a:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+.wrap{width:100%;max-width:1080px;margin:0 auto;padding:0 28px}
 
-.topnav{
-  display:flex;justify-content:flex-end;gap:18px;
-  font-family:'IBM Plex Mono',monospace;
-  font-size:0.8rem;
+.top{display:flex;justify-content:space-between;align-items:center;padding:22px 28px}
+.name{font-stretch:118%;font-weight:750;font-size:15px;letter-spacing:-.01em}
+.links{display:flex;align-items:center;gap:18px;font-size:14.5px;color:var(--muted)}
+.links a:hover{color:var(--ink)}
+.links svg{display:block}
+
+main{flex:1;display:flex;flex-direction:column;justify-content:center;padding-top:6vh;padding-bottom:10vh}
+h1{font-weight:400;font-size:clamp(1.7rem,3.7vw,2.85rem);line-height:1.2;letter-spacing:-.018em;max-width:23em;color:#2b2b2b}
+h1 strong{font-weight:650;color:var(--ink)}
+
+.work{margin-top:clamp(40px,7vh,72px);display:flex;flex-wrap:wrap;align-items:center;gap:16px 34px}
+.co{display:inline-flex;align-items:center;gap:9px;font-stretch:108%;font-weight:600;font-size:16.5px;color:#8a8a8a;transition:color .2s}
+.co img{width:22px;height:22px;border-radius:5px;filter:grayscale(1);opacity:.6;transition:filter .2s,opacity .2s}
+.co:hover{color:var(--ink)}
+.co:hover img{filter:none;opacity:1}
+
+@media (max-width:600px){
+  .wrap,.top{padding-left:18px;padding-right:18px}
+  main{justify-content:flex-start;padding-top:12vh;padding-bottom:8vh}
+  .work{gap:14px 24px}
+  .co{font-size:15px}
 }
-.topnav a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--rule)}
-.topnav a.iconlink{border-bottom:none;display:inline-flex;align-items:center}
-.topnav a.iconlink svg{display:block}
-.topnav a:hover{color:var(--cobalt);border-color:var(--cobalt)}
-.controls{
-  display:flex;align-items:baseline;flex-wrap:wrap;gap:4px;
-  padding:12px 0 4px;
-  font-family:'IBM Plex Mono',monospace;
-  font-size:0.78rem;
-  color:var(--muted);
-}
-.ctl-label{margin-right:2px}
-.ctl-slash{color:var(--rule)}
-.ctl-dot{margin:0 10px;color:var(--rule)}
-.controls .ctl{
-  font-family:'IBM Plex Mono',monospace;
-  font-size:0.78rem;
-  background:none;border:none;
-  color:var(--muted);
-  padding:0 2px;
-  cursor:pointer;
-  border-bottom:1px solid transparent;
-  transition:color .15s;
-}
-.controls .ctl:hover{color:var(--cobalt)}
-.controls .ctl.active{color:var(--cobalt);border-bottom:1px solid var(--cobalt)}
-.gallery-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
-  gap:14px;margin-bottom:8px;
-}
-.gallery-grid .entry{
-  border:1px solid var(--rule);border-radius:10px;
-  padding:16px;border-bottom:1px solid var(--rule);
-  background:#fff;
-  transition:border-color .15s, box-shadow .15s;
-}
-.gallery-grid .entry:hover{border-color:var(--cobalt);box-shadow:0 2px 10px rgba(37,69,255,0.08)}
-.gallery-grid .entry{padding:0;overflow:hidden}
-.gallery-grid .entry .thumb{
-  width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;
-  display:block;border-bottom:1px solid var(--rule);
-  background:var(--chip);
-}
-.gallery-grid .entry .card-body{padding:12px 14px 14px}
-.gallery-grid .entry h2{font-size:1.02rem}
-.gallery-grid .entry p{font-size:0.85rem}
+@media (prefers-reduced-motion:reduce){.co,.co img{transition:none}}
 </style>
 </head>
 <body>
-<div class="wrap">
-<header>
-  <div class="brand">
-    <div class="wordmark">Rahul's Site<span class="cursor" aria-hidden="true"></span></div>
-  </div>
-  <nav class="topnav" aria-label="Site pages">
-    <a href="posts/links/">links</a>
-    <a href="all/">all</a>
-    <a href="https://www.linkedin.com/in/rahul-c-a83a3723" target="_blank" rel="noopener" aria-label="LinkedIn" class="iconlink">
-      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
+<div class="wrap top">
+  <a class="name" href="./">Rahul Chaudhary</a>
+  <nav class="links" aria-label="Links">
+    <a href="all/">all pages</a>
+    <a href="https://www.linkedin.com/in/rahul-c-a83a3723" target="_blank" rel="noopener" aria-label="LinkedIn">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
     </a>
-    <a href="https://buymeacoffee.com/rahulxc" target="_blank" rel="noopener" aria-label="Buy me a coffee" class="iconlink">
-      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v6a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
+    <a href="https://buymeacoffee.com/rahulxc" target="_blank" rel="noopener" aria-label="Buy me a coffee">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v6a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
     </a>
   </nav>
-</header>
-
-<nav class="filters" aria-label="Filter posts by category">
-  <button class="active" data-tag="all">All</button>
-  <button data-tag="apps-tools">Apps &amp; tools</button>
-  <button data-tag="data-visualizations">Data &amp; visualizations</button>
-  <button data-tag="economics">Economics</button>
-  <button data-tag="learning-tutorials">Learning &amp; tutorials</button>
-  <button data-tag="walks-places">Walks &amp; places</button>
-  <button data-tag="books-art-essays">Books, art &amp; essays</button>
-  <button data-tag="reference">Reference</button>
-</nav>
-
-<div class="controls" aria-label="View and grouping options">
-  <span class="ctl-label">view:</span><button class="ctl active" data-view="list">list</button><span class="ctl-slash">/</span><button class="ctl" data-view="gallery">gallery</button>
-  <span class="ctl-dot">·</span>
-  <span class="ctl-label">group by:</span><button class="ctl active" data-sort="date">date</button><span class="ctl-slash">/</span><button class="ctl" data-sort="category">category</button>
 </div>
 
-<main>
-  <div id="entries" hidden>
-  <a class="entry" data-date="2026-10-06" data-pin="0" data-tags="apps-tools" href="estimand/">
-    <div class="meta"><span>[2026-10-06]</span><span class="tag">Apps &amp; tools</span></div>
-    <h2>Estimand on Pinlake</h2>
-    <p>An AI data scientist on a governed semantic layer: home page, live SQL analysis, shared reports, dashboards, expert review and role-based access.</p>
-  </a>
-<a class="entry" data-date="2026-10-04" data-pin="0" data-tags="economics" href="posts/2026-10-04-treasury-bills/">
-  <div class="meta"><span>[2026-10-04]</span><span class="tag">Economics</span></div>
-  <h2>USA Treasuries: bills, notes and bonds</h2>
-  <p>What each one is, what $1,000 pays you, today's yields by term, how prices move if you sell early, and 90 years of rates.</p>
-</a>
-<a class="entry" data-date="2026-10-04" data-pin="0" data-tags="economics" href="posts/2026-10-04-who-pays-for-healthcare/">
-  <div class="meta"><span>[2026-10-04]</span><span class="tag">Economics</span></div>
-  <h2>Who pays for US healthcare?</h2>
-  <p>$5.3 trillion in 2024: what people with employer plans, ACA plans, Medicare, Medicaid or no insurance pay, and 65 years of who writes the check.</p>
-</a>
-<a class="entry" data-date="2026-10-04" data-pin="0" data-tags="economics" href="posts/2026-10-04-the-jobs-number/">
-  <div class="meta"><span>[2026-10-04]</span><span class="tag">Economics</span></div>
-  <h2>What is the US jobs report?</h2>
-  <p>What US payroll growth is, why it leads the front page, how to read September's +29k, and 87 years of monthly job growth by decade.</p>
-</a>
-<a class="entry" data-date="2026-10-02" data-pin="0" data-tags="data-visualizations" href="state-tiles/">
-  <div class="meta"><span>[2026-10-02]</span><span class="tag">Data &amp; visualizations</span></div>
-  <h2>State tiles</h2>
-  <p>Tile-grid maps of the fifty states over time: elections, the House, electricity, energy, taxes, jobs, homes, age and cities. Interactive, with data and code.</p>
-</a>
+<main class="wrap">
+  <h1>Hi! I am <strong>Rahul</strong> and I work as a Data Scientist by profession and my interests lie in <strong>Agentic Data Science</strong>, <strong>Building Applied AI Products</strong>, and testing the frontiers of <strong>Data Visualization</strong>.</h1>
 
-<a class="entry" data-date="2026-09-30" data-pin="0" data-tags="learning-tutorials" href="posts/2026-09-30-shapes-of-chance/">
-  <div class="meta"><span>[2026-09-30]</span><span class="tag">Learning &amp; tutorials</span></div>
-  <h2>Shapes of Chance</h2>
-  <p>Stats part 5: eight probability distributions measured from 125 years of Central Park weather and NYC 311 calls, including where real rain breaks the textbook.</p>
-</a>
-
-<a class="entry" data-date="2026-09-30" data-pin="0" data-tags="learning-tutorials" href="posts/2026-09-30-positive-probably-not/">
-  <div class="meta"><span>[2026-09-30]</span><span class="tag">Learning &amp; tutorials</span></div>
-  <h2>Positive, Probably Not</h2>
-  <p>Stats part 4: conditional probability, Bayes' theorem and precision vs recall, with real U.S. mammography benchmarks. Of 1,160 women called back per 10,000 screens, 51 have cancer.</p>
-</a>
-
-<a class="entry" data-date="2026-09-30" data-pin="0" data-tags="learning-tutorials" href="posts/2026-09-30-loud-streets-warm-homes/">
-  <div class="meta"><span>[2026-09-30]</span><span class="tag">Learning &amp; tutorials</span></div>
-  <h2>Loud Streets, Warm Homes</h2>
-  <p>Stats part 3: correlation, regression and a confounder, with every day of 2025 in NYC. Street noise and heat complaints look linked until you account for the weather.</p>
-</a>
-
-<a class="entry" data-date="2026-09-30" data-pin="0" data-tags="learning-tutorials" href="posts/2026-09-30-could-it-be-chance/">
-  <div class="meta"><span>[2026-09-30]</span><span class="tag">Learning &amp; tutorials</span></div>
-  <h2>Could It Be Chance?</h2>
-  <p>Stats part 2: null hypotheses, p-values, power and multiple comparisons, shuffled out of all 651,951 NYC street trees.</p>
-</a>
-
-<a class="entry" data-date="2026-09-30" data-pin="0" data-tags="learning-tutorials" href="posts/2026-09-30-averages-of-averages/">
-  <div class="meta"><span>[2026-09-30]</span><span class="tag">Learning &amp; tutorials</span></div>
-  <h2>Averages of Averages</h2>
-  <p>Stats part 1: mean, spread, sampling, the central limit theorem and the law of large numbers, told with 1,600 cubes. Pick a crowd: commuters, a poll, NYC street trees or Hacker News titles.</p>
-</a>
-
-<a class="entry" data-date="2026-09-19" data-pin="0" data-tags="data-visualizations" href="posts/2026-09-19-nontrivial-trivia-charts/">
-  <div class="meta"><span>[2026-09-19]</span><span class="tag">Data &amp; visualizations</span></div>
-  <h2>Nontrivial Trivia in twenty-six charts</h2>
-  <p>One section per chapter of Jonn Elledge's book of lists: largest cities, tallest buildings, biggest earthquakes, box office, flagpoles.</p>
-</a>
-
-<a class="entry" data-date="2026-09-15" data-pin="0" data-tags="data-visualizations" href="posts/2026-09-15-switzerland-in-890-lines/">
-  <div class="meta"><span>[2026-09-15]</span><span class="tag">Data &amp; visualizations</span></div>
-  <h2>Switzerland in 890 lines</h2>
-  <p>Every Swiss men's international since 1905 as one line per match, plus a square-glyph grid of every opponent.</p>
-</a>
-
-<a class="entry" data-date="2026-09-15" data-pin="0" data-tags="data-visualizations" href="posts/2026-09-15-switzerland-runs-on-a-clock/">
-  <div class="meta"><span>[2026-09-15]</span><span class="tag">Data &amp; visualizations</span></div>
-  <h2>Switzerland runs on a clock</h2>
-  <p>One Wednesday of Swiss rail departures sorted by minute past the hour: sixty small maps and six station dials from the SBB timetable.</p>
-</a>
-
-<a class="entry" data-date="2026-10-03" data-pin="0" data-tags="walks-places" href="posts/2026-10-03-walking-union-square-flatiron/">
-  <div class="meta"><span>[2026-10-03]</span><span class="tag">Walks &amp; places</span></div>
-  <h2>Walking Union Square and the Flatiron District</h2>
-  <p>18 stops from the Metronome to the old Madison Square Garden site: Tammany's last hall, Gramercy's locked park, the Ladies' Mile, and the Flatiron.</p>
-</a>
-
-<a class="entry" data-date="2026-09-10" data-pin="0" data-tags="walks-places" href="posts/2026-09-10-walking-greenpoint/">
-  <div class="meta"><span>[2026-09-10]</span><span class="tag">Walks &amp; places</span></div>
-  <h2>Walking Greenpoint</h2>
-  <p>12 stops over the Pulaski Bridge: the oil spill, the Monitor, the pencil factory, the fire, and a cathedral finished by hand.</p>
-</a>
-
-<a class="entry" data-date="2026-09-10" data-pin="0" data-tags="walks-places" href="posts/2026-09-10-walking-long-island-city/">
-  <div class="meta"><span>[2026-09-10]</span><span class="tag">Walks &amp; places</span></div>
-  <h2>Walking Long Island City</h2>
-  <p>13 stops from the Pepsi sign to the Queens Plaza clock tower: gantries, a whitewashed factory, a courthouse that split a county.</p>
-</a>
-
-<a class="entry" data-date="2026-09-07" data-pin="0" data-tags="walks-places" href="posts/2026-09-07-walking-chinatown-lower-east-side-east-village/">
-  <div class="meta"><span>[2026-09-07]</span><span class="tag">Walks &amp; places</span></div>
-  <h2>Walking Chinatown, the Lower East Side, and the East Village</h2>
-  <p>18 stops through four centuries of immigration, infrastructure, food, faith, and neighborhood reinvention.</p>
-</a>
-
-<a class="entry" data-date="2026-09-05" data-pin="0" data-tags="walks-places" href="posts/2026-09-05-walking-tribeca-soho/">
-  <div class="meta"><span>[2026-09-05]</span><span class="tag">Walks &amp; places</span></div>
-  <h2>Walking Tribeca and SoHo</h2>
-  <p>18 stops from the Tweed Courthouse to Old St Patrick's, with a map and subway directions.</p>
-</a>
-
-
-  <a class="entry" data-date="2026-08-28" data-pin="0" data-tags="learning-tutorials" href="posts/2026-08-28-can-you-trust-the-probability/">
-    <div class="meta"><span>[2026-08-28]</span><span class="tag">Learning &amp; tutorials</span></div>
-    <h2>Can you trust the probability?</h2>
-    <p>Model scores are rankings, not frequencies. Calibration, expected loss, and when a 0.95 should not be blocked.</p>
-  </a>
-  <a class="entry" data-date="2026-08-21" data-pin="0" data-tags="learning-tutorials" href="posts/2026-08-21-one-regression-140-years/">
-    <div class="meta"><span>[2026-08-21]</span><span class="tag">Learning &amp; tutorials</span></div>
-    <h2>One regression, 140 years of machines</h2>
-    <p>Galton's 1886 height problem, fit on every machine from pencil to phone, with how long each took and what it cost.</p>
-  </a>
-  <a class="entry" data-date="2026-08-16" data-pin="0" data-tags="data-visualizations" href="https://vibedatascience.github.io/treemap-atlas/">
-    <div class="meta"><span>[2026-08-16]</span><span class="tag">Data &amp; visualizations</span></div>
-    <h2>Treemap Atlas</h2>
-    <p>32 datasets on one zoomable canvas: population, GDP, box office, warheads, and the wealth pyramid.</p>
-  </a>
-  <a class="entry" data-date="2026-09-30" data-pin="0" data-tags="data-visualizations" href="map-gallery/">
-    <div class="meta"><span>[2026-09-30]</span><span class="tag">Data &amp; visualizations</span></div>
-    <h2>30 Day Map Gallery</h2>
-    <p>423 #30DayMapChallenge maps from 9 mapmakers who publish their code, 2019 to 2025. Filter by maker, year or tool, search by theme or package, and read the code behind each map.</p>
-  </a>
-  <a class="entry" data-date="2026-08-15" data-pin="0" data-tags="data-visualizations" href="tidytuesday-gallery/">
-    <div class="meta"><span>[2026-08-15]</span><span class="tag">Data &amp; visualizations</span></div>
-    <h2>TidyTuesday gallery</h2>
-    <p>689 #TidyTuesday plots by Nicola Rennie and Georgios Karamanis, 2019 to today, updated automatically. Explore by maker, topic, year or package, with source code for each plot.</p>
-  </a>
-  <a class="entry" data-date="2026-08-15" data-pin="0" data-tags="apps-tools" href="posts/hn-reader/">
-    <div class="meta"><span>[2026-08-15]</span><span class="tag">Apps &amp; tools</span></div>
-    <h2>Wire, a Hacker News reader</h2>
-    <p>Explore Hacker News by topic or date, find an unexpected story, and read the discussion.</p>
-  </a>
-  <a class="entry" data-date="2026-08-15" data-pin="1" data-tags="reference" href="posts/india-biggest-news-by-year/">
-    <div class="meta"><span>[updated 2026-08-15]</span><span class="tag">Reference</span></div>
-    <h2>The biggest India news stories, every year since 1925</h2>
-    <p>Three ranked stories per year, color coded by category, 1925 to 2026.</p>
-  </a>
-
-  <a class="entry" data-date="2026-08-15" data-pin="1" data-tags="reference" href="posts/us-biggest-news-by-year/">
-    <div class="meta"><span>[updated 2026-08-15]</span><span class="tag">Reference</span></div>
-    <h2>The biggest US news stories, every year since 1925</h2>
-    <p>Three ranked stories per year, color coded by category, 1925 to 2026.</p>
-  </a>
-
-
-  <a class="entry" data-date="2026-08-15" data-pin="0" data-tags="learning-tutorials" href="posts/2026-08-15-codebase-diagrams/">
-    <div class="meta"><span>[2026-08-15]</span><span class="tag">Learning &amp; tutorials</span></div>
-    <h2>Turning codebases into visual diagrams</h2>
-    <p>Having Claude render a codebase as an interactive map, with moving dots as inspectable data snippets.</p>
-  </a>
-
-  <a class="entry" data-date="2026-08-15" data-pin="0" data-tags="books-art-essays" href="posts/2026-08-15-goodreads-100-years/">
-    <div class="meta"><span>[2026-08-15]</span><span class="tag">Books, art &amp; essays</span></div>
-    <h2>100 years, 100 books</h2>
-    <p>The Goodreads best book of each year since 1925, organized by genre era, dystopia lineage, and grip.</p>
-  </a>
-
-  <a class="entry" data-date="2026-08-02" data-pin="0" data-tags="books-art-essays" href="posts/2026-08-02-experimentation-reading-list/">
-    <div class="meta"><span>[2026-08-02]</span><span class="tag">Books, art &amp; essays</span></div>
-    <h2>Experimentation reading list</h2>
-    <p>Nine books on experimentation and A/B testing, with the table of contents for each.</p>
-  </a>
-
-  <a class="entry" data-date="2026-08-01" data-pin="0" data-tags="books-art-essays" href="posts/van-gogh-in-paintings/">
-    <div class="meta"><span>[2026-08-01]</span><span class="tag">Books, art &amp; essays</span></div>
-    <h2>Van Gogh, in 33 paintings</h2>
-    <p>His ten years of work told as one story through 33 paintings, sourced from three museum lectures.</p>
-  </a>
-
-
-
-
-
-
-
-
+  <div class="work" aria-label="Companies I have worked at">
+    <span class="co"><img src="https://www.google.com/s2/favicons?domain=pinterest.com&amp;sz=64" alt="">Pinterest</span>
+    <span class="co"><img src="https://www.google.com/s2/favicons?domain=grammarly.com&amp;sz=64" alt="">Grammarly</span>
+    <span class="co"><img src="https://www.google.com/s2/favicons?domain=airbnb.com&amp;sz=64" alt="">Airbnb</span>
+    <span class="co"><img src="https://www.google.com/s2/favicons?domain=facebook.com&amp;sz=64" alt="">Facebook</span>
+    <span class="co"><img src="https://www.google.com/s2/favicons?domain=amazon.com&amp;sz=64" alt="">Amazon</span>
+    <span class="co"><img src="https://www.google.com/s2/favicons?domain=8451.com&amp;sz=64" alt="">84.51°</span>
+    <span class="co"><img src="https://www.google.com/s2/favicons?domain=dunnhumby.com&amp;sz=64" alt="">dunnhumby</span>
   </div>
-  <div id="rendered"></div>
-  <div class="empty">[warn] no entries match this filter</div>
 </main>
-
-<footer>
-  <a href="about.html">about</a>
-  <a href="https://github.com/vibedatascience">github</a>
-</footer>
-</div>
-
-<script>
-const buttons=document.querySelectorAll('.filters button');
-const viewBtns=document.querySelectorAll('.controls [data-view]');
-const sortBtns=document.querySelectorAll('.controls [data-sort]');
-const pool=Array.from(document.querySelectorAll('#entries .entry'));
-const rendered=document.getElementById('rendered');
-const empty=document.querySelector('.empty');
-let state={tag:'all',view:'list',sort:'date'};
-
-function monthLabel(d){
-  const names=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  return d.slice(0,4)+' · '+names[parseInt(d.slice(5,7),10)-1];
-}
-function render(){
-  const items=pool.filter(e=>state.tag==='all'||e.dataset.tags.split(' ').includes(state.tag));
-  rendered.innerHTML='';
-  empty.style.display=items.length?'none':'block';
-  if(!items.length)return;
-  let groups=[];
-  if(state.sort==='date'){
-    const byMonth={};
-    items.forEach(e=>{const k=e.dataset.date.slice(0,7);(byMonth[k]=byMonth[k]||[]).push(e)});
-    Object.keys(byMonth).sort().reverse().forEach(k=>{
-      byMonth[k].sort((a,b)=>b.dataset.date.localeCompare(a.dataset.date));
-      groups.push([monthLabel(byMonth[k][0].dataset.date),byMonth[k]]);
-    });
-  }else{
-    const byTag={};
-    items.forEach(e=>{const k=e.querySelector('.tag').textContent;(byTag[k]=byTag[k]||[]).push(e)});
-    Object.keys(byTag).sort().forEach(k=>{
-      byTag[k].sort((a,b)=>b.dataset.date.localeCompare(a.dataset.date));
-      groups.push([k.toLowerCase(),byTag[k]]);
-    });
-  }
-  groups.forEach(([label,es])=>{
-    const h=document.createElement('div');h.className='month';h.textContent=label;
-    rendered.appendChild(h);
-    let holder=rendered;
-    if(state.view==='gallery'){
-      holder=document.createElement('div');holder.className='gallery-grid';
-      rendered.appendChild(holder);
-    }
-    es.forEach(e=>{
-      const c=e.cloneNode(true);
-      if(state.view==='gallery'){
-        const body=document.createElement('div');body.className='card-body';
-        while(c.firstChild)body.appendChild(c.firstChild);
-        const img=document.createElement('img');
-        img.className='thumb';img.loading='lazy';img.alt='';
-        img.src=c.getAttribute('href')+'thumb.jpg';
-        img.onerror=()=>img.remove();
-        c.appendChild(img);c.appendChild(body);
-      }
-      holder.appendChild(c);
-    });
-  });
-}
-buttons.forEach(b=>b.addEventListener('click',()=>{
-  buttons.forEach(x=>x.classList.remove('active'));
-  b.classList.add('active');
-  state.tag=b.dataset.tag;render();
-}));
-viewBtns.forEach(b=>b.addEventListener('click',()=>{
-  viewBtns.forEach(x=>x.classList.remove('active'));
-  b.classList.add('active');
-  state.view=b.dataset.view;render();
-}));
-sortBtns.forEach(b=>b.addEventListener('click',()=>{
-  sortBtns.forEach(x=>x.classList.remove('active'));
-  b.classList.add('active');
-  state.sort=b.dataset.sort;render();
-}));
-render();
-</script>
 </body>
 </html>
