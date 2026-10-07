@@ -9,6 +9,40 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
+.tlw{display:grid;grid-template-columns:132px 1fr;background:#fff;border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+.tln{border-right:1px solid var(--rule);font-size:.74rem;font-weight:500}
+.tln div{display:flex;align-items:center;gap:7px;padding:0 10px;white-space:nowrap}
+.tln div{border-bottom:1px solid #F0F0EC}
+.dot{width:7px;height:7px;border-radius:50%;flex:none}
+.dot.done{background:#1E8A5A}.dot.blocked{background:#B42318}.dot.now{background:#E8A33D}.dot.exp{background:#B9C4FF}
+.tls{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tl{display:block;width:100%;font-family:'IBM Plex Mono',monospace}
+.tl .yr{font-size:11px;font-weight:500;fill:var(--ink)}
+.tl .ax{font-size:9.5px;fill:var(--muted)}
+.tl .gmin{stroke:#F0F0EC}
+.tl .gmaj{stroke:#D6D6CF}
+.tl .past{fill:#F4F4F0}
+.tl .sep{stroke:#F0F0EC}
+.tl .hit{fill:transparent}
+.tl .row:hover .hit{fill:#2545FF;fill-opacity:.05}
+.tl .spine{stroke:#B8B8B0;stroke-width:1.5}
+.tl .proj{stroke:#8C9BFF;stroke-width:1.5;stroke-dasharray:3 3}
+.tl .oira{fill:#A3A3AB}.tl .oira.open{fill:#E8A33D}.tl .oira.exp{fill:#fff;stroke:#A3A3AB;stroke-dasharray:2 2}
+.tl .cm{fill:#B9C4FF}.tl .cm.open{fill:#E8A33D;opacity:.75}.tl .cm.alt{fill:#fff;stroke:#8C9BFF;stroke-dasharray:3 2}
+.tl .eff{fill:url(#hatch);stroke:#2545FF;stroke-width:1}
+.tl .vague{fill:#fff;stroke:#B9C4FF;stroke-dasharray:2 3}
+.tl .np{fill:var(--cobalt)}.tl .np.exp{fill:#fff;stroke:var(--cobalt);stroke-width:1.5}
+.tl .fd{fill:#1E8A5A}.tl .ed{fill:#0F5A3C}.tl .ed.blk{fill:#fff;stroke:#B42318;stroke-width:1.5}
+.tl .bx{stroke:#B42318;stroke-width:2;fill:none}
+.tl .el{paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round;font-size:10.5px;fill:var(--cobalt);font-weight:500}.tl .el.done{fill:#0F5A3C}.tl .el.blocked{fill:#B42318}.tl .el.vague{fill:var(--muted)}
+.tl .today{stroke:#B42318;stroke-width:1.2}
+.tl .todayl{font-size:9.5px;fill:#B42318;font-weight:500}
+.tl .side{font-size:9.5px;fill:var(--muted)}
+.tl .ref{stroke:#6E6E76;stroke-width:1;stroke-dasharray:1 3}
+.tl .refl{font-size:9.5px;fill:var(--muted)}
+.tl g g{cursor:help}
+@media (max-width:700px){.tlw{grid-template-columns:104px 1fr}.tln{font-size:.66rem}.tln div{padding:0 6px;gap:5px}}
+
 :root{--paper:#FAFAF8;--ink:#17171C;--cobalt:#2545FF;--muted:#6E6E76;--rule:#E7E7E2;--chip:#EEF1FF;
 --done:#E6F4EC;--doneInk:#0F5A3C;--now:#FFF1D6;--nowInk:#7A4A00;--blk:#FDE8E8;--blkInk:#8F1D1D}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -27,24 +61,6 @@ h2{font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:1.05rem;marg
 .sub{font-size:.78rem;color:var(--muted);margin-bottom:8px}
 .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;background:#fff;border:1px solid var(--rule);border-radius:6px}
 /* timeline */
-.tl{display:block;width:100%;min-width:980px;height:auto;font-family:'IBM Plex Mono',monospace}
-.tl .ax{font-size:10px;fill:var(--muted)}
-.tl .gmin{stroke:#F0F0EC;stroke-width:1}
-.tl .gmaj{stroke:#DADAD3;stroke-width:1}
-.tl .zebra{fill:#FBFBF9}
-.tl .rl{font-family:'Inter',sans-serif;font-size:12px;font-weight:500;fill:var(--ink)}
-.tl .spine{stroke:#CFCFC8;stroke-width:1}
-.tl .oira{fill:#A3A3AB}.tl .oira.open{fill:#E8A33D}.tl .oira.exp{fill:none;stroke:#A3A3AB;stroke-dasharray:2 2}
-.tl .cm{fill:#B9C4FF}.tl .cm.alt{fill:none;stroke:#8C9BFF;stroke-dasharray:3 2}
-.tl .fin{fill:#DDE3FF;stroke:#B9C4FF}
-.tl .eff{fill:url(#hatch);stroke:#2545FF;stroke-width:1;stroke-dasharray:3 2}
-.tl .vague{fill:none;stroke:#B9C4FF;stroke-dasharray:2 3}
-.tl .np{fill:var(--cobalt)}.tl .np.exp{fill:#fff;stroke:var(--cobalt);stroke-width:1.5}
-.tl .fd{fill:#1E8A5A}.tl .ed{fill:#0F5A3C}.tl .ed.blk{fill:#fff;stroke:#B42318;stroke-width:1.5}
-.tl .bx{stroke:#B42318;stroke-width:2;fill:none}
-.tl .el{font-size:10.5px;fill:var(--cobalt)}.tl .el.done{fill:var(--doneInk)}.tl .el.blocked{fill:#B42318}.tl .el.vague{fill:var(--muted)}
-.tl .today{stroke:#B42318;stroke-width:1;stroke-dasharray:3 3}
-.tl .todayl{font-size:10px;fill:#B42318}
 .key{display:flex;flex-wrap:wrap;gap:4px 16px;font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--muted);margin:8px 2px 0}
 .key span{display:inline-flex;align-items:center;gap:6px}
 .key i{display:inline-block;flex:none}
@@ -119,119 +135,8 @@ details.nt[open] summary::before{content:"- "}
 </header>
 
 <h2>Timeline</h2>
-<div class="scroll"><svg viewBox="0 0 1400 394" class="tl" role="img" aria-label="Timeline of each rule from proposal to effective date">
-<defs><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="#DDE3FF"/><line x1="0" y1="0" x2="0" y2="6" stroke="#2545FF" stroke-width="2" opacity=".55"/></pattern></defs>
-<line x1="178.3" y1="22" x2="178.3" y2="370" class="gmin"/>
-<text x="181.3" y="18" class="ax">Jul 2025</text>
-<line x1="265.0" y1="22" x2="265.0" y2="370" class="gmin"/>
-<text x="268.0" y="18" class="ax">Oct</text>
-<line x1="351.6" y1="22" x2="351.6" y2="370" class="gmaj"/>
-<text x="354.6" y="18" class="ax">Jan 2026</text>
-<line x1="436.4" y1="22" x2="436.4" y2="370" class="gmin"/>
-<text x="439.4" y="18" class="ax">Apr</text>
-<line x1="522.2" y1="22" x2="522.2" y2="370" class="gmin"/>
-<text x="525.2" y="18" class="ax">Jul</text>
-<line x1="608.9" y1="22" x2="608.9" y2="370" class="gmin"/>
-<text x="611.9" y="18" class="ax">Oct</text>
-<line x1="695.5" y1="22" x2="695.5" y2="370" class="gmaj"/>
-<text x="698.5" y="18" class="ax">Jan 2027</text>
-<line x1="780.3" y1="22" x2="780.3" y2="370" class="gmin"/>
-<text x="783.3" y="18" class="ax">Apr</text>
-<line x1="866.1" y1="22" x2="866.1" y2="370" class="gmin"/>
-<text x="869.1" y="18" class="ax">Jul</text>
-<line x1="952.8" y1="22" x2="952.8" y2="370" class="gmin"/>
-<text x="955.8" y="18" class="ax">Oct</text>
-<line x1="1039.5" y1="22" x2="1039.5" y2="370" class="gmaj"/>
-<text x="1042.5" y="18" class="ax">Jan 2028</text>
-<line x1="1125.2" y1="22" x2="1125.2" y2="370" class="gmin"/>
-<text x="1128.2" y="18" class="ax">Apr</text>
-<text x="140" y="51.0" class="rl" text-anchor="end">Weighted lottery</text>
-<line x1="193.3" y1="47.0" x2="405.3" y2="47.0" class="spine"/>
-<rect x="193.3" y="43.0" width="20.7" height="8" rx="2" class="oira"/>
-<rect x="339.4" y="43.0" width="3.8" height="8" rx="2" class="oira"/>
-<rect x="258.4" y="44.0" width="28.3" height="6" class="cm"/>
-<circle cx="258.4" cy="47.0" r="4.5" class="np"/>
-<rect x="344.3" y="42.5" width="9" height="9" transform="rotate(45 348.8 47.0)" class="fd"/>
-<rect x="400.3" y="42.0" width="10" height="10" class="ed"/>
-<text x="413.3" y="51.0" class="el done">in force</text>
-<rect x="0" y="64.0" width="1400" height="34" class="zebra"/>
-<text x="140" y="85.0" class="rl" text-anchor="end">F-1/J-1 D/S</text>
-<line x1="174.5" y1="81.0" x2="593.8" y2="81.0" class="spine"/>
-<rect x="174.5" y="77.0" width="38.6" height="8" rx="2" class="oira"/>
-<rect x="468.5" y="77.0" width="40.5" height="8" rx="2" class="oira"/>
-<rect x="232.9" y="78.0" width="30.2" height="6" class="cm"/>
-<circle cx="232.9" cy="81.0" r="4.5" class="np"/>
-<rect x="532.8" y="76.5" width="9" height="9" transform="rotate(45 537.3 81.0)" class="fd"/>
-<rect x="588.8" y="76.0" width="10" height="10" class="ed blk"/>
-<path d="M587.8 70.0l10 10m0 -10l-10 10" class="bx"/>
-<text x="620.5" y="85.0" class="el blocked">blocked</text>
-<text x="140" y="119.0" class="rl" text-anchor="end">Prevailing wage</text>
-<line x1="340.3" y1="115.0" x2="819.0" y2="115.0" class="spine"/>
-<rect x="340.3" y="111.0" width="58.4" height="8" rx="2" class="oira"/>
-<rect x="431.7" y="112.0" width="56.5" height="6" class="cm"/>
-<rect x="614.5" y="108.0" width="147.9" height="14" rx="3" class="fin"/>
-<rect x="671.0" y="108.0" width="147.9" height="14" rx="3" class="eff"/>
-<circle cx="431.7" cy="115.0" r="4.5" class="np"/>
-<text x="827.0" y="119.0" class="el exp">eff. by May 2027</text>
-<rect x="0" y="132.0" width="1400" height="34" class="zebra"/>
-<text x="140" y="153.0" class="rl" text-anchor="end">Biometrics</text>
-<line x1="296.0" y1="149.0" x2="750.2" y2="149.0" class="spine"/>
-<rect x="296.0" y="146.0" width="56.5" height="6" class="cm"/>
-<rect x="614.5" y="142.0" width="80.1" height="14" rx="3" class="fin"/>
-<rect x="671.0" y="142.0" width="79.1" height="14" rx="3" class="eff"/>
-<circle cx="296.0" cy="149.0" r="4.5" class="np"/>
-<text x="758.2" y="153.0" class="el exp">eff. by ~Feb 2027</text>
-<text x="140" y="187.0" class="rl" text-anchor="end">$103k cap fee</text>
-<line x1="568.3" y1="183.0" x2="933.0" y2="183.0" class="spine"/>
-<rect x="568.3" y="179.0" width="3.0" height="8" rx="2" class="oira"/>
-<rect x="574.0" y="180.0" width="28.3" height="6" class="cm"/>
-<rect x="664.5" y="176.0" width="212.0" height="14" rx="3" class="fin"/>
-<rect x="721.0" y="176.0" width="212.0" height="14" rx="3" class="eff"/>
-<circle cx="574.0" cy="183.0" r="4.5" class="np"/>
-<text x="941.0" y="187.0" class="el exp">eff. Jan to Sep 2027</text>
-<rect x="0" y="200.0" width="1400" height="34" class="zebra"/>
-<text x="140" y="221.0" class="rl" text-anchor="end">60-day grace</text>
-<line x1="556.1" y1="217.0" x2="977.3" y2="217.0" class="spine"/>
-<rect x="556.1" y="213.0" width="19.8" height="8" rx="2" class="oira"/>
-<rect x="590.0" y="214.0" width="56.5" height="6" class="cm"/>
-<rect x="708.7" y="210.0" width="212.0" height="14" rx="3" class="fin"/>
-<rect x="765.3" y="210.0" width="212.0" height="14" rx="3" class="eff"/>
-<circle cx="590.0" cy="217.0" r="4.5" class="np"/>
-<text x="985.3" y="221.0" class="el exp">eff. Mar to Oct 2027</text>
-<text x="140" y="255.0" class="rl" text-anchor="end">OPT fee</text>
-<line x1="569.3" y1="251.0" x2="1001.8" y2="251.0" class="spine"/>
-<rect x="569.3" y="247.0" width="20.7" height="8" rx="2" class="oira"/>
-<rect x="614.5" y="248.0" width="28.3" height="6" class="cm"/>
-<rect x="642.8" y="248.0" width="28.3" height="6" class="cm alt"/>
-<rect x="705.0" y="244.0" width="240.3" height="14" rx="3" class="fin"/>
-<rect x="761.5" y="244.0" width="240.3" height="14" rx="3" class="eff"/>
-<circle cx="614.5" cy="251.0" r="4.5" class="np"/>
-<text x="1009.8" y="255.0" class="el exp">eff. Mar to Nov 2027</text>
-<rect x="0" y="268.0" width="1400" height="34" class="zebra"/>
-<text x="140" y="289.0" class="rl" text-anchor="end">H-1B reform</text>
-<line x1="573.1" y1="285.0" x2="1038.5" y2="285.0" class="spine"/>
-<rect x="573.1" y="281.0" width="41.5" height="8" rx="2" class="oira open"/>
-<rect x="631.5" y="282.0" width="57.5" height="6" class="cm alt"/>
-<rect x="724.8" y="278.0" width="256.3" height="14" rx="3" class="fin"/>
-<rect x="780.3" y="278.0" width="258.2" height="14" rx="3" class="eff"/>
-<circle cx="631.5" cy="285.0" r="4.5" class="np exp"/>
-<text x="1046.5" y="289.0" class="el exp">eff. Apr to Dec 2027</text>
-<text x="140" y="323.0" class="rl" text-anchor="end">Practical training</text>
-<line x1="737.9" y1="319.0" x2="1152.5" y2="319.0" class="spine"/>
-<rect x="708.7" y="315.0" width="4" height="8" rx="2" class="oira exp"/>
-<rect x="737.9" y="316.0" width="69.7" height="6" class="cm alt"/>
-<rect x="837.8" y="312.0" width="257.2" height="14" rx="3" class="fin"/>
-<rect x="895.3" y="312.0" width="257.2" height="14" rx="3" class="eff"/>
-<circle cx="737.9" cy="319.0" r="4.5" class="np exp"/>
-<text x="1160.5" y="323.0" class="el exp">eff. Aug 2027 to Apr 2028</text>
-<rect x="0" y="336.0" width="1400" height="34" class="zebra"/>
-<text x="140" y="357.0" class="rl" text-anchor="end">H-4 EAD</text>
-<rect x="695.5" y="347.0" width="514.5" height="12" rx="3" class="vague"/>
-<text x="1218.0" y="357.0" class="el vague">2028 ?</text>
-<line x1="614.5" y1="18" x2="614.5" y2="376" class="today"/>
-<text x="614.5" y="388" class="todayl" text-anchor="middle">today, Oct 7, 2026</text>
-</svg></div>
-<div class="key"><span><i class="k-oira"></i>OIRA review</span><span><i class="k-np"></i>proposal</span><span><i class="k-cm"></i>comments</span><span><i class="k-fd"></i>final rule</span><span><i class="k-fin"></i>final rule window</span><span><i class="k-eff"></i>effective window</span><span><i class="k-ed"></i>effective</span><span><i class="k-bx">×</i>blocked</span></div>
+<div class="tlw"><div class="tln" style="padding-top:46px"><div style="height:34px"><i class="dot done"></i>Weighted lottery</div><div style="height:34px"><i class="dot blocked"></i>F-1/J-1 D/S</div><div style="height:34px"><i class="dot now"></i>Prevailing wage</div><div style="height:34px"><i class="dot now"></i>Biometrics</div><div style="height:34px"><i class="dot now"></i>$103k cap fee</div><div style="height:34px"><i class="dot now"></i>60-day grace</div><div style="height:34px"><i class="dot now"></i>OPT fee</div><div style="height:34px"><i class="dot now"></i>H-1B reform</div><div style="height:34px"><i class="dot exp"></i>Practical training</div><div style="height:34px"><i class="dot exp"></i>H-4 EAD</div></div><div class="tls" id="tls"><svg style="min-width:1260px;height:420px" preserveAspectRatio="xMinYMin meet" viewBox="0 0 1260 420" class="tl" role="img" aria-label="Timeline of each rule from first review to projected effective date"><defs><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="#DDE3FF"/><line x1="0" y1="0" x2="0" y2="6" stroke="#2545FF" stroke-width="2" opacity=".6"/></pattern></defs><rect x="14" y="46" width="479.9" height="340" class="past"/><text x="118.2" y="16" class="yr" text-anchor="middle">2025</text><text x="400.0" y="16" class="yr" text-anchor="middle">2026</text><line x1="222.3" y1="6" x2="222.3" y2="386" class="gmaj"/><text x="755.3" y="16" class="yr" text-anchor="middle">2027</text><line x1="577.7" y1="6" x2="577.7" y2="386" class="gmaj"/><text x="1006.5" y="16" class="yr" text-anchor="middle">2028</text><line x1="933.0" y1="6" x2="933.0" y2="386" class="gmaj"/><line x1="43.2" y1="36" x2="43.2" y2="386" class="gmin"/><text x="43.2" y="32" class="ax" text-anchor="middle">Jul</text><line x1="132.8" y1="36" x2="132.8" y2="386" class="gmin"/><text x="132.8" y="32" class="ax" text-anchor="middle">Oct</text><line x1="309.9" y1="36" x2="309.9" y2="386" class="gmin"/><text x="309.9" y="32" class="ax" text-anchor="middle">Apr</text><line x1="398.5" y1="36" x2="398.5" y2="386" class="gmin"/><text x="398.5" y="32" class="ax" text-anchor="middle">Jul</text><line x1="488.1" y1="36" x2="488.1" y2="386" class="gmin"/><text x="488.1" y="32" class="ax" text-anchor="middle">Oct</text><line x1="665.3" y1="36" x2="665.3" y2="386" class="gmin"/><text x="665.3" y="32" class="ax" text-anchor="middle">Apr</text><line x1="753.9" y1="36" x2="753.9" y2="386" class="gmin"/><text x="753.9" y="32" class="ax" text-anchor="middle">Jul</text><line x1="843.4" y1="36" x2="843.4" y2="386" class="gmin"/><text x="843.4" y="32" class="ax" text-anchor="middle">Oct</text><line x1="1021.6" y1="36" x2="1021.6" y2="386" class="gmin"/><text x="1021.6" y="32" class="ax" text-anchor="middle">Apr</text><line x1="665.3" y1="46" x2="665.3" y2="392" class="ref"/><text x="669.3" y="402" class="refl">FY2028 cap petitions open, Apr 1</text><g class="row"><rect x="0" y="46.0" width="1260" height="34" class="hit"/><line x1="0" y1="80.0" x2="1260" y2="80.0" class="sep"/><line x1="58.8" y1="63.0" x2="277.8" y2="63.0" class="spine"/><g><rect x="58.8" y="59.5" width="21.4" height="7" rx="2" class="oira"/><title>Weighted lottery: OIRA review Jul 17, 2025 to Aug 8, 2025 (22 d)</title></g><g><rect x="209.7" y="59.5" width="3.9" height="7" rx="2" class="oira"/><title>Weighted lottery: OIRA review Dec 19, 2025 to Dec 23, 2025 (4 d)</title></g><g><rect x="126.0" y="60.0" width="29.2" height="6" class="cm"/><title>Weighted lottery: comments Sep 24, 2025 to Oct 24, 2025</title></g><g><circle cx="126.0" cy="63.0" r="4.5" class="np"/><title>Weighted lottery: proposal published Sep 24, 2025</title></g><g><rect x="214.9" y="58.5" width="9" height="9" transform="rotate(45 219.4 63.0)" class="fd"/><title>Weighted lottery: final rule published Dec 29, 2025</title></g><g><rect x="272.8" y="58.0" width="10" height="10" class="ed"/><title>Weighted lottery: in force since Feb 27, 2026</title></g><text x="501.9" y="67.0" class="el done">in force</text></g><g class="row"><rect x="0" y="80.0" width="1260" height="34" class="hit"/><line x1="0" y1="114.0" x2="1260" y2="114.0" class="sep"/><line x1="39.3" y1="97.0" x2="472.5" y2="97.0" class="spine"/><g><rect x="39.3" y="93.5" width="39.9" height="7" rx="2" class="oira"/><title>F-1/J-1 D/S: OIRA review Jun 27, 2025 to Aug 7, 2025 (41 d)</title></g><g><rect x="343.0" y="93.5" width="41.9" height="7" rx="2" class="oira"/><title>F-1/J-1 D/S: OIRA review May 5, 2026 to Jun 17, 2026 (43 d)</title></g><g><rect x="99.7" y="94.0" width="31.2" height="6" class="cm"/><title>F-1/J-1 D/S: comments Aug 28, 2025 to Sep 29, 2025</title></g><g><circle cx="99.7" cy="97.0" r="4.5" class="np"/><title>F-1/J-1 D/S: proposal published Aug 28, 2025</title></g><g><rect x="409.6" y="92.5" width="9" height="9" transform="rotate(45 414.1 97.0)" class="fd"/><title>F-1/J-1 D/S: final rule published Jul 17, 2026</title></g><g><rect x="467.5" y="92.0" width="10" height="10" class="ed blk"/><title>F-1/J-1 D/S: was to take effect Sep 15, 2026; postponed by court Sep 14, 2026</title></g><path d="M467.6 84.0l8 8m0 -8l-8 8" class="bx"/><text x="501.9" y="101.0" class="el blocked">blocked</text></g><g class="row"><rect x="0" y="114.0" width="1260" height="34" class="hit"/><line x1="0" y1="148.0" x2="1260" y2="148.0" class="sep"/><line x1="210.7" y1="131.0" x2="363.5" y2="131.0" class="spine"/><line x1="493.9" y1="131.0" x2="552.4" y2="131.0" class="proj"/><g><rect x="210.7" y="127.5" width="60.4" height="7" rx="2" class="oira"/><title>Prevailing wage: OIRA review Dec 20, 2025 to Feb 20, 2026 (62 d)</title></g><g><rect x="305.1" y="128.0" width="58.4" height="6" class="cm"/><title>Prevailing wage: comments Mar 27, 2026 to May 26, 2026</title></g><g><rect x="552.4" y="124.0" width="152.8" height="14" rx="3" class="eff"/><title>Prevailing wage: projected effective Dec 6, 2026 (fast) to May 12, 2027 (slow); final rule Oct 7, 2026 to Mar 13, 2027</title></g><g><circle cx="305.1" cy="131.0" r="4.5" class="np"/><title>Prevailing wage: proposal published Mar 27, 2026</title></g><text x="714.2" y="135.0" class="el exp">eff. by May 2027</text></g><g class="row"><rect x="0" y="148.0" width="1260" height="34" class="hit"/><line x1="0" y1="182.0" x2="1260" y2="182.0" class="sep"/><line x1="164.9" y1="165.0" x2="223.3" y2="165.0" class="spine"/><line x1="493.9" y1="165.0" x2="552.4" y2="165.0" class="proj"/><g><rect x="164.9" y="162.0" width="58.4" height="6" class="cm"/><title>Biometrics: comments Nov 3, 2025 to Jan 2, 2026</title></g><g><rect x="552.4" y="158.0" width="81.8" height="14" rx="3" class="eff"/><title>Biometrics: projected effective Dec 6, 2026 (fast) to Feb 28, 2027 (slow); final rule Oct 7, 2026 to Dec 31, 2026</title></g><g><circle cx="164.9" cy="165.0" r="4.5" class="np"/><title>Biometrics: proposal published Nov 3, 2025</title></g><text x="643.1" y="169.0" class="el exp">eff. by ~Feb 2027</text></g><g class="row"><rect x="0" y="182.0" width="1260" height="34" class="hit"/><line x1="0" y1="216.0" x2="1260" y2="216.0" class="sep"/><line x1="446.2" y1="199.0" x2="481.3" y2="199.0" class="spine"/><line x1="493.9" y1="199.0" x2="604.0" y2="199.0" class="proj"/><g><rect x="446.2" y="195.5" width="3.0" height="7" rx="2" class="oira"/><title>$103k cap fee: OIRA review Aug 19, 2026 to Aug 19, 2026 (0 d)</title></g><g><rect x="452.1" y="196.0" width="29.2" height="6" class="cm"/><title>$103k cap fee: comments Aug 25, 2026 to Sep 24, 2026</title></g><g><rect x="604.0" y="192.0" width="219.0" height="14" rx="3" class="eff"/><title>$103k cap fee: projected effective Jan 28, 2027 (fast) to Sep 10, 2027 (slow); final rule Nov 29, 2026 to Jul 12, 2027</title></g><g><circle cx="452.1" cy="199.0" r="4.5" class="np"/><title>$103k cap fee: proposal published Aug 25, 2026</title></g><text x="832.0" y="203.0" class="el exp">eff. Jan to Sep 2027</text></g><g class="row"><rect x="0" y="216.0" width="1260" height="34" class="hit"/><line x1="0" y1="250.0" x2="1260" y2="250.0" class="sep"/><line x1="433.6" y1="233.0" x2="468.6" y2="233.0" class="spine"/><line x1="493.9" y1="233.0" x2="649.7" y2="233.0" class="proj"/><g><rect x="433.6" y="229.5" width="20.4" height="7" rx="2" class="oira"/><title>60-day grace: OIRA review Aug 6, 2026 to Aug 27, 2026 (21 d)</title></g><g><rect x="468.6" y="230.0" width="58.4" height="6" class="cm open"/><title>60-day grace: comments Sep 11, 2026 to Nov 10, 2026 (open now)</title></g><g><rect x="649.7" y="226.0" width="219.0" height="14" rx="3" class="eff"/><title>60-day grace: projected effective Mar 16, 2027 (fast) to Oct 27, 2027 (slow); final rule Jan 15, 2027 to Aug 28, 2027</title></g><g><circle cx="468.6" cy="233.0" r="4.5" class="np"/><title>60-day grace: proposal published Sep 11, 2026</title></g><text x="877.7" y="237.0" class="el exp">eff. Mar to Oct 2027</text></g><g class="row"><rect x="0" y="250.0" width="1260" height="34" class="hit"/><line x1="0" y1="284.0" x2="1260" y2="284.0" class="sep"/><line x1="447.2" y1="267.0" x2="493.9" y2="267.0" class="spine"/><line x1="493.9" y1="267.0" x2="645.8" y2="267.0" class="proj"/><g><rect x="447.2" y="263.5" width="21.4" height="7" rx="2" class="oira"/><title>OPT fee: OIRA review Aug 20, 2026 to Sep 11, 2026 (22 d)</title></g><g><rect x="493.9" y="264.0" width="58.4" height="6" class="cm alt"/><title>OPT fee: comments close ~Nov 6, 2026 (30 d) or ~Dec 6, 2026 (60 d)</title></g><g><rect x="645.8" y="260.0" width="248.2" height="14" rx="3" class="eff"/><title>OPT fee: projected effective Mar 12, 2027 (fast) to Nov 22, 2027 (slow); final rule Jan 11, 2027 to Sep 23, 2027</title></g><g><circle cx="493.9" cy="267.0" r="4.5" class="np"/><title>OPT fee: proposal published Oct 7, 2026</title></g><text x="903.1" y="271.0" class="el exp">eff. Mar to Nov 2027</text></g><g class="row"><rect x="0" y="284.0" width="1260" height="34" class="hit"/><line x1="0" y1="318.0" x2="1260" y2="318.0" class="sep"/><line x1="451.1" y1="301.0" x2="493.9" y2="301.0" class="spine"/><line x1="493.9" y1="301.0" x2="665.3" y2="301.0" class="proj"/><g><rect x="451.1" y="297.5" width="42.8" height="7" rx="2" class="oira open"/><title>H-1B reform: at OIRA since Aug 24, 2026 (44 d so far)</title></g><g><rect x="511.5" y="298.0" width="59.4" height="6" class="cm alt"/><title>H-1B reform: comments expected to close ~Nov 2026 to ~Dec 2026</title></g><g><rect x="665.3" y="294.0" width="266.7" height="14" rx="3" class="eff"/><title>H-1B reform: projected effective ~Apr 1, 2027 (fast) to ~Dec 31, 2027 (slow); final rule ~Feb 1, 2027 to ~Oct 31, 2027</title></g><g><circle cx="511.5" cy="301.0" r="4.5" class="np exp"/><title>H-1B reform: proposal expected ~Oct 2026</title></g><text x="941.0" y="305.0" class="el exp">eff. Apr to Dec 2027</text></g><g class="row"><rect x="0" y="318.0" width="1260" height="34" class="hit"/><line x1="0" y1="352.0" x2="1260" y2="352.0" class="sep"/><line x1="591.3" y1="335.0" x2="784.1" y2="335.0" class="proj"/><g><rect x="591.3" y="331.5" width="5" height="7" rx="2" class="oira exp"/><title>Practical training: proposal expected at OIRA ~Jan 2027</title></g><g><rect x="621.5" y="332.0" width="72.0" height="6" class="cm alt"/><title>Practical training: comments expected to close ~Apr 2027 to ~Apr 2027</title></g><g><rect x="784.1" y="328.0" width="265.8" height="14" rx="3" class="eff"/><title>Practical training: projected effective ~Aug 1, 2027 (fast) to ~Apr 30, 2028 (slow); final rule ~Jun 1, 2027 to ~Feb 29, 2028</title></g><g><circle cx="621.5" cy="335.0" r="4.5" class="np exp"/><title>Practical training: proposal expected ~Feb 2027</title></g><text x="1058.8" y="339.0" class="el exp">eff. Aug 2027 to Apr 2028</text></g><g class="row"><rect x="0" y="352.0" width="1260" height="34" class="hit"/><line x1="0" y1="386.0" x2="1260" y2="386.0" class="sep"/><g><rect x="577.7" y="363.0" width="531.5" height="12" rx="3" class="vague"/><title>H-4 EAD: no proposal date; long-term action, final rule 2028 at the earliest</title></g><text x="1118.2" y="373.0" class="el vague">2028 ?</text></g><line x1="493.9" y1="36" x2="493.9" y2="392" class="today"/><text x="493.9" y="18" class="todayl" text-anchor="middle">today</text><text x="487.9" y="402" class="side" text-anchor="end">happened</text><text x="499.9" y="402" class="side">projected</text></svg></div></div><script>(function(){var s=document.getElementById("tls");if(s&&window.innerWidth<760&&s.scrollWidth>s.clientWidth+4)s.scrollLeft=494-s.clientWidth*0.3;})();</script>
+<div class="key"><span><i class="k-oira"></i>OIRA review (amber = open)</span><span><i class="k-np"></i>proposal</span><span><i class="k-cm"></i>comments</span><span><i class="k-fd"></i>final rule</span><span><i class="k-eff"></i>projected effective, fast to slow</span><span><i class="k-ed"></i>in force</span><span><i class="k-bx">×</i>blocked</span><span>&middot; hover any mark for exact dates</span></div>
 
 <h2>Stage by stage</h2>
 <div class="legend"><span><i class="sw" style="background:var(--done)"></i>happened</span><span><i class="sw" style="background:var(--now)"></i>happening now</span><span><i class="sw" style="background:var(--blk)"></i>blocked</span><span><i class="sw" style="background:#fff;border:1px solid var(--rule);box-shadow:inset 3px 0 var(--chip)"></i>expected</span><span>ranges run fast to slow &middot; hover a cell for detail &middot; dates link to sources</span></div>
