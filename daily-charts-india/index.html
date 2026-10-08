@@ -41,11 +41,11 @@ body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--b
   <header class="mast"><h1>Daily Charts India</h1><span>One chart a day from India's news</span></header>
 
   <article class="entry" id="d2026-10-08">
-    <div class="date">Oct 8, 2026 &middot; Mughal nobility</div>
-    <h2>By Aurangzeb's last decades, almost 1 in 3 top Mughal nobles was <span class="r">Hindu</span>, and more than half of them were <span class="t">Marathas</span></h2>
-    <p class="dek">Each square is one noble holding a rank (mansab) of 1,000 or more. Rows are periods. Gray squares are all other nobles, mostly Iranis, Turanis, Afghans and Indian Muslims.</p>
-    <div class="chart" id="c1"></div>
-    <p class="foot"><b>Note:</b> Counts differ by source and by the rank cutoff used. The Maratha count is shown only for 1679 to 1707, where it is published separately. <b>Data:</b> M. Athar Ali, <i>The Mughal Nobility under Aurangzeb</i> (Oxford University Press), as reproduced in <a href="https://nowgonggirlscollege.co.in/attendence/classnotes/files/1621322563.pdf" target="_blank" rel="noopener">Nowgong Girls' College notes</a> and <a href="https://selfstudyhistory.com/2015/01/03/27-medieval-indiaaurangjeb-religious-policiesnorth-india-and-rajputs/" target="_blank" rel="noopener">SelfStudyHistory</a>.</p>
+    <div class="date">Oct 8, 2026 &middot; India's income since the Mughals</div>
+    <h2>In 1600 the average Indian earned <span class="r">three quarters</span> as much as the average Briton. At independence in 1947, it was <span class="r">less than a tenth</span>.</h2>
+    <p class="dek">India's GDP per person as a share of Britain's, in inflation-adjusted dollars at 2011 prices. India's own income per person was lower in 1947 ($985) than in 1600 ($1,264).</p>
+    <div class="chart" id="c1"><div class="tip" id="t1" hidden></div></div>
+    <p class="foot"><b>Note:</b> Figures before 1870 are reconstructions from historical wages, prices and farm output, and carry wide error margins. Gaps between points before 1884 are years with no estimate. <b>Data:</b> <a href="https://www.rug.nl/ggdc/historicaldevelopment/maddison/releases/maddison-project-database-2023" target="_blank" rel="noopener">Maddison Project Database 2023</a> (Bolt and van Zanden), with India before 1871 from Broadberry, Custodis and Gupta (2015).</p>
   </article>
 </div>
 
@@ -54,50 +54,80 @@ const NS = "http://www.w3.org/2000/svg";
 const el = (t, a, p) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; };
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 
-/* Unit chart: one square per noble, Hindu nobles first. Athar Ali's counts. */
-const ROWS = [
-  { name: "Akbar", yrs: "1575 to 1595", total: 98, hindu: 22, maratha: 0 },
-  { name: "Shah Jahan", yrs: "1628 to 1658", total: 437, hindu: 98, maratha: 0 },
-  { name: "Aurangzeb", yrs: "1658 to 1678", total: 486, hindu: 105, maratha: 0 },
-  { name: "Aurangzeb", yrs: "1679 to 1707", total: 575, hindu: 182, maratha: 96 }
+/* India's GDP per person as a % of Britain's, 1600 to 2022 (Maddison Project Database 2023) */
+const D = [[1600,1264,1691,74.7],[1650,1189,1446,82.2],[1700,1162,2412,48.2],[1750,1068,2702,39.5],[1801,1033,3351,30.8],[1811,983,3397,28.9],[1821,937,3308,28.3],[1831,945,3545,26.7],[1841,944,3894,24.2],[1850,947,4332,21.9],[1851,947,4477,21.2],[1861,896,5024,17.8],[1870,850,5829,14.6],[1884,878,6220,14.1],[1885,904,6132,14.7],[1886,874,6170,14.2],[1887,912,6358,14.3],[1888,918,6585,13.9],[1889,891,6876,13.0],[1890,931,6845,13.6],[1891,843,6781,12.4],[1892,910,6553,13.9],[1893,931,6486,14.4],[1894,944,6851,13.8],[1895,920,6996,13.2],[1896,850,7211,11.8],[1897,1004,7229,13.9],[1898,1004,7500,13.4],[1899,925,7729,12.0],[1900,955,7594,12.6],[1901,969,7516,12.9],[1902,1044,7635,13.7],[1903,1052,7482,14.1],[1904,1050,7455,14.1],[1905,1025,7603,13.5],[1906,1047,7782,13.5],[1907,979,7855,12.5],[1908,987,7461,13.2],[1909,1116,7557,14.8],[1910,1111,7718,14.4],[1911,1101,7874,14.0],[1912,1098,7954,13.8],[1913,1073,8212,13.1],[1914,1130,8131,13.9],[1915,1101,8639,12.7],[1916,1132,8702,13.0],[1917,1111,8665,12.8],[1918,968,8630,11.2],[1919,1100,7605,14.5],[1920,1012,7017,14.4],[1921,1082,6792,15.9],[1922,1117,7391,15.1],[1923,1070,7587,14.1],[1924,1111,7844,14.2],[1925,1113,8199,13.6],[1926,1137,7868,14.5],[1927,1125,8472,13.3],[1928,1125,8539,13.2],[1929,1160,8772,13.2],[1930,1157,8673,13.3],[1931,1133,8190,13.8],[1932,1130,8206,13.8],[1933,1116,8411,13.3],[1934,1111,8939,12.4],[1935,1084,9244,11.7],[1936,1111,9620,11.5],[1937,1078,9911,10.9],[1938,1065,9988,10.7],[1939,1074,9982,10.8],[1940,1093,10928,10.0],[1941,1101,11926,9.2],[1942,1082,12176,8.9],[1943,1113,12344,9.0],[1944,1089,11803,9.2],[1945,1058,11247,9.4],[1946,991,10751,9.2],[1947,985,10527,9.4],[1948,983,10753,9.1],[1949,995,11088,9.0],[1950,987,11061,8.9],[1951,993,11354,8.7],[1952,1003,11303,8.9],[1953,1047,11709,8.9],[1954,1071,12145,8.8],[1955,1078,12541,8.6],[1956,1117,12639,8.8],[1957,1084,12779,8.5],[1958,1141,12698,9.0],[1959,1143,13134,8.7],[1960,1200,13780,8.7],[1961,1208,14118,8.6],[1962,1208,14131,8.5],[1963,1242,14583,8.5],[1964,1309,15251,8.6],[1965,1229,15545,7.9],[1966,1215,15757,7.7],[1967,1286,16018,8.0],[1968,1290,16593,7.8],[1969,1347,16820,8.0],[1970,1384,17162,8.1],[1971,1364,17440,7.8],[1972,1329,18002,7.4],[1973,1360,19168,7.1],[1974,1344,18903,7.1],[1975,1430,18884,7.6],[1976,1417,19311,7.3],[1977,1494,19740,7.6],[1978,1540,20448,7.5],[1979,1427,20988,6.8],[1980,1495,20612,7.3],[1981,1557,20319,7.7],[1982,1570,20650,7.6],[1983,1663,21366,7.8],[1984,1690,21869,7.7],[1985,1720,22579,7.6],[1986,1755,23498,7.5],[1987,1793,24536,7.3],[1988,1938,25679,7.5],[1989,2024,26164,7.7],[1990,2087,26189,8.0],[1991,2062,25792,8.0],[1992,2115,25790,8.2],[1993,2176,26349,8.3],[1994,2255,27278,8.3],[1995,2356,27861,8.5],[1996,2476,28472,8.7],[1997,2514,29260,8.6],[1998,2612,30077,8.7],[1999,2708,30933,8.8],[2000,2753,31946,8.6],[2001,2838,32660,8.7],[2002,2871,33271,8.6],[2003,3036,34232,8.9],[2004,3213,34866,9.2],[2005,3397,35624,9.5],[2006,3629,36214,10.0],[2007,3871,36817,10.5],[2008,4031,36265,11.1],[2009,4271,34402,12.4],[2010,4526,34754,13.0],[2011,4768,34971,13.6],[2012,4982,35244,14.1],[2013,5224,35661,14.6],[2014,5524,36522,15.1],[2015,5870,37101,15.8],[2016,6326,37594,16.8],[2017,6639,38284,17.3],[2018,7046,38705,18.2],[2019,7294,39113,18.6],[2020,6731,34651,19.4],[2021,7315,37134,19.7],[2022,7766,38407,20.2]]; // [year, India gdppc, UK gdppc, ratio %]
+const ERAS = [
+  { a: 1600, b: 1707, n: "Mughal Empire", s: "Mughals" },
+  { a: 1707, b: 1757, n: "Mughal decline", s: "Decline" },
+  { a: 1757, b: 1858, n: "East India Company", s: "Company" },
+  { a: 1858, b: 1947, n: "British Raj", s: "Raj" },
+  { a: 1947, b: 2022, n: "Independent India", s: "Republic" }
 ];
-const host = document.getElementById("c1");
+const NOTES = [
+  { y: 1600, t: "Akbar's reign", dx: 4, dy: 22, anchor: "start" },
+  { y: 1700, t: "Late in Aurangzeb's reign", dx: 8, dy: -10, anchor: "start" },
+  { y: 1947, t: "Independence", dx: 0, dy: 22, anchor: "middle" }
+];
+const host = document.getElementById("c1"), tip = document.getElementById("t1");
 
 function draw() {
   host.querySelector("svg")?.remove();
   const W = host.clientWidth, narrow = W < 640;
-  const red = css("--red"), teal = css("--teal"), ink = css("--ink"), slate = css("--slate");
-  const LW = narrow ? 0 : 210;                 // label column on wide screens
-  const cell = narrow ? 7 : 11, gap = narrow ? 1.2 : 2;
-  const per = Math.floor((W - LW + gap) / (cell + gap));
-  const labH = narrow ? 34 : 0, rowGap = narrow ? 18 : 26;
-  let y = 4; const blocks = [];
-  ROWS.forEach(r => { const lines = Math.ceil(r.total / per); const h = lines * (cell + gap); blocks.push({ r, y: y + labH, h }); y += labH + Math.max(h, narrow ? 0 : 40) + rowGap; });
-  const H = y;
-  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Unit chart of Mughal nobles with ranks of 1,000 or more. Akbar 1575-95: 22 of 98 Hindu (22.5%). Shah Jahan: 98 of 437 (22.4%). Aurangzeb 1658-78: 105 of 486 (21.6%). Aurangzeb 1679-1707: 182 of 575 (31.6%), of whom 96 were Marathas." });
+  const H = Math.round(Math.max(360, Math.min(520, W * 0.45)));
+  const L = narrow ? 30 : 40, R = narrow ? 44 : 56, T = 34, B = 26;
+  const x = yr => L + (yr - 1595) / (2026 - 1595) * (W - L - R);
+  const y = v => T + (90 - v) / 90 * (H - T - B);
+  const red = css("--red"), ink = css("--ink"), slate = css("--slate"), rule = css("--rule");
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Line chart of India's GDP per person as a share of Britain's, 1600 to 2022. 75% in 1600, 48% in 1700, 31% in 1801, 9% in 1947, 20% in 2022." });
   host.prepend(svg);
-  blocks.forEach(({ r, y: by, h }) => {
-    // label
-    const lx = 0, ly = narrow ? by - labH + 13 : by + 12;
-    const t = el("text", { x: lx, y: ly }, svg);
-    const a = el("tspan", { x: lx, "font-family": "var(--display)", "font-weight": 800, "font-size": narrow ? 14 : 17, fill: ink }, t); a.textContent = r.name + " ";
-    const b = el("tspan", { "font-size": narrow ? 10.5 : 12, fill: slate, dx: 2 }, t); b.textContent = r.yrs;
-    const pct = (100 * r.hindu / r.total).toFixed(1) + "% Hindu";
-    const t2 = el("text", { x: lx, y: ly + (narrow ? 15 : 19) }, svg);
-    const c = el("tspan", { "font-weight": 700, "font-size": narrow ? 11 : 13, fill: red }, t2); c.textContent = pct;
-    const d = el("tspan", { "font-size": narrow ? 10.5 : 12, fill: slate, dx: 6 }, t2); d.textContent = `${r.hindu} of ${r.total} nobles`;
-    if (r.maratha) {
-      const t3 = el("text", { x: lx, y: ly + (narrow ? 15 : 37), "font-size": narrow ? 10.5 : 12, "font-weight": 600, fill: teal }, svg);
-      if (narrow) { t3.setAttribute("x", W); t3.setAttribute("text-anchor", "end"); }
-      t3.textContent = `${r.maratha} Marathas`;
-    }
-    // squares
-    for (let i = 0; i < r.total; i++) {
-      const col = i % per, row = Math.floor(i / per);
-      const fill = i < r.maratha ? teal : i < r.hindu ? red : "#dde3ea";
-      el("rect", { x: LW + col * (cell + gap), y: by + row * (cell + gap), width: cell, height: cell, rx: 1, fill }, svg);
-    }
+  // era bands
+  ERAS.forEach((e, i) => {
+    el("rect", { x: x(e.a), y: T - 4, width: x(e.b) - x(e.a), height: H - B - T + 4, fill: i % 2 ? "#f6f8fb" : "#ffffff" }, svg);
+    const lbl = narrow ? e.s : e.n;
+    const t = el("text", { x: (x(e.a) + x(e.b)) / 2, y: T - 12, "text-anchor": "middle", "font-size": narrow ? 9 : 11, "font-weight": 600, fill: slate }, svg);
+    t.textContent = lbl;
   });
+  // grid
+  for (let v = 0; v <= 80; v += 20) {
+    el("line", { x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: rule }, svg);
+    const t = el("text", { x: L - 6, y: y(v) + 3.5, "text-anchor": "end", "font-size": 10, fill: slate }, svg); t.textContent = v + "%";
+  }
+  [1600, 1700, 1800, 1900, 2000].forEach(yr => {
+    const t = el("text", { x: x(yr), y: H - 8, "text-anchor": "middle", "font-size": 10, fill: slate }, svg); t.textContent = yr;
+  });
+  // line, broken where India has no estimate for more than 15 years
+  let d = "";
+  D.forEach((r, i) => { const gap = i && r[0] - D[i - 1][0] > 15; d += (i === 0 || gap ? "M" : "L") + x(r[0]) + "," + y(r[3]) + " "; });
+  // dashed bridges across gaps so the trend reads as one series
+  D.forEach((r, i) => { if (i && r[0] - D[i - 1][0] > 15) el("line", { x1: x(D[i - 1][0]), y1: y(D[i - 1][3]), x2: x(r[0]), y2: y(r[3]), stroke: red, "stroke-width": 1.6, "stroke-dasharray": "3 3" }, svg); });
+  el("path", { d, fill: "none", stroke: red, "stroke-width": narrow ? 2 : 2.6, "stroke-linejoin": "round" }, svg);
+  // points for the sparse early estimates
+  D.filter(r => r[0] < 1884).forEach(r => el("circle", { cx: x(r[0]), cy: y(r[3]), r: narrow ? 2.6 : 3.4, fill: red }, svg));
+  // labelled points
+  NOTES.forEach(n => {
+    const r = D.find(q => q[0] === n.y); if (!r) return;
+    el("circle", { cx: x(r[0]), cy: y(r[3]), r: narrow ? 3.5 : 4.5, fill: "#ffffff", stroke: red, "stroke-width": 2 }, svg);
+    const t = el("text", { x: x(r[0]) + n.dx, y: y(r[3]) + n.dy, "text-anchor": n.anchor }, svg);
+    const a = el("tspan", { "font-weight": 800, "font-size": narrow ? 12 : 15, fill: red, "font-family": "var(--display)" }, t); a.textContent = Math.round(r[3]) + "%";
+    const b = el("tspan", { dx: 5, "font-size": narrow ? 9.5 : 11, fill: ink }, t); b.textContent = narrow && n.y === 1700 ? "Aurangzeb" : n.t;
+  });
+  // end label
+  const last = D[D.length - 1];
+  el("circle", { cx: x(last[0]), cy: y(last[3]), r: narrow ? 3.5 : 4.5, fill: red }, svg);
+  const te = el("text", { x: x(last[0]) + 7, y: y(last[3]) + 4, "font-weight": 800, "font-size": narrow ? 12 : 15, fill: red, "font-family": "var(--display)" }, svg); te.textContent = last[3].toFixed(1) + "%";
+  // hover: nearest year
+  const move = e => {
+    const bb = svg.getBoundingClientRect(), sx = (e.clientX - bb.left) * W / bb.width;
+    let best = null, dm = 1e9; D.forEach(r => { const dd = Math.abs(x(r[0]) - sx); if (dd < dm) { dm = dd; best = r; } });
+    if (!best || dm > 30) { tip.hidden = true; return; }
+    tip.innerHTML = `<b>${best[0]}</b><br>India $${best[1].toLocaleString("en-US")} &middot; Britain $${best[2].toLocaleString("en-US")}<br>India at ${best[3].toFixed(1)}% of Britain`;
+    tip.hidden = false;
+    const px = x(best[0]) * bb.width / W, py = y(best[3]) * bb.height / H;
+    let tx = px + 12; if (tx + tip.offsetWidth > bb.width) tx = px - tip.offsetWidth - 12;
+    tip.style.left = Math.max(0, tx) + "px"; tip.style.top = Math.max(0, py - tip.offsetHeight - 10) + "px";
+  };
+  svg.addEventListener("pointermove", move); svg.addEventListener("pointerdown", move);
+  svg.addEventListener("pointerleave", () => { tip.hidden = true; });
 }
 (document.fonts?.ready || Promise.resolve()).then(draw);
 draw();
