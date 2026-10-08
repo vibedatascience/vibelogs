@@ -40,6 +40,14 @@ body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--b
 <div class="wrap">
   <header class="mast"><h1>Daily Charts India</h1><span>One chart a day from India's news</span></header>
 
+  <article class="entry" id="d2026-10-08b">
+    <div class="date">Oct 8, 2026 &middot; Hidden urbanization</div>
+    <h2>India's official count puts 36% of people in towns and cities. Satellite data puts it at 84%, about <span class="r">700 million</span> more urban residents.</h2>
+    <p class="dek">Share of population living in urban areas in 2025 for the 30 most populous countries, by each country's <span style="color:var(--slate);font-weight:700">own definition</span> and by the <span style="color:var(--navy);font-weight:700">same satellite-based measure for every country</span>. Sorted by the gap.</p>
+    <div class="chart" id="c2"><div class="tip" id="t2" hidden></div></div>
+    <p class="foot"><b>Note:</b> The satellite measure (the UN-endorsed Degree of Urbanisation) counts anyone living in a city, town or suburb, using a 1 km grid of built-up area and population. India's own definition requires a town to have 5,000 people, 400 people per km&sup2; and 75% of male workers outside farming, and towns run by village councils stay administratively rural. 2025 values are estimates. <b>Data:</b> <a href="https://ourworldindata.org/grapher/urban-share-european-commission" target="_blank" rel="noopener">European Commission JRC (2025)</a>, <a href="https://ourworldindata.org/grapher/share-of-population-urban" target="_blank" rel="noopener">UN World Urbanization Prospects (2025)</a>, both via Our World in Data.</p>
+  </article>
+
   <article class="entry" id="d2026-10-08">
     <div class="date">Oct 8, 2026 &middot; India's income since the Mughals</div>
     <h2>In 1600 the average Indian earned <span class="r">three quarters</span> as much as the average Briton. At independence in 1947, it was <span class="r">less than a tenth</span>.</h2>
@@ -129,9 +137,55 @@ function draw() {
   svg.addEventListener("pointermove", move); svg.addEventListener("pointerdown", move);
   svg.addEventListener("pointerleave", () => { tip.hidden = true; });
 }
-(document.fonts?.ready || Promise.resolve()).then(draw);
-draw();
-let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(draw, 120); });
+
+/* Dumbbell: national-definition urban share vs Degree of Urbanisation, 2025 */
+const DB = [["Bangladesh","BGD",33.2,98.0,171],["Egypt","EGY",42.9,97.5,115],["Pakistan","PAK",39.5,89.1,248],["Vietnam","VNM",38.8,87.5,100],["India","IND",35.7,84.1,1438],["Kenya","KEN",32.2,77.1,55],["Ethiopia","ETH",24.1,66.8,129],["Sudan","SDN",34.9,74.6,50],["Myanmar","MMR",30.6,69.4,54],["Philippines","PHL",55.8,85.2,115],["DR Congo","COD",45.1,73.7,106],["Indonesia","IDN",59.4,86.0,281],["Tanzania","TZA",36.9,58.8,67],["Nigeria","NGA",63.8,81.8,228],["China","CHN",66.3,83.7,1423],["South Africa","ZAF",63.8,79.5,63],["South Korea","KOR",81.2,90.4,52],["Iran","IRN",77.4,84.8,91],["Italy","ITA",69.7,76.9,59],["Russia","RUS",75.3,79.2,145],["Colombia","COL",78.8,82.2,52],["United Kingdom","GBR",83.3,86.4,69],["Thailand","THA",62.8,62.3,72],["Japan","JPN",92.3,91.4,124],["Mexico","MEX",80.0,77.5,130],["United States","USA",80.2,74.4,343],["Turkey","TUR",89.5,82.8,87],["Brazil","BRA",88.2,79.7,211],["Germany","DEU",82.1,73.4,85],["France","FRA",78.8,62.5,66]]; // [country, code, national %, satellite %, population M]
+const host2 = document.getElementById("c2"), tip2 = document.getElementById("t2");
+function draw2() {
+  host2.querySelector("svg")?.remove();
+  const W = host2.clientWidth, narrow = W < 640;
+  const L = narrow ? 84 : 130, R = narrow ? 34 : 50, T = 26, rh = narrow ? 17 : 19;
+  const H = T + DB.length * rh + 22;
+  const x = v => L + v / 100 * (W - L - R);
+  const red = css("--red"), navy = css("--navy"), slate = css("--slate"), ink = css("--ink"), rule = css("--rule");
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Dumbbell chart of urban population share by national definition and by satellite-based Degree of Urbanisation for 30 countries in 2025. India: 35.7% official, 84.1% satellite." });
+  host2.prepend(svg);
+  for (let v = 0; v <= 100; v += 25) {
+    el("line", { x1: x(v), x2: x(v), y1: T - 4, y2: H - 20, stroke: rule }, svg);
+    const t = el("text", { x: x(v), y: H - 6, "text-anchor": "middle", "font-size": 10, fill: slate }, svg); t.textContent = v + "%";
+  }
+  const hd = el("text", { x: W, y: T - 10, "text-anchor": "end", "font-size": 10, "font-weight": 600, fill: slate }, svg); hd.textContent = "Gap";
+  DB.forEach((r, i) => {
+    const cy = T + i * rh + rh / 2, isI = r[1] === "IND";
+    const g = el("g", {}, svg);
+    if (isI) el("rect", { x: 0, y: cy - rh / 2, width: W, height: rh, fill: red, "fill-opacity": 0.06 }, g);
+    const nm = el("text", { x: L - 8, y: cy + 3.5, "text-anchor": "end", "font-size": narrow ? 10 : 11.5, "font-weight": isI ? 800 : 400, fill: isI ? red : ink }, g); nm.textContent = r[0];
+    const c = isI ? red : r[3] >= r[2] ? navy : slate;
+    el("line", { x1: x(r[2]), x2: x(r[3]), y1: cy, y2: cy, stroke: c, "stroke-width": isI ? 3 : 2, "stroke-opacity": isI ? 1 : 0.55 }, g);
+    el("circle", { cx: x(r[2]), cy, r: narrow ? 3.2 : 4, fill: "#ffffff", stroke: isI ? red : slate, "stroke-width": 1.6 }, g);
+    el("circle", { cx: x(r[3]), cy, r: narrow ? 3.4 : 4.4, fill: isI ? red : navy }, g);
+    const gap = r[3] - r[2];
+    const gt = el("text", { x: W, y: cy + 3.5, "text-anchor": "end", "font-size": narrow ? 10 : 11, "font-weight": isI ? 800 : 600, fill: isI ? red : gap >= 0 ? navy : slate }, g);
+    gt.textContent = (gap >= 0 ? "+" : "") + Math.round(gap);
+    if (isI && !narrow) {
+      const a = el("text", { x: x(r[2]) - 7, y: cy + 3.5, "text-anchor": "end", "font-size": 10.5, "font-weight": 700, fill: red }, g); a.textContent = r[2].toFixed(0) + "%";
+      const b = el("text", { x: x(r[3]) + 7, y: cy + 3.5, "font-size": 10.5, "font-weight": 700, fill: red }, g); b.textContent = r[3].toFixed(0) + "%";
+    }
+    el("rect", { x: 0, y: cy - rh / 2, width: W, height: rh, fill: "transparent" }, g);
+    const on = () => {
+      tip2.innerHTML = `<b>${r[0]}</b> &middot; ${r[4].toLocaleString("en-US")} million people<br>Own definition ${r[2]}% &middot; Satellite ${r[3]}%`;
+      tip2.hidden = false;
+      const bb = svg.getBoundingClientRect(), sc = bb.width / W;
+      let tx = x(Math.max(r[2], r[3])) * sc + 14; if (tx + tip2.offsetWidth > bb.width) tx = x(Math.min(r[2], r[3])) * sc - tip2.offsetWidth - 14;
+      tip2.style.left = Math.max(0, tx) + "px"; tip2.style.top = (cy * bb.height / H - tip2.offsetHeight / 2) + "px";
+    };
+    g.addEventListener("pointerenter", on); g.addEventListener("pointerdown", on); g.addEventListener("pointerleave", () => { tip2.hidden = true; });
+  });
+}
+const drawAll = () => { draw(); draw2(); };
+(document.fonts?.ready || Promise.resolve()).then(drawAll);
+drawAll();
+let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(drawAll, 120); });
 </script>
 </body>
 </html>
