@@ -77,6 +77,24 @@ table.pp td.t a:hover{color:var(--navy)}
 .idea dt{color:var(--faint)}
 .idea dd{margin:0}
 .foot{margin-top:30px;color:var(--faint);font-size:11px}
+#mchart{max-width:980px}
+#mchart svg{display:block;width:100%;height:auto}
+.mash{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(460px,100%),1fr));gap:10px;margin-top:12px}
+.mc{border:1px solid var(--line);border-radius:4px;padding:10px 12px;min-width:0}
+.mc.top{border-color:#fecdd3;box-shadow:inset 3px 0 0 var(--red)}
+.mc h3{margin:0 0 2px;font-size:14.5px;font-weight:600}
+.mc .rk{color:var(--faint);font-weight:500;margin-right:6px}
+.mc .src2{font-size:11.5px;color:var(--mute);margin:0 0 6px}
+.mc .src2 b{font-weight:500;color:var(--ink)}
+.mc p{margin:0 0 6px}
+.mc dl{display:grid;grid-template-columns:62px 1fr;gap:3px 8px;margin:0 0 8px;font-size:12px}
+.mc dt{color:var(--faint)}.mc dd{margin:0}
+.sc{display:grid;grid-template-columns:50px 92px 1fr;gap:3px 8px;align-items:center;font-size:12px}
+.sc .lb{color:var(--faint)}
+.bar{height:6px;background:#f1f3f5;border-radius:3px;position:relative}
+.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:3px}
+.sc .why{color:var(--mute)}
+.sc b{font-weight:600;font-variant-numeric:tabular-nums;margin-left:4px}
 @media (max-width:760px){.vt{white-space:normal}table.pp td.t{overflow-wrap:anywhere}.hide-xs{display:none}.grid,.ideas{grid-template-columns:1fr}.ctl input[type=search]{min-width:0;width:100%}.hide-s{display:none}}
 </style>
 </head>
@@ -85,7 +103,7 @@ table.pp td.t a:hover{color:var(--navy)}
 <div class="page">
 <h1>Visualization and AI venues</h1>
 <p class="sub">Where papers on charts, LLMs and data agents get published, what each venue accepted before, and small agentic data science projects that fit them.</p>
-<nav><a href="#deadlines">Deadlines</a><a href="#venues">Venues</a><a href="#papers">Accepted papers</a><a href="#ideas">Ideas</a></nav>
+<nav><a href="#deadlines">Deadlines</a><a href="#venues">Venues</a><a href="#papers">Accepted papers</a><a href="#ideas">Ideas</a><a href="#mashups">Paper combinations</a></nav>
 <div class="stats" id="stats"></div>
 
 <h2 id="deadlines">Deadlines, Aug 2026 to Sep 2027</h2>
@@ -112,6 +130,11 @@ table.pp td.t a:hover{color:var(--navy)}
 <h2 id="ideas">Doable ideas with an agentic data science angle</h2>
 <p class="lede">Five of the six need no user study and use only public data. Effort assumes evenings and weekends. Related papers link to the arXiv or DOI page.</p>
 <div class="ideas" id="idealist"></div>
+
+<h2 id="mashups">Two papers, one new paper</h2>
+<p class="lede">Each idea takes two accepted papers that answer half of a question and joins them. Impact (1-10) weighs how many people would use or cite the result, how central it is to agentic data science, and the venue tier it can reach. Ease (1-10) weighs public data, no user study, compute cost and weeks of work. Scores are judgment calls, not measurements.</p>
+<div id="mchart"></div>
+<div class="mash" id="mashlist"></div>
 
 <p class="foot">Source: venue research notes and papers.csv, last refreshed Sep 13, 2026. Dates marked ~ are projections.</p>
 </div>
@@ -268,6 +291,33 @@ var IDEAS=[{"t": "Agents that check their own charts", "p": "A chart agent rende
 document.getElementById("idealist").innerHTML=IDEAS.map(function(d){
  var rel=d.rel.map(function(i){var p=PAPERS[i];return '<a href="'+esc(link(p))+'" target="_blank" rel="noopener">'+esc(p.paper.split(":")[0])+'</a>'}).join(", ");
  return '<div class="idea"><h3>'+esc(d.t)+'</h3><p>'+esc(d.p)+'</p><dl><dt>Build</dt><dd>'+esc(d.b)+'</dd><dt>Evaluate</dt><dd>'+esc(d.e)+'</dd><dt>Send to</dt><dd>'+esc(d.v)+'</dd><dt>Effort</dt><dd>'+esc(d.f)+'</dd><dt>Related</dt><dd>'+rel+'</dd></dl></div>'}).join("");
+/* ---------- mashups ---------- */
+var MASH=[{"t": "Do data agents clean data to fit the hypothesis?", "short": "Biased data cleaning", "a": 57, "b": 88, "impact": 9, "ease": 8, "q": "Paper A showed that people remove scatterplot outliers that contradict what they already believe. Paper B showed that classic human perception studies can be rerun with vision-language models as the subjects. Combined: rerun the outlier-removal experiment with data agents as the subjects.", "gap": "A tested only people. B replicated readability studies, not analysis decisions. No paper in the list measures cognitive bias in how agents clean data.", "method": "Generate scatterplot datasets with planted outliers on both sides of a trend. Prompt agents with a stated hypothesis, the opposite hypothesis, or none, and ask them to clean the data. Measure which points they drop and how the fitted slope moves. Test one mitigation, such as hiding the hypothesis during cleaning.", "data": "Synthetic datasets. The published human results from paper A serve as the baseline.", "venue": "EuroVis short (~Feb 2027) or VLDB ADS (~May 2027). Extend to IEEE VIS full (Mar 31, 2027) with more models and mitigations.", "wi": "Every data agent cleans data. A measured tilt toward the user's hypothesis is a quotable finding about agent reliability, not only chart quality.", "we": "No people, synthetic data, a few hundred calls per model. The hard part is matching the original stimuli closely."}, {"t": "Do LLM chart judges agree with r/dataisbeautiful?", "short": "LLM judges vs Reddit", "a": 116, "b": 89, "impact": 8, "ease": 8, "q": "BeautiVis annotated community charts from r/dataisbeautiful. Beauty in the Eye of AI tested whether models match human aesthetic ratings, but only for network diagrams. Combined: test whether the vision-language judges used to score agent charts agree with how a large chart community rates everyday charts.", "gap": "LLM judges now grade agent charts in benchmarks and in the AgenticVIS Challenge. Their agreement with human ratings of ordinary charts is untested in these papers.", "method": "Score each BeautiVis chart with 3 or 4 judge models and prompts. Correlate with community signals (post score, annotations) while controlling for topic and post time. Show the charts where judges and people disagree most.", "data": "BeautiVis corpus of public Reddit posts. Confirm that the release includes vote counts.", "venue": "PacificVis VisNotes (~Jan 7, 2027) or VISxGenAI 2027 (~Aug 15, 2027).", "wi": "Any chart-agent paper that uses an LLM judge could cite this as the check on its metric.", "we": "Public data, no study, cheap inference. Votes are noisy, so the analysis needs controls."}, {"t": "Read the data back out of the agent's chart", "short": "Read-back check", "a": 92, "b": 1, "impact": 8, "ease": 7, "lx": -12, "q": "Paper A scores a chart by how well the source data can be reconstructed from the image. DEEPCHART found that charts that look right often carry wrong data. Combined: use reconstruction as an automatic check that catches DEEPCHART-style errors before the user sees the chart.", "gap": "A proposed reconstruction as an evaluation score, not as a guard inside an agent loop. DEEPCHART measured the errors but did not test a fix.", "method": "The agent draws a chart, a separate vision model reads the values back from the image, and the pipeline compares them with the source table. High error triggers a redraw. Report how many DEEPCHART expert-labeled errors the check catches and how often it raises false alarms.", "data": "DEEPCHART tasks and labels if released; otherwise a smaller set built from public tables.", "venue": "IEEE VIS short (~Jun 2027) or VISxGenAI 2027 (~Aug 15, 2027).", "wi": "A cheap guard that works with any model and drops straight into chart agents.", "we": "Mostly pipeline work. Depends on DEEPCHART releasing its labels."}, {"t": "Do agents analyze like analysts?", "short": "Agents vs analysts", "a": 101, "b": 112, "impact": 8, "ease": 5, "q": "Paper A mined Jupyter notebooks to see how people build charts step by step. NotebookRAG grounds agents in existing notebooks. Combined: compare the path an agent takes through a dataset with the paths people took through the same dataset.", "gap": "Workflow mining has studied only people, and agents are judged only on their final output.", "method": "Pick Kaggle datasets with many public notebooks. Run several agents on the same tasks and log every step. Compare charts tried, revisits, dead ends and order of operations. Test whether more human-like paths lead to better final answers.", "data": "Public Kaggle notebooks and agent logs. Edit histories are not public, so final notebooks stand in for paths.", "venue": "PacificVis conference track (~Nov 8, 2026) for an early version, IEEE VIS full (Mar 31, 2027) for the complete one.", "wi": "Gives a way to evaluate how an agent works, not only what it outputs. Central to agentic data science.", "we": "Defining comparable path metrics is the real research work, and human paths must be approximated."}, {"t": "Agents that learn from 20 years of human chart edits", "short": "Wikimedia chart edits", "a": 68, "b": 108, "impact": 7, "ease": 6, "q": "Paper A mined how Wikimedia editors revised charts over two decades. Paper B showed which design defaults LLMs pick when a request is vague. Combined: use real human revisions as ground truth for what a better chart looks like, and test whether agents make the same fixes.", "gap": "Agent chart critics have no ground truth of real improvements, and revision mining has not been used to evaluate AI.", "method": "Collect before and after chart pairs from Wikimedia Commons. Ask vision models which version is better, and ask agents to revise the before version. Compare their edits with the human edits by category: labels, color, chart type, data.", "data": "Public Wikimedia Commons file histories through its API.", "venue": "EuroVis short (~Feb 2027) or PacificVis VisNotes (~Jan 7, 2027).", "wi": "A free benchmark of chart improvements made by people, reusable by others.", "we": "Building the pair dataset and edit categories takes time unless paper A released its data."}, {"t": "Do human guardrails protect AI chart readers?", "short": "Guardrails for AI", "a": 95, "b": 9, "impact": 6, "ease": 9, "q": "Paper A found which added context best keeps people from being misled by persuasive line charts. VEIL showed that vision models can be steered by manipulated encodings. Combined: test whether the guardrails that help people also help vision models.", "gap": "A tested guardrails on people only. VEIL showed the attack but no defense.", "method": "Recreate the persuasive line charts with and without each guardrail. Ask vision models the questions people answered in A. Compare the guardrail ranking for models with the ranking for people.", "data": "Synthetic charts that follow the published study design.", "venue": "PacificVis VisNotes (~Jan 7, 2027).", "wi": "Matters as agents read charts on behalf of users, but the audience is narrower.", "we": "Fully synthetic and small, and the human baseline already exists."}, {"t": "Can agents follow a chart style guide?", "short": "Style guide compliance", "a": 66, "b": 108, "impact": 6, "ease": 8, "lx": -12, "q": "Paper A studied how organizations write chart style guides and when they bend them. Paper B showed what LLMs pick when no style is given. Combined: give agents a real public style guide and measure which rules they follow and which model defaults win anyway.", "gap": "Neither paper tests a style guide as an instruction to an AI.", "method": "Turn public style guides, such as the Urban Institute guide, into checkable rules. Generate charts with and without the guide in the prompt. Score compliance per rule from the generated code and image.", "data": "Public style guides and public datasets.", "venue": "VISxGenAI 2027 (~Aug 15, 2027) or ACM IUI posters (Nov 10, 2026).", "wi": "Direct industry use: every company with a brand guide wants agents that follow it.", "we": "Rule checks on generated code are straightforward to automate."}];
+MASH.forEach(function(m){m.sum=m.impact+m.ease});
+var order=MASH.slice().sort(function(a,b){return b.sum-a.sum||b.impact-a.impact});
+order.forEach(function(m,i){m.rank=i+1});
+function pl(i){var p=PAPERS[i];return '<a href="'+esc(link(p))+'" target="_blank" rel="noopener">'+esc(p.paper.split(":")[0])+'</a> <span style="color:var(--faint)">('+esc(p.venue)+' '+p.year+')</span>'}
+function bar(v,c){return '<div class="bar"><i style="width:'+v*10+'%;background:'+c+'"></i></div>'}
+document.getElementById("mashlist").innerHTML=order.map(function(m){
+ return '<div class="mc'+(m.rank==1?' top':'')+'"><h3><span class="rk">#'+m.rank+'</span>'+esc(m.t)+'</h3>'+
+ '<p class="src2"><b>A</b> '+pl(m.a)+'<br><b>B</b> '+pl(m.b)+'</p>'+
+ '<p>'+esc(m.q)+'</p><dl><dt>Gap</dt><dd>'+esc(m.gap)+'</dd><dt>Method</dt><dd>'+esc(m.method)+'</dd><dt>Data</dt><dd>'+esc(m.data)+'</dd><dt>Send to</dt><dd>'+esc(m.venue)+'</dd></dl>'+
+ '<div class="sc"><span class="lb">Impact<b>'+m.impact+'</b></span>'+bar(m.impact,'#E60023')+'<span class="why">'+esc(m.wi)+'</span>'+
+ '<span class="lb">Ease<b>'+m.ease+'</b></span>'+bar(m.ease,'#0a3069')+'<span class="why">'+esc(m.we)+'</span></div></div>'}).join("");
+(function(){
+ var W=980,H=420,l=56,r=24,tp=20,b=46,x0=4,x1=10,y0=4,y1=10;
+ function X(v){return l+(v-x0)/(x1-x0)*(W-l-r)}function Y(v){return tp+(y1-v)/(y1-y0)*(H-tp-b)}
+ var s='<svg viewBox="0 0 '+W+' '+H+'" font-family="inherit" font-size="11">';
+ s+='<rect x="'+X(7.5)+'" y="'+Y(10)+'" width="'+(X(10)-X(7.5))+'" height="'+(Y(7.5)-Y(10))+'" fill="#fff5f6"/>';
+ s+='<text x="'+(X(10)-6)+'" y="'+(Y(10)+14)+'" text-anchor="end" fill="#E60023" font-size="10.5">Do first: high impact, easy</text>';
+ for(var v=4;v<=10;v++){s+='<line x1="'+X(v)+'" x2="'+X(v)+'" y1="'+tp+'" y2="'+(H-b)+'" stroke="#f1f3f5"/><text x="'+X(v)+'" y="'+(H-b+15)+'" text-anchor="middle" fill="#9ca3af">'+v+'</text>';
+  s+='<line x1="'+l+'" x2="'+(W-r)+'" y1="'+Y(v)+'" y2="'+Y(v)+'" stroke="#f1f3f5"/><text x="'+(l-8)+'" y="'+(Y(v)+4)+'" text-anchor="end" fill="#9ca3af">'+v+'</text>'}
+ s+='<text x="'+((l+W-r)/2)+'" y="'+(H-8)+'" text-anchor="middle" fill="#6b7280">Ease of doing it &rarr;</text>';
+ s+='<text transform="translate(14 '+((tp+H-b)/2)+') rotate(-90)" text-anchor="middle" fill="#6b7280">Impact &rarr;</text>';
+ MASH.forEach(function(m){var x=X(m.ease),y=Y(m.impact),c=m.rank==1?'#E60023':'#0a3069',dx=m.lx||12,dy=m.ly||4,anc=dx<0?'end':'start';
+  s+='<circle cx="'+x+'" cy="'+y+'" r="'+(m.rank==1?7:5.5)+'" fill="'+c+'" fill-opacity="'+(m.rank==1?1:.85)+'"/>';
+  s+='<text x="'+(x+dx)+'" y="'+(y+dy)+'" text-anchor="'+anc+'" fill="'+(m.rank==1?'#E60023':'#16181d')+'" font-weight="'+(m.rank==1?600:400)+'">#'+m.rank+' '+esc(m.short)+'</text>'});
+ document.getElementById("mchart").innerHTML=s+'</svg>'})();
 </script>
 </body>
 </html>
