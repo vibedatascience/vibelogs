@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Daily Charts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sofia+Sans+Condensed:wght@700;800&family=Sofia+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one wide white column, one dated entry per chart, newest first. Rennie-style entries: the headline states the finding and its colored words act as the legend, annotations sit on the chart, a single Data | Graphic footer. Deliberately single-theme (pure white). */
+:root {
+  color-scheme: light;
+  --bg: #ffffff; --ink: #1e293b; --navy: #0a3069; --red: #E60023; --teal: #0d9488;
+  --slate: #64748b; --dot: #94a3b8; --rule: #e9eef4; --band: #f4f6f9;
+  --display: "Sofia Sans Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --body: "Sofia Sans", "Helvetica Neue", Arial, sans-serif;
+}
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 13px; line-height: 1.45; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: 16px; padding-block: 16px 40px; }
+.mast { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; border-bottom: 2px solid var(--navy); padding-bottom: 4px; }
+.mast h1 { font-family: var(--display); font-weight: 800; font-size: 22px; margin: 0; color: var(--navy); letter-spacing: 0.01em; }
+.mast span { font-size: 11px; color: var(--slate); }
+.entry { padding-top: 18px; }
+.entry + .entry { margin-top: 30px; border-top: 1px solid var(--rule); }
+.date { font-size: 11px; font-weight: 600; color: var(--slate); text-transform: uppercase; letter-spacing: 0.08em; }
+.entry h2 { font-family: var(--display); font-weight: 800; font-size: clamp(22px, 3.4vw, 34px); line-height: 1.08; margin: 4px 0 6px; color: var(--ink); text-wrap: balance; max-width: 30ch; }
+.entry h2 .r { color: var(--red); } .entry h2 .n { color: var(--navy); }
+.dek { color: var(--slate); max-width: 92ch; margin: 0 0 10px; font-size: 13.5px; }
+.chart { position: relative; width: 100%; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; font-variant-numeric: tabular-nums; }
+.chart text { font-family: var(--body); }
+.tip { position: absolute; pointer-events: none; background: var(--bg); border: 1px solid var(--rule); box-shadow: 0 4px 14px rgba(10,48,105,.12); padding: 5px 8px; font-size: 11.5px; border-radius: 3px; white-space: nowrap; z-index: 2; color: var(--ink); }
+.tip b { font-weight: 700; color: var(--navy); }
+.foot { font-size: 11px; color: var(--slate); margin-top: 8px; max-width: 120ch; }
+.foot b { color: var(--ink); font-weight: 600; }
+.foot a { color: var(--slate); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast"><h1>Daily Charts</h1><span>One chart a day from the day's news</span></header>
+
+  <article class="entry" id="d2026-10-06">
+    <div class="date">Oct 6, 2026 &middot; AI agents</div>
+    <h2>In just over a year, the <span class="r">best AI agent</span> went from barely beating its $500 starting cash to turning it into $15,515</h2>
+    <p class="dek">Each dot is one AI model running a simulated vending machine business on its own for a year, starting with $500, placed by the model's release date. The red line is the best result on record at each date.</p>
+    <div class="chart" id="c1"><div class="tip" id="t1" hidden></div></div>
+    <p class="foot"><b>Data:</b> <a href="https://epoch.ai/benchmarks/use-this-data" target="_blank" rel="noopener">Epoch AI</a> benchmark hub (Oct 6, 2026), from <a href="https://andonlabs.com/evals/vending-bench-2" target="_blank" rel="noopener">Andon Labs Vending-Bench 2</a>, 66 model runs.</p>
+  </article>
+
+  <article class="entry" id="d2026-10-05">
+    <div class="date">Oct 5, 2026 &middot; 2026 Senate races</div>
+    <h2>Deep-red states swung up to 20 points <span class="n">toward Democrats</span>. Maine swung <span class="r">toward Republicans</span>.</h2>
+    <p class="dek">Margin in the 2024 presidential race compared with the margin in September 2026 Senate polls, in eight states.</p>
+    <div class="chart" id="c2"></div>
+    <p class="foot"><b>Note:</b> A Senate poll and a presidential result measure different races, so the swing reflects the candidates as well as the voters. 2024 margins are certified results rounded to whole points. <b>Data:</b> NYT/Siena Senate polls, Sep 2026 (<a href="https://gvwire.com/2026/09/25/democrats-lead-in-michigan-new-hampshire-senate-races-trail-in-maine-nyt-polls-find/" target="_blank" rel="noopener">GV Wire</a>).</p>
+  </article>
+</div>
+
+<script>
+const NS = "http://www.w3.org/2000/svg";
+const el = (t, a, p) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; };
+const txt = (s, a, p) => { const e = el("text", a, p); e.textContent = s; return e; };
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+/* ---------- Chart 1: Vending-Bench 2, record line over all runs ---------- */
+const VB = [{"m":"Gemini 2.5 Flash","d":"2025-06-17","o":"Google DeepMind","v":549},{"m":"Gemini 2.5 Pro","d":"2025-06-17","o":"Google DeepMind","v":574},{"m":"Qwen3 235B A22B Thinking","d":"2025-07-25","o":"Alibaba","v":-11},{"m":"GPT-OSS-120b","d":"2025-08-05","o":"OpenAI","v":-22},{"m":"GPT-5 mini","d":"2025-08-07","o":"OpenAI","v":-31},{"m":"Qwen3 Max","d":"2025-09-24","o":"Alibaba","v":72},{"m":"DeepSeek-V3.2","d":"2025-09-29","o":"DeepSeek","v":1034},{"m":"Claude Sonnet 4.5","d":"2025-09-29","o":"Anthropic","v":3839},{"m":"Claude Haiku 4.5","d":"2025-10-15","o":"Anthropic","v":459},{"m":"MiniMax-M2","d":"2025-10-27","o":"MiniMax","v":161},{"m":"GPT-5.1","d":"2025-11-13","o":"OpenAI","v":1473},{"m":"Gemini 3 Pro","d":"2025-11-18","o":"Google DeepMind","v":5478},{"m":"Grok 4.1 Fast","d":"2025-11-19","o":"xAI","v":1107},{"m":"Claude Opus 4.5","d":"2025-11-24","o":"Anthropic","v":4967},{"m":"GPT-5.2","d":"2025-12-11","o":"OpenAI","v":3591},{"m":"Gemini 3 Flash","d":"2025-12-17","o":"Google DeepMind","v":3635},{"m":"GLM-4.7","d":"2025-12-22","o":"Z.ai (Zhipu AI)","v":2377},{"m":"Kimi K2.5","d":"2026-01-27","o":"Moonshot","v":1198},{"m":"GPT-5.3-Codex","d":"2026-02-05","o":"OpenAI","v":5940},{"m":"Claude Opus 4.6","d":"2026-02-05","o":"Anthropic","v":8018},{"m":"GLM-5","d":"2026-02-11","o":"Z.ai (Zhipu AI)","v":4432},{"m":"MiniMax-M2.5","d":"2026-02-12","o":"MiniMax","v":-23},{"m":"Qwen 3.5 Plus","d":"2026-02-16","o":"Alibaba","v":1},{"m":"Grok 4.20","d":"2026-02-17","o":"xAI","v":4663},{"m":"Claude Sonnet 4.6","d":"2026-02-17","o":"Anthropic","v":7204},{"m":"Gemini 3.1 Pro","d":"2026-02-19","o":"Google DeepMind","v":911},{"m":"Gemini 3.1 Pro Custom Tools","d":"2026-02-19","o":"Google DeepMind","v":3774},{"m":"Qwen 3.5 27B","d":"2026-02-24","o":"Alibaba","v":202},{"m":"Qwen 3.5 35B A3B","d":"2026-02-25","o":"Alibaba","v":463},{"m":"GPT-5.4","d":"2026-03-05","o":"OpenAI","v":6144},{"m":"Qwen 3.6 Plus","d":"2026-03-31","o":"Alibaba","v":5115},{"m":"GLM-5.1","d":"2026-04-07","o":"Z.ai (Zhipu AI)","v":5634},{"m":"Claude Opus 4.7","d":"2026-04-16","o":"Anthropic","v":10937},{"m":"Grok 4.3","d":"2026-04-17","o":"xAI","v":35},{"m":"Qwen 3.6 Max","d":"2026-04-20","o":"Alibaba","v":4254},{"m":"Kimi K2.6","d":"2026-04-20","o":"Moonshot","v":6205},{"m":"GPT-5.5","d":"2026-04-23","o":"OpenAI","v":7524},{"m":"Deepseek V4 Pro","d":"2026-04-24","o":"DeepSeek","v":3285},{"m":"Gemini 3.5 Flash","d":"2026-05-19","o":"Google DeepMind","v":5396},{"m":"Claude Opus 4.8 (Max)","d":"2026-05-28","o":"Anthropic","v":2992},{"m":"Claude Opus 4.8 (High)","d":"2026-05-28","o":"Anthropic","v":5787},{"m":"MiniMax-M3","d":"2026-06-01","o":"MiniMax","v":2158},{"m":"Claude Fable 5 (Medium)","d":"2026-06-09","o":"Anthropic","v":4340},{"m":"Claude Fable 5 (None)","d":"2026-06-09","o":"Anthropic","v":4530},{"m":"Claude Fable 5 (Max)","d":"2026-06-09","o":"Anthropic","v":4967},{"m":"Claude Fable 5 (Low)","d":"2026-06-09","o":"Anthropic","v":5019},{"m":"Claude Fable 5 (High)","d":"2026-06-09","o":"Anthropic","v":5680},{"m":"Kimi K2.7 Code","d":"2026-06-12","o":"Moonshot","v":5083},{"m":"GLM-5.2","d":"2026-06-16","o":"Z.ai (Zhipu AI)","v":8314},{"m":"Claude Sonnet 5","d":"2026-06-30","o":"Anthropic","v":6378},{"m":"Grok 4.5","d":"2026-07-08","o":"xAI","v":3887},{"m":"GPT-5.6 Luna","d":"2026-07-09","o":"OpenAI","v":4095},{"m":"Muse Spark 1.1","d":"2026-07-09","o":"Meta AI","v":6520},{"m":"GPT-5.6 Terra","d":"2026-07-09","o":"OpenAI","v":7343},{"m":"GPT-5.6 Sol","d":"2026-07-09","o":"OpenAI","v":9619},{"m":"Kimi K3 (Moonshot)","d":"2026-07-16","o":"Moonshot","v":5165},{"m":"Claude Opus 5","d":"2026-07-24","o":"Anthropic","v":11182},{"m":"Grok 4.6","d":"2026-08-12","o":"xAI","v":9047},{"m":"GLM-5.3","d":"2026-08-14","o":"Z.ai (Zhipu AI)","v":8164},{"m":"Claude Fable 5.1","d":"2026-09-01","o":"Anthropic","v":5422},{"m":"Gemini 3.8 Flash","d":"2026-09-02","o":"Google DeepMind","v":5094},{"m":"GPT-6 Astra","d":"2026-09-03","o":"OpenAI","v":15515},{"m":"Grok 4.7","d":"2026-09-21","o":"xAI","v":10537},{"m":"Claude Opus 5.5","d":"2026-09-22","o":"Anthropic","v":9235},{"m":"GPT-6 Sol","d":"2026-09-22","o":"OpenAI","v":14428},{"m":"Gemini 4 Argon","d":"2026-09-30","o":"Google DeepMind","v":13718}];
+const T = s => new Date(s + "T12:00:00").getTime();
+VB.forEach(r => r.t = T(r.d));
+const sorted = [...VB].sort((a, b) => a.t - b.t || a.v - b.v);
+let best = -Infinity; const REC = [];
+sorted.forEach(r => { if (r.v > best) { best = r.v; REC.push(r); } });
+const RECS = REC.filter((r, i) => !(REC[i + 1] && REC[i + 1].t === r.t)); // same-day ties: keep the higher one
+const money = v => (v < 0 ? "-$" : "$") + Math.abs(v).toLocaleString("en-US");
+const kmoney = v => "$" + (v / 1000).toFixed(1) + "k";
+const mon = t => new Date(t).toLocaleDateString("en-US", { month: "short", year: "numeric" });
+const host1 = document.getElementById("c1"), tip1 = document.getElementById("t1");
+
+function draw1() {
+  host1.querySelector("svg")?.remove();
+  const W = host1.clientWidth, narrow = W < 600;
+  const H = Math.round(Math.max(380, Math.min(580, W * 0.5)));
+  const L = narrow ? 38 : 46, R = narrow ? 50 : 64, Tp = 24, B = 26;
+  const t0 = T("2025-06-01"), t1 = T("2026-10-08"), lo = -800, hi = 16800;
+  const x = t => L + (t - t0) / (t1 - t0) * (W - L - R);
+  const y = v => Tp + (hi - v) / (hi - lo) * (H - Tp - B);
+  const red = css("--red"), navy = css("--navy"), slate = css("--slate"), dotc = css("--dot"), teal = css("--teal");
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Scatter of 66 AI models' final balances in Vending-Bench 2 by release date, with a red step line for the record. The record rose from $574 in June 2025 to $15,515 for GPT-6 Astra in September 2026." });
+  host1.prepend(svg);
+  // band: ended below starting cash
+  el("rect", { x: L, y: y(500), width: W - L - R, height: y(lo) - y(500), fill: css("--band") }, svg);
+  txt("Ended with less than the $500 it started with", { x: W - R - 4, y: y(lo) - 6, "text-anchor": "end", "font-size": narrow ? 9.5 : 10.5, fill: slate, "font-style": "italic" }, svg);
+  // y grid
+  for (let v = 0; v <= 16000; v += 4000) {
+    el("line", { x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: css("--rule") }, svg);
+    txt(v === 0 ? "$0" : `$${v / 1000}k`, { x: L - 6, y: y(v) + 3.5, "text-anchor": "end", "font-size": 10, fill: slate }, svg);
+  }
+  el("line", { x1: L, x2: W - R, y1: y(500), y2: y(500), stroke: teal, "stroke-dasharray": "3 3", "stroke-width": 1.2 }, svg);
+  if (!narrow) txt("$500 start", { x: L + 4, y: y(500) + 12, "font-size": 10, fill: teal, "font-weight": 600 }, svg);
+  // x ticks
+  ["2025-07-01", "2025-10-01", "2026-01-01", "2026-04-01", "2026-07-01", "2026-10-01"].forEach(d => {
+    const xx = x(T(d));
+    el("line", { x1: xx, x2: xx, y1: H - B, y2: H - B + 4, stroke: slate }, svg);
+    txt(mon(T(d)), { x: xx, y: H - 8, "text-anchor": "middle", "font-size": 10, fill: slate }, svg);
+  });
+  el("line", { x1: L, x2: W - R, y1: H - B, y2: H - B, stroke: slate, "stroke-width": 0.8 }, svg);
+  // dots
+  const pts = [];
+  VB.forEach(r => {
+    const isRec = RECS.includes(r), muse = r.m.startsWith("Muse");
+    const c = el("circle", { cx: x(r.t), cy: y(r.v), r: isRec ? (narrow ? 4.5 : 5.5) : (narrow ? 3 : 3.8), fill: isRec ? red : muse ? navy : dotc, "fill-opacity": isRec || muse ? 1 : 0.55, stroke: "#ffffff", "stroke-width": 0.8 }, svg);
+    pts.push({ r, cx: x(r.t), cy: y(r.v) });
+  });
+  // record step line, held to the last data date
+  const tEnd = T("2026-09-30");
+  let d = `M${x(RECS[0].t)},${y(RECS[0].v)}`;
+  RECS.slice(1).forEach(r => { d += ` H${x(r.t)} V${y(r.v)}`; });
+  d += ` H${x(tEnd)}`;
+  const line = el("path", { d, fill: "none", stroke: red, "stroke-width": 2.4, "stroke-linejoin": "round" }, svg);
+  svg.insertBefore(line, svg.querySelector("circle"));
+  // end label
+  txt(money(RECS.at(-1).v), { x: x(tEnd) + 6, y: y(RECS.at(-1).v) + 4, "font-size": narrow ? 11 : 13, "font-weight": 700, fill: red }, svg);
+  // record labels: left of each riser top, unless that runs off the plot
+  RECS.forEach((r, i) => {
+    const isLast = i === RECS.length - 1;
+    const label = narrow ? (isLast ? r.m : kmoney(r.v)) : (isLast ? r.m : `${r.m}  ${money(r.v)}`);
+    const t = txt(label, { x: 0, y: y(r.v) - 8, "font-size": narrow ? 9.5 : 10.5, "font-weight": 600, fill: red }, svg);
+    const w = t.getComputedTextLength();
+    const leftX = x(r.t) - 6;
+    if (leftX - w < L + 2) { t.setAttribute("x", x(r.t) + 6); }
+    else { t.setAttribute("x", leftX); t.setAttribute("text-anchor", "end"); }
+  });
+  // Meta's Muse annotation (wide screens only)
+  if (!narrow) {
+    const m = VB.find(r => r.m.startsWith("Muse")), mx = x(m.t), my = y(m.v);
+    const ax = x(T("2026-08-05")), ay = y(2700);
+    const g = el("g", {}, svg);
+    txt("Meta's Muse Spark 1.1", { x: ax, y: ay, "font-size": 10.5, "font-weight": 700, fill: navy }, g);
+    txt("ended with $6,520", { x: ax, y: ay + 13, "font-size": 10.5, fill: navy }, g);
+    el("path", { d: `M${ax - 4},${ay - 4} Q${mx + 4},${ay - 6} ${mx + 2},${my + 8}`, fill: "none", stroke: navy, "stroke-width": 1 }, g);
+    el("path", { d: `M${mx - 1.5},${my + 13} L${mx + 2},${my + 7} L${mx + 5.5},${my + 13}`, fill: "none", stroke: navy, "stroke-width": 1 }, g);
+  }
+  // nearest-dot tooltip
+  const move = e => {
+    const b = svg.getBoundingClientRect(), sx = (e.clientX - b.left) * W / b.width, sy = (e.clientY - b.top) * H / b.height;
+    let hit = null, dmin = 18 * 18;
+    pts.forEach(p => { const dd = (p.cx - sx) ** 2 + (p.cy - sy) ** 2; if (dd < dmin) { dmin = dd; hit = p; } });
+    if (!hit) { tip1.hidden = true; return; }
+    const r = hit.r;
+    tip1.innerHTML = `<b>${r.m}</b> &middot; ${r.o}<br>Released ${mon(r.t)} &middot; ended with ${money(r.v)}`;
+    tip1.hidden = false;
+    const px = hit.cx * b.width / W, py = hit.cy * b.height / H;
+    let tx = px + 12; if (tx + tip1.offsetWidth > b.width) tx = px - tip1.offsetWidth - 12;
+    tip1.style.left = Math.max(0, tx) + "px"; tip1.style.top = Math.max(0, py - tip1.offsetHeight - 8) + "px";
+  };
+  svg.addEventListener("pointermove", move); svg.addEventListener("pointerdown", move);
+  svg.addEventListener("pointerleave", () => { tip1.hidden = true; });
+}
+
+/* ---------- Chart 2: Senate slope chart ---------- */
+const SEN = [
+  { st: "Kansas", a: -16, b: 0 }, { st: "Texas", a: -14, b: 6 }, { st: "Alaska", a: -13, b: 7 }, { st: "Iowa", a: -13, b: -1 },
+  { st: "Ohio", a: -11, b: 3 }, { st: "Michigan", a: -1, b: 5 }, { st: "New Hampshire", a: 3, b: 5 }, { st: "Maine", a: 7, b: -3 }
+];
+const mg = v => v === 0 ? "Tie" : (v > 0 ? "D+" : "R+") + Math.abs(v);
+const host2 = document.getElementById("c2");
+
+// push labels apart vertically so none overlap, keeping order
+function dodge(items, gap, top, bottom) {
+  items.sort((p, q) => p.y - q.y);
+  for (let k = 0; k < 60; k++) {
+    let moved = false;
+    for (let i = 1; i < items.length; i++) {
+      const d = items[i].y - items[i - 1].y;
+      if (d < gap) { const s = (gap - d) / 2; items[i].y += s; items[i - 1].y -= s; moved = true; }
+    }
+    items.forEach(it => { it.y = Math.min(bottom, Math.max(top, it.y)); });
+    if (!moved) break;
+  }
+  return items;
+}
+
+function draw2() {
+  host2.querySelector("svg")?.remove();
+  const W = host2.clientWidth, narrow = W < 600;
+  const H = narrow ? 440 : Math.round(Math.max(440, Math.min(560, W * 0.46)));
+  const XA = narrow ? 92 : Math.round(W * 0.2), XB = narrow ? W - 118 : Math.round(W * 0.74);
+  const Tp = 40, B = 16, lo = -19, hi = 11;
+  const y = v => Tp + (hi - v) / (hi - lo) * (H - Tp - B);
+  const red = css("--red"), navy = css("--navy"), slate = css("--slate"), ink = css("--ink");
+  const fs = narrow ? 10.5 : 12;
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Slope chart from 2024 presidential margin to 2026 Senate poll margin in eight states. Texas and Alaska moved 20 points toward Democrats; Maine moved 10 points toward Republicans." });
+  host2.prepend(svg);
+  // party zones between the two axes
+  el("rect", { x: XA, y: y(hi), width: XB - XA, height: y(0) - y(hi), fill: navy, "fill-opacity": 0.035 }, svg);
+  el("rect", { x: XA, y: y(0), width: XB - XA, height: y(lo) - y(0), fill: red, "fill-opacity": 0.035 }, svg);
+  txt("Democrat ahead", { x: (XA + XB) / 2, y: y(hi) + 14, "text-anchor": "middle", "font-size": 10.5, "font-weight": 700, fill: navy, "letter-spacing": "0.06em" }, svg);
+  txt("Republican ahead", { x: (XA + XB) / 2, y: y(lo) - 8, "text-anchor": "middle", "font-size": 10.5, "font-weight": 700, fill: red, "letter-spacing": "0.06em" }, svg);
+  el("line", { x1: XA, x2: XB, y1: y(0), y2: y(0), stroke: slate, "stroke-dasharray": "3 3" }, svg);
+  [XA, XB].forEach(xx => el("line", { x1: xx, x2: xx, y1: y(hi), y2: y(lo), stroke: slate, "stroke-width": 0.8 }, svg));
+  txt("2024 presidential race", { x: XA, y: Tp - 14, "text-anchor": "middle", "font-size": fs, "font-weight": 700, fill: ink }, svg);
+  txt("2026 Senate poll", { x: XB, y: Tp - 14, "text-anchor": "middle", "font-size": fs, "font-weight": 700, fill: ink }, svg);
+  // Maine note in the empty lower-right area
+  if (!narrow) {
+    const nx = XA + (XB - XA) * 0.56, ny = y(-12.5), mx = XB - 6, my = y(-3) + 6;
+    txt("Maine moved 10 points the other way.", { x: nx, y: ny, "font-size": 11, "font-weight": 700, fill: red }, svg);
+    txt("Other polls show the Democrat ahead,", { x: nx, y: ny + 14, "font-size": 11, fill: red }, svg);
+    txt("so this poll may be an outlier.", { x: nx, y: ny + 28, "font-size": 11, fill: red }, svg);
+    el("path", { d: `M${nx + 150},${ny - 12} Q${mx - 4},${ny - 14} ${mx},${my + 4}`, fill: "none", stroke: red, "stroke-width": 1 }, svg);
+    el("path", { d: `M${mx - 3.5},${my + 9} L${mx},${my + 3} L${mx + 3.5},${my + 9}`, fill: "none", stroke: red, "stroke-width": 1 }, svg);
+  }
+  // lines and dots
+  SEN.forEach(s => {
+    const c = s.b > s.a ? navy : red;
+    el("line", { x1: XA, x2: XB, y1: y(s.a), y2: y(s.b), stroke: c, "stroke-width": narrow ? 2 : 2.6, "stroke-linecap": "round" }, svg);
+    el("circle", { cx: XA, cy: y(s.a), r: narrow ? 3.5 : 4.5, fill: "#ffffff", stroke: c, "stroke-width": 2 }, svg);
+    el("circle", { cx: XB, cy: y(s.b), r: narrow ? 4 : 5, fill: c }, svg);
+  });
+  const vcol = v => v > 0 ? navy : v < 0 ? red : slate;
+  // left labels
+  dodge(SEN.map(s => ({ s, y: y(s.a) })), fs + 3, Tp, H - B).forEach(({ s, y: yy }) => {
+    const t = el("text", { x: XA - 10, y: yy + 4, "text-anchor": "end", "font-size": fs }, svg);
+    const a = el("tspan", { fill: ink, "font-weight": 500 }, t); a.textContent = s.st + "  ";
+    const b = el("tspan", { fill: vcol(s.a), "font-weight": 700 }, t); b.textContent = mg(s.a);
+  });
+  // right labels
+  dodge(SEN.map(s => ({ s, y: y(s.b) })), fs + 3, Tp, H - B).forEach(({ s, y: yy }) => {
+    const sw = s.b - s.a;
+    const t = el("text", { x: XB + 10, y: yy + 4, "font-size": fs }, svg);
+    const a = el("tspan", { fill: vcol(s.b), "font-weight": 700 }, t); a.textContent = mg(s.b) + "  ";
+    const b = el("tspan", { fill: ink, "font-weight": 500 }, t); b.textContent = s.st + "  ";
+    const c = el("tspan", { fill: sw > 0 ? navy : red, "font-weight": 600, "font-size": fs - 1.5 }, t); c.textContent = (narrow ? "" : "") + Math.abs(sw) + (narrow ? "" : " pts");
+  });
+}
+
+
+const drawAll = () => { draw1(); draw2(); };
+(document.fonts?.ready || Promise.resolve()).then(drawAll);
+drawAll();
+let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(drawAll, 120); });
+</script>
+</body>
+</html>
