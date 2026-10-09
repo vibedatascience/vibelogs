@@ -7,13 +7,16 @@
     {
       "id": "cmv0ej6erw97",
       "created": "2026-10-09T03:24:31.923Z",
-      "status": "open",
+      "status": "resolved",
       "section": "Dataviz Competitions",
       "quote": "Free, jury-judged data visualization awards that individuals can enter. Paid design awards and newsroom-only prizes are left out. Dates come from published calls only; nothing is projected.",
       "prefix": "\nsource chat\n\nDataviz Competitions\n",
       "suffix": "\n8 daysto next open deadline (Swiss Viz,",
       "context": "Free, jury-judged data visualization awards that individuals can enter. Paid design awards and newsroom-only prizes are left out. Dates come from published calls only; nothing is projected.",
-      "comment": "Remove this random commentary"
+      "comment": "Remove this random commentary",
+      "resolved": "2026-10-09T03:50:30.000Z",
+      "by": "Claude",
+      "reply": "Removed the subtitle line under the title."
     }
   ]
 }
