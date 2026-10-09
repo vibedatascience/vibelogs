@@ -40,6 +40,14 @@ body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--b
 <div class="wrap">
   <header class="mast"><h1>Daily Charts India</h1><span>One chart a day from India's news</span></header>
 
+  <article class="entry" id="d2026-10-08c">
+    <div class="date">Oct 8, 2026 &middot; Untouchability law</div>
+    <h2>Police across India registered <span class="r">13 cases</span> under the 1955 law against untouchability in 2022. Courts decided 31 such cases that year and convicted in <span class="r">one</span>.</h2>
+    <p class="dek">Cases registered each year under the Protection of Civil Rights Act, 1955, which makes practising untouchability a crime. The row under the bars shows the share of cases decided by courts that year that ended in a conviction. In the last national survey to ask, in 2011-12, 27% of households said a member practises untouchability.</p>
+    <div class="chart" id="c3"><div class="tip" id="t3" hidden></div></div>
+    <p class="foot"><b>Note:</b> Many caste-based offences are now filed under the SC/ST (Prevention of Atrocities) Act, 1989, which carries harsher penalties, so part of the fall reflects a shift between laws. Crimes recorded against Scheduled Castes under all laws rose from 26,127 in 2005 to 57,582 in 2022. Counts cover cases involving both Scheduled Castes and Scheduled Tribes. The 2017 conviction share covers Scheduled Caste cases only. A dash means the year's court figures were not found. <b>Data:</b> Ministry of Social Justice and Empowerment, annual reports under the PCR Act (<a href="https://socialjustice.gov.in/writereaddata/UploadFile/arpcr09.pdf" target="_blank" rel="noopener">2009</a>, <a href="https://socialjustice.gov.in/writereaddata/UploadFile/arpcr12.pdf" target="_blank" rel="noopener">2012</a>, <a href="https://socialjustice.gov.in/writereaddata/UploadFile/arpcr15.pdf" target="_blank" rel="noopener">2015</a>, <a href="https://nhapoa.gov.in/files/AR_PCR-2017.pdf" target="_blank" rel="noopener">2017</a>) and department annual reports (<a href="https://nhapoa.gov.in/files/annual_report_201920e.pdf" target="_blank" rel="noopener">2019-20</a>, <a href="https://socialjustice.gov.in/writereaddata/UploadFile/ANNUAL_REPORT_2021_ENG.pdf" target="_blank" rel="noopener">2020-21</a>, <a href="https://nhapoa.gov.in/files/annual-reports-21-22.pdf" target="_blank" rel="noopener">2021-22</a>), all citing NCRB; 2021-22 figures from the ministry's 2022 PCR report as reported by <a href="https://theleaflet.in/leaflet-reports/more-than-97-percent-untouchability-cases-remain-pending-majority-result-in-acquittal-claims-social-justice-ministrys-data" target="_blank" rel="noopener">The Leaflet</a>. Crimes against Scheduled Castes: NCRB via <a href="https://mospi.gov.in/sites/default/files/reports_and_publication/cso_research_and_publication_unit/COSIOIESIOTSDVOL-2/acp-7-25.pdf" target="_blank" rel="noopener">MoSPI</a> and <a href="https://eparlib.nic.in/bitstream/123456789/2972977/1/AU2625.pdf" target="_blank" rel="noopener">Lok Sabha question 2625 (2023)</a>. Survey: <a href="https://www.ncaer.org/news/biggest-caste-survey-one-in-four-indians-admit-to-practising-untouchability" target="_blank" rel="noopener">India Human Development Survey 2011-12 (NCAER, University of Maryland)</a>.</p>
+  </article>
+
   <article class="entry" id="d2026-10-08b">
     <div class="date">Oct 8, 2026 &middot; Hidden urbanization</div>
     <h2>India's official count puts 36% of people in towns and cities. Satellite data puts it at 84%, about <span class="r">700 million</span> more urban residents.</h2>
@@ -182,7 +190,63 @@ function draw2() {
     g.addEventListener("pointerenter", on); g.addEventListener("pointerdown", on); g.addEventListener("pointerleave", () => { tip2.hidden = true; });
   });
 }
-const drawAll = () => { draw(); draw2(); };
+
+/* PCR Act (1955): cases registered per year and conviction share of court-decided cases, 2005-2022 */
+const PC = [[2005,453,20.8],[2006,454,14.1],[2007,211,14.3],[2008,254,11.2],[2009,170,16.2],[2010,148,21.5],[2011,74,15.9],[2012,64,9.6],[2013,87,8.4],[2014,102,6.3],[2015,107,4.8],[2016,31,1.6],[2017,234,1.6],[2018,257,null],[2019,16,0],[2020,25,0],[2021,24,null],[2022,13,3.2]]; // [year, cases registered, % of decided cases ending in conviction]
+const COURT = { 2005: [3356, 486, 101, 2867], 2008: [1987, 492, 55, 1485], 2016: [null, 61, 1, null], 2017: [736, 124, 2, 606], 2019: [1283, 17, 0, 1261], 2020: [1273, 6, 0, 1260], 2022: [null, 31, 1, 1242] }; // [cases before courts, decided, convicted, pending at year end]
+const host3 = document.getElementById("c3"), tip3 = document.getElementById("t3");
+function draw3() {
+  host3.querySelector("svg")?.remove();
+  const W = host3.clientWidth, narrow = W < 640;
+  const L = narrow ? 30 : 64, R = narrow ? 8 : 16, T = 22, Bc = narrow ? 44 : 48;
+  const H = Math.round(Math.max(330, Math.min(470, W * 0.4)));
+  const ch = H - T - Bc, step = (W - L - R) / PC.length, bw = step * 0.62;
+  const x = i => L + i * step + (step - bw) / 2, xc = i => L + i * step + step / 2;
+  const y = v => T + ch - v / 500 * ch;
+  const red = css("--red"), navy = css("--navy"), ink = css("--ink"), slate = css("--slate"), rule = css("--rule");
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Column chart of cases registered under India's Protection of Civil Rights Act, 2005 to 2022: 453 in 2005, 148 in 2010, 107 in 2015, 257 in 2018, 13 in 2022. Conviction share of decided cases fell from 20.8% in 2005 to 0% in 2019 and 2020 and 3.2% in 2022." });
+  host3.prepend(svg);
+  for (let v = 0; v <= 500; v += 100) {
+    el("line", { x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: rule }, svg);
+    const t = el("text", { x: L - 6, y: y(v) + 3.5, "text-anchor": "end", "font-size": 10, fill: slate }, svg); t.textContent = v;
+  }
+  const yl = el("text", { x: 0, y: T - 10, "text-anchor": "start", "font-size": 10, "font-weight": 600, fill: slate }, svg); yl.textContent = narrow ? "Cases" : "Cases registered";
+  const rowY = T + ch + 30;
+  const rl = el("text", { x: L - 6, y: rowY, "text-anchor": "end", "font-size": narrow ? 8.5 : 10, "font-weight": 600, fill: slate }, svg); rl.textContent = narrow ? "Conv." : "Convicted";
+  PC.forEach((r, i) => {
+    const last = i === PC.length - 1, g = el("g", {}, svg);
+    el("rect", { x: x(i), y: y(r[1]), width: bw, height: y(0) - y(r[1]), fill: red, "fill-opacity": last ? 1 : 0.82 }, g);
+    if (r[0] % (narrow ? 4 : 1) === 1 || !narrow || last) {
+      const yt = el("text", { x: xc(i), y: T + ch + 14, "text-anchor": "middle", "font-size": narrow ? 9 : 10, fill: slate, "font-weight": last ? 700 : 400 }, g);
+      yt.textContent = narrow ? "'" + String(r[0]).slice(2) : r[0];
+    }
+    const ct = el("text", { x: xc(i), y: rowY, "text-anchor": "middle", "font-size": narrow ? 8 : 10, "font-weight": r[2] === 0 ? 800 : 600, fill: r[2] === null ? slate : r[2] === 0 ? red : navy }, g);
+    ct.textContent = r[2] === null ? "-" : narrow ? Math.round(r[2]) : r[2] + "%";
+    if (!narrow || i === 0 || last || r[0] === 2018) {
+      const vt = el("text", { x: xc(i), y: y(r[1]) - 5, "text-anchor": "middle", "font-size": last ? (narrow ? 13 : 16) : narrow ? 9 : 10.5, "font-weight": last ? 800 : 600, fill: last ? red : ink, "font-family": last ? "var(--display)" : "var(--body)" }, g);
+      vt.textContent = r[1];
+    }
+    el("rect", { x: L + i * step, y: T, width: step, height: H - T, fill: "transparent" }, g);
+    const on = () => {
+      const c = COURT[r[0]], f = n => n === null ? "n/a" : n.toLocaleString("en-US");
+      tip3.innerHTML = `<b>${r[0]}</b> &middot; ${r[1]} cases registered<br>Conviction in ${r[2] === null ? "n/a" : r[2] + "%"} of cases decided` + (c ? `<br>Courts: ${f(c[1])} decided, ${f(c[2])} convicted, ${f(c[3])} pending` : "");
+      tip3.hidden = false;
+      const bb = svg.getBoundingClientRect(), sc = bb.width / W;
+      let tx = xc(i) * sc + 12; if (tx + tip3.offsetWidth > bb.width) tx = xc(i) * sc - tip3.offsetWidth - 12;
+      tip3.style.left = Math.max(0, tx) + "px"; tip3.style.top = Math.max(0, y(r[1]) * sc - tip3.offsetHeight - 8) + "px";
+    };
+    g.addEventListener("pointerenter", on); g.addEventListener("pointerdown", on); g.addEventListener("pointerleave", () => { tip3.hidden = true; });
+  });
+  // annotation over 2019-2020
+  const i19 = PC.findIndex(r => r[0] === 2019), ax = (xc(i19) + xc(i19 + 1)) / 2;
+  const tx = narrow ? W - R : ax, anc = narrow ? "end" : "middle", ty = narrow ? y(430) : y(150) - 16, lh = narrow ? 11 : 13;
+  el("line", { x1: ax, x2: ax, y1: ty + 2 * lh + 5, y2: y(30), stroke: ink, "stroke-width": 0.8 }, svg);
+  const at = el("text", { x: tx, y: ty, "text-anchor": anc, "font-size": narrow ? 9 : 11, fill: ink }, svg);
+  const a1 = el("tspan", { x: tx, dy: 0, "font-weight": 700 }, at); a1.textContent = "2019 and 2020";
+  const a2 = el("tspan", { x: tx, dy: lh }, at); a2.textContent = "23 cases decided,";
+  const a3 = el("tspan", { x: tx, dy: lh }, at); a3.textContent = "no convictions";
+}
+const drawAll = () => { draw(); draw2(); draw3(); };
 (document.fonts?.ready || Promise.resolve()).then(drawAll);
 drawAll();
 let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(drawAll, 120); });
