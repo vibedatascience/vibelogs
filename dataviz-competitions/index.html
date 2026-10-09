@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Dataviz Competitions</title>
+<style>
+:root{--ink:#16181d;--mute:#6b7280;--faint:#9ca3af;--line:#e8eaed;--soft:#f8fafc;--red:#E60023;--navy:#0a3069;--teal:#0d9488;--slate:#64748b}
+html,body{background:#fff;margin:0}
+body{color:var(--ink);font:13px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;position:relative}
+a{color:var(--navy);text-decoration:none}
+a:hover{text-decoration:underline}
+.src{position:absolute;top:2px;right:6px;color:#fff;font-size:10px}
+.page{padding:14px 12px 40px}
+h1{margin:0;font-family:Georgia,"Times New Roman",serif;font-weight:500;font-size:30px;line-height:1.15}
+h2{font-family:Georgia,"Times New Roman",serif;font-weight:500;font-size:20px;margin:30px 0 4px;padding-top:10px;border-top:1px solid var(--line)}
+.sub{margin:5px 0 0;color:var(--mute);font-size:13.5px;max-width:900px}
+.lede{color:var(--mute);margin:0 0 10px;max-width:900px;font-size:12.5px}
+.stats{display:flex;flex-wrap:wrap;gap:26px;margin:16px 0 0}
+.stat b{display:block;font-family:Georgia,serif;font-weight:500;font-size:26px;line-height:1}
+.stat span{color:var(--mute);font-size:11px}
+.stat.next b{color:var(--red)}
+/* timeline */
+#tl{width:100%;overflow-x:auto;margin-top:6px}
+#tl svg{display:block}
+#tl text{font-family:inherit}
+.legend{font-size:11px;color:var(--mute);margin:6px 0 0;display:flex;gap:16px;flex-wrap:wrap}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:0}
+/* open calls */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(380px,100%),1fr));gap:10px}
+.call{border:1px solid var(--line);border-radius:6px;padding:10px 12px;background:#fff;min-width:0}
+.call h3{margin:0;font-size:15px;font-weight:600}
+.call .meta{color:var(--mute);font-size:11.5px;margin:1px 0 7px}
+.call .due{float:right;text-align:right;font-family:Georgia,serif;font-size:20px;line-height:1;color:var(--red)}
+.call .due small{display:block;font:500 10.5px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--mute)}
+.call.closed .due{color:var(--slate)}
+.call table{border-collapse:collapse;width:100%;font-size:12px}
+.call td{padding:3px 8px 3px 0;border-top:1px solid var(--line);vertical-align:top}
+.call td:first-child{color:var(--faint);width:84px;white-space:nowrap;font-size:11px}
+/* watch list */
+table.wl{width:100%;border-collapse:collapse;font-size:12px}
+table.wl th{text-align:left;font-weight:500;color:var(--faint);font-size:10.5px;padding:4px 10px 4px 0;border-bottom:1px solid var(--line)}
+table.wl td{padding:5px 10px 5px 0;border-bottom:1px solid var(--line);vertical-align:top}
+table.wl td:first-child{font-weight:600;white-space:nowrap}
+table.wl .last{white-space:nowrap;color:var(--slate)}
+/* gallery */
+.ctl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0 12px;position:sticky;top:0;background:rgba(255,255,255,.95);padding:6px 0;z-index:5;border-bottom:1px solid var(--line)}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:3px 10px;font:500 11.5px/1.4 inherit;cursor:pointer;color:var(--ink)}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip.win.on{background:var(--red);border-color:var(--red)}
+.cnt{margin-left:auto;color:var(--mute);font-size:11.5px}
+.wall{column-width:260px;column-gap:10px}
+.tile{break-inside:avoid;margin:0 0 10px;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff;display:block;color:var(--ink);transition:transform .12s ease,box-shadow .12s ease}
+.tile:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 8px 22px rgba(10,48,105,.12)}
+.tile img{width:100%;display:block;background:var(--soft)}
+.ph{aspect-ratio:4/3;display:flex;align-items:flex-end;padding:12px;color:#fff;font-family:Georgia,serif;font-size:19px;line-height:1.15;position:relative;overflow:hidden}
+.ph svg{position:absolute;inset:0;width:100%;height:100%}
+.ph span{position:relative;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.cap{padding:7px 10px 9px}
+.tag{font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--slate)}
+.tag.w{color:var(--red)}
+.cap .t{font-size:13px;font-weight:600;line-height:1.3;margin:2px 0 1px}
+.cap .c{font-size:11.5px;color:var(--mute);line-height:1.3}
+.foot{margin-top:28px;color:var(--faint);font-size:11px;border-top:1px solid var(--line);padding-top:8px}
+@media (max-width:640px){.page{padding:12px 16px 30px}.wall{column-width:160px}table.wl td:first-child,table.wl .last{white-space:normal}table.wl td{word-break:break-word}.call td:first-child{width:56px}}
+</style>
+</head>
+<body>
+<a class="src" href="https://claude.ai/code/session_01EeUYL4b3xEi35UhVAZThee">source chat</a>
+<div class="page">
+<h1>Dataviz Competitions</h1>
+<p class="sub">Free, jury-judged data visualization awards that individuals can enter. Paid design awards and newsroom-only prizes are left out. Dates come from published calls only; nothing is projected.</p>
+<div class="stats" id="stats"></div>
+
+<h2>2026 to 2027 calendar</h2>
+<p class="lede">One row per award. Red dots are submission deadlines that are still ahead. Gray dots have already passed.</p>
+<div id="tl"></div>
+<div class="legend">
+<span><i style="background:var(--red)"></i>Deadline</span>
+<span><i style="background:var(--teal)"></i>Call opens</span>
+<span><i style="background:var(--navy)"></i>Results or ceremony</span>
+<span><i style="background:#fff;border:1.5px solid var(--slate);width:6px;height:6px"></i>Past date</span>
+</div>
+
+<h2>Open calls</h2>
+<p class="lede">Calls with confirmed dates for this cycle.</p>
+<div class="grid" id="calls"></div>
+
+<h2>Watch list</h2>
+<p class="lede">Recurring awards with no confirmed next call yet. The last cycle is shown so you know roughly when to look.</p>
+<table class="wl" id="watch"></table>
+
+<h2>Past winners</h2>
+<p class="lede">Winning and shortlisted work from the awards above. Each tile links to the original. Images load from the creator or award site.</p>
+<div class="ctl" id="ctl"></div>
+<div class="wall" id="wall"></div>
+
+<p class="foot">Last checked 2026-10-08.</p>
+</div>
+
+<script>
+const TODAY = new Date();
+
+const CALLS = [
+  {name:'PacificVis Visual Data Storytelling Contest', url:'https://visstory.github.io/', due:'2027-02-01', tier:'International, academic', rows:[
+    ['Who','Individuals or teams, industry or academia. One author presents in person.'],
+    ['Work','New, unpublished story on any public dataset. Video, website, notebook, infographic, or immersive.'],
+    ['Dates','Opened Aug 27, 2026. Submit by Feb 1, 2027 (AoE). Notification Feb 15. Camera-ready with 3-6 min video Mar 1.'],
+    ['Event','IEEE PacificVis 2027, Busan, Apr 19-22, 2027.'],
+    ['Judging','Vis researchers score 1-5 on novelty, originality, trust, engagement, and insight.'],
+    ['Prize','Best Storytelling and Honorable Mention. Accepted entries go on the contest site.']]},
+  {name:'Swiss Viz Awards', url:'https://www.swissviz.org/', due:'2026-10-16', tier:'National, open worldwide', rows:[
+    ['Who','Anyone: individuals, teams, studios, newsrooms, students.'],
+    ['Work','Created in or about Switzerland, published 2025 or 2026. Categories: Public Lens, Operational Insight, Avant-Garde, Student Work.'],
+    ['Dates','Submit by Oct 16, 2026. Winners at the ceremony on Dec 10, 2026.'],
+    ['Judging','Jury of the Data Innovation Alliance.'],
+    ['Prize','Swiss Viz Award trophy and a feature by the Data Innovation Alliance.']]},
+  {name:'Odissé Dataviz Challenge', url:'https://invs.santepubliquefrance.fr/en/events/odisse-dataviz-challenge-let-public-health-data-speak-itself', due:'2026-10-10', closed:'Registration closed Sep 23', tier:'National, open worldwide, first edition', rows:[
+    ['Who','Anyone, any age or nationality, solo or team. Registration closed Sep 23, 2026.'],
+    ['Work','Built on Odissé French public-health open data. Themes: mental health, heat, health inequalities. README and pitch in French.'],
+    ['Dates','Production Sep 28 to Oct 10, 2026 (23:59). Pitches week of Oct 12. Winners by Oct 17. Awards Nov 9 in Montrouge.'],
+    ['Judging','Jury from Santé publique France and partners. Five equal criteria: relevance, storytelling, rigor, design, impact.'],
+    ['Prize','EUR 300 per theme, plus a Most Promising mentoring day. Winners featured on Odissé.']]},
+];
+
+const WATCH = [
+  ['Sigma Awards','https://www.sigmaawards.org/','2026 cycle closed Jan 18, 2026','Data journalism, any newsroom size or individual. Work published the previous year. 10 winners from 543 entries in 2026.'],
+  ['Pacific Dataviz Challenge','https://pacificdatavizchallenge.org/','2025 winners Sep 2025','Pacific data. Open category is worldwide; Pacific and youth categories too. Requires unpublished work.'],
+  ['Pudding Cup','https://pudding.cool/pudding-cup/','2025 (9th edition)','Best visual and data-driven stories not made by The Pudding. Three winners, $1,500 each.'],
+  ['Tableau Iron Viz','https://www.tableau.com/community/ironviz','2026 qualifier late 2025','One-month qualifier in the second half of the year, set theme (2026: food and drink). Top 3 compete live; champion gets $15,000.'],
+  ['IEEE SciVis Contest','https://sciviscontest2026.github.io/','2026 closed Jul 31, 2026','Runs with IEEE VIS. Open globally, provided dataset, $1,000 top prize.'],
+  ['VAST Challenge','https://vast-challenge.github.io/','Not recorded','Visual analytics mini-challenges on a provided dataset, with IEEE VIS. Requires unpublished work.'],
+  ['IEEE VIS Arts Program','https://visap.net/','Not recorded','Artistic data work and papers at IEEE VIS. Requires unpublished work.'],
+  ['Pamela Tobey Award','https://www.press.org/','2026 winner: The Pudding','National Press Club award for data visualization.'],
+  ['DVS SOTI Challenge','https://www.datavisualizationsociety.org/soti-challenge','Annual','Free DVS membership. Panel scores impact, clarity, beauty, accessibility and gives written feedback.'],
+  ['Data Lab Data Visualisation Competition','https://thedatalab.com/data-visualisation-competition-2025/','2025','Free Data Lab Community membership. Requires unpublished work.'],
+  ['DataConnect Data Viz Competition','https://www.dataconnectconf.com/dataviz-competition','Not recorded','Runs with the DataConnect conference.'],
+  ['ADV DataXcellence Award','https://www.adv.at/events/adv-dataxcellence-award-2026/','2026','Projects from Austria, DACH, or Tyrol. Expert jury, Vienna ceremony.'],
+  ['Global Data Barometer Challenge','https://globaldatabarometer.org/2025/06/global-data-barometer-data-visualization-challenge-2025/','2025 ran Jun to Jul','Worldwide, 18+. Jury. $500 and $350.'],
+  ['RSS Statistical Excellence in Journalism','https://rss.org.uk/training-events/events/excellence-awards/','2026 closed Mar 11, 2026','Non-journalists can enter Best statistical commentary: a blog or LinkedIn post under 2,000 words. London ceremony in July.'],
+  ['RSE Data Competition','https://www.software.ac.uk/news/rse-data-competition','2026 closed Mar 30, 2026','Up to 750 words and 4 charts on RSE survey data. Community vote. GBP 250.'],
+  ['Code 4 Nature Challenge','https://indiaobservatory.org.in/code-for-nature-challenge-2026','2026 registration closed Aug 20','Indian citizens 18+, teams of 2-4. Challenge Sep 1 to Oct 15, results Nov 20, 2026. Up to INR 1 lakh.'],
+  ['NIH CFDE Data Visualization Competition','https://www.orau.org/cfde-trainingcenter/events/data-visualization-competition.html','2026 closed Jun 30, 2026','US. Jury on accuracy, clarity, narrative. Up to $1,000.'],
+];
+
+// timeline lanes
+const LANES = [
+  ['PacificVis Storytelling',[['2026-08-27','open','Call opens'],['2027-02-01','deadline','Feb 1'],['2027-02-15','result','Notified'],['2027-04-19','result','Busan']]],
+  ['Swiss Viz Awards',[['2026-10-16','deadline','Oct 16'],['2026-12-10','result','Ceremony Dec 10']]],
+  ['Odissé Challenge',[['2026-09-23','deadline','Reg. closed'],['2026-10-10','deadline','Oct 10'],['2026-10-17','result','Winners'],['2026-11-09','result','Awards']]],
+  ['Code 4 Nature',[['2026-08-20','deadline','Reg. closed'],['2026-10-15','deadline','Oct 15'],['2026-11-20','result','Results']]],
+  ['Sigma Awards',[['2026-01-18','deadline','Closed'],['2026-05-11','result','Winners']]],
+  ['RSS Excellence Awards',[['2026-03-11','deadline','Closed'],['2026-07-01','result','London, July']]],
+  ['RSE Data Competition',[['2026-03-30','deadline','Closed']]],
+  ['Tableau Iron Viz',[['2026-05-05','result','Championship']]],
+  ['NIH CFDE',[['2026-06-30','deadline','Closed']]],
+  ['IEEE SciVis Contest',[['2026-07-31','deadline','Closed']]],
+];
+
+const yt = id => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+const IIB = 'https://iibawards-prod.s3.amazonaws.com/app/public/ckeditor_assets/pictures/';
+// [award, year, prize, title, creator, link, image, win]
+const G = [
+  ['Swiss Viz Awards',2025,'Public Lens, Gold','Schweizer Bergwelten: 100 Infografiken mit Weitsicht','Fabian Lang','http://mountains.fabianlang.net/',IIB+'1649/content_15.png',1],
+  ['Swiss Viz Awards',2025,'Public Lens, Silver','Women in Politics','Hahn+Zimmermann and Katja Vock','https://hahn-zimmermann.ch/projekte/women-in-politics','https://hahn-zimmermann.ch/images/projects/1_13_Women_Politics/HZ_1_13_13.jpg',1],
+  ['Swiss Viz Awards',2025,'Public Lens, Bronze','2024 Migration Reports','Emphase for the State Secretariat for Migration','https://www.migration.swiss/de-CH','',1],
+  ['Swiss Viz Awards',2025,'Operational Insight, Gold','GAiAPSE','Jean-Baptiste Mignardot and Emmanuel Pignat for Sophia Genetics','https://gaiapse.myportfolio.com/','https://cdn.myportfolio.com/0d488258-6a66-40d5-921d-ec8270e10668/59d8b131-758d-4b3c-b6df-66c2c4459a0c_rw_600.png?h=4b8e3ccf244f2337a2461700640e920e',1],
+  ['Swiss Viz Awards',2025,'Operational Insight, Silver','Western Balkans Competitiveness Data Hub','Interactive Things for the OECD','https://westernbalkans-competitiveness.oecd.org/','https://westernbalkans-competitiveness.oecd.org/images/og-image.png',1],
+  ['Swiss Viz Awards',2025,'Operational Insight, Bronze','Wertschöpfungsstudie Tourismus Graubünden','EBP Schweiz for the Canton of Grisons','https://www.wertschoepfung-tourismus-graubuenden.ch/','',1],
+  ['Swiss Viz Awards',2025,'Avant-Garde, Gold','Klingende Werte','Charis Arnold','https://www.charisarnold.ch/klingende-werte/','https://www.charisarnold.ch/wp-content/uploads/2025/09/cha-klingende-werte-05.jpg',1],
+  ['Swiss Viz Awards',2025,'Student, Gold','Hurricanes: A History of Wind and Water','Elisee Kukulu and Eva Sanneke Brinksma, HSLU','https://www.instagram.com/p/DKHKUJNOjDv/','',1],
+  ['Swiss Viz Awards',2025,'Student, Silver','Reviving Ponds: a Better Future for Amphibians','Jill Amber Kaser and Danielle Urech, HSLU','https://danielleurech9890b3.myportfolio.com/work','',1],
+  ['Swiss Viz Awards',2024,'Visualizations, Winner','The Swiss Egg Market','Superdot Studio with the Federal Office for Agriculture','http://data-innovation.org/wp-content/uploads/2024/06/Superdot_Studio_Isometric_Infographic_about_the_Swiss_egg_market_poster-Nicole-Lachenmeier.pdf','',1],
+  ['Swiss Viz Awards',2024,'Dashboards, Winner','Federal Popular Votes','Federal Statistical Office with Interactive Things','https://votations.admin.ch/en/overview','',1],
+  ['Swiss Viz Awards',2024,'Data Stories, Winner','Es ist so viel Hass da','Tamedia','https://www.tagesanzeiger.ch/es-ist-so-viel-hass-da-5-politikerinnen-und-politiker-erzaehlen-wie-sie-bedroht-werden-347667617569','',1],
+
+  ['Sigma Awards',2026,'Winner','Green to Grey','Arena for Journalism in Europe, NRK and partners','https://greentogrey.eu/','https://greentogrey.eu/img/green-to-grey.jpg',1],
+  ['Sigma Awards',2026,'Winner','Inside Russia’s Shadow War in the Baltics','Financial Times','https://ig.ft.com/baltic-sea/','',1],
+  ['Sigma Awards',2026,'Winner','Invisibles','Salud con Lupa','https://saludconlupa.com/series/invisibles/','https://saludconlupa.com/media/images/2_Invisibles_Miles_de_personas_ma.412bda8b.fill-1800x945.jpg',1],
+  ['Sigma Awards',2026,'Winner','The Human Trap','ARIJ and Al-Muhajir','https://arij.net/investigations/sudanese-refugees-trapped-gangs-border/','https://arij.net/wp-content/uploads/2025/09/main-banner-sudanese-refugees-trapped-gangs-border.jpg',1],
+  ['Sigma Awards',2026,'Winner','Fantasmas del Erario','Quinto Elemento Lab','https://quintoelab.org/fantasmas-del-erario/','https://quintoelab.org/wp-content/uploads/2025/04/Redes-Sociales-Fantasmas-del-Erario.jpg',1],
+  ['Sigma Awards',2026,'Winner','Syria’s Stolen Children','Lighthouse Reports and partners','https://www.lighthousereports.com/investigation/syrias-stolen-children/','https://www.lighthousereports.com/wp-content/uploads/2025/09/Syrias-Stolen-Children.jpg',1],
+  ['Sigma Awards',2026,'Winner','Cerrado: o Elo Sagrado das Águas do Brasil','Ambiental Media','https://cerrado.ambiental.media/pt/','https://ambiental.media/wp-content/uploads/2025/06/thumb-cerrado-final-scaled.jpg',1],
+  ['Sigma Awards',2026,'Winner','The Silent Victims of War','Neue Zürcher Zeitung and Texty.org.ua','https://www.nzz.ch/international/vertriebene-kinder-aus-der-ukraine-wie-russland-ihre-identitaet-raubt-ld.1915206','',1],
+  ['Sigma Awards',2026,'Winner','The Poisonous Lead Trade','The Examination and The New York Times','https://www.theexamination.org/articles/battery-recycling-nigeria-lead-poisoning-us-automakers','https://a.storyblok.com/f/212662/1920x1080/bede52fb0d/lead-battery_drone-footage_screengrab.jpg/m/1200x0',1],
+  ['Sigma Awards',2026,'Winner','How Iran Moves Sanctioned Oil Around the World','Reuters','https://www.reuters.com/world/middle-east/how-iran-moves-sanctioned-oil-around-world-2025-01-07/','',1],
+
+  ['Pudding Cup',2025,'Winner','Dithering, Part I','Damar Aji Pramudita','https://visualrambling.space/dithering-part-1/','https://pudding.cool/pudding-cup/assets/project-imgs/dithering.jpg',1],
+  ['Pudding Cup',2025,'Winner','The Legislative Network Behind State Trans Laws','C.J. Robinson','https://cj-robinson.github.io/trans-model-leg/','https://pudding.cool/pudding-cup/assets/project-imgs/trans-legislation.jpg',1],
+  ['Pudding Cup',2025,'Winner','Benford’s Law','Schubert de Abreu','https://benfords-law-explainer.netlify.app/','https://pudding.cool/pudding-cup/assets/project-imgs/benfords.jpg',1],
+
+  ['Tableau Iron Viz',2026,'Champion','Genre Mash-Up Madness','Ann Pregler','https://public.tableau.com/app/profile/ann.pregler/viz/GenreMash-UpMadness-IronViz26/Opener','https://www.tableau.com/sites/default/files/2026-05/Mashup-Madness.png',1],
+  ['Tableau Iron Viz',2026,'Finalist','Busting the Myths About Reading Graphic Novels','Kevin Wee','https://public.tableau.com/app/profile/kevin.wee/viz/BustingtheMythsAboutReadingGraphicNovelsIronViz2026/Dashboard','https://www.tableau.com/sites/default/files/2026-05/Busting-the-Myths-About-Reading-Graphic-Novels.png',0],
+  ['Tableau Iron Viz',2026,'Finalist','Hogwarts Over Hemingway','Brian Moore','https://public.tableau.com/app/profile/brian.moore7221/viz/HogwartsOverHemingwayIronViz2026/HogwartsOverHemingway','https://www.tableau.com/sites/default/files/2026-05/HogwartsOverHemingway.png',0],
+
+  ['Pamela Tobey Award',2026,'Winner','Sizing Chaos','The Pudding','https://www.press.org/','',1],
+
+  ['PacificVis Storytelling',2026,'Honorable Mention','Hidden Information Behind Fancy Words: ESG Reports','Weiqi Han, Yupu Chen, Yunzhong Luo, Xiaoyu Zhang, CityU Hong Kong','https://visstory.github.io/','',1],
+  ['PacificVis Storytelling',2026,'Shortlist','India Ki Hawa, The air we breathe','Priyanka Karnam, Northeastern','https://priyanka-karnam-india-aqi-visualization.vercel.app','',0],
+  ['PacificVis Storytelling',2026,'Shortlist','Chinese Canine Heritage','Shuai Zhang and others, Tongji','https://chortlezs.github.io/','',0],
+  ['PacificVis Storytelling',2026,'Shortlist','Twin City Tales: Lives Across the Shenzhen-Hong Kong Border','Mingxi Li, Lu Junchi, Yiwei Zhou, CityU Hong Kong','https://twincitytale-visstory2026.netlify.app/','',0],
+  ['PacificVis Storytelling',2026,'Shortlist','Visualizing the Storm: Cyber Violence','Zherui Zhou and others, Tongji','https://dontwannagetbald.github.io/visualizing-the-storm.github.io/','',0],
+  ['PacificVis Storytelling',2026,'Shortlist','A Small Boat in a Great Tide','Xingyu Lan and others, Fudan','https://kitee0325.github.io/modern-chronicle/','',0],
+  ['PacificVis Storytelling',2026,'Shortlist','A Cat’s Day','Aoshuang Zhang and others, CityU Hong Kong','https://visstory.github.io/','',0],
+  ['PacificVis Storytelling',2026,'Shortlist','Aromatic Herbs: Traditional Chinese Aromatherapy','Shuai Zhang and others, Tongji','https://visstory.github.io/','',0],
+  ['PacificVis Storytelling',2025,'Shortlist','The Story of Wagyu','Yuki Ueno, Chris Bryan and others, Arizona State','https://y0uk1.github.io/PacificVis2025/',yt('yQjwSWizEP4'),0],
+  ['PacificVis Storytelling',2025,'Shortlist','South Korea’s Untold Stories: Birth Policies','Jonghoon Daniel Kim, Woojang Pyeon, Xiaoyu Zhang, CityU Hong Kong','https://www.youtube.com/watch?v=kl4Vv4YB0zQ',yt('kl4Vv4YB0zQ'),0],
+  ['PacificVis Storytelling',2025,'Shortlist','Human Atlas Stories: The Adventures of CeCe and Squiggy','Todd Theriault, Katy Börner, Shouvik Maiti, Indiana','https://cns-iu.github.io/hra-scrollytelling/story2.html',yt('yIM_y5IG06A'),0],
+  ['PacificVis Storytelling',2025,'Shortlist','The Lighthouse: The Gender Gap in Economic Engagement','Rufei Han, Siming Chen and others','https://www.youtube.com/watch?v=MY1S2-ozDnE',yt('MY1S2-ozDnE'),0],
+  ['PacificVis Storytelling',2025,'Shortlist','Illuminating the Silent Night','Yutong Jiang, Nan Cao and others, Tongji','https://www.youtube.com/watch?v=T6fARnG3nZg',yt('T6fARnG3nZg'),0],
+  ['PacificVis Storytelling',2025,'Shortlist','Great Beauty has No Boundary','Zheng Wang and others, Beijing Jiaotong','https://www.youtube.com/watch?v=cPeK1WAsQTM',yt('cPeK1WAsQTM'),0],
+  ['PacificVis Storytelling',2024,'Winner','History and Humanity of Shanghai’s Lane','Jiangnan University with Cognizant Digital Experience','https://visstory.github.io/2024/','',1],
+  ['PacificVis Storytelling',2024,'Honorable Mention','Starry Starry Night: Astrology Imagery in Tang Poetry','Tongji University','https://yejingxin515.github.io/astrology-webpage/','',1],
+  ['PacificVis Storytelling',2024,'Shortlist','City Pulse: Global Metro Line Development','Peking University and CAFA','https://vis.pku.edu.cn/metro/dist/','',0],
+  ['PacificVis Storytelling',2024,'Shortlist','Stock Forest','Hithink RoyalFlush','https://visstory.github.io/2024/','',0],
+
+  ['Pacific Dataviz Challenge',2025,'Open Interactive, Top','Paying the Heaviest of the Carbon Debt Never Incurred','Nur Adhyaksa Hamid','https://pacificdata.org/updates/news/media-release/2025/09/award-winning-storytellers-transform-pacific-data-into-past','',1],
+  ['Pacific Dataviz Challenge',2025,'Open Static, Top','Echoes of the Unprotected Sea','Eduardo España','https://pacificdata.org/updates/news/media-release/2025/09/award-winning-storytellers-transform-pacific-data-into-past','',1],
+  ['Pacific Dataviz Challenge',2025,'Pacific Interactive','Blue Paradigm','Eunice Rigo','https://pacificdata.org/updates/news/media-release/2025/09/award-winning-storytellers-transform-pacific-data-into-past','',1],
+  ['Pacific Dataviz Challenge',2025,'Pacific Static','When Our Waste Suffocates the Ocean','Sarah Mouniama','https://pacificdata.org/updates/news/media-release/2025/09/award-winning-storytellers-transform-pacific-data-into-past','',1],
+];
+
+const fmt = d => new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+const days = d => { const t = new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate()); return Math.round((new Date(d+'T00:00:00') - t)/864e5); };
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// stats
+(function(){
+  const open = CALLS.filter(c=>!c.closed && days(c.due)>=0).sort((a,b)=>a.due.localeCompare(b.due));
+  const nx = open[0];
+  const wins = G.filter(g=>g[7]).length;
+  document.getElementById('stats').innerHTML =
+    `<div class="stat next"><b>${nx?days(nx.due)+' days':'none'}</b><span>to next open deadline${nx?' ('+esc(nx.name.split(' ').slice(0,2).join(' '))+', '+fmt(nx.due)+')':''}</span></div>`+
+    `<div class="stat"><b>${CALLS.length}</b><span>calls with confirmed dates</span></div>`+
+    `<div class="stat"><b>${WATCH.length}</b><span>on the watch list</span></div>`+
+    `<div class="stat"><b>${G.length}</b><span>past entries in the gallery (${wins} winners)</span></div>`;
+})();
+
+// timeline
+(function(){
+  const box = document.getElementById('tl');
+  const W = Math.max(box.clientWidth, 900), L = 150, R = 40, rowH = 40, top = 26;
+  const H = top + LANES.length*rowH + 10;
+  const t0 = new Date(2026,0,1), t1 = new Date(2027,4,1);
+  const x = d => L + ((typeof d==='string'?new Date(d+'T12:00:00'):d) - t0)/(t1 - t0)*(W-L-R);
+  let s = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Award deadlines 2026 to 2027">`;
+  for (let m = new Date(t0); m <= t1; m.setMonth(m.getMonth()+1)) {
+    const xi = x(m), lab = m.toLocaleDateString('en-US',{month:'short'});
+    const jan = m.getMonth()===0;
+    s += `<line x1="${xi}" x2="${xi}" y1="${top-6}" y2="${H-6}" stroke="${jan?'#cbd5e1':'#f1f3f5'}"/>`;
+    s += `<text x="${xi+3}" y="${top-10}" font-size="10" fill="${jan?'#16181d':'#9ca3af'}" font-weight="${jan?600:400}">${jan?lab+' '+m.getFullYear():lab}</text>`;
+  }
+  LANES.forEach((ln,i)=>{
+    const y = top + i*rowH + rowH/2;
+    s += `<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="#e8eaed"/>`;
+    s += `<text x="${L-8}" y="${y+3.5}" font-size="11" text-anchor="end" fill="#16181d">${esc(ln[0])}</text>`;
+    const slotEnd = [-1e9,-1e9]; // above, below
+    ln[1].slice().sort((a,b)=>a[0].localeCompare(b[0])).forEach(([d,k,lab])=>{
+      const xi = x(d), past = new Date(d+'T23:59:00') < TODAY;
+      const w = lab.length*4.9 + 6, st = xi - w/2;
+      let slot = slotEnd[0] < st ? 0 : slotEnd[1] < st ? 1 : -1;
+      const col = k==='deadline'?'#E60023':k==='open'?'#0d9488':'#0a3069';
+      const r = k==='deadline'?5:4;
+      s += past ? `<circle cx="${xi}" cy="${y}" r="${r-0.5}" fill="#fff" stroke="#64748b" stroke-width="1.5"/>`
+                : `<circle cx="${xi}" cy="${y}" r="${r}" fill="${col}"/>`;
+      s += `<title>${esc(ln[0]+': '+lab+', '+fmt(d))}</title>`;
+      if (slot >= 0) { slotEnd[slot] = st + w; s += `<text x="${xi}" y="${y + (slot?15:-9)}" font-size="9" text-anchor="middle" fill="${past?'#9ca3af':col}">${esc(lab)}</text>`; }
+    });
+  });
+  const xt = x(TODAY);
+  s += `<line x1="${xt}" x2="${xt}" y1="${top-4}" y2="${H-6}" stroke="#E60023" stroke-dasharray="3 3"/>`;
+  s += `<text x="${xt+4}" y="${H-8}" font-size="9" fill="#E60023">today</text>`;
+  box.innerHTML = s + '</svg>';
+  if (box.scrollWidth > box.clientWidth) box.scrollLeft = xt - box.clientWidth*0.6;
+})();
+
+// open calls
+document.getElementById('calls').innerHTML = CALLS.slice().sort((a,b)=>(!!a.closed-!!b.closed)||a.due.localeCompare(b.due)).map(c=>{
+  const n = days(c.due);
+  const due = c.closed ? `<div class="due">${fmt(c.due).replace(/, \d{4}/,'')}<small>${esc(c.closed)}</small></div>`
+                       : `<div class="due">${n} days<small>due ${fmt(c.due)}</small></div>`;
+  return `<div class="call${c.closed?' closed':''}">${due}<h3><a href="${c.url}">${esc(c.name)}</a></h3><div class="meta">${esc(c.tier)}</div>
+  <table>${c.rows.map(r=>`<tr><td>${r[0]}</td><td>${esc(r[1])}</td></tr>`).join('')}</table></div>`;
+}).join('');
+
+// watch list
+document.getElementById('watch').innerHTML = '<tr><th>Award</th><th>Last cycle</th><th>Notes</th></tr>' +
+  WATCH.map(w=>`<tr><td><a href="${w[1]}">${esc(w[0])}</a></td><td class="last">${esc(w[2])}</td><td>${esc(w[3])}</td></tr>`).join('');
+
+// gallery
+(function(){
+  const awards = [...new Set(G.map(g=>g[0]))];
+  let sel = 'All', winOnly = false;
+  const ctl = document.getElementById('ctl'), wall = document.getElementById('wall');
+  const PAL = [['#E60023','#0a3069'],['#0a3069','#0d9488'],['#0d9488','#0a3069'],['#64748b','#0a3069'],['#E60023','#64748b']];
+  const hash = s => [...s].reduce((h,c)=>(h*31 + c.charCodeAt(0))>>>0, 7);
+  const ph = g => {
+    const h = hash(g[3]), p = PAL[h % PAL.length]; let bars = '';
+    for (let i=0;i<9;i++){ const v = 20 + ((h>>(i*3))%7)*10; bars += `<rect x="${i*11+2}" y="${100-v}" width="8" height="${v}" fill="#fff" opacity="${0.08+0.04*(i%3)}"/>`; }
+    return `<div class="ph" style="background:linear-gradient(135deg,${p[0]},${p[1]})"><svg viewBox="0 0 100 100" preserveAspectRatio="none">${bars}</svg><span>${esc(g[3])}</span></div>`;
+  };
+  window._ph = el => { const g = G[+el.dataset.i]; el.outerHTML = ph(g); };
+  function chips(){
+    ctl.innerHTML = ['All',...awards].map(a=>`<button class="chip${a===sel?' on':''}" data-a="${esc(a)}">${esc(a)}</button>`).join('') +
+      `<button class="chip win${winOnly?' on':''}" data-w="1">Winners only</button><span class="cnt" id="cnt"></span>`;
+  }
+  function draw(){
+    const rows = G.map((g,i)=>[g,i]).filter(([g])=>(sel==='All'||g[0]===sel)&&(!winOnly||g[7]))
+      .sort((a,b)=>b[0][1]-a[0][1] || b[0][7]-a[0][7] || (!!b[0][6])-(!!a[0][6]));
+    wall.innerHTML = rows.map(([g,i])=>`<a class="tile" href="${g[5]}" target="_blank" rel="noopener">
+      ${g[6]?`<img src="${g[6]}" alt="${esc(g[3])}" loading="lazy" referrerpolicy="no-referrer" data-i="${i}" onerror="_ph(this)">`:ph(g)}
+      <div class="cap"><div class="tag${g[7]?' w':''}">${esc(g[0])} ${g[1]} · ${esc(g[2])}</div><div class="t">${esc(g[3])}</div><div class="c">${esc(g[4])}</div></div></a>`).join('');
+    document.getElementById('cnt').textContent = rows.length + ' entries';
+  }
+  ctl.addEventListener('click', e=>{
+    const b = e.target.closest('button'); if(!b) return;
+    if (b.dataset.w) winOnly = !winOnly; else sel = b.dataset.a;
+    chips(); draw();
+  });
+  chips(); draw();
+})();
+</script>
+</body>
+</html>
