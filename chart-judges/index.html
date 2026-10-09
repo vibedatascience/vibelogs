@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Chart Judges vs Audiences</title>
+<title>Chart Judges vs r/dataisbeautiful</title>
 <meta name="description" content="Do LLM chart judges pick what r/dataisbeautiful upvotes? A visual companion to the paper, with the gallery of pairs and every judge's own words.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,6 +30,8 @@ a { color: var(--navy); }
 header { padding: 18px 0 6px; border-bottom: 2px solid var(--navy); }
 .kicker { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--slate); }
 h1 { font-family: var(--display); font-weight: 800; font-size: clamp(30px, 5.4vw, 56px); line-height: 1.0; margin: 6px 0 10px; letter-spacing: -.005em; max-width: 22ch; text-wrap: balance; }
+.byline { font-size: 14px; color: var(--slate); margin: 0 0 12px; }
+.byline a { color: var(--slate); }
 .dek { font-size: 16px; color: #334155; max-width: 78ch; margin: 0 0 12px; }
 .links { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 12px; }
 .btn { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; text-decoration: none; color: var(--ink); border: 1px solid #cbd5e1; border-radius: 999px; padding: 5px 12px; background: #fff; }
@@ -151,12 +153,9 @@ footer a { color: var(--slate); }
 </head>
 <body>
 <div class="wrap">
-<nav class="nav"><a href="../">Rahul Chaudhary</a><a href="../all/">All pages</a></nav>
-
 <header>
-  <div class="kicker">Paper companion · October 2026</div>
-  <h1>LLM chart judges reward <span class="r">labels</span>, not what <span class="n">audiences</span> upvote</h1>
-  <p class="dek">Multimodal LLMs now grade the charts that AI agents make, and we check them against expert ratings. I asked a different question: when two charts went up on r/dataisbeautiful in the same week, and one got at least five times the votes, does the judge pick the one people liked? Across 2,000 such pairs, four judges did worse than a simple model that never looks at the chart.</p>
+  <h1>LLM chart judges reward <span class="r">labels</span>, not what <span class="n">r/dataisbeautiful</span> upvotes</h1>
+  <p class="byline">Rahul Chaudhary · <a href="mailto:rahul.chaudhary@outlook.com">rahul.chaudhary@outlook.com</a></p>
   <div class="links">
     <a class="btn primary" href="paper.pdf">Read the paper (PDF)</a>
     <a class="btn" href="https://github.com/vibedatascience/chart-judges-vs-audience">Code and every judge output</a>
@@ -235,7 +234,7 @@ footer a { color: var(--slate); }
 </section>
 
 <footer>
-  <p><b>Rahul Chaudhary.</b> "LLM Chart Judges Reward Labels, Not What Audiences Upvote." 2026. <a href="paper.pdf">PDF</a> · <a href="https://github.com/vibedatascience/chart-judges-vs-audience">Code and data</a>. This work was done in a personal capacity; the views here are my own and do not represent Pinterest.</p>
+  <p><b>Rahul Chaudhary</b> (<a href="mailto:rahul.chaudhary@outlook.com">rahul.chaudhary@outlook.com</a>). "LLM Chart Judges Reward Labels, Not What r/dataisbeautiful Upvotes." 2026. <a href="paper.pdf">PDF</a> · <a href="https://github.com/vibedatascience/chart-judges-vs-audience">Code and data</a>. This work was done in a personal capacity; the views here are my own and do not represent Pinterest.</p>
   <p>Data: beautiVis (Lin, Ru, Chang and Bearfield, PacificVis 2026), CC0. Charts in the gallery belong to the Reddit users who posted them; each card credits the poster and links to the original post. They are shown here for commentary.</p>
 </footer>
 </div>
