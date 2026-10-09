@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sous la surface</title>
+<meta name="description" content="Entre 2014 et 2025, près de trois décès attribuables à la chaleur sur quatre sont survenus en dehors des canicules. Données Odissé, Santé publique France.">
+<style>
+:root{--ink:#16181d;--mute:#5b6270;--faint:#9ca3af;--line:#e5e7eb;--red:#E60023;--blue:#2d6cb5;--water:#eef4fb;--waterline:#2d6cb5;--bg:#ffffff}
+html,body{background:var(--bg);margin:0}
+body{color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;position:relative}
+a{color:var(--blue)}
+.src{position:absolute;top:2px;right:6px;color:#fff;font-size:10px;text-decoration:none}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 16px 48px}
+.kick{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--red);font-weight:600;margin:0}
+h1{font-family:Georgia,"Times New Roman",serif;font-weight:500;font-size:clamp(38px,6vw,64px);line-height:1.02;margin:6px 0 12px;letter-spacing:-.01em}
+.deck{font-size:clamp(17px,2vw,20px);line-height:1.45;max-width:760px;margin:0;color:#2b2f36}
+.deck b{color:var(--blue)} .deck em{font-style:normal;color:var(--red);font-weight:600}
+.legend{display:flex;flex-wrap:wrap;gap:18px;align-items:center;font-size:13px;color:var(--mute);margin:26px 0 6px}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:0}
+#ice{position:relative;width:100%}
+#ice svg,#dice svg{display:block;overflow:visible}
+svg text{font-family:inherit}
+.tip{position:absolute;pointer-events:none;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 8px 24px rgba(22,24,29,.12);padding:9px 11px;font-size:12.5px;line-height:1.45;min-width:270px;opacity:0;transition:opacity .12s;z-index:5}
+.tip b{font-size:14px}
+.tip .r{display:flex;justify-content:space-between;gap:14px}.tip .r span:last-child{white-space:nowrap;font-variant-numeric:tabular-nums}
+.tip .k{color:var(--mute)}
+.tip i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px;margin:34px 0 8px;border-top:1px solid var(--line);padding-top:22px}
+.fig b{display:block;font-family:Georgia,serif;font-weight:500;font-size:44px;line-height:1}
+.fig span{display:block;color:var(--mute);font-size:13.5px;margin-top:6px;max-width:300px}
+.fig.r b{color:var(--red)} .fig.b b{color:var(--blue)}
+h2{font-family:Georgia,"Times New Roman",serif;font-weight:500;font-size:28px;margin:46px 0 8px;line-height:1.15}
+p.body{max-width:760px;margin:0 0 12px}
+.pick{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:10px 0 4px}
+select{font:inherit;font-size:15px;padding:6px 10px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;color:var(--ink)}
+#dsum{max-width:760px;margin:10px 0 0;font-size:16px}
+#dsum b.r{color:var(--red)} #dsum b.b{color:var(--blue)}
+#dice{position:relative;margin-top:10px}
+.note{font-size:12.5px;color:var(--mute);max-width:860px}
+.method{margin-top:46px;border-top:1px solid var(--line);padding-top:16px;font-size:13px;color:var(--mute)}
+.method p{margin:0 0 8px;max-width:900px}
+.method b{color:var(--ink);font-weight:600}
+table.data{border-collapse:collapse;font-size:12.5px;margin-top:8px;width:100%;max-width:900px}
+table.data th,table.data td{padding:4px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+table.data th:first-child,table.data td:first-child{text-align:left}
+table.data th{color:var(--mute);font-weight:500}
+details summary{cursor:pointer;color:var(--blue);margin:6px 0}
+/* poster mode */
+body.affiche .wrap{max-width:1500px;padding:56px 64px}
+body.affiche .noaffiche{display:none}
+body.affiche h1{font-size:96px}
+body.affiche .deck{font-size:26px;max-width:1100px}
+body.affiche .legend{font-size:18px}
+body.affiche .fig b{font-size:64px} body.affiche .fig span{font-size:18px;max-width:380px}
+body.affiche .method{font-size:15px}
+body.affiche p.body{font-size:21px;max-width:1100px}
+.onlyaffiche{display:none}body.affiche .onlyaffiche{display:block}
+@media (max-width:640px){.fig b{font-size:36px} h2{font-size:24px}}
+</style>
+</head>
+<body>
+<a class="src noaffiche" href="https://claude.ai/code/session_01EeUYL4b3xEi35UhVAZThee">source chat</a>
+<div class="wrap">
+  <p class="kick">Odissé Dataviz Challenge · Défi 2 · Impacts de la chaleur</p>
+  <h1>Sous la surface</h1>
+  <p class="deck">Entre 2014 et 2025, la chaleur a causé <strong id="tot"></strong> décès en France hexagonale pendant les étés. Les canicules n'en expliquent que <em id="pctCan"></em>. <b>Près de trois sur quatre</b> sont survenus des jours où aucune canicule n'était en cours.</p>
+
+  <div class="legend">
+    <span><i style="background:var(--red)"></i>Pendant une canicule (au-dessus de la ligne)</span>
+    <span><i style="background:var(--blue)"></i>Le reste de l'été, hors canicule (en dessous)</span>
+    <span>1 point = 10 décès attribuables à la chaleur</span>
+  </div>
+  <div id="ice" role="img" aria-label="Décès attribuables à la chaleur par été, 2014 à 2025, pendant et en dehors des canicules"></div>
+
+  <div class="figs">
+    <div class="fig b"><b id="fHors"></b><span>des décès attribuables à la chaleur sont survenus hors canicule, entre 2014 et 2025. C'est le cas chaque année.</span></div>
+    <div class="fig r"><b id="fAf"></b><span id="fAfTxt"></span></div>
+    <div class="fig"><b id="f75"></b><span>des décès attribuables à la chaleur concernent des personnes de 75 ans et plus.</span></div>
+    <div class="fig"><b id="fDays"></b><span id="fDaysTxt"></span></div>
+  </div>
+
+  <h2>Pourquoi la partie cachée compte</h2>
+  <p class="body">Le système d'alerte canicule déclenche des mesures renforcées quand les seuils de température sont dépassés. Ces jours-là sont les plus dangereux, et de loin. Mais ils sont rares. La plus grande partie des décès liés à la chaleur se produit lors de chaleurs moins extrêmes et bien plus fréquentes, qui ne déclenchent aucune alerte.</p>
+  <p class="body">La prévention ne peut donc pas s'arrêter à la vigilance canicule. Boire régulièrement, se rafraîchir, et prendre des nouvelles des personnes âgées ou isolées comptent du 1<sup>er</sup> juin au 15 septembre, pas seulement pendant les alertes.</p>
+
+  <div class="noaffiche">
+  <h2>Et dans votre département ?</h2>
+  <div class="pick"><label for="dsel">Département</label><select id="dsel"></select></div>
+  <p id="dsum"></p>
+  <div id="dice"></div>
+  <p class="note" id="dnote"></p>
+  </div>
+
+  <div class="method">
+    <p><b>Données.</b> Odissé, Santé publique France, Licence Ouverte 2.0 : <a href="https://odisse.santepubliquefrance.fr/explore/dataset/canicules-deces-attribuables-a-la-chaleur-pendant-lete-et-pendant-les-vagues-de-chaleur-france/">Décès attribuables à la chaleur pendant l'été et pendant les vagues de chaleur</a> (France et département) et <a href="https://odisse.santepubliquefrance.fr/explore/dataset/canicules-nombres-de-jours-de-canicule-departement/">Nombres de jours de canicule</a> (France et département). Données publiées en mai 2026.</p>
+    <p><b>Méthode.</b> Les décès attribuables sont une estimation de Santé publique France fondée sur les relations entre température et mortalité dans chaque département (Pascal et al., 2024). Ce n'est pas un décompte des causes inscrites sur les certificats de décès. L'été correspond à la période de surveillance, du 1<sup>er</sup> juin au 15 septembre. Décès hors canicule = décès attribuables sur l'été moins ceux survenus pendant les canicules. Une canicule correspond au dépassement simultané des seuils départementaux de températures minimales et maximales moyennées sur trois jours. Les points sont arrondis à la dizaine ; les valeurs exactes et les intervalles de confiance à 95 % sont dans la version interactive. Les sommes départementales peuvent différer légèrement du total national du fait des arrondis.</p>
+    <details class="noaffiche"><summary>Voir les données en tableau</summary><table class="data" id="tbl"></table></details>
+    <p><b>Inspiration.</b> La visualisation unitaire, où chaque point représente des personnes, s'inspire de <a href="https://www.informationisbeautifulawards.com/showcase/7177-this-is-a-teenager">This is a Teenager</a> d'Alvin Chang (The Pudding), médaille d'or aux Information is Beautiful Awards 2024.</p>
+    <p class="onlyaffiche"><b>Version interactive.</b> rahulch.site/odisse-chaleur</p>
+    <p><b>Auteur.</b> Rahul Chaudhary. Code sous licence MIT, textes et visuels sous licence CC BY 4.0. <span class="noaffiche"><a href="https://github.com/vibedatascience/vibelogs/tree/main/odisse-chaleur">Code source</a> · <a href="affiche.png">Affiche (PNG, 300 dpi)</a></span></p>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script>
+const D = window.DATA, NAT = D.nat;
+const nf = n => Math.round(n).toLocaleString('fr-FR');
+const pf = (x,d=0) => (x*100).toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}) + ' %';
+const RED = '#E60023', BLUE = '#2d6cb5';
+const AFFICHE = /affiche/.test(location.search);
+if (AFFICHE) document.body.classList.add('affiche');
+
+// headline numbers
+const T = NAT.reduce((a,n)=>{a.ch+=n.ch;a.ca+=n.ca;a.o75+=n.o75;return a},{ch:0,ca:0,o75:0});
+document.getElementById('tot').textContent = nf(T.ch);
+document.getElementById('pctCan').textContent = pf(T.ca/T.ch);
+document.getElementById('fHors').textContent = pf(1-T.ca/T.ch);
+document.getElementById('f75').textContent = pf(T.o75/T.ch,1);
+const last = NAT[NAT.length-1];
+document.getElementById('fAf').textContent = '×' + (last.afc/last.af).toLocaleString('fr-FR',{maximumFractionDigits:1});
+document.getElementById('fAfTxt').textContent = `Un jour de canicule reste bien plus meurtrier. En ${last.y}, la chaleur expliquait ${last.afc.toLocaleString('fr-FR')} % des décès pendant les canicules, contre ${last.af.toLocaleString('fr-FR')} % sur l'ensemble de l'été.`;
+const avg = (a,b)=>{let s=0,n=0;for(let y=a;y<=b;y++){s+=D.days[y]||0;n++}return s/n};
+const early = avg(2004,2013), recent = avg(2016,2025);
+document.getElementById('fDays').textContent = '×' + (recent/early).toLocaleString('fr-FR',{maximumFractionDigits:1});
+document.getElementById('fDaysTxt').textContent = `de jours de canicule en dix ans : ${nf(recent)} jours-départements par an en moyenne de 2016 à 2025, contre ${nf(early)} de 2004 à 2013.`;
+
+// tooltip
+function tipFor(box){ const t=document.createElement('div'); t.className='tip'; box.appendChild(t); return t; }
+function showTip(t, box, html, x, y){
+  t.innerHTML = html; t.style.opacity = 1;
+  const bw = box.clientWidth, tw = t.offsetWidth;
+  t.style.left = Math.max(0, Math.min(bw - tw, x + 14)) + 'px';
+  t.style.top = Math.max(0, y - 20) + 'px';
+}
+
+// iceberg drawing: cols = [{label, up, down, html}], per = people per dot
+function iceberg(box, cols, per, opts={}){
+  box.innerHTML = '';
+  const W = box.clientWidth, G0 = opts.gutter ? opts.gutter(W) : 0;
+  const n = cols.length, gapFrac = 0.28;
+  const colW = (W - G0) / n;
+  const step = opts.step || (W < 600 ? 5 : AFFICHE ? 9 : 7);
+  const r = step * 0.36;
+  const k = Math.max(2, Math.floor(colW * (1-gapFrac) / step));
+  const rowsUp = Math.max(...cols.map(c=>Math.ceil(Math.round(c.up/per)/k)));
+  const rowsDn = Math.max(...cols.map(c=>Math.ceil(Math.round(c.down/per)/k)));
+  const padTop = 34, padBot = 34;
+  const y0 = padTop + rowsUp*step + 8;          // waterline
+  const H = y0 + 10 + rowsDn*step + padBot;
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns,'svg');
+  svg.setAttribute('width', W); svg.setAttribute('height', H); svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  let s = `<rect x="0" y="${y0}" width="${W}" height="${H-y0}" fill="#eef4fb"/>`;
+  s += `<line x1="0" x2="${W}" y1="${y0}" y2="${y0}" stroke="${BLUE}" stroke-width="1.5"/>`;
+  cols.forEach((c,i)=>{
+    const x0 = G0 + i*colW + (colW - k*step)/2 + step/2;
+    const nu = Math.round(c.up/per), nd = Math.round(c.down/per);
+    let g = `<g class="col" data-i="${i}">`;
+    for (let j=0;j<nu;j++){ const cx = x0 + (j%k)*step, cy = y0 - 6 - Math.floor(j/k)*step; g += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r.toFixed(2)}" fill="${RED}"/>`; }
+    for (let j=0;j<nd;j++){ const cx = x0 + (j%k)*step, cy = y0 + 10 + Math.floor(j/k)*step; g += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r.toFixed(2)}" fill="${BLUE}"/>`; }
+    const cxm = G0 + i*colW + colW/2;
+    const topY = y0 - 6 - Math.max(0,Math.ceil(nu/k)-1)*step - r;
+    const botY = y0 + 10 + Math.max(0,Math.ceil(nd/k)-1)*step + r;
+    g += `<text x="${cxm}" y="${H-10}" text-anchor="middle" font-size="${AFFICHE?17:12}" fill="#16181d" font-weight="600">${c.label}</text>`;
+    if (opts.labels !== false){
+      g += `<text x="${cxm}" y="${topY-6}" text-anchor="middle" font-size="${AFFICHE?14:10.5}" fill="#5b6270">${nf(c.up)}</text>`;
+      g += `<text x="${cxm}" y="${botY+13}" text-anchor="middle" font-size="${AFFICHE?14:10.5}" fill="#5b6270">${nf(c.down)}</text>`;
+    }
+    g += `<rect x="${G0+i*colW}" y="0" width="${colW}" height="${H}" fill="transparent"/></g>`;
+    s += g;
+  });
+  if (opts.note && G0) s += opts.note(y0, G0);
+  svg.innerHTML = s; box.appendChild(svg);
+  const t = tipFor(box);
+  svg.querySelectorAll('.col').forEach(el=>{
+    el.addEventListener('mousemove', e=>{ const b=box.getBoundingClientRect(); showTip(t, box, cols[+el.dataset.i].html, e.clientX-b.left, e.clientY-b.top); el.style.opacity=1; });
+    el.addEventListener('mouseleave', ()=>{ t.style.opacity=0; });
+  });
+}
+
+const row = (k,v,c) => `<div class="r"><span class="k">${c?`<i style="background:${c}"></i>`:''}${k}</span><span>${v}</span></div>`;
+function drawNational(){
+  const cols = NAT.map(n=>({label:String(n.y), up:n.ca, down:n.ch-n.ca,
+    html:`<b>Été ${n.y}</b>${row('Décès attribuables à la chaleur', nf(n.ch))}${row('IC à 95\u202f%', nf(n.chi)+' à '+nf(n.chs))}${row('Pendant les canicules', nf(n.ca), RED)}${row('Hors canicule', nf(n.ch-n.ca)+' ('+pf((n.ch-n.ca)/n.ch)+')', BLUE)}${row('Jours-départements en canicule', nf(D.days[n.y]||0))}`}));
+  iceberg(document.getElementById('ice'), cols, 10, {gutter: W => W < 700 ? 0 : (AFFICHE ? 190 : 130), note:(y0,G0)=>{
+    const fs = AFFICHE?17:12.5, x = G0 - 14, lh = fs*1.25;
+    const t = (txt,y,c) => `<text x="${x}" y="${y}" font-size="${fs}" fill="${c}" font-weight="600" text-anchor="end">${txt}</text>`;
+    return t('Ce que voient',y0-14-lh,RED)+t('les alertes',y0-14,RED)+t('Ce qui reste',y0+24,BLUE)+t('sous la surface',y0+24+lh,BLUE);
+  }});
+}
+
+// département picker
+const sel = document.getElementById('dsel');
+Object.entries(D.dep).sort((a,b)=>a[0].localeCompare(b[0],'fr',{numeric:true})).forEach(([code,d])=>{
+  const o=document.createElement('option'); o.value=code; o.textContent=`${code} · ${d.n}`; sel.appendChild(o);
+});
+sel.value = '75';
+function drawDep(){
+  const d = D.dep[sel.value], years = Object.keys(d.y).map(Number).sort();
+  let ch=0, ca=0, days=0; years.forEach(y=>{ch+=d.y[y][0];ca+=d.y[y][1];days+=(d.j&&d.j[y])||0});
+  const hors = ch-ca;
+  const per = ch > 1500 ? 2 : 1;
+  document.getElementById('dsum').innerHTML = ch>0 ? `${d.n} : <b>${nf(ch)}</b> décès attribuables à la chaleur depuis 2014, dont <b class="r">${nf(ca)}</b> pendant les canicules et <b class="b">${nf(hors)} (${pf(hors/ch)})</b> hors canicule. ${days} jours de canicule sur la période.` : `${d.n} : aucun décès attribuable à la chaleur estimé sur la période.`;
+  const cols = years.map(y=>({label:"'"+String(y).slice(2), up:d.y[y][1], down:d.y[y][0]-d.y[y][1],
+    html:`<b>${d.n}, été ${y}</b>${row('Décès attribuables à la chaleur', nf(d.y[y][0]))}${row('Pendant les canicules', nf(d.y[y][1]), RED)}${row('Hors canicule', nf(d.y[y][0]-d.y[y][1]), BLUE)}${row('Jours de canicule', (d.j&&d.j[y])||0)}`}));
+  iceberg(document.getElementById('dice'), cols, per, {step: document.body.clientWidth<600?5:6});
+  document.getElementById('dnote').textContent = `1 point = ${per} décès${per>1?'':''}. Estimations départementales, arrondies ; les petits départements ont des effectifs faibles et incertains.`;
+}
+sel.addEventListener('change', drawDep);
+
+// table
+document.getElementById('tbl').innerHTML = '<tr><th>Été</th><th>Décès attribuables</th><th>IC 95 %</th><th>Pendant les canicules</th><th>Hors canicule</th><th>Part hors canicule</th><th>75 ans et plus</th><th>Jours-départements en canicule</th></tr>' +
+  NAT.map(n=>`<tr><td>${n.y}</td><td>${nf(n.ch)}</td><td>${nf(n.chi)} à ${nf(n.chs)}</td><td>${nf(n.ca)}</td><td>${nf(n.ch-n.ca)}</td><td>${pf((n.ch-n.ca)/n.ch)}</td><td>${nf(n.o75)}</td><td>${nf(D.days[n.y]||0)}</td></tr>`).join('') +
+  `<tr><td><b>Total</b></td><td><b>${nf(T.ch)}</b></td><td></td><td><b>${nf(T.ca)}</b></td><td><b>${nf(T.ch-T.ca)}</b></td><td><b>${pf(1-T.ca/T.ch)}</b></td><td><b>${nf(T.o75)}</b></td><td></td></tr>`;
+
+function drawAll(){ drawNational(); if(!AFFICHE) drawDep(); }
+drawAll();
+let rz; addEventListener('resize', ()=>{ clearTimeout(rz); rz=setTimeout(drawAll,150); });
+</script>
+</body>
+</html>
