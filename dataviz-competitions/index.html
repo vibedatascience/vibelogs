@@ -110,6 +110,13 @@ const CALLS = [
     ['Event','IEEE PacificVis 2027, Busan, Apr 19-22, 2027.'],
     ['Judging','Vis researchers score 1-5 on novelty, originality, trust, engagement, and insight.'],
     ['Prize','Best Storytelling and Honorable Mention. Accepted entries go on the contest site.']]},
+  {name:'ASA Data Challenge Expo', url:'https://community.amstat.org/dataexpo/home', due:'2027-02-01', tier:'International, American Statistical Association', rows:[
+    ['Who','Students and professionals from the private or public sector.'],
+    ['Work','Analysis and graphics on a set dataset. 2027 dataset: NYC 311 Service Requests (NYC Open Data).'],
+    ['Dates','Submit a contributed speed-poster abstract to JSM 2027 by Feb 1, 2027, with the Statistical Computing Section as primary sponsor, then email the abstract details to the organizer.'],
+    ['Event','JSM 2027, Chicago, Aug 8-12, 2027. No entry fee; presenters pay JSM registration and travel.'],
+    ['Judging','Judged on the poster presented at JSM.'],
+    ['Prize','Professional: $500. Student: $1,500, $1,000, $500.']]},
   {name:'Swiss Viz Awards', url:'https://www.swissviz.org/', due:'2026-10-16', tier:'National, open worldwide', rows:[
     ['Who','Anyone: individuals, teams, studios, newsrooms, students.'],
     ['Work','Created in or about Switzerland, published 2025 or 2026. Categories: Public Lens, Operational Insight, Avant-Garde, Student Work.'],
@@ -125,6 +132,9 @@ const CALLS = [
 ];
 
 const WATCH = [
+  ['Information is Beautiful Awards','https://www.informationisbeautifulawards.com/','2024 edition closed Feb 3, 2025','Run by the Data Visualization Society. Students and members of the public enter free; companies pay. Jury plus a community vote. No call since the 2024 edition.'],
+  ['Posit Table and Plotnine Contests','https://posit.co/blog/announcing-the-2025-table-and-plotnine-contests','2025 ran Aug 21 to Oct 17, 2025','Free, worldwide, judged. Tables in R or Python (gt, Great Tables, reactable) and charts in plotnine.'],
+  ['NACIS Atlas of Design','https://atlasofdesign.org/','Vol. 7 call closed Jan 21, 2024','Juried selection of maps, published as a book roughly every two years by the North American Cartographic Information Society.'],
   ['Sigma Awards','https://www.sigmaawards.org/','2026 cycle closed Jan 18, 2026','Data journalism, any newsroom size or individual. Work published the previous year. 10 winners from 543 entries in 2026.'],
   ['Pacific Dataviz Challenge','https://pacificdatavizchallenge.org/','2025 winners Sep 2025','Pacific data. Open category is worldwide; Pacific and youth categories too. Requires unpublished work.'],
   ['Pudding Cup','https://pudding.cool/pudding-cup/','2025 (9th edition)','Best visual and data-driven stories not made by The Pudding. Three winners, $1,500 each.'],
@@ -147,6 +157,7 @@ const WATCH = [
 // timeline lanes
 const LANES = [
   ['PacificVis Storytelling',[['2026-08-27','open','Call opens'],['2027-02-01','deadline','Feb 1'],['2027-02-15','result','Notified'],['2027-04-19','result','Busan']]],
+  ['ASA Data Challenge Expo',[['2027-02-01','deadline','Abstract Feb 1'],['2027-08-08','result','JSM Chicago']]],
   ['Swiss Viz Awards',[['2026-10-16','deadline','Oct 16'],['2026-12-10','result','Ceremony Dec 10']]],
   ['Odissé Challenge',[['2026-09-23','deadline','Reg. closed'],['2026-10-10','deadline','Oct 10'],['2026-10-17','result','Winners'],['2026-11-09','result','Awards']]],
   ['Code 4 Nature',[['2026-08-20','deadline','Reg. closed'],['2026-10-15','deadline','Oct 15'],['2026-11-20','result','Results']]],
@@ -219,6 +230,59 @@ const G = [
   ['Pacific Dataviz Challenge',2025,'Open Static, Top','Echoes of the Unprotected Sea','Eduardo España','https://pacificdata.org/updates/news/media-release/2025/09/award-winning-storytellers-transform-pacific-data-into-past','',1],
   ['Pacific Dataviz Challenge',2025,'Pacific Interactive','Blue Paradigm','Eunice Rigo','https://pacificdata.org/updates/news/media-release/2025/09/award-winning-storytellers-transform-pacific-data-into-past','',1],
   ['Pacific Dataviz Challenge',2025,'Pacific Static','When Our Waste Suffocates the Ocean','Sarah Mouniama','https://pacificdata.org/updates/news/media-release/2025/09/award-winning-storytellers-transform-pacific-data-into-past','',1],
+  ['Information is Beautiful Awards',2024,'Arts, Gold','Is the Love Song Dying?','David Mora and Michelle Jia','https://www.informationisbeautifulawards.com/showcase/7176-is-the-love-song-dying',IIB+'1638/content_1.png',1],
+  ['Information is Beautiful Awards',2024,'Arts, Silver','Databeads','Eszter Katona and Mih\u00e1ly Mink\u00f3','https://www.informationisbeautifulawards.com/showcase/7521-databeads',IIB+'1634/content_2.png',1],
+  ['Information is Beautiful Awards',2024,'Arts, Bronze','Beyond the Score: Wynton Marsalis\' Musical Legacy','Emanuele Pizzuti, Martina Dossi','https://www.informationisbeautifulawards.com/showcase/7422-beyond-the-score-wynton-marsalis-musical-legacy-visualized',IIB+'1635/content_3.png',1],
+  ['Information is Beautiful Awards',2024,'Business, Gold','Office Vacancies Data Story','Moody\'s Corporation','https://www.informationisbeautifulawards.com/showcase/7225-moody-s-office-vacancies-data-story',IIB+'1636/content_4.png',1],
+  ['Information is Beautiful Awards',2024,'Business, Silver','What\'s driving up burger prices?','ABC News','https://www.informationisbeautifulawards.com/showcase/7147-what-s-driving-up-burger-prices','',1],
+  ['Information is Beautiful Awards',2024,'Business, Bronze','10 Major Risks Shaping Insurance Today','Moody\'s Corporation','https://www.informationisbeautifulawards.com/showcase/7224-moody-s-10-major-risks-shaping-insurance-today-data-story',IIB+'1640/content_8.png',1],
+  ['Information is Beautiful Awards',2024,'Current Affairs, Gold','The Birdsong of Sorrow above Ukraine','Anastasia Balagurova','https://www.informationisbeautifulawards.com/showcase/7590-the-birdsong-of-sorrow-above-ukraine',IIB+'1642/content_9.png',1],
+  ['Information is Beautiful Awards',2024,'Current Affairs, Silver','How the 2024 U.S. election was decided, vote by vote','The Washington Post','https://www.informationisbeautifulawards.com/showcase/7396-how-the-2024-u-s-election-was-decided-vote-by-vote',IIB+'1641/content_10.png',1],
+  ['Information is Beautiful Awards',2024,'Current Affairs, Bronze','A torrent of trash','Sudev Kiyada, Han Huang, Adolfo Arranz, Simon Scarr','https://www.informationisbeautifulawards.com/showcase/7142-a-torrent-of-trash',IIB+'1643/content_11.png',1],
+  ['Information is Beautiful Awards',2024,'Humanitarian, Gold','The world\'s hunger watchdog warned of catastrophe in Sudan','Reuters','https://www.informationisbeautifulawards.com/showcase/7241-the-world-s-hunger-watchdog-warned-of-catastrophe-in-sudan-famine-struck-anyway',IIB+'1645/content_12.png',1],
+  ['Information is Beautiful Awards',2024,'Humanitarian, Silver','Pathways to Prosperity for Adolescent Girls in Africa','OneTandem','https://www.informationisbeautifulawards.com/showcase/7058-pathways-to-prosperity-for-adolescent-girls-in-africa',IIB+'1644/content_13.png',1],
+  ['Information is Beautiful Awards',2024,'Humanitarian, Bronze','Lives in limbo: asylum seekers in Hong Kong','South China Morning Post','https://www.informationisbeautifulawards.com/showcase/7167-lives-in-limbo-struggles-of-asylum-seekers-in-hong-kong',IIB+'1646/content_14.png',1],
+  ['Information is Beautiful Awards',2024,'Leisure, Gold','Swiss Mountains','Fabian Lang','https://www.informationisbeautifulawards.com/showcase/6972-swiss-mountains-schweizer-bergwelten-montagnes-suisses',IIB+'1649/content_15.png',1],
+  ['Information is Beautiful Awards',2024,'Leisure, Silver','Vertical Momentum: High Jump and Pole Vault','Krisztina Szucs','https://www.informationisbeautifulawards.com/showcase/7194-vertical-momentum-high-jump-pole-vault',IIB+'1647/content_16.png',1],
+  ['Information is Beautiful Awards',2024,'Leisure, Bronze','Games of two eras','South China Morning Post','https://www.informationisbeautifulawards.com/showcase/7166-games-of-two-eras',IIB+'1650/content_19.png',1],
+  ['Information is Beautiful Awards',2024,'People, Gold','This is a Teenager','Alvin Chang','https://www.informationisbeautifulawards.com/showcase/7177-this-is-a-teenager',IIB+'1660/content_36.png',1],
+  ['Information is Beautiful Awards',2024,'People, Silver','The Roots of Racism','Jack Beckwith','https://www.informationisbeautifulawards.com/showcase/7437-the-roots-of-racism',IIB+'1651/content_21.png',1],
+  ['Information is Beautiful Awards',2024,'People, Bronze','Gaza Lives: Resisting Cultural Genocide','Kontinentalist','https://www.informationisbeautifulawards.com/showcase/6939-gaza-lives-resisting-cultural-genocide',IIB+'1653/content_22.png',1],
+  ['Information is Beautiful Awards',2024,'Places, Gold','I Want a Better Catastrophe: A Flowchart','Andrew Boyd, Jona Pomerance, Marian D\u00f6rk','https://www.informationisbeautifulawards.com/showcase/7487-i-want-a-better-catastrophe-a-flowchart-for-navigating-our-climate-predicament',IIB+'1652/content_23.png',1],
+  ['Information is Beautiful Awards',2024,'Places, Silver','Seeking shadow. A cool fix for hot cities','Urbi Atlas','https://www.informationisbeautifulawards.com/showcase/6995-seeking-shadow-a-cool-fix-for-hot-cities',IIB+'1654/content_24.png',1],
+  ['Information is Beautiful Awards',2024,'Places, Bronze','Buildings wrapped in solid gasoline','Mariano Zafra and Sudev Kiyada','https://www.informationisbeautifulawards.com/showcase/7037-buildings-wrapped-in-solid-gasoline',IIB+'1655/content_25.png',1],
+  ['Information is Beautiful Awards',2024,'Science, Gold','Zoonotic Web','Liuhuaying Yang','https://www.informationisbeautifulawards.com/showcase/7158-zoonotic-web',IIB+'1657/content_26.png',1],
+  ['Information is Beautiful Awards',2024,'Science, Silver','Navigate the obstacles to transportation electrification','Radio-Canada','https://www.informationisbeautifulawards.com/showcase/7179-navigate-the-obstacles-to-transportation-electrification','',1],
+  ['Information is Beautiful Awards',2024,'Science, Bronze','Beyond Crisis: Lives Saved','Jessica Russo','https://www.informationisbeautifulawards.com/showcase/6810-beyond-crisis-lives-saved',IIB+'1658/content_28.png',1],
+  ['Information is Beautiful Awards',2024,'Unusual, Gold','World in Tangible Fragments','Nadezda Andrianova','https://www.informationisbeautifulawards.com/showcase/7536-world-in-tangible-fragments',IIB+'1665/content_Screenshot_2025-06-14_at_9.07.21_AM.png',1],
+  ['Information is Beautiful Awards',2024,'Unusual, Silver','Material Interactions: Data-Driven Community Quilting','Syracuse University iSchool','https://www.informationisbeautifulawards.com/showcase/7043-material-interactions-data-driven-community-quilting',IIB+'1666/content_Screenshot_2025-06-14_at_9.30.17_AM.png',1],
+  ['Information is Beautiful Awards',2024,'Unusual, Bronze','Hello From The Data Vandals','the Data Vandals','https://www.informationisbeautifulawards.com/showcase/7407-hello-from-the-data-vandals-or-free-as-air-and-water-or-whatsoever-things-are-true',IIB+'1667/content_Screenshot_2025-06-14_at_9.31.09_AM.png',1],
+  ['Posit Table and Plotnine Contests',2025,'Table Contest, Grand Prize','Exploring United\'s Fleet Using fleetR','Martin Stavro','https://github.com/mstavro/fleetR','https://posit.co/sites/default/files/migrate/blog/2025/11/image5.gif',1],
+  ['Posit Table and Plotnine Contests',2025,'Table Contest, Runner-up','Visits to Singapore\'s Places of Interest, 2010-2024','Jeremy Selva','https://github.com/JauntyJJS/2025_table','https://posit.co/sites/default/files/styles/small_hq/public/migrate/blog/2025/11/image8.jpg?itok=zd97BV1x',1],
+  ['Posit Table and Plotnine Contests',2025,'Table Contest, Runner-up','Pixel Art Using gt','Melissa Van Bussel','https://github.com/melissavanbussel/gt-pixel-art','https://posit.co/sites/default/files/styles/small_hq/public/migrate/blog/2025/11/image10.jpg?itok=wPi3bGog',1],
+  ['Posit Table and Plotnine Contests',2025,'Table Contest, Runner-up','Scaling Free Book Distribution with Interactive Data','Leo Ohyama','https://github.com/leoohyama/posit_table_contest_2025','https://posit.co/sites/default/files/styles/small_hq/public/migrate/blog/2025/11/image3.jpg?itok=xTdEfE7X',1],
+  ['Posit Table and Plotnine Contests',2025,'Table Contest, Best gt Table','Conserved Regions Across Coronavirus Spike Proteins','Victor Yuan','https://github.com/wvictor14/2025-posit-table-contest-gt-msa/','https://posit.co/sites/default/files/migrate/blog/2025/11/image4.gif',1],
+  ['Posit Table and Plotnine Contests',2025,'Table Contest, Best reactablefmtr Table','New York City Ballet\'s 75th Season','Kristen Akey','https://github.com/kkakey/nycb-75th-season','https://posit.co/sites/default/files/migrate/blog/2025/11/image11.gif',1],
+  ['Posit Table and Plotnine Contests',2025,'Table Contest, Greatest Great Tables Table','Baseball Pitchers: Luck vs. Skill','Jules Walzer-Goldfeld','https://github.com/juleswg23/baseball','https://posit.co/sites/default/files/migrate/blog/2025/11/image1.jpg?itok=Cv5eLFwh',1],
+  ['Posit Table and Plotnine Contests',2025,'Table Contest, Best Sports Table','NRL Finals Probabilities with Monte Carlo Simulation','Mitch Henderson','https://github.com/mitchhenderson/2025-Table-Contest/','https://posit.co/sites/default/files/styles/small_hq/public/migrate/blog/2025/11/image12.png?itok=CatqhnLH',1],
+  ['Posit Table and Plotnine Contests',2025,'Table Contest, Best Quarto Dashboard','Trending Knitting and Crochet Patterns','Alex McSween','https://github.com/alexmcsw/ravelry-table','https://posit.co/sites/default/files/styles/small_hq/public/migrate/blog/2025/11/image6.jpg?itok=VenlWJtA',1],
+  ['Posit Table and Plotnine Contests',2025,'Plotnine Contest, Winner','Tracking Canada\'s Labour Statistics','Victor Yuan','https://github.com/has2k1/plotnine/discussions/989','https://posit.co/sites/default/files/quarto-blogs/winner-of-the-2025-plotnine-plotting-contest/images/canada-labour-statistics-all-industries.png',1],
+  ['Posit Table and Plotnine Contests',2025,'Plotnine Contest, Honorable Mention','Circle of Fifths','Manish Datt','https://github.com/has2k1/plotnine/discussions/986','https://posit.co/sites/default/files/quarto-blogs/winner-of-the-2025-plotnine-plotting-contest/images/billboard_plot.svg',0],
+  ['Posit Table and Plotnine Contests',2025,'Plotnine Contest, Honorable Mention','Truchet Tiles','Deepali Kank','https://github.com/has2k1/plotnine/discussions/988','https://posit.co/sites/default/files/quarto-blogs/winner-of-the-2025-plotnine-plotting-contest/images/truchet-art-1.svg',0],
+  ['Posit Table and Plotnine Contests',2025,'Plotnine Contest, Honorable Mention','Powerwash','Meghan Harris','https://github.com/has2k1/plotnine/discussions/991','https://posit.co/sites/default/files/quarto-blogs/winner-of-the-2025-plotnine-plotting-contest/images/powerwash.png',0],
+  ['ASA Data Challenge Expo',2025,'Professional Division, Winner','Exploring the Periodicity of Flight Patterns','Sherry Zhang, Sarah Coleman, Lydia Lucchesi, Saptarshi Roy, UT Austin','https://github.com/huizezhang-sherry/jsm-flight-2025','',1],
+  ['NACIS Atlas of Design',2024,'Volume VII, Selected','Wild World','Anton Thomas','https://atlasofdesign.org/seven','',1],
+  ['NACIS Atlas of Design',2024,'Volume VII, Selected','A Delicious View of U.S. Parks','Wendy Shijia Wang and RJ Andrews','https://atlasofdesign.org/seven','',1],
+  ['NACIS Atlas of Design',2024,'Volume VII, Selected','A Map of Home, Stitched in Found Fabrics','Eleanor Lutz','https://atlasofdesign.org/seven','',1],
+  ['NACIS Atlas of Design',2024,'Volume VII, Selected','A Selection of North American Rivers','Daniel P. Huffman','https://atlasofdesign.org/seven','',1],
+  ['NACIS Atlas of Design',2024,'Volume VII, Selected','Californian Snowflakes: The Record Snowfall of 2022-2023','Kenneth Field','https://atlasofdesign.org/seven','',1],
+  ['NACIS Atlas of Design',2024,'Volume VII, Selected','Under Siege: A Cartographic Chronicle of the Fifth Gaza War','Adina Renner, Neue Z\u00fcrcher Zeitung','https://atlasofdesign.org/seven','',1],
+  ['NACIS Atlas of Design',2024,'Volume VII, Selected','Voteland','Adri\u00e1n Blanco Ramos and Artur Galocha, The Washington Post','https://atlasofdesign.org/seven','',1],
+  ['NACIS Atlas of Design',2024,'Volume VII, Selected','East Boston Sea Level Rise Flood Risk','Andy Woodruff','https://atlasofdesign.org/seven','',1],
+  ['NACIS Atlas of Design',2024,'Volume VII, Selected','Malaspina Glacier and the Saint Elias Mountains','Tom Patterson','https://atlasofdesign.org/seven','',1],
+  ['NACIS Atlas of Design',2024,'Volume VII, Selected','Une Mappemonde Craquel\u00e9e','Xemartin Laborde, Francesca Fattori, Delphine Papin','https://atlasofdesign.org/seven','',1],
+  ['NACIS Atlas of Design',2024,'Volume VII, Selected','Spain\'s Muslim Era','National Geographic','https://atlasofdesign.org/seven','',1],
+  ['NACIS Atlas of Design',2024,'Volume VII, Selected','Hand Drawn Map of London','Jenni Sparks','https://atlasofdesign.org/seven','',1],
 ];
 
 const fmt = d => new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
@@ -242,7 +306,7 @@ const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
   const box = document.getElementById('tl');
   const W = Math.max(box.clientWidth, 900), L = 150, R = 40, rowH = 40, top = 26;
   const H = top + LANES.length*rowH + 10;
-  const t0 = new Date(2026,0,1), t1 = new Date(2027,4,1);
+  const t0 = new Date(2026,0,1), t1 = new Date(2027,8,1);
   const x = d => L + ((typeof d==='string'?new Date(d+'T12:00:00'):d) - t0)/(t1 - t0)*(W-L-R);
   let s = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Award deadlines 2026 to 2027">`;
   for (let m = new Date(t0); m <= t1; m.setMonth(m.getMonth()+1)) {
