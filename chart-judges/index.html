@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chart Judges vs Audiences</title>
+<meta name="description" content="Do LLM chart judges pick what r/dataisbeautiful upvotes? A visual companion to the paper, with the gallery of pairs and every judge's own words.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sofia+Sans+Condensed:wght@700;800&family=Sofia+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Companion page for "LLM Chart Judges Reward Labels, Not What Audiences Upvote".
+   Single white theme like the rest of the site. Red = an LLM judge, navy = the audience, teal = experts. */
+:root {
+  color-scheme: light;
+  --bg: #ffffff; --ink: #1e293b; --navy: #0a3069; --red: #E60023; --teal: #0d9488;
+  --slate: #64748b; --mute: #94a3b8; --rule: #e9eef4; --band: #f4f6f9; --redbg: #fff1f3; --navybg: #eef3fb;
+  --display: "Sofia Sans Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --body: "Sofia Sans", "Helvetica Neue", Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 14px; line-height: 1.5; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 14px 16px 48px; }
+a { color: var(--navy); }
+.nav { font-size: 12px; color: var(--slate); display: flex; gap: 14px; }
+.nav a { color: var(--slate); text-decoration: none; }
+.nav a:hover { color: var(--ink); text-decoration: underline; }
+.r { color: var(--red); } .n { color: var(--navy); } .t { color: var(--teal); }
+
+header { padding: 18px 0 6px; border-bottom: 2px solid var(--navy); }
+.kicker { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--slate); }
+h1 { font-family: var(--display); font-weight: 800; font-size: clamp(30px, 5.4vw, 56px); line-height: 1.0; margin: 6px 0 10px; letter-spacing: -.005em; max-width: 22ch; text-wrap: balance; }
+.dek { font-size: 16px; color: #334155; max-width: 78ch; margin: 0 0 12px; }
+.links { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 12px; }
+.btn { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; text-decoration: none; color: var(--ink); border: 1px solid #cbd5e1; border-radius: 999px; padding: 5px 12px; background: #fff; }
+.btn:hover { border-color: var(--ink); }
+.btn.primary { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border-bottom: 1px solid var(--rule); }
+.stat { padding: 14px 14px 14px 0; }
+.stat + .stat { padding-left: 14px; border-left: 1px solid var(--rule); }
+.stat .big { font-family: var(--display); font-weight: 800; font-size: clamp(28px, 3.6vw, 40px); line-height: 1; font-variant-numeric: tabular-nums; }
+.stat .lbl { font-size: 12.5px; color: var(--slate); margin-top: 4px; max-width: 30ch; }
+@media (max-width: 760px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .stat:nth-child(3) { border-left: 0; padding-left: 0; } .stat:nth-child(n+3) { border-top: 1px solid var(--rule); } }
+
+section { padding-top: 26px; }
+section + section { margin-top: 18px; border-top: 1px solid var(--rule); }
+h2 { font-family: var(--display); font-weight: 800; font-size: clamp(22px, 3vw, 32px); line-height: 1.08; margin: 2px 0 6px; max-width: 34ch; text-wrap: balance; }
+.sec-dek { color: #475569; max-width: 86ch; margin: 0 0 12px; }
+.foot { font-size: 11.5px; color: var(--slate); margin-top: 8px; max-width: 120ch; }
+
+/* Method strip */
+.steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 6px; }
+.step { background: var(--band); border-radius: 6px; padding: 10px 12px; }
+.step b { display: block; font-family: var(--display); font-size: 19px; line-height: 1.1; margin-bottom: 3px; }
+.step span { font-size: 12.5px; color: #475569; }
+.step .num { font-size: 11px; font-weight: 700; color: var(--slate); letter-spacing: .08em; }
+@media (max-width: 760px) { .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.prompt { margin-top: 10px; font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; background: #f8fafc; border-left: 3px solid var(--red); padding: 8px 12px; color: #334155; max-width: 110ch; }
+
+/* Charts */
+.chart { position: relative; width: 100%; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; font-variant-numeric: tabular-nums; }
+.chart text { font-family: var(--body); }
+.tip { position: absolute; pointer-events: none; background: #fff; border: 1px solid var(--rule); box-shadow: 0 4px 14px rgba(10,48,105,.14); padding: 6px 9px; font-size: 12px; border-radius: 4px; z-index: 5; color: var(--ink); opacity: 0; transition: opacity .08s; max-width: 280px; }
+.tip.on { opacity: 1; }
+.tip b { font-weight: 700; }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; }
+@media (max-width: 860px) { .two { grid-template-columns: 1fr; } }
+.two h3 { font-family: var(--display); font-weight: 800; font-size: 21px; line-height: 1.1; margin: 0 0 4px; }
+.two p { margin: 0 0 8px; color: #475569; font-size: 13.5px; }
+
+/* Gallery controls */
+.bar { position: sticky; top: 0; z-index: 4; background: rgba(255,255,255,.96); backdrop-filter: blur(6px); display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--rule); margin-bottom: 14px; }
+.seg { display: inline-flex; border: 1px solid #cbd5e1; border-radius: 999px; overflow: hidden; }
+.seg button { font: 600 12.5px var(--body); border: 0; background: #fff; color: #334155; padding: 5px 12px; cursor: pointer; }
+.seg button + button { border-left: 1px solid #cbd5e1; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+.quiz-toggle { display: inline-flex; align-items: center; gap: 6px; font: 600 12.5px var(--body); color: #334155; cursor: pointer; user-select: none; border: 1px solid #cbd5e1; border-radius: 999px; padding: 5px 12px; background: #fff; }
+.quiz-toggle[aria-pressed="true"] { background: var(--red); border-color: var(--red); color: #fff; }
+.tally { font-size: 12.5px; color: var(--slate); margin-left: auto; font-variant-numeric: tabular-nums; }
+.tally b { color: var(--ink); }
+
+/* Pair cards */
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 22px; }
+@media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+.card { border: 1px solid var(--rule); border-radius: 8px; padding: 10px 12px 8px; background: #fff; }
+.card-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-size: 11.5px; color: var(--slate); margin-bottom: 8px; }
+.card-head .ratio { font-weight: 700; color: var(--ink); }
+.tag { font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; border-radius: 3px; padding: 1px 6px; }
+.tag.fig { background: var(--band); color: var(--slate); }
+.tag.wrong { background: var(--redbg); color: var(--red); }
+.tag.right { background: var(--navybg); color: var(--navy); }
+.sides { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+.side { min-width: 0; display: flex; flex-direction: column; }
+.imgbox { position: relative; height: 220px; border-radius: 5px; background: #f8fafc; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; overflow: hidden; cursor: zoom-in; padding: 0; }
+.imgbox img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+.side.win .imgbox { border-color: var(--navy); }
+.side.pick .imgbox { box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--red); }
+.role { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; margin-top: 7px; font-size: 12px; }
+.role .who { font-weight: 700; }
+.side.win .who { color: var(--navy); }
+.side.lose .who { color: var(--slate); }
+.role .votes { font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 600; white-space: nowrap; }
+.ttl { font-size: 12.5px; line-height: 1.3; margin-top: 3px; color: var(--ink); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.6em; }
+.scores { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; align-items: center; }
+.chip { font-size: 11px; font-variant-numeric: tabular-nums; border-radius: 3px; padding: 1px 5px; background: var(--band); color: #475569; white-space: nowrap; }
+.chip b { font-weight: 700; }
+.chip.hi { background: var(--redbg); color: var(--red); }
+.words { font-size: 11px; color: var(--slate); margin-left: auto; white-space: nowrap; }
+.pickmark { font-size: 10.5px; font-weight: 700; color: var(--red); letter-spacing: .04em; text-transform: uppercase; }
+details { margin-top: 8px; border-top: 1px solid var(--rule); padding-top: 6px; }
+summary { cursor: pointer; font-size: 12.5px; font-weight: 600; color: #334155; list-style: none; }
+summary::-webkit-details-marker { display: none; }
+summary::before { content: "+"; display: inline-block; width: 14px; color: var(--slate); }
+details[open] summary::before { content: "−"; }
+.pw { margin: 8px 0 6px; font-size: 12.5px; border-left: 3px solid var(--red); padding: 2px 0 2px 10px; color: #334155; }
+.pw small { display: block; color: var(--slate); font-size: 11px; margin-bottom: 2px; }
+.reasons { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4px 12px; font-size: 12px; }
+.reasons h4 { margin: 6px 0 2px; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--slate); }
+.reasons p { margin: 0 0 5px; color: #334155; }
+.reasons p b { font-variant-numeric: tabular-nums; }
+.credit { font-size: 10.5px; color: var(--mute); margin-top: 4px; }
+.credit a { color: var(--mute); }
+
+/* Quiz mode */
+.quiz .side .role, .quiz .side .scores, .quiz .card details, .quiz .card .ratio, .quiz .card .tag.wrong, .quiz .card .tag.right, .quiz .credit { visibility: hidden; }
+.quiz .side .imgbox { border-color: transparent; box-shadow: none; cursor: pointer; }
+.quiz .side .imgbox:hover { border-color: #cbd5e1; }
+.quiz .card.answered .side .role, .quiz .card.answered .side .scores, .quiz .card.answered details, .quiz .card.answered .ratio, .quiz .card.answered .tag.wrong, .quiz .card.answered .tag.right, .quiz .card.answered .credit { visibility: visible; }
+.quiz .card.answered .side.win .imgbox { border-color: var(--navy); }
+.quiz .card.answered .side.pick .imgbox { box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--red); }
+.verdict { display: none; font-size: 12px; font-weight: 700; margin-top: 6px; }
+.quiz .card.answered .verdict { display: block; }
+.verdict.ok { color: var(--navy); } .verdict.no { color: var(--red); }
+.ask { display: none; font-size: 12px; color: var(--slate); margin-top: 6px; }
+.quiz .card:not(.answered) .ask { display: block; }
+
+/* Lightbox */
+.lb { position: fixed; inset: 0; background: rgba(15,23,42,.86); display: none; align-items: center; justify-content: center; z-index: 50; padding: 24px; }
+.lb.on { display: flex; }
+.lb figure { margin: 0; max-width: min(1100px, 96vw); max-height: 92vh; display: flex; flex-direction: column; }
+.lb img { max-width: 100%; max-height: 80vh; object-fit: contain; background: #fff; border-radius: 4px; }
+.lb figcaption { color: #e2e8f0; font-size: 13px; margin-top: 8px; }
+.lb figcaption a { color: #fff; }
+
+footer { margin-top: 30px; padding-top: 12px; border-top: 2px solid var(--navy); font-size: 12px; color: var(--slate); }
+footer p { margin: 0 0 6px; max-width: 120ch; }
+footer a { color: var(--slate); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="nav"><a href="../">Rahul Chaudhary</a><a href="../all/">All pages</a></nav>
+
+<header>
+  <div class="kicker">Paper companion · October 2026</div>
+  <h1>LLM chart judges reward <span class="r">labels</span>, not what <span class="n">audiences</span> upvote</h1>
+  <p class="dek">Multimodal LLMs now grade the charts that AI agents make, and we check them against expert ratings. I asked a different question: when two charts went up on r/dataisbeautiful in the same week, and one got at least five times the votes, does the judge pick the one people liked? Across 2,000 such pairs, four judges did worse than a simple model that never looks at the chart.</p>
+  <div class="links">
+    <a class="btn primary" href="paper.pdf">Read the paper (PDF)</a>
+    <a class="btn" href="https://github.com/vibedatascience/chart-judges-vs-audience">Code and every judge output</a>
+    <a class="btn" href="#gallery">Jump to the gallery</a>
+  </div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="big n">59.1%</div><div class="lbl">picked by a model that reads only the <b>title and posting time</b>, never the image</div></div>
+  <div class="stat"><div class="big r">55.5–57.8%</div><div class="lbl">picked by four <b>LLM judges</b> that look at the charts (gpt-5, Claude Haiku 4.5, Gemini 2.5 Flash, Claude Sonnet 5.5)</div></div>
+  <div class="stat"><div class="big"><span class="t">0.44–0.49</span> <span style="color:var(--mute);font-size:.6em">vs</span> <span class="n">0.08–0.13</span></div><div class="lbl">rank correlation of the same judge scores with <b class="t">expert ratings</b> and with <b class="n">audience votes</b></div></div>
+  <div class="stat"><div class="big r">+0.31 to +0.51</div><div class="lbl">pull of on-chart text on the judges' pick, per SD of word count. The audience's is <b class="n">−0.02</b>.</div></div>
+</div>
+
+<section id="method">
+  <div class="kicker">How the test works</div>
+  <h2>Compare each chart only with its close neighbor</h2>
+  <p class="sec-dek">Raw upvotes mostly track timing, title and topic, and the subreddit grew many times over 13 years. So every comparison is a pair of charts that share almost everything except the chart itself.</p>
+  <div class="steps">
+    <div class="step"><span class="num">1</span><b>34,556 charts</b><span>cleaned from the beautiVis dataset of r/dataisbeautiful posts, 2012 to 2025</span></div>
+    <div class="step"><span class="num">2</span><b>Same week, same type</b><span>both posted in one ISO week, both bar charts, or both maps, and so on</span></div>
+    <div class="step"><span class="num">3</span><b>5× the votes</b><span>the winner got at least five times the loser's votes and at least 50 votes. Median gap: 32×</span></div>
+    <div class="step"><span class="num">4</span><b>Image only</b><span>each judge scores each chart 1 to 10 without seeing the title. Higher score = its pick</span></div>
+  </div>
+  <div class="prompt">You are judging the quality of a data visualization. Rate this chart from 1 (very poor) to 10 (excellent), considering how clearly it communicates its data, how well it is designed, and how visually appealing it is. Respond with JSON only: {"score": &lt;integer 1-10&gt;, "reason": "&lt;one sentence&gt;"}</div>
+</section>
+
+<section id="accuracy">
+  <div class="kicker">Result 1</div>
+  <h2>Every <span class="r">judge</span> lands below a model that reads only <span class="n">titles and timestamps</span></h2>
+  <p class="sec-dek">Share of the 2,000 pairs where each method picked the audience winner, with 95% confidence intervals. The analysis plan was written before the run. For every judge, an advantage of four points or more over the baseline is ruled out (p ≤ 0.002), and Claude Haiku 4.5 is significantly worse than it. A tie counts as half right.</p>
+  <div class="chart" id="c-acc"></div>
+  <p class="foot">Claude Sonnet 5.5 was run on the first 1,000 pairs; the baseline scores 59.6% on those. Ranked by AUC, which needs no rule for ties, every judge also falls below the baseline (0.571–0.604 vs 0.623).</p>
+</section>
+
+<section id="gallery">
+  <div class="kicker">The gallery</div>
+  <h2>Forty pairs, and what the judges said about them</h2>
+  <p class="sec-dek">The 20 pairs where gpt-5, asked head to head, most confidently picked the less-voted chart, and the 20 where it most confidently picked the winner. The <span class="n"><b>navy frame</b></span> marks the audience winner. The <span class="r"><b>red ring</b></span> marks the chart the four judges scored higher on average with the 1 to 10 prompt, so it can differ from gpt-5's head-to-head pick. Click any chart to enlarge it, or turn on the quiz and guess the winner yourself.</p>
+  <div class="bar" role="toolbar" aria-label="Gallery filters">
+    <div class="seg" id="seg">
+      <button data-k="wrong" aria-pressed="true">gpt-5 picked the loser (20)</button>
+      <button data-k="right" aria-pressed="false">gpt-5 picked the winner (20)</button>
+      <button data-k="all" aria-pressed="false">All 40</button>
+    </div>
+    <button class="quiz-toggle" id="quiz" aria-pressed="false">Quiz: guess the winner</button>
+    <div class="tally" id="tally"></div>
+  </div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<section id="why">
+  <div class="kicker">Result 2</div>
+  <h2>The <span class="r">judges</span> reward text. The <span class="n">audience</span> does not.</h2>
+  <div class="two">
+    <div>
+      <h3>What predicts each pick</h3>
+      <p>Logistic coefficients per SD of the difference between the two charts, for five image features, with 95% intervals. On resolution, color count and edge density, judges and audience agree. On the amount of text in the image they split: every judge leans toward the wordier chart, while the audience is neutral.</p>
+      <div class="chart" id="c-bias"></div>
+    </div>
+    <div>
+      <h3>Experts yes, audiences no</h3>
+      <p>Spearman correlation of the same 1 to 10 scores with expert ratings (150 VisJudge-Bench charts) and with each post's vote percentile in its month (4,000 audience charts). Agreement with experts does not carry over to the audience.</p>
+      <div class="chart" id="c-corr"></div>
+      <h3 style="margin-top:18px">Order matters for one judge</h3>
+      <p>With a head-to-head prompt run in both A/B orders, share of pairs where the judge changes its answer when the order is swapped. Gemini 2.5 Flash also picks whichever chart comes first 77% of the time.</p>
+      <div class="chart" id="c-pos"></div>
+    </div>
+  </div>
+</section>
+
+<section id="takeaway">
+  <div class="kicker">So what</div>
+  <h2>A judge's score measures conformance to conventions, not appeal</h2>
+  <p class="sec-dek">The judges apply a checklist of labels, legends and readable scales, and many charts the audience loved would fail it: a striking idea, a joke, a celebrity topic, a minimal map with no labels at all. If you score chart-making agents with an LLM judge, you are measuring how closely the charts follow the rules. To measure whether people will engage, you need audience data or a judge calibrated on it. And if you judge in pairs, run both orders.</p>
+</section>
+
+<footer>
+  <p><b>Rahul Chaudhary.</b> "LLM Chart Judges Reward Labels, Not What Audiences Upvote." 2026. <a href="paper.pdf">PDF</a> · <a href="https://github.com/vibedatascience/chart-judges-vs-audience">Code and data</a>. This work was done in a personal capacity; the views here are my own and do not represent Pinterest.</p>
+  <p>Data: beautiVis (Lin, Ru, Chang and Bearfield, PacificVis 2026), CC0. Charts in the gallery belong to the Reddit users who posted them; each card credits the poster and links to the original post. They are shown here for commentary.</p>
+</footer>
+</div>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Enlarged chart"><figure><img id="lb-img" alt=""><figcaption id="lb-cap"></figcaption></figure></div>
+<div class="tip" id="tip"></div>
+
+<script>
+const C = { red: "#E60023", navy: "#0a3069", teal: "#0d9488", slate: "#64748b", mute: "#94a3b8", rule: "#e9eef4", ink: "#1e293b", band: "#f4f6f9" };
+const JUDGES = ["gpt-5", "Claude Haiku 4.5", "Gemini 2.5 Flash", "Claude Sonnet 5.5"];
+const SHORT = { "gpt-5": "gpt-5", "Claude Haiku 4.5": "Haiku", "Gemini 2.5 Flash": "Flash", "Claude Sonnet 5.5": "Sonnet" };
+const SHAPE = { "gpt-5": "circle", "Claude Haiku 4.5": "square", "Gemini 2.5 Flash": "tri", "Claude Sonnet 5.5": "tridown" };
+const fmt = (x) => x.toLocaleString("en-US");
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const pct = (x, d = 1) => (x * 100).toFixed(d) + "%";
+
+/* ---------- tooltip ---------- */
+const tip = document.getElementById("tip");
+function showTip(e, html) {
+  tip.innerHTML = html; tip.classList.add("on");
+  const pad = 12, w = tip.offsetWidth, h = tip.offsetHeight;
+  let x = e.pageX + pad, y = e.pageY - h - pad;
+  if (x + w > window.scrollX + document.documentElement.clientWidth - 8) x = e.pageX - w - pad;
+  if (y < window.scrollY + 4) y = e.pageY + pad;
+  tip.style.left = x + "px"; tip.style.top = y + "px";
+}
+function hideTip() { tip.classList.remove("on"); }
+function svgEl(tag, attrs = {}, parent) {
+  const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for (const k in attrs) el.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(el);
+  return el;
+}
+function marker(g, shape, x, y, r, color, filled) {
+  const a = { fill: filled ? color : "#fff", stroke: color, "stroke-width": 1.6 };
+  if (shape === "circle") return svgEl("circle", { cx: x, cy: y, r, ...a }, g);
+  if (shape === "square") return svgEl("rect", { x: x - r, y: y - r, width: 2 * r, height: 2 * r, ...a }, g);
+  if (shape === "diamond") return svgEl("path", { d: `M${x},${y - r * 1.3}L${x + r * 1.3},${y}L${x},${y + r * 1.3}L${x - r * 1.3},${y}Z`, ...a }, g);
+  const s = shape === "tri" ? 1 : -1;
+  return svgEl("path", { d: `M${x},${y - s * r * 1.2}L${x + r * 1.1},${y + s * r * 0.8}L${x - r * 1.1},${y + s * r * 0.8}Z`, ...a }, g);
+}
+function axisX(g, x, y0, y1, ticks, f, label, W) {
+  for (const t of ticks) {
+    svgEl("line", { x1: x(t), x2: x(t), y1: y0, y2: y1, stroke: C.rule }, g);
+    const tx = svgEl("text", { x: x(t), y: y1 + 14, "text-anchor": "middle", "font-size": 11, fill: C.slate }, g); tx.textContent = f(t);
+  }
+  if (label) { const l = svgEl("text", { x: W / 2, y: y1 + 32, "text-anchor": "middle", "font-size": 11.5, fill: C.slate }, g); l.textContent = label; }
+}
+
+/* ---------- chart 1: accuracy ---------- */
+function drawAccuracy(S) {
+  const host = document.getElementById("c-acc"); host.innerHTML = "";
+  const W = Math.max(320, host.clientWidth), narrow = W < 560;
+  const L = narrow ? 104 : 200, R = narrow ? 52 : 70, top = 26, rowH = 34, rows = S.accuracy;
+  const H = top + rows.length * rowH + 44;
+  const svg = svgEl("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Accuracy of each method at picking the audience winner" }, host);
+  const lo = 0.48, hi = 0.64, x = (v) => L + (v - lo) / (hi - lo) * (W - L - R);
+  const g = svgEl("g", {}, svg);
+  axisX(g, x, top - 8, top + rows.length * rowH - 4, [0.48, 0.52, 0.56, 0.60, 0.64], (t) => Math.round(t * 100) + "%", "Pairs where the method picked the audience winner (95% CI)", W);
+  // chance
+  svgEl("line", { x1: x(0.5), x2: x(0.5), y1: top - 14, y2: top + rows.length * rowH - 4, stroke: C.slate, "stroke-dasharray": "3 3" }, g);
+  const ct = svgEl("text", { x: x(0.5) + 4, y: top - 16, "font-size": 11, fill: C.slate }, g); ct.textContent = "chance";
+  const base = rows[0];
+  svgEl("rect", { x: x(base.lo), y: top - 10, width: x(base.hi) - x(base.lo), height: rows.length * rowH + 6, fill: C.navy, opacity: 0.06 }, g);
+  svgEl("line", { x1: x(base.acc), x2: x(base.acc), y1: top - 14, y2: top + rows.length * rowH - 4, stroke: C.navy, "stroke-width": 1.2 }, g);
+  const bt = svgEl("text", { x: x(base.acc) + 4, y: top - 16, "font-size": 11, fill: C.navy, "font-weight": 700 }, g); bt.textContent = "baseline";
+  rows.forEach((r, i) => {
+    const y = top + i * rowH + rowH / 2 - 4, col = i === 0 ? C.navy : C.red;
+    const name = svgEl("text", { x: L - 10, y: y + 4, "text-anchor": "end", "font-size": narrow ? 11.5 : 13, fill: C.ink, "font-weight": i === 0 ? 700 : 500 }, g);
+    name.textContent = narrow ? (i === 0 ? "Titles + timing" : SHORT[r.name] || r.name) : r.name + (r.n === 1000 ? " (1,000 pairs)" : "");
+    svgEl("line", { x1: x(r.lo), x2: x(r.hi), y1: y, y2: y, stroke: col, "stroke-width": 2.5, "stroke-linecap": "round" }, g);
+    svgEl("circle", { cx: x(r.acc), cy: y, r: 5.5, fill: col, stroke: "#fff", "stroke-width": 2 }, g);
+    const v = svgEl("text", { x: W - 4, y: y + 4, "text-anchor": "end", "font-size": 12, "font-weight": 700, fill: C.ink }, g); v.textContent = pct(r.acc);
+    const hit = svgEl("rect", { x: 0, y: y - rowH / 2, width: W, height: rowH, fill: "transparent" }, g);
+    hit.addEventListener("mousemove", (e) => showTip(e, `<b style="color:${col}">${esc(r.name)}</b><br>${pct(r.acc)} correct (95% CI ${pct(r.lo)} to ${pct(r.hi)})<br>${fmt(r.n)} pairs${r.tie != null ? ` · ties on ${pct(r.tie, 0)}` : ""}`));
+    hit.addEventListener("mouseleave", hideTip);
+  });
+}
+
+/* ---------- chart 2: bias ---------- */
+const FEAT = [["log_ocr_words", "Text in the image"], ["log_orig_megapixels", "Original resolution"], ["n_colors", "Dominant colors"], ["edge_density", "Edge density"], ["log_aspect_ratio", "Aspect ratio"]];
+function drawBias(S) {
+  const host = document.getElementById("c-bias"); host.innerHTML = "";
+  const W = Math.max(300, host.clientWidth), L = 128, R = 12, top = 34, rowH = 52;
+  const H = top + FEAT.length * rowH + 44;
+  const svg = svgEl("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Logistic coefficients of five image features for the audience and each judge" }, host);
+  const lo = -0.4, hi = 0.7, x = (v) => L + (v - lo) / (hi - lo) * (W - L - R);
+  const g = svgEl("g", {}, svg);
+  svgEl("rect", { x: L - 4, y: top - 4, width: W - L - R + 8, height: rowH, fill: C.red, opacity: 0.05 }, g);
+  axisX(g, x, top - 6, top + FEAT.length * rowH - 4, [-0.4, -0.2, 0, 0.2, 0.4, 0.6], (t) => (t > 0 ? "+" : t < 0 ? "−" : "") + Math.abs(t).toFixed(1), "Coefficient per SD (positive = favors the chart with more of it)", W);
+  svgEl("line", { x1: x(0), x2: x(0), y1: top - 6, y2: top + FEAT.length * rowH - 4, stroke: C.slate }, g);
+  // legend
+  const who = ["Audience winner", ...JUDGES];
+  let lx = 0;
+  who.forEach((w) => {
+    const aud = w === "Audience winner", col = aud ? C.navy : C.red;
+    const gg = svgEl("g", { transform: `translate(${lx},10)` }, g);
+    marker(gg, aud ? "diamond" : SHAPE[w], 6, 0, 4, col, aud);
+    const t = svgEl("text", { x: 14, y: 4, "font-size": 11, fill: C.ink }, gg); t.textContent = aud ? "Audience" : SHORT[w];
+    lx += 14 + t.getComputedTextLength() + 14;
+  });
+  FEAT.forEach(([f, label], i) => {
+    const yc = top + i * rowH + rowH / 2 - 4;
+    const t = svgEl("text", { x: L - 10, y: yc + 4, "text-anchor": "end", "font-size": 12.5, fill: C.ink, "font-weight": i === 0 ? 700 : 500 }, g); t.textContent = label;
+    who.forEach((w, k) => {
+      const d = S.bias.find((b) => b.who === w && b.feature === f); if (!d) return;
+      const y = yc + (k - 2) * 7.5, aud = w === "Audience winner", col = aud ? C.navy : C.red;
+      svgEl("line", { x1: x(d.coef - 1.96 * d.se), x2: x(d.coef + 1.96 * d.se), y1: y, y2: y, stroke: col, "stroke-width": aud ? 1.6 : 1.1, opacity: aud ? 1 : 0.85 }, g);
+      marker(g, aud ? "diamond" : SHAPE[w], x(d.coef), y, aud ? 4 : 3.2, col, aud);
+    });
+    const hit = svgEl("rect", { x: 0, y: yc - rowH / 2, width: W, height: rowH, fill: "transparent" }, g);
+    hit.addEventListener("mousemove", (e) => {
+      const lines = who.map((w) => { const d = S.bias.find((b) => b.who === w && b.feature === f); return d ? `<span style="color:${w === "Audience winner" ? C.navy : C.red}">${esc(w === "Audience winner" ? "Audience" : w)}</span>: ${d.coef > 0 ? "+" : ""}${d.coef.toFixed(2)}` : ""; });
+      showTip(e, `<b>${esc(label)}</b><br>${lines.join("<br>")}`);
+    });
+    hit.addEventListener("mouseleave", hideTip);
+  });
+  const note = svgEl("text", { x: x(-0.38), y: top + rowH / 2 + 18, "font-size": 11, fill: C.red, "font-weight": 700 }, g);
+  note.textContent = "judges lean wordy";
+}
+
+/* ---------- chart 3: expert vs audience ---------- */
+function drawCorr(S) {
+  const host = document.getElementById("c-corr"); host.innerHTML = "";
+  const rows = S.corr.filter((r) => r.expert != null);
+  const W = Math.max(300, host.clientWidth), L = 112, R = 40, top = 22, rowH = 30, H = top + rows.length * rowH + 40;
+  const svg = svgEl("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Correlation with expert ratings and with audience votes for each judge" }, host);
+  const x = (v) => L + v / 0.6 * (W - L - R), g = svgEl("g", {}, svg);
+  axisX(g, x, top - 8, top + rows.length * rowH - 6, [0, 0.2, 0.4, 0.6], (t) => t.toFixed(1), "Spearman ρ with the same 1–10 scores", W);
+  const a = svgEl("text", { x: x(rows[0].audience), y: top - 12, "font-size": 11, fill: C.navy, "font-weight": 700, "text-anchor": "middle" }, g); a.textContent = "audience";
+  const ex = svgEl("text", { x: x(rows[0].expert), y: top - 12, "font-size": 11, fill: C.teal, "font-weight": 700, "text-anchor": "middle" }, g); ex.textContent = "experts";
+  rows.forEach((r, i) => {
+    const y = top + i * rowH + rowH / 2 - 4;
+    const t = svgEl("text", { x: L - 10, y: y + 4, "text-anchor": "end", "font-size": 12.5, fill: C.ink }, g); t.textContent = r.name;
+    svgEl("line", { x1: x(r.audience), x2: x(r.expert), y1: y, y2: y, stroke: C.mute, "stroke-width": 2 }, g);
+    svgEl("circle", { cx: x(r.audience), cy: y, r: 5, fill: C.navy, stroke: "#fff", "stroke-width": 1.5 }, g);
+    svgEl("circle", { cx: x(r.expert), cy: y, r: 5, fill: C.teal, stroke: "#fff", "stroke-width": 1.5 }, g);
+    const v = svgEl("text", { x: x(r.expert) + 9, y: y + 4, "font-size": 11.5, "font-weight": 700, fill: C.ink }, g); v.textContent = r.expert.toFixed(2);
+    const hit = svgEl("rect", { x: 0, y: y - rowH / 2, width: W, height: rowH, fill: "transparent" }, g);
+    hit.addEventListener("mousemove", (e) => showTip(e, `<b>${esc(r.name)}</b><br><span style="color:${C.teal}">Experts</span>: ρ = ${r.expert.toFixed(2)} (150 charts)<br><span style="color:${C.navy}">Audience</span>: ρ = ${r.audience.toFixed(2)} (4,000 charts)`));
+    hit.addEventListener("mouseleave", hideTip);
+  });
+}
+
+/* ---------- chart 4: position bias ---------- */
+const POS = [{ name: "gpt-5", flip: 0.184, first: 0.544, n: 250 }, { name: "Claude Haiku 4.5", flip: 0.184, first: 0.416, n: 250 }, { name: "Gemini 2.5 Flash", flip: 0.532, first: 0.766, n: 500 }];
+function drawPos() {
+  const host = document.getElementById("c-pos"); host.innerHTML = "";
+  const W = Math.max(300, host.clientWidth), L = 112, R = 44, top = 6, rowH = 26, H = top + POS.length * rowH + 36;
+  const svg = svgEl("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Share of pairs where each judge changes its answer when the order is swapped" }, host);
+  const x = (v) => L + v * (W - L - R), g = svgEl("g", {}, svg);
+  axisX(g, x, top, top + POS.length * rowH - 2, [0, 0.25, 0.5, 0.75, 1], (t) => Math.round(t * 100) + "%", "Pairs where the answer flips when A and B swap places", W);
+  POS.forEach((r, i) => {
+    const y = top + i * rowH + 4;
+    const t = svgEl("text", { x: L - 10, y: y + 12, "text-anchor": "end", "font-size": 12.5, fill: C.ink }, g); t.textContent = r.name;
+    svgEl("rect", { x: x(0), y, width: x(r.flip) - x(0), height: 16, rx: 3, fill: C.red, opacity: r.flip > 0.5 ? 1 : 0.55 }, g);
+    const v = svgEl("text", { x: x(r.flip) + 6, y: y + 12, "font-size": 11.5, "font-weight": 700, fill: C.ink }, g); v.textContent = pct(r.flip, 0);
+    const hit = svgEl("rect", { x: 0, y: y - 4, width: W, height: rowH, fill: "transparent" }, g);
+    hit.addEventListener("mousemove", (e) => showTip(e, `<b>${esc(r.name)}</b><br>Flips on ${pct(r.flip)} of ${r.n} pairs<br>Picks the first-shown chart ${pct(r.first)} of the time`));
+    hit.addEventListener("mouseleave", hideTip);
+  });
+}
+
+/* ---------- gallery ---------- */
+let PAIRS = [], filter = "wrong", quiz = false;
+const answers = {};
+function isoMonday(d) { const t = new Date(d + "T12:00:00Z"); t.setUTCDate(t.getUTCDate() - ((t.getUTCDay() + 6) % 7)); return t.toISOString().slice(0, 10); }
+function meanScore(p) { const v = Object.values(p.judges).map((j) => j.score); return v.reduce((a, b) => a + b, 0) / v.length; }
+function seeded(i) { const s = Math.sin(i * 9301 + 49297) * 233280; return s - Math.floor(s); }
+function sideHTML(p, other, isWin, judgePick, idx, slot) {
+  const chips = JUDGES.map((j) => {
+    const a = p.judges[j], b = other.judges[j]; if (!a) return "";
+    const hi = b && a.score > b.score;
+    return `<span class="chip${hi ? " hi" : ""}" title="${esc(j)}">${SHORT[j]} <b>${a.score}</b></span>`;
+  }).join("");
+  return `<div class="side ${isWin ? "win" : "lose"}${judgePick ? " pick" : ""}" data-slot="${slot}">
+    <button class="imgbox" data-id="${p.id}" data-i="${idx}" data-win="${isWin ? 1 : 0}" aria-label="${esc(p.title)}"><img loading="lazy" src="img/${p.id}.webp" width="${p.w}" height="${p.h}" alt="${esc(p.title)}"></button>
+    <div class="role"><span class="who">${isWin ? "Audience winner" : "Less-voted"}${judgePick ? ' <span class="pickmark">· judges\' pick</span>' : ""}</span><span class="votes">${fmt(p.votes)} votes</span></div>
+    <div class="ttl">${esc(p.title)}</div>
+    <div class="scores">${chips}<span class="words">${p.words} word${p.words === 1 ? "" : "s"} of text</span></div>
+    <div class="credit">u/${esc(p.author)} · <a href="${esc(p.url)}" target="_blank" rel="noopener">post</a> · ${p.date}</div>
+  </div>`;
+}
+function reasonsHTML(pr) {
+  const col = (p, label) => `<div><h4>${label}</h4>${JUDGES.map((j) => p.judges[j] ? `<p><b>${SHORT[j]} ${p.judges[j].score}/10.</b> ${esc(p.judges[j].reason)}</p>` : "").join("")}</div>`;
+  return `<div class="pw"><small>gpt-5, head-to-head prompt, confidence ${pr.conf}/5, same pick in both A/B orders</small>"${esc(pr.pairwise_reason)}"</div>
+    <div class="reasons">${col(pr.winner, "On the audience winner")}${col(pr.loser, "On the less-voted chart")}</div>`;
+}
+function cardHTML(pr, idx) {
+  const winPick = meanScore(pr.winner) > meanScore(pr.loser), losePick = meanScore(pr.loser) > meanScore(pr.winner);
+  const flip = quiz && seeded(idx) < 0.5;
+  const W = sideHTML(pr.winner, pr.loser, true, winPick, idx, "w"), Lh = sideHTML(pr.loser, pr.winner, false, losePick, idx, "l");
+  const tag = pr.kind === "wrong" ? '<span class="tag wrong">gpt-5 wrong</span>' : '<span class="tag right">gpt-5 right</span>';
+  const ans = answers[idx];
+  const verdict = ans == null ? "" : ans ? `<div class="verdict ok">You picked the audience winner. ${pr.kind === "wrong" ? "gpt-5 did not." : "So did gpt-5."}</div>` : `<div class="verdict no">The audience preferred the other one. ${pr.kind === "wrong" ? "gpt-5 missed it too." : "gpt-5 got this one."}</div>`;
+  return `<article class="card${ans != null ? " answered" : ""}" data-i="${idx}">
+    <div class="card-head">${tag}${pr.fig1 ? `<span class="tag fig">paper Fig. 1${pr.fig1}</span>` : ""}<span>${esc(pr.winner.type)} · week of ${isoMonday(pr.winner.date)}</span><span class="ratio">${fmt(Math.round(pr.ratio))}× the votes</span></div>
+    <div class="sides">${flip ? Lh + W : W + Lh}</div>
+    <div class="ask">Which one got more upvotes? Click it.</div>${verdict}
+    <details><summary>What the judges said</summary>${reasonsHTML(pr)}</details>
+  </article>`;
+}
+function renderGallery() {
+  const grid = document.getElementById("grid");
+  grid.classList.toggle("quiz", quiz);
+  const idxs = PAIRS.map((p, i) => i).filter((i) => filter === "all" || PAIRS[i].kind === filter);
+  grid.innerHTML = idxs.map((i) => cardHTML(PAIRS[i], i)).join("");
+  updateTally(idxs);
+}
+function updateTally(idxs) {
+  const el = document.getElementById("tally");
+  if (!quiz) { el.innerHTML = `${idxs.length} pairs · scores are each judge's 1–10 rating; <span style="color:var(--red)">red</span> = that judge's higher score`; return; }
+  const done = idxs.filter((i) => answers[i] != null);
+  const you = done.filter((i) => answers[i]).length, judges = done.filter((i) => PAIRS[i].kind === "right").length;
+  el.innerHTML = done.length ? `You <b>${you}/${done.length}</b> · gpt-5 <b>${judges}/${done.length}</b> on the same pairs` : "Click the chart you think got more votes";
+}
+document.getElementById("seg").addEventListener("click", (e) => {
+  const b = e.target.closest("button"); if (!b) return;
+  filter = b.dataset.k;
+  document.querySelectorAll("#seg button").forEach((x) => x.setAttribute("aria-pressed", x === b ? "true" : "false"));
+  renderGallery();
+});
+document.getElementById("quiz").addEventListener("click", (e) => {
+  quiz = !quiz; e.currentTarget.setAttribute("aria-pressed", quiz ? "true" : "false");
+  if (quiz && filter !== "all") { filter = "all"; document.querySelectorAll("#seg button").forEach((x) => x.setAttribute("aria-pressed", x.dataset.k === "all" ? "true" : "false")); }
+  renderGallery();
+});
+const lb = document.getElementById("lb");
+document.getElementById("grid").addEventListener("click", (e) => {
+  const box = e.target.closest(".imgbox"); if (!box) return;
+  const i = +box.dataset.i;
+  if (quiz && answers[i] == null) {
+    answers[i] = box.dataset.win === "1";
+    const card = box.closest(".card"); card.outerHTML = cardHTML(PAIRS[i], i);
+    const idxs = PAIRS.map((p, k) => k).filter((k) => filter === "all" || PAIRS[k].kind === filter);
+    updateTally(idxs); return;
+  }
+  const pr = PAIRS[i], p = pr.winner.id === box.dataset.id ? pr.winner : pr.loser;
+  document.getElementById("lb-img").src = `img/${p.id}.webp`;
+  document.getElementById("lb-img").alt = p.title;
+  document.getElementById("lb-cap").innerHTML = `${esc(p.title)} · ${fmt(p.votes)} votes · u/${esc(p.author)} · <a href="${esc(p.url)}" target="_blank" rel="noopener">original post</a>`;
+  lb.classList.add("on");
+});
+lb.addEventListener("click", () => lb.classList.remove("on"));
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") lb.classList.remove("on"); });
+
+/* ---------- boot ---------- */
+Promise.all([fetch("stats.json").then((r) => r.json()), fetch("pairs.json").then((r) => r.json())]).then(([S, P]) => {
+  PAIRS = P;
+  const drawAll = () => { drawAccuracy(S); drawBias(S); drawCorr(S); drawPos(); };
+  drawAll(); renderGallery();
+  let t; window.addEventListener("resize", () => { clearTimeout(t); t = setTimeout(drawAll, 120); });
+});
+</script>
+</body>
+</html>
