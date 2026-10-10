@@ -1,0 +1,19 @@
+{
+  "page": "/vis-ai-venues/",
+  "url": "https://rahulch.site/vis-ai-venues/",
+  "comment_mode": "https://rahulch.site/vis-ai-venues/comments",
+  "how_to_address": "https://github.com/vibedatascience/vibelogs/blob/main/COMMENTS.md",
+  "comments": [
+    {
+      "id": "cmv2efnsdhg7",
+      "created": "2026-10-10T12:57:20.173Z",
+      "status": "open",
+      "section": "Doable ideas with an agentic data science angle",
+      "quote": "Doable ideas with an agentic data science angle\nFive of the six need no user study and use only public data. Effort assumes evenings and weekends. Related papers link to the arXiv or DOI page.\nAgents that check their own chartsA chart agent renders its output to PNG, looks at the image with a vision model, and fixes what it sees: overlapping labels, clipped legends, low-contrast colors, bars that do not start at zero. The question is how many defects one or two critique rounds remove, and which defects survive.BuildRun 3 or 4 models on 50 TidyTuesday datasets, with and without the critique loop. Log every round.EvaluateAutomatic defect checks (label bounding-box overlap, contrast ratio, axis baseline). No user study. Two 2026 PacificVis VisNotes used the same design.Send toPacificVis VisNotes (~Jan 7, 2027) or VISxGenAI 2027 short paper (~Aug 15, 2027)EffortAbout 3 weekendsRelatedAre LLMs ready for Visualization?, When Users Don't Specify, The Truth, the Whole Truth, and Nothing but the Truth, May (A)I Beautify Your Visualization? Expert Judgments of Acceptable Aesthetic Alterations\"Make the growth look strong\": a persuasion auditGive data agents the same dataset twice, once with a neutral request and once with a biased one. Count how often the biased version truncates axes, picks a flattering date range, or uses a dual axis, and whether the agent tells the user it did so.Build100 prompt pairs over public datasets. Parse the generated Vega-Lite or matplotlib code for known deceptive patterns.EvaluateRule-based detectors taken from the misleading-chart literature, plus a hand check of 50 charts to confirm the detectors.Send toEuroVis short paper (~Feb 2027) or PacificVis VisNotes (~Jan 7, 2027)Effort2 to 3 weekendsRelatedVEIL, Guardrail Selection in Line Charts to Contextualize Persuasive Visualizations, VizDefender, Do You Trust This Visualization? An Inventory to Measure Trust in VisualizationsDid the agent get the number right?Most chart benchmarks score the pictu",
+      "prefix": "ap vs GPT-4o.ACLMain (long)2025modelno\n\n",
+      "suffix": "\n\n\n\n\n",
+      "context": "Doable ideas with an agentic data science angle",
+      "comment": "remove all of this actually. since this was all made up."
+    }
+  ]
+}
